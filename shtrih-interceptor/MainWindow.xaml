@@ -7,8 +7,10 @@
         mc:Ignorable="d"
         Title="shtrih-interceptor" Height="350" Width="525">
     <Grid>
-        <Button x:Name="button" Content="start serv" HorizontalAlignment="Left" Height="60" Margin="150,125,0,0" VerticalAlignment="Top" Width="191" Click="button_Click"/>
-        <Canvas x:Name="switchon" HorizontalAlignment="Left" Height="60" Margin="346,125,0,0" VerticalAlignment="Top" Width="31" Background="Red"/>
+        <Button x:Name="button" Content="start serv" HorizontalAlignment="Left" Height="60" Margin="96,105,0,0" VerticalAlignment="Top" Width="191" Click="button_Click"/>
+        <Canvas x:Name="switchon" HorizontalAlignment="Left" Height="60" Margin="292,105,0,0" VerticalAlignment="Top" Width="31" Background="#FFA6A6A6"/>
+        <Button x:Name="settings" Content="settings" HorizontalAlignment="Left" Height="31" Margin="96,170,0,0" VerticalAlignment="Top" Width="227" Click="settings_Click"/>
+        <Button x:Name="direct" Content="direct" HorizontalAlignment="Left" Height="96" Margin="328,105,0,0" VerticalAlignment="Top" Width="92"/>
 
     </Grid>
 </Window>

@@ -36,10 +36,17 @@ namespace shtrih_interceptor
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            asynchServ.DoWork += worker_DoWork;
-            asynchServ.RunWorkerAsync();
-            switchon.Background = Brushes.LimeGreen;
-            button.IsEnabled = false;
+            if (Diagnosticcs.failCashbox())
+                switchon.Background = Brushes.Red;
+            else
+            {
+                asynchServ.DoWork += worker_DoWork;
+                asynchServ.RunWorkerAsync();
+
+                switchon.Background = Brushes.LimeGreen;
+                button.IsEnabled = false;
+            }
+            
         }
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
@@ -47,6 +54,11 @@ namespace shtrih_interceptor
             new Server(80);
 
             Log.add("сервер запущен");
+        }
+
+        private void settings_Click(object sender, RoutedEventArgs e)
+        {
+            Cashbox.settings();
         }
     }
 }

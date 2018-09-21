@@ -23,7 +23,7 @@ namespace shtrih_interceptor
 
         public DocPack()
         {
-
+            // only for serialization
         }
 
         public DocPack(string requestLine)

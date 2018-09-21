@@ -13,33 +13,44 @@ namespace shtrih_interceptor
 
         public static bool checkXml(string from)
         {
-            string md5 = Client.getFromXml("check", from);
-
-            Log.add("md5 отправки: " + md5);
+            if (from == "") return false;
 
             XmlDocument request = new XmlDocument();
 
             request.LoadXml(from);
 
+            XmlNode md5check = request.SelectSingleNode("toCashbox/Control/CRC");
+            string md5 = md5check.InnerText;
+
+            Log.add("md5 отправки: " + md5);
+
             var root = request.DocumentElement;
 
             MD5_LINE_TMP = "";
 
-            string md5line = createMD5(PrintItem(root)).ToLower();
+            string md5lineTMP = allXmlField(root);
+
+            byte[] bytes = Encoding.GetEncoding(1251).GetBytes(md5lineTMP);
+            string byteLine = "";
+
+            foreach (byte b in bytes)
+                byteLine += b.ToString() + " ";
+
+            string md5line = createMD5(byteLine).ToLower();
 
             Log.add("md5 полученного: " + md5line);
 
             return md5line == md5;
         }
 
-        private static string PrintItem(XmlElement item, int indent = 0)
+        private static string allXmlField(XmlElement item, int indent = 0)
         {
-            if (item.LocalName == "check") return "";
+            if (item.LocalName == "CRC") return "";
 
             foreach (var child in item.ChildNodes)
             {
                 if (child is XmlElement)
-                    PrintItem((XmlElement)child, indent + 1);
+                    allXmlField((XmlElement)child, indent + 1);
 
                 if (child is XmlText)
                 {

@@ -55,36 +55,16 @@ namespace shtrih_interceptor
 
         public static string responsePrepare(string request)
         {
-            string yourName = getFromXml("myName", request);
-
             if (!CheckRequest.checkXml(request))
                 return "ERROR: BROKEN DATA";
 
-            else if (yourName != "vms")
-                return "ERROR: AUTHENTHIFICTION";
-
             else
             {
-                string whatYouWant = getFromXml("doIt", request);
+                DocPack docPack = new DocPack(request);
 
-                return "i know you, " + yourName + ". I do " + whatYouWant;
+                return "OK";
             }
                 
         }
-
-        public static string getFromXml(string what, string from)
-        {
-            if (from == "") return "";
-
-            XmlDocument request = new XmlDocument();
-
-            request.LoadXml(from);
-
-            XmlNode field = request.SelectSingleNode("data/"+what);
-
-            return field.InnerText;
-        }
-
-        
     }
 }

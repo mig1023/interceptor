@@ -24,6 +24,7 @@ namespace shtrih_interceptor
         {
             InitializeComponent();
 
+            Log.add("");
             Log.add("перехватчик запущен");
 
             int MaxThreadsCount = Environment.ProcessorCount * 4;

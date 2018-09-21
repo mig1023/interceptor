@@ -57,7 +57,9 @@
     </ApplicationDefinition>
     <Compile Include="CheckRequest.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="DocPack.cs" />
     <Compile Include="Server.cs" />
+    <Compile Include="Service.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

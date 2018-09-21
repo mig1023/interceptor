@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Xml.Serialization;
 
 namespace shtrih_interceptor
 {
@@ -33,5 +34,21 @@ namespace shtrih_interceptor
                 sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss") + " " + line);
             }
         } 
+
+        public static void addDocPack(DocPack docForLog)
+        {
+            XmlSerializer DocPackLog = new XmlSerializer(typeof(DocPack));
+
+            using (StreamWriter sw = new StreamWriter("shtrih-interceptor-doc.log", true))
+            {
+                sw.WriteLine("");
+                sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss"));
+                sw.WriteLine("");
+
+                DocPackLog.Serialize(sw, docForLog);
+
+                sw.WriteLine("");
+            }
+        }
     }
 }

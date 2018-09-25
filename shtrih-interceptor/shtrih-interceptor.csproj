@@ -58,7 +58,7 @@
     <Compile Include="Cashbox.cs" />
     <Compile Include="CheckRequest.cs" />
     <Compile Include="Client.cs" />
-    <Compile Include="Diagnosticcs.cs" />
+    <Compile Include="Diagnostic.cs" />
     <Compile Include="DocPack.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Service.cs" />

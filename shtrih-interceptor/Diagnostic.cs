@@ -10,7 +10,12 @@ namespace shtrih_interceptor
     {
         public static bool failCashbox()
         {
-            int testCashbox = Cashbox.testBeep();
+            Cashbox.makeBeep();
+
+            int testCashbox = Cashbox.getResultCode();
+
+            Log.add("проверка связи с кассой: " + Cashbox.getResultLine() +
+                " [" + testCashbox.ToString() + "]");
 
             if (testCashbox == -2)
                 return true;

@@ -16,19 +16,25 @@ namespace shtrih_interceptor
             Driver = new DrvFR();
         }
 
-        public static int testBeep()
+        public static void makeBeep()
         {
             Driver.Beep();
+        }
 
-            Log.add("проверка связи с кассой: " + Driver.ResultCodeDescription + 
-                " [" + Driver.ResultCode.ToString() + "]");
-
+        public static int getResultCode()
+        {
             return Driver.ResultCode;
+        }
+
+        public static string getResultLine()
+        {
+            return Driver.ResultCodeDescription;
         }
 
         public static void settings()
         {
             Driver.ShowProperties();
+
         }
     }
 }

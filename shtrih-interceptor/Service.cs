@@ -9,9 +9,9 @@ namespace shtrih_interceptor
     public class Service
     {
         public string Name;
-        public int Number;
-        public string Price;
-        public string Total;
-        public string VAT;
+        public int ServiceID;
+        public int Quantity;
+        public decimal Price;
+        public int VAT;
     }
 }

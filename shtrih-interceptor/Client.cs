@@ -62,6 +62,8 @@ namespace shtrih_interceptor
             {
                 DocPack docPack = new DocPack(request);
 
+                Cashbox.printDocPack(docPack);
+
                 return "OK";
             }
                 

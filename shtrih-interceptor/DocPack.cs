@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,15 +16,22 @@ namespace shtrih_interceptor
 
         public string AgrNumber;
         public string Cashier;
+        public int CashierPass;
 
         public int MoneyType;
-        public string Total;
-        public string Money;
-        public string Change;
+        public decimal Total;
+        public decimal Money;
 
         public DocPack()
         {
             // only for serialization
+        }
+
+        decimal manualParseDecimal(string line)
+        {
+            double decimalTemporary = double.Parse(line, CultureInfo.InvariantCulture); 
+
+            return (decimal)decimalTemporary;
         }
 
         public DocPack(string requestLine)
@@ -37,10 +45,10 @@ namespace shtrih_interceptor
                 Service newService = new Service();
 
                 newService.Name = node["Name"].InnerText;
-                newService.Number = int.Parse(node["Number"].InnerText);
-                newService.Price = node["Price"].InnerText;
-                newService.Total = node["Total"].InnerText;
-                newService.VAT = node["VAT"].InnerText;
+                newService.ServiceID = int.Parse(node["ServiceID"].InnerText);
+                newService.Quantity = int.Parse(node["Quantity"].InnerText);
+                newService.Price = manualParseDecimal(node["Price"].InnerText);
+                newService.VAT = int.Parse(node["VAT"].InnerText);
 
                 this.Services.Add(newService);
             }
@@ -49,10 +57,10 @@ namespace shtrih_interceptor
 
             this.AgrNumber = info["AgrNumber"].InnerText;
             this.Cashier = info["Cashier"].InnerText;
+            this.CashierPass = int.Parse(info["CashierPass"].InnerText);
             this.MoneyType = int.Parse(info["MoneyType"].InnerText);
-            this.Total = info["Total"].InnerText;
-            this.Money = info["Money"].InnerText;
-            this.Change = info["Change"].InnerText;
+            this.Total = manualParseDecimal(info["Total"].InnerText);
+            this.Money = manualParseDecimal(info["Money"].InnerText);
 
             Log.addDocPack(this);
         }

@@ -4,58 +4,93 @@ use strict;
 use lib '/usr/local/www/data/htdocs/vcs/lib';
 
 use VCS::Config;
-use VCS::Vars;
-use VCS::SQL;
-use VCS::System;
-use VCS::Memcache;
 use LWP;
-use HTTP::Cookies;
-use HTTP::Headers;
-use HTTP::Request::Common;
 use Digest::MD5  qw(md5_hex);
-use Digest::SHA1  qw(sha1_hex);
 use Data::Dumper;
 use Encode qw(decode encode);
 
 	my $serv = '127.0.0.1';
 
+	
+	    # 1 - сервисный сбор (92101) киев
+            # 2 - срочн.сервисный (92111) киев
+            # 3 - ВИП комфорт
+            # 4 - ВИП обслуживание
+            # 5 - Доставка
+            # 6 - КС
+            # 7 - СМС
+            # 8 - ВИП Стандарт
+            # 9 - сервисный сбор (00101) мск
+            # 10 - срочн.сервисный (00111) мск
+            # 11 - страхование
+            # 12 - доставка
+            # 13 - анкета
+            # 14 - распечатка
+            # 15 - фотопечать
+            # 16 - ксерокс
+	
 	my $services = [
 	
 		{
-			Name	=> 'Сервисный сбор',
-			Number	=> 1,
-			Price	=> '2000.00',
-			Total	=> '2000.00',
-			VAT	=> '360.00',
+			Name		=> 'Сервисный сбор',
+			ServiceID	=> 9,
+			Quantity	=> 2,
+			Price		=> '20.00',
+			VAT		=> 1,
 		},
 		{
-			Name	=> 'Консульский сбор',
-			Number	=> 1,
-			Price	=> '1500.00',
-			Total	=> '1500.00',
-			VAT	=> '270.00',
+			Name		=> 'Консульский сбор',
+			ServiceID	=> 6,
+			Quantity	=> 1,
+			Price		=> '15.00',
+			VAT		=> 0,
+		},
+		{
+			Name		=> 'СМС',
+			ServiceID	=> 7,
+			Quantity	=> 3,
+			Price		=> '4.00',
+			VAT		=> 1,
+		},
+		{
+			Name		=> 'Страхование',
+			ServiceID	=> 11,
+			Quantity	=> 1,
+			Price		=> '10.00',
+			VAT		=> 0,
+		},
+		{
+			Name		=> 'Доставка',
+			ServiceID	=> 12,
+			Quantity	=> 1,
+			Price		=> '3.50',
+			VAT		=> 1,
+		},
+		{
+			Name		=> 'VIP',
+			ServiceID	=> 4,
+			Quantity	=> 1,
+			Price		=> '5.50',
+			VAT		=> 1,
 		},
 	];
 	
 	my $info = {
 		AgrNumber => '01.000209.091418',
 		Cashier => 'Иванов И.И.',
-		MoneyType => 1,
-		Total => '3500.00',
-		Money => '5000.00',
-		Change => '3000.00',
+		CashierPass => 26,
+		
+		MoneyType => 1, # 1 - наличка, 2 - карта
+		Total => '169.00',
+		Money => '200.00',
 	};
 
-	#for ( @$req ) {
+	my $request = xmlCreate( $services, $info );
 	
-		my $request = xmlCreate( $services, $info );
-		
-		# print "запрос: " . Dumper( $request )."\n\n";
-		
-		my $resp = sendRequest( $request );
-		
-		print "получен ответ: $resp\n\n";
-	#}
+	my $resp = sendRequest( $request );
+	
+	print "получен ответ: $resp\n\n";
+	
 
 sub xmlCreate
 {

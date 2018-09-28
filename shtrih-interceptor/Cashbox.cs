@@ -37,11 +37,7 @@ namespace shtrih_interceptor
                 Driver.Price = service.Price;
                 Driver.Department = service.ServiceID;
 
-                if (service.VAT == 1)
-                    Driver.Tax1 = 1;    // НДС 18%
-                else
-                    Driver.Tax1 = 2;    // без НДС
-
+                Driver.Tax1 = service.VAT;
                 Driver.Tax2 = 0;
                 Driver.Tax3 = 0;
                 Driver.Tax4 = 0;
@@ -49,17 +45,12 @@ namespace shtrih_interceptor
                 Driver.Sale();
             }
             
-
-
-
             Driver.Password = doc.CashierPass;
 
             if (doc.MoneyType == 1)
                 Driver.Summ1 = doc.Money;
             else if (doc.MoneyType == 2)
                 Driver.Summ2 = doc.Money;
-
-            //Driver.Tax1 = 1; // 1 - 18%, 0 - без НДС
 
             Driver.CloseCheck();
 
@@ -75,6 +66,11 @@ namespace shtrih_interceptor
         public static string getResultLine()
         {
             return Driver.ResultCodeDescription;
+        }
+
+        public static decimal getChange()
+        {
+            return Driver.Change;
         }
 
         public static void settings()

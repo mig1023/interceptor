@@ -56,7 +56,7 @@ namespace shtrih_interceptor
         public static string responsePrepare(string request)
         {
             if (!CheckRequest.checkXml(request))
-                return "ERROR: BROKEN DATA";
+                return "ERROR:BROKEN DATA";
 
             else
             {
@@ -64,7 +64,9 @@ namespace shtrih_interceptor
 
                 Cashbox.printDocPack(docPack);
 
-                return "OK";
+                decimal change = Cashbox.getChange();
+
+                return "OK:"+change.ToString();
             }
                 
         }

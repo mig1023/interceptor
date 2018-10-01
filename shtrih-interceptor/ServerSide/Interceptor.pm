@@ -34,6 +34,8 @@ sub send_docpack
 	my $docobj = VCS::Docs::docs->new('VCS::Docs::docs', $vars);
 	my $error = $docobj->getDocData(\$data, $docid, 'individuals');
 	
+	return ( "ERROR", "Договор юрлица не может быть оплачен" ) if $data->{ jurid };
+	
 	my $services = temporary_docservices( $self, $data, $ptype, $summ );
 
 	my $request = xml_create( $services->{ services }, $services->{ info } );
@@ -137,6 +139,60 @@ sub get_date
 	return "$year-$mon-$mday $hour:$min:$sec";
 }
 
+sub get_all_add_services
+# //////////////////////////////////////////////////
+{
+	my ( $self, $vars, $docid, $rate ) = @_;
+	
+	my $serv_price = $vars->db->selallkeys("
+		SELECT ServiceID, Price FROM ServicesPriceRates WHERE PriceRateID = ?", $rate );
+		
+	my %serv_price = map { $_->{ ServiceID } => $_->{ Price } } @$serv_price;
+		
+	my $services = $vars->db->selallkeys("
+		SELECT Services.Name, DocPackService.ServiceID, ServiceFields.ValueType, ServiceFieldValuesINT.Value
+		FROM DocPackService
+		JOIN Services ON DocPackService.ServiceID = Services.ID
+		JOIN ServiceFields ON DocPackService.ServiceID = ServiceFields.ServiceID
+		JOIN ServiceFieldValuesINT ON ServiceFieldValuesINT.DocPackServiceID = DocPackService.ID
+		WHERE PackID = ?
+		GROUP BY DocPackServiceID",
+		$docid
+	);
+	
+	my $serv_list = {};
+	
+	my $serv_index = 0;
+	
+	for ( @$services ) {
+	
+		$serv_index++;
+	
+		if ( $_->{ ValueType } == 1 ) {
+			
+			$serv_list->{ "service$serv_index" } = {
+				Name		=> $_->{ Name },
+				Quantity	=> 1,
+				Price		=> $_->{ Value },
+				VAT 		=> 1,
+
+			};
+		}
+		elsif ( $_->{ ValueType } == 2 ) {
+		
+			$serv_list->{ "service$serv_index" } = {
+				Name		=> $_->{ Name },
+				Quantity	=> $_->{ Value },
+				Price		=> $serv_price{ $_->{ ServiceID } },
+				VAT 		=> 1,
+			};
+		}
+	}
+	
+	return $serv_list;
+}
+
+
 sub temporary_docservices
 # //////////////////////////////////////////////////
 {
@@ -164,7 +220,8 @@ sub temporary_docservices
 		$mobile_kostyl = 1;
 	}
 	
-	my ( $cntres, $cntnres, $cntncon, $cntage, $smscnt, $shcnt, $shrows, $shind, $indexes, $dhlsum ) = ( 0, 0, 0, 0, 0, 0, {}, '', {}, 0 );
+	my ( $cntres, $cntnres, $cntncon, $cntage, $smscnt, $shcnt, $shrows, $shind, $indexes, $dhlsum, $inssum, $inscnt ) = 
+		( 0, 0, 0, 0, 0, 0, {}, '', {}, 0, 0, 0 );
 
 	if ( $data->{ shipping }==1 ) {
 		$dhlsum = $data->{'shipsum'};
@@ -179,214 +236,183 @@ sub temporary_docservices
 
 		$apcnt++;
 		
-		if ( $data->{ jurid } ) {
+		if ( $ak->{ Concil } ) {
 		
-			if ( $prevbank != $ak->{ InfoID } ) {
+			$cntncon++;
+		}
+		else {
+			if ( $ak->{ AgeCatA } ) {
 			
-				$prevbank = $ak->{ InfoID };
-				$cntncon += $ak->{ Num_NC } + $ak->{ Num_NN }; 
-				$cntnres += $ak->{ Num_NR } - $ak->{ Num_NN }; 
-				$cntres += $ak->{ VisaCnt } - $ak->{ Num_NR } - $ak->{ Num_NC } - $ak->{ Num_ACon };
-				$cntage += $ak->{ Num_ACon };
+				$cntage++;
 			}
-		} else {
-			if ($ak->{ Concil }) {
-				$cntncon++;
-			} else {
-				if ($ak->{ AgeCatA }) {
-					$cntage++;
-				} else {
-					if ($ak->{ iNRes }) {
-						$cntnres++;
-					} else {					
-						$cntres++;
-					}
+			else {
+				if ( $ak->{ iNRes } ) {
+				
+					$cntnres++;
+				}
+				else {					
+					$cntres++;
 				}
 			}
 		}
 
-		if ( ( $data->{'sms_status'} == 2) && ($ak->{'MobileNums'} ne '')) {
+		if ( ( $data->{ sms_status } == 2 ) && ( $ak->{ MobileNums } ne '' ) ) {
+		
 			$smscnt++;
 		}
-		if (($data->{'shipping'} == 2) && ($ak->{'ShipAddress'} ne '')) {
+		
+		if ( ( $data->{ shipping } == 2 ) && ( $ak->{ ShipAddress } ne '' ) ) {
+		
 			$shcnt++;
-			$dhlsum += $ak->{'RTShipSum'};
-
+			$dhlsum += $ak->{ RTShipSum };
 		}
 	}
 	
-	my $rate = $data->{'rate'};
-	my ($agesfree,$ages) = $vars->db->sel1('SELECT AgesFree,Ages FROM PriceRate WHERE ID=?',$rate);		
-	my $prices = $vars->admfunc->getPrices($vars,$rate,$data->{'vtype'},$data->{'ipdate'});
+	my ( $agesfree, $ages ) = $vars->db->sel1("
+		SELECT AgesFree, Ages FROM PriceRate WHERE ID = ?",
+		$data->{ rate }
+	);
+	
+	my $prices = $vars->admfunc->getPrices( $vars, $data->{ rate }, $data->{ vtype }, $data->{ ipdate } );
 
 	my $shsum = 0;
-	if ($data->{'newdhl'}) {
-		$shsum = sprintf("%.2f",$dhlsum);
-	} else {
-		$shsum = sprintf("%.2f",$prices->{'shipping'} * $shcnt);
+	
+	if ( $data->{ newdhl } ) {
+	
+		$shsum = sprintf( "%.2f", $dhlsum );
 	}
-	if ($data->{'sms_status'} == 1) {
+	else {
+		$shsum = sprintf( "%.2f", $prices->{ shipping } * $shcnt );
+	}
+	
+	if ( $data->{ sms_status } == 1 ) {
+	
 		$smscnt = 1;
 	}
 	
-	my $vprice = ($data->{'urgent'} ? $prices->{($data->{'jurid'} ? 'j' : '').'urgent'} : $prices->{($data->{'jurid'} ? 'j' : '').'visa'});
-		
-	    #    1 - сервисный сбор (92101) киев
-            #    2 - срочн.сервисный (92111) киев
-            # 3 - ВИП комфорт
-            # ок 4 - ВИП обслуживание
-            # 5 - Доставка
-            # 6 - КС	----------------> без НДС
-            # 7 - СМС
-            # 8 - ВИП Стандарт
-            # ок 9 - сервисный сбор (00101) мск
-            # ок 10 - срочн.сервисный (00111) мск
-            # 11 - страхование --------------> без НДС
-            # ок 12 - доставка
-            # ок 13 - анкета
-            # ок 14 - распечатка
-            # ок 15 - фотопечать
-            # ок 16 - ксерокс
-	    
-	    # страховка!!
-	    # services!!
+	if ( $data->{ inssum } ne '0.00' ) {
 	
+		$inssum = $data->{ inssum };
+		$inscnt = 1;
+	}
+	
+	my $vprice = (
+		$data->{ urgent } ?
+		$prices->{ ( $data->{ jurid } ? 'j' : '' ) . 'urgent' } :
+		$prices->{ ( $data->{ jurid } ? 'j' : '') . 'visa' }
+	);
+	    
 	my $servsums = {
+		insurance => {
+			Name		=> 'Страхование',
+			Quantity	=> $inscnt,
+			Price		=> $inssum,
+			VAT		=> 0,
+		},
 		shipping => {
-			Name		=> 'доставка',
-			ServiceID	=> 5,
+			Name		=> 'Услуги по доставке на дом',
 			Quantity	=> $shcnt,
-			Price		=> sprintf( "%.2f", $prices->{ shipping } ),
+			Price		=> sprintf( "%.2f", $shsum ),
 			VAT		=> 1,
 		},
 		sms => {
-			Name		=> 'смс',
-			ServiceID	=> 7,
+			Name		=> 'Услуги по СМС оповещению',
 			Quantity	=> $smscnt,
 			Price		=> sprintf( "%.2f", $prices->{ sms } ),
 			VAT		=> 1,
 		},
 		tran => {
-			Name		=> 'перевод',
-			ServiceID	=> 17,
+			Name		=> 'Услуги по переводу документов',
 			Quantity	=> $data->{ transum },
 			Price		=> sprintf( "%.2f", $prices->{ tran } ),
 			VAT		=> 1,
 		},
 		xerox => {
-			Name		=> 'ксерокс',
-			ServiceID	=> 16,
+			Name		=> 'Услуги по копированию',
 			Quantity	=> $data->{ xerox },
 			Price		=> sprintf( "%.2f", $prices->{ xerox } ),
 			VAT		=> 1,
 		},
 		visa => {
-			Name		=> ( $data->{'urgent'} ? 'срочн.' : '' ).'сервисный',
-			ServiceID	=> ( $data->{'urgent'} ? 10 : 9 ),
+			Name		=> ( $data->{'urgent'} ? 'Cрочн.cервисный' : 'Cервисный' ).' сбор',
 			Quantity	=> $apcnt,
 			Price		=> sprintf( "%.2f", $vprice ),
 			VAT		=> 1,
 		},
 		ank => {
-			Name		=> 'анкета',
-			ServiceID	=> 13,
+			Name		=> '00502 Услуги по заполнению анкеты',
 			Quantity	=> $data->{ anketasrv },
 			Price		=> sprintf( "%.2f", $prices->{ anketasrv } ),
 			VAT		=> 1,
 		},
 		print => {
-			Name		=> 'печать',
-			ServiceID	=> 14,
+			Name		=> '00503 Услуги по распечатке',
 			Quantity	=> $data->{ printsrv },
 			Price		=> sprintf( "%.2f", $prices->{ printsrv } ),
 			VAT		=> 1,
 		},
 		photo => {
-			Name		=> 'фото',
-			ServiceID	=> 15,
+			Name		=> '00504 Услуги по фотографированию',
 			Quantity	=> $data->{ photosrv },
 			Price		=> sprintf( "%.2f", $prices->{ photosrv } ),
 			VAT		=> 1,
 		},
 		vip => {
-			Name		=> 'vip',
-			ServiceID	=> 4,
+			Name		=> 'ВИП обслуживание',
 			Quantity	=> $data->{ vipsrv },
 			Price		=> sprintf( "%.2f", $prices->{ vipsrv } ),
 			VAT		=> 1,
-		}
+		},
+		cons_resident => {
+			Name		=> 'Консульский сбор (резидент)',
+			Quantity	=> ( $data->{'vcat'} eq 'C' ? $cntres : 0 ),
+			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) } ),
+			VAT		=> 0,
+		},
+		cons_noresident => {
+			Name		=> 'Консульский сбор (нерезидент)',
+			Quantity	=> $cntnres,
+			Price		=> sprintf( '%.2f', $prices->{ 'conciln' . ( $data->{ urgent } ? 'u' : '' ) } ),
+			VAT		=> 0,
+		},
+		cons_age => {
+			Name		=> 'Консульский сбор (возраст)',
+			Quantity	=> $cntage,
+			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) . '_' . $ages } ),
+			VAT		=> 0,
+		},
+		cons_d => {
+			Name		=> 'Консульский сбор (тип D)',
+			Quantity	=> ( $data->{'vcat'} eq 'D' ? $cntres : 0 ),
+			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) } ),
+			VAT		=> 0,
+		},
 	};
 
-	if ( $data->{'vcat'} eq 'D' ) {
+	my $serv_hash = get_all_add_services( $self, $vars, $data->{ docid }, $data->{'rate'} );
 	
-		$servsums->{ cons }->{ pconsd } = sprintf('%.2f',$prices->{'concilr' . ($data->{'urgent'}?'u':'') });
-		$servsums->{ cons }->{ cconsd } = $cntres;
-		$servsums->{ cons }->{ sconsd } = sprintf('%.2f', $cntres * $servsums->{'pconsd'});
-		
-		$servsums->{ cons }->{ cconsc } = 0;
-		$servsums->{ cons }->{ cconsr } = 0;
-		
-		$servsums->{ cons }->{ pconsc } = '0.00';
-		$servsums->{ cons }->{ pconsr } = '0.00';
-		$servsums->{ cons }->{ sconsc } = '0.00';
-		$servsums->{ cons }->{ sconsr } = '0.00';
-	}
-	elsif ( $data->{ vcat } eq 'C' ) {
+	for ( keys %$serv_hash ) {
 	
-		$servsums->{ cons }->{ pconsc } = sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) } );
-		$servsums->{ cons }->{ pconsr } = sprintf( '%.2f', $prices->{ 'conciln' . ( $data->{ urgent } ? 'u' : '' ) } );
-		$servsums->{ cons }->{ pconsa } = sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) . '_' . $ages } );
-		
-		$servsums->{ cons }->{ cconsc } = $cntres;
-		$servsums->{ cons }->{ cconsr } = $cntnres;
-		$servsums->{ cons }->{ cconsa } = $cntage;
-		
-		$servsums->{ cons }->{ sconsc } = sprintf( '%.2f', $cntres * $servsums->{ pconsc } );
-		$servsums->{ cons }->{ sconsr } = sprintf( '%.2f', $cntnres * $servsums->{ pconsr } );
-		$servsums->{ cons }->{ sconsa } = sprintf( '%.2f', $cntage * $servsums->{ pconsa } );
-		
-		$servsums->{ cons }->{ cconsd } = 0;
-		$servsums->{ cons }->{ pconsd } = '0.00';
-		$servsums->{ cons }->{ sconsd } = '0.00';
-	}
-	# $servsums->{ consabs } = $cntncon;
-	
-	my $vip_type = {
-		2 => 'vipprime',
-		3 => 'vipprimespb',
-		4 => 'vipcomfort',
-	};
-	
-	my $serv_adds =  $vars->db->selallkeys("
-		SELECT ServiceID, Price FROM ServicesPriceRates WHERE PriceRateID = ?", $rate);
-
-	for ( @$serv_adds ) {
-		next unless exists $vip_type->{ $_->{ ServiceID } };
-		
-		my $vip_tag = $vip_type->{ $_->{ ServiceID } };
-		$data->{ $vip_tag.'prc' } = sprintf("%.2f", $_->{ Price } );
-		$data->{ $vip_tag.'vat' } = sprintf("%.2f", $data->{ $vip_tag.'prc' } * $gconfig->{'VAT'} / (100 + $gconfig->{'VAT'}) );
+		$servsums->{ $_ } = $serv_hash->{ $_ };
 	}
 	
 	if ( $mobile_kostyl ) {
+	
 		$servsums->{'visaprc'} = $kostyle_hash->{price};
 		$servsums->{'visasum'} = $kostyle_hash->{price_sum};
 	}
-	
+
 	for my $serv ( keys %$servsums ) {
 	
 		delete $servsums->{ $serv } unless $servsums->{ $serv }->{ Quantity };
 	}
 	
-warn "------------------------";
-warn Dumper($servsums);
-
 	my $info = {
 		AgrNumber => $data->{ docnum },
 		Cashier => 'Иванов И.И.',
 		CashierPass => 26,
 		
-		MoneyType => $ptype, # 1 - наличка, 2 - карта
+		MoneyType => $ptype,
 		Total => '169.00',
 		Money => $summ,
 	};

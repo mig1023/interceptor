@@ -26,7 +26,7 @@ namespace shtrih_interceptor
             Driver.CheckConnection();
         }
 
-        public static void printDocPack(DocPack doc)
+        public static int printDocPack(DocPack doc)
         {
             
             foreach (Service service in doc.Services)
@@ -35,7 +35,8 @@ namespace shtrih_interceptor
 
                 Driver.Quantity = service.Quantity;
                 Driver.Price = service.Price;
-                Driver.Department = service.ServiceID;
+                Driver.StringForPrinting = service.Name;
+
 
                 Driver.Tax1 = service.VAT;
                 Driver.Tax2 = 0;
@@ -46,6 +47,7 @@ namespace shtrih_interceptor
             }
             
             Driver.Password = doc.CashierPass;
+            Driver.StringForPrinting = "";
 
             if (doc.MoneyType == 1)
                 Driver.Summ1 = doc.Money;
@@ -56,6 +58,8 @@ namespace shtrih_interceptor
 
             Log.add("распечатка чека: " + getResultLine() +
                 " [" + getResultCode() + "]");
+
+            return getResultCode();
         }
 
         public static int getResultCode()

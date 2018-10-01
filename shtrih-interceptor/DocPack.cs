@@ -45,7 +45,6 @@ namespace shtrih_interceptor
                 Service newService = new Service();
 
                 newService.Name = node["Name"].InnerText;
-                newService.ServiceID = int.Parse(node["ServiceID"].InnerText);
                 newService.Quantity = int.Parse(node["Quantity"].InnerText);
                 newService.Price = manualParseDecimal(node["Price"].InnerText);
                 newService.VAT = int.Parse(node["VAT"].InnerText);

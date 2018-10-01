@@ -62,11 +62,12 @@ namespace shtrih_interceptor
             {
                 DocPack docPack = new DocPack(request);
 
-                Cashbox.printDocPack(docPack);
+                int errorCode = Cashbox.printDocPack(docPack);
 
-                decimal change = Cashbox.getChange();
-
-                return "OK:"+change.ToString();
+                if (errorCode == 0)
+                    return "OK:" + Cashbox.getChange().ToString();
+                else
+                    return "ERROR:" + Cashbox.getResultLine();
             }
                 
         }

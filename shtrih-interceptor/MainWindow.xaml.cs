@@ -34,17 +34,17 @@ namespace shtrih_interceptor
 
         private readonly BackgroundWorker asynchServ = new BackgroundWorker();
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void startServButton_Click(object sender, RoutedEventArgs e)
         {
             if (Diagnosticcs.failCashbox())
-                switchon.Background = Brushes.Red;
+                switchOn.Background = Brushes.Red;
             else
             {
                 asynchServ.DoWork += worker_DoWork;
                 asynchServ.RunWorkerAsync();
 
-                switchon.Background = Brushes.LimeGreen;
-                button.IsEnabled = false;
+                switchOn.Background = Brushes.LimeGreen;
+                startServButton.IsEnabled = false;
             }
             
         }

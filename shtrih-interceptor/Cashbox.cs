@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DrvFRLib;
+using System.Timers;
 
 namespace shtrih_interceptor
 {
@@ -11,9 +12,13 @@ namespace shtrih_interceptor
     {
         static DrvFR Driver;
 
+        public static System.Timers.Timer repeatPrintingTimer = new System.Timers.Timer(5000);
+        static int currentDrvPassword = 0;
+
         static Cashbox()
         {
             Driver = new DrvFR();
+            repeatPrintingTimer.Elapsed += new ElapsedEventHandler(repeatPrint);
         }
 
         public static void makeBeep()
@@ -28,10 +33,11 @@ namespace shtrih_interceptor
 
         public static int printDocPack(DocPack doc)
         {
-            
+            currentDrvPassword = doc.CashierPass;
+
             foreach (Service service in doc.Services)
             {
-                Driver.Password = doc.CashierPass;
+                Driver.Password = currentDrvPassword;
 
                 Driver.Quantity = service.Quantity;
                 Driver.Price = service.Price;
@@ -45,8 +51,8 @@ namespace shtrih_interceptor
 
                 Driver.Sale();
             }
-            
-            Driver.Password = doc.CashierPass;
+
+            Driver.Password = currentDrvPassword;
             Driver.StringForPrinting = "";
 
             if (doc.MoneyType == 1)
@@ -59,25 +65,26 @@ namespace shtrih_interceptor
             Log.add("распечатка чека: " + getResultLine() +
                 " [" + getResultCode() + "]");
 
-            //for (int a = 0; a < 10; a++)
-            //{
-            //    System.Threading.Thread.Sleep(2000);
-
-            //    Driver.CheckConnection();
-            //    Log.add("проверка связи (" + a.ToString() + "): " + getResultLine() +
-            //   " [" + getResultCode() + "]");
-
-                Driver.Password = doc.CashierPass;
-                Driver.RepeatDocument();
-
-                Log.add("распечатка повтора: " + getResultLine() +
-               " [" + getResultCode() + "]");
-            //}
-
-
-           
+            repeatPrintingTimer.Enabled = true;
+            repeatPrintingTimer.Start();
 
             return getResultCode();
+        }
+
+        public static void repeatPrint(object obj, ElapsedEventArgs e)
+        {
+            Driver.Password = currentDrvPassword;
+            Driver.RepeatDocument();
+
+            int printSuccess = getResultCode();
+
+            Log.add("распечатка повтора: " + getResultLine() +
+                " [" + printSuccess.ToString() + "]");
+
+            if (printSuccess == 0) {
+                repeatPrintingTimer.Enabled = false;
+                repeatPrintingTimer.Stop();
+            }
         }
 
         public static int getResultCode()

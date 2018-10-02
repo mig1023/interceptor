@@ -59,6 +59,24 @@ namespace shtrih_interceptor
             Log.add("распечатка чека: " + getResultLine() +
                 " [" + getResultCode() + "]");
 
+            //for (int a = 0; a < 10; a++)
+            //{
+            //    System.Threading.Thread.Sleep(2000);
+
+            //    Driver.CheckConnection();
+            //    Log.add("проверка связи (" + a.ToString() + "): " + getResultLine() +
+            //   " [" + getResultCode() + "]");
+
+                Driver.Password = doc.CashierPass;
+                Driver.RepeatDocument();
+
+                Log.add("распечатка повтора: " + getResultLine() +
+               " [" + getResultCode() + "]");
+            //}
+
+
+           
+
             return getResultCode();
         }
 

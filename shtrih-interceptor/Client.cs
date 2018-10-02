@@ -12,13 +12,21 @@ namespace shtrih_interceptor
 {
     class Client
     {
-        
+        private byte[] EncodeToUTF8(string line)
+        {
+            Encoding utf8 = Encoding.GetEncoding("UTF-8");
+            Encoding win1251 = Encoding.GetEncoding("Windows-1251");
+
+            byte[] win1251Bytes = win1251.GetBytes(line);
+
+            return Encoding.Convert(win1251, utf8, win1251Bytes);
+        }
 
         private void SendResponse(TcpClient Client, string line)
         {
             Log.add("отправлен ответ: "+line);
 
-            byte[] Buffer = Encoding.ASCII.GetBytes(line);
+            byte[] Buffer = EncodeToUTF8(line);
 
             Client.GetStream().Write(Buffer, 0, Buffer.Length);
 
@@ -56,10 +64,15 @@ namespace shtrih_interceptor
         public static string responsePrepare(string request)
         {
             if (!CheckRequest.checkXml(request))
-                return "ERROR:BROKEN DATA";
+            {
+                Log.add("md5 ошибочен, возвращаем BROKEN DATA");
 
+                return "ERR1:BROKEN DATA";
+            }
             else
             {
+                Log.add("md5 запроса корректен");
+
                 DocPack docPack = new DocPack(request);
 
                 int errorCode = Cashbox.printDocPack(docPack);
@@ -67,7 +80,7 @@ namespace shtrih_interceptor
                 if (errorCode == 0)
                     return "OK:" + Cashbox.getChange().ToString();
                 else
-                    return "ERROR:" + Cashbox.getResultLine();
+                    return "ERR2:" + Cashbox.getResultLine();
             }
                 
         }

@@ -22,8 +22,6 @@ namespace shtrih_interceptor
             XmlNode md5check = request.SelectSingleNode("toCashbox/Control/CRC");
             string md5 = md5check.InnerText;
 
-            Log.add("md5 отправки: " + md5);
-
             var root = request.DocumentElement;
 
             MD5_LINE_TMP = "";
@@ -37,8 +35,6 @@ namespace shtrih_interceptor
                 byteLine += b.ToString() + " ";
 
             string md5line = createMD5(byteLine).ToLower();
-
-            Log.add("md5 полученного: " + md5line);
 
             return md5line == md5;
         }

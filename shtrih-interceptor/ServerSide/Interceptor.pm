@@ -118,7 +118,7 @@ sub send_request
 
 	my $response = $ua->request($request);
 
-	return "ERROR:нет связи с перехватчиком" if $response->{ _rc } != 200;
+	return "ERR1:нет связи" if $response->{ _rc } != 200;
 	
 	return $response->{ _content };
 }
@@ -301,7 +301,7 @@ sub temporary_docservices
 		$prices->{ ( $data->{ jurid } ? 'j' : '' ) . 'urgent' } :
 		$prices->{ ( $data->{ jurid } ? 'j' : '') . 'visa' }
 	);
-	    
+		
 	my $servsums = {
 		insurance => {
 			Name		=> 'Страхование',
@@ -404,7 +404,8 @@ sub temporary_docservices
 
 	for my $serv ( keys %$servsums ) {
 	
-		delete $servsums->{ $serv } unless $servsums->{ $serv }->{ Quantity };
+		delete $servsums->{ $serv } unless
+			( $servsums->{ $serv }->{ Quantity } and $servsums->{ $serv }->{ Price } ne '0.00' );
 	}
 	
 	my $info = {
@@ -412,7 +413,7 @@ sub temporary_docservices
 		Cashier => 'Иванов И.И.',
 		CashierPass => 26,
 		
-		MoneyType => $ptype,
+		MoneyType => $ptype, # 1 - наличка, 2 - карта
 		Total => '169.00',
 		Money => $summ,
 	};

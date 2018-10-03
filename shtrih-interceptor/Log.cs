@@ -12,6 +12,11 @@ namespace shtrih_interceptor
 {
     class Log
     {
+        public static void addWithCode(string line, string logType = "main")
+        {
+            add(line + ": " + Cashbox.getResultLine() + " [" + Cashbox.getResultCode() + "]", logType);
+        }
+
         public static void add(string line, string logType = "main")
         {
             string logFileName;

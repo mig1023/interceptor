@@ -31,7 +31,7 @@ namespace shtrih_interceptor
             Driver.CheckConnection();
         }
 
-        public static int printDocPack(DocPack doc)
+        public static string printDocPack(DocPack doc)
         {
             currentDrvPassword = doc.CashierPass;
 
@@ -42,7 +42,6 @@ namespace shtrih_interceptor
                 Driver.Quantity = service.Quantity;
                 Driver.Price = service.Price;
                 Driver.StringForPrinting = service.Name;
-
 
                 Driver.Tax1 = service.VAT;
                 Driver.Tax2 = 0;
@@ -56,19 +55,41 @@ namespace shtrih_interceptor
             Driver.StringForPrinting = "";
 
             if (doc.MoneyType == 1)
+            {
                 Driver.Summ1 = doc.Money;
+                Driver.Summ2 = 0;
+            }
             else if (doc.MoneyType == 2)
+            {
                 Driver.Summ2 = doc.Money;
+                Driver.Summ1 = 0;
+            }
+                
 
             Driver.CloseCheck();
 
-            Log.add("распечатка чека: " + getResultLine() +
-                " [" + getResultCode() + "]");
+            int checkClosingResult = Driver.ResultCode;
+            string checkClosingErrorText = Driver.ResultCodeDescription;
 
-            repeatPrintingTimer.Enabled = true;
-            repeatPrintingTimer.Start();
+            Log.addWithCode("распечатка чека");
 
-            return getResultCode();
+            if (checkClosingResult != 0)
+            {
+                Driver.Password = currentDrvPassword;
+                Driver.CancelCheck();
+
+                Log.addWithCode("отмена чека");
+            }
+            else
+            {
+                repeatPrintingTimer.Enabled = true;
+                repeatPrintingTimer.Start();
+            }
+
+            if (checkClosingResult == 0)
+                return "OK:" + Driver.Change;
+            else
+                return "ERR2:" + checkClosingErrorText;
         }
 
         public static void repeatPrint(object obj, ElapsedEventArgs e)
@@ -78,8 +99,7 @@ namespace shtrih_interceptor
 
             int printSuccess = getResultCode();
 
-            Log.add("распечатка повтора: " + getResultLine() +
-                " [" + printSuccess.ToString() + "]");
+            Log.addWithCode("распечатка повтора");
 
             if (printSuccess == 0) {
                 repeatPrintingTimer.Enabled = false;

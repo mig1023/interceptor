@@ -24,7 +24,7 @@ namespace shtrih_interceptor
 
         private void SendResponse(TcpClient Client, string line)
         {
-            Log.add("отправлен ответ: "+line);
+            Log.add("отправлен ответ: " + line);
 
             byte[] Buffer = EncodeToUTF8(line);
 
@@ -75,12 +75,9 @@ namespace shtrih_interceptor
 
                 DocPack docPack = new DocPack(request);
 
-                int errorCode = Cashbox.printDocPack(docPack);
+                return Cashbox.printDocPack(docPack);
 
-                if (errorCode == 0)
-                    return "OK:" + Cashbox.getChange().ToString();
-                else
-                    return "ERR2:" + Cashbox.getResultLine();
+               
             }
                 
         }

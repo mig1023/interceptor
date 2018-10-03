@@ -14,13 +14,9 @@ namespace shtrih_interceptor
 
             int testCashbox = Cashbox.getResultCode();
 
-            Log.add("проверка связи с кассой: " + Cashbox.getResultLine() +
-                " [" + testCashbox.ToString() + "]");
+            Log.addWithCode("проверка связи с кассой");
 
-            if (testCashbox != 0)
-                return true;
-            else
-                return false;
+            return ( Cashbox.getResultCode() != 0 ? true : false );
         }
     }
 }

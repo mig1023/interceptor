@@ -28,7 +28,7 @@ namespace shtrih_interceptor
         {
             string RemoteEndPoint = (state as TcpClient).Client.RemoteEndPoint.ToString();
 
-            Log.add("новое соединение c "+RemoteEndPoint);
+            Log.add("новое соединение c " + RemoteEndPoint);
 
             new Client((TcpClient)state);
         }

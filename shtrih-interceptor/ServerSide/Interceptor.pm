@@ -20,9 +20,6 @@ sub new
 	return $self;
 }
 
-	my $serv = '127.0.0.1';
-	
-
 sub send_docpack
 # //////////////////////////////////////////////////
 {
@@ -34,13 +31,26 @@ sub send_docpack
 	my $docobj = VCS::Docs::docs->new('VCS::Docs::docs', $vars);
 	my $error = $docobj->getDocData(\$data, $docid, 'individuals');
 	
-	return ( "ERROR", "Договор юрлица не может быть оплачен" ) if $data->{ jurid };
+	return ( "ERR3", "Договор юрлица не может быть оплачен" ) if $data->{ jurid };
 	
-	my $services = temporary_docservices( $self, $data, $ptype, $summ );
+	my $login = $vars->get_session->{'login'};
+	
+	my $pass = $vars->db->sel1("
+		SELECT CashPassword FROM Cashboxes_password WHERE Login = ?", $login
+	);
+	
+	return ( "ERR3", "Неверный кассовый пароль пользователя" ) unless $pass;
+	
+	my $services = temporary_docservices( $self, $data, $ptype, $summ, $login, $pass );
 
 	my $request = xml_create( $services->{ services }, $services->{ info } );
 	
-	my $resp = send_request( $request );
+	my $resp = send_request( $vars, $request );
+	
+	$vars->db->query("
+		UPDATE Cashboxes_password SET LastUse = now(), LastResponse = ? WHERE Login = ?", {},
+		$resp, $login
+	);
 	
 	return split( /:/, $resp );
 }
@@ -108,15 +118,20 @@ sub xml_create
 sub send_request
 # //////////////////////////////////////////////////
 {
-	my $line = shift;
+	my ( $vars, $line ) = @_;
+	
+	my $serv = $vars->db->sel1("
+		SELECT InterceptorIP FROM Cashboxes_interceptors WHERE ID = ?",
+		$vars->get_session->{ interceptor }
+	);
 	
 	my $ua = LWP::UserAgent->new;
 	
-	$ua->agent('Mozilla/4.0 (compatible; MSIE 6.0; X11; Linux i686; en) Opera 7.60');
+	$ua->agent( 'Mozilla/4.0 (compatible; MSIE 6.0; X11; Linux i686; en) Opera 7.60' );
 	
-	my $request = HTTP::Request->new(GET => $serv.'/?message='.$line.';');
+	my $request = HTTP::Request->new( GET => 'http://'.$serv.'/?message='.$line.';' );
 
-	my $response = $ua->request($request);
+	my $response = $ua->request( $request );
 
 	return "ERR1:нет связи" if $response->{ _rc } != 200;
 	
@@ -196,7 +211,7 @@ sub get_all_add_services
 sub temporary_docservices
 # //////////////////////////////////////////////////
 {
-	my ( $self, $data, $ptype, $summ ) = @_;
+	my ( $self, $data, $ptype, $summ, $login, $pass ) = @_;
 
 	my $vars = $self->{'VCS::Vars'};
 	my $gconfig = $vars->getConfig('general');
@@ -402,19 +417,24 @@ sub temporary_docservices
 		$servsums->{'visasum'} = $kostyle_hash->{price_sum};
 	}
 
+	my $total = 0;
 	for my $serv ( keys %$servsums ) {
 	
-		delete $servsums->{ $serv } unless
-			( $servsums->{ $serv }->{ Quantity } and $servsums->{ $serv }->{ Price } ne '0.00' );
+		if ( !$servsums->{ $serv }->{ Quantity } or $servsums->{ $serv }->{ Price } eq '0.00' ) {
+			
+			delete $servsums->{ $serv };
+		}
+		else{
+			$total += $servsums->{ $serv }->{ Price } * $servsums->{ $serv }->{ Quantity };
+		}
 	}
 	
 	my $info = {
 		AgrNumber => $data->{ docnum },
-		Cashier => 'Иванов И.И.',
-		CashierPass => 26,
-		
-		MoneyType => $ptype, # 1 - наличка, 2 - карта
-		Total => '169.00',
+		Cashier => $login,
+		CashierPass => $pass,
+		MoneyType => $ptype,
+		Total => $total,
 		Money => $summ,
 	};
 	

@@ -12,12 +12,12 @@ namespace shtrih_interceptor
 {
     class Log
     {
-        public static void addWithCode(string line, string logType = "main")
+        public static void addWithCode(string line, string logType = "main", bool freeLine = false)
         {
-            add(line + ": " + Cashbox.getResultLine() + " [" + Cashbox.getResultCode() + "]", logType);
+            add(line + ": " + Cashbox.getResultLine() + " [" + Cashbox.getResultCode() + "]", logType, freeLine);
         }
 
-        public static void add(string line, string logType = "main")
+        public static void add(string line, string logType = "main", bool freeLine = false)
         {
             string logFileName;
 
@@ -36,6 +36,9 @@ namespace shtrih_interceptor
 
             using (StreamWriter sw = new StreamWriter(logFileName, true))
             {
+                if (freeLine)
+                    sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss"));
+
                 sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss") + " " + line);
             }
         } 

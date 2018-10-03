@@ -48,7 +48,7 @@ namespace shtrih_interceptor
 
             Request = Uri.UnescapeDataString(Request);
 
-            Log.add(Request, "http");
+            Log.add(Request, logType: "http");
 
             Match ReqMatch = Regex.Match(Request, @"message=([^;]+?);");
 

@@ -79,6 +79,8 @@ namespace shtrih_interceptor
                 Driver.CancelCheck();
 
                 Log.addWithCode("отмена чека");
+
+                Server.ShowActivity(false);
             }
             else
             {
@@ -104,6 +106,8 @@ namespace shtrih_interceptor
             if (printSuccess == 0) {
                 repeatPrintingTimer.Enabled = false;
                 repeatPrintingTimer.Stop();
+
+                Server.ShowActivity(false);
             }
         }
 

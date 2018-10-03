@@ -24,15 +24,14 @@ namespace shtrih_interceptor
         {
             InitializeComponent();
 
-            Log.add("");
-            Log.add("перехватчик запущен");
+            Log.add("перехватчик запущен", freeLine: true);
 
             int MaxThreadsCount = Environment.ProcessorCount * 4;
             ThreadPool.SetMaxThreads(MaxThreadsCount, MaxThreadsCount);
             ThreadPool.SetMinThreads(2, 2);
         }
 
-        private readonly BackgroundWorker asynchServ = new BackgroundWorker();
+        
 
         private void startServButton_Click(object sender, RoutedEventArgs e)
         {
@@ -40,20 +39,11 @@ namespace shtrih_interceptor
                 switchOn.Background = Brushes.Red;
             else
             {
-                asynchServ.DoWork += worker_DoWork;
-                asynchServ.RunWorkerAsync();
-
+                Server.StartServer();
                 switchOn.Background = Brushes.LimeGreen;
                 startServButton.IsEnabled = false;
             }
             
-        }
-
-        private void worker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            new Server(80);
-
-            Log.add("сервер запущен");
         }
 
         private void settings_Click(object sender, RoutedEventArgs e)

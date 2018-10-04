@@ -41,7 +41,7 @@ sub send_docpack
 	
 	return ( "ERR3", "Неверный кассовый пароль пользователя" ) unless $pass;
 	
-	my $services = temporary_docservices( $self, $data, $ptype, $summ, $login, $pass );
+	my $services = doc_services( $self, $data, $ptype, $summ, $login, $pass );
 
 	my $request = xml_create( $services->{ services }, $services->{ info } );
 	
@@ -208,33 +208,13 @@ sub get_all_add_services
 }
 
 
-sub temporary_docservices
+sub doc_services
 # //////////////////////////////////////////////////
 {
 	my ( $self, $data, $ptype, $summ, $login, $pass ) = @_;
 
 	my $vars = $self->{'VCS::Vars'};
-	my $gconfig = $vars->getConfig('general');
 
-	my $mobile_kostyl = 0;
-	my $kostyle_hash = {};
-
-	my ($k_agr, $k_code, $k_name, $k_pers, $k_price, $k_prsum, $k_agrsum, $k_agrvat) = $vars->db->sel1("
-		SELECT AgreementNo, Code, Name, PersNum, Price, PriceSum, AgrSum, AgrVAT
-		FROM MobilJurDoc WHERE AgreementNo = ?", $data->{docnum} );
-	
-	if ( $k_agr ) { 
-		$kostyle_hash->{code} = $k_code;
-		$kostyle_hash->{num} = $k_pers;
-		$kostyle_hash->{price} = $k_price;
-		$kostyle_hash->{price_sum} = $k_prsum;
-		$kostyle_hash->{sum} = $k_agrsum;
-		$kostyle_hash->{nds} = $k_agrvat;
-		$kostyle_hash->{name} = $k_name;
-		
-		$mobile_kostyl = 1;
-	}
-	
 	my ( $cntres, $cntnres, $cntncon, $cntage, $smscnt, $shcnt, $shrows, $shind, $indexes, $dhlsum, $inssum, $inscnt ) = 
 		( 0, 0, 0, 0, 0, 0, {}, '', {}, 0, 0, 0 );
 
@@ -305,12 +285,6 @@ sub temporary_docservices
 		$smscnt = 1;
 	}
 	
-	if ( $data->{ inssum } ne '0.00' ) {
-	
-		$inssum = $data->{ inssum };
-		$inscnt = 1;
-	}
-	
 	my $vprice = (
 		$data->{ urgent } ?
 		$prices->{ ( $data->{ jurid } ? 'j' : '' ) . 'urgent' } :
@@ -318,12 +292,6 @@ sub temporary_docservices
 	);
 		
 	my $servsums = {
-		insurance => {
-			Name		=> 'Страхование',
-			Quantity	=> $inscnt,
-			Price		=> $inssum,
-			VAT		=> 0,
-		},
 		shipping => {
 			Name		=> 'Услуги по доставке на дом',
 			Quantity	=> $shcnt,
@@ -409,12 +377,6 @@ sub temporary_docservices
 	for ( keys %$serv_hash ) {
 	
 		$servsums->{ $_ } = $serv_hash->{ $_ };
-	}
-	
-	if ( $mobile_kostyl ) {
-	
-		$servsums->{'visaprc'} = $kostyle_hash->{price};
-		$servsums->{'visasum'} = $kostyle_hash->{price_sum};
 	}
 
 	my $total = 0;

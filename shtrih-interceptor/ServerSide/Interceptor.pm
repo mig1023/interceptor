@@ -20,6 +20,21 @@ sub new
 	return $self;
 }
 
+sub send_connection_signal
+# //////////////////////////////////////////////////
+{
+	my ( $self, $interceptor ) = @_;
+
+	my $vars = $self->{ 'VCS::Vars' };
+	
+	my $request = '<?xml version="1.0" encoding="UTF-8"?>' . 
+		'<toCashbox>' . 
+			'<CheckConnection>MakeBeep</CheckConnection>' .
+		'</toCashbox>';
+	
+	return send_request( $vars, $request, $interceptor );
+}	
+
 sub send_docpack
 # //////////////////////////////////////////////////
 {
@@ -118,11 +133,13 @@ sub xml_create
 sub send_request
 # //////////////////////////////////////////////////
 {
-	my ( $vars, $line ) = @_;
+	my ( $vars, $line, $interceptor ) = @_;
+	
+	$interceptor = $vars->get_session->{ interceptor } unless $interceptor;
 	
 	my $serv = $vars->db->sel1("
 		SELECT InterceptorIP FROM Cashboxes_interceptors WHERE ID = ?",
-		$vars->get_session->{ interceptor }
+		$interceptor
 	);
 	
 	my $ua = LWP::UserAgent->new;

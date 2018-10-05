@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -11,7 +12,14 @@ namespace shtrih_interceptor
     {
         static string MD5_LINE_TMP;
 
-        public static bool checkXml(string from)
+        public static bool CheckConnection(string from)
+        {
+            Match ReqMatch = Regex.Match(from, @"<CheckConnection>MakeBeep</CheckConnection>");
+
+            return ReqMatch.Success;
+        }
+
+        public static bool CheckXml(string from)
         {
             if (from == "") return false;
 

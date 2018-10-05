@@ -63,11 +63,22 @@ namespace shtrih_interceptor
 
         public static string responsePrepare(string request)
         {
-            if (!CheckRequest.checkXml(request))
+            if (CheckRequest.CheckConnection(request))
             {
-                Log.add("md5 ошибочен, возвращаем BROKEN DATA");
+                Log.add("бип-тест подключения к кассе");
 
-                return "ERR1:BROKEN DATA";
+                string testResult = Diagnostics.makeBeepTest();
+
+                Server.ShowActivity(false);
+
+                return testResult;
+            }
+
+            if (!CheckRequest.CheckXml(request))
+            {
+                Log.add("md5 ошибочен, возвращаем ошибку данных");
+
+                return "ERR1:Ошибка переданных данных";
             }
             else
             {
@@ -76,8 +87,6 @@ namespace shtrih_interceptor
                 DocPack docPack = new DocPack(request);
 
                 return Cashbox.printDocPack(docPack);
-
-               
             }
                 
         }

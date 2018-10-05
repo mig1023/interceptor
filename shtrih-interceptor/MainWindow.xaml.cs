@@ -31,11 +31,9 @@ namespace shtrih_interceptor
             ThreadPool.SetMinThreads(2, 2);
         }
 
-        
-
         private void startServButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Diagnosticcs.failCashbox())
+            if (Diagnostics.failCashbox())
                 switchOn.Background = Brushes.Red;
             else
             {
@@ -43,7 +41,6 @@ namespace shtrih_interceptor
                 switchOn.Background = Brushes.LimeGreen;
                 startServButton.IsEnabled = false;
             }
-            
         }
 
         private void settings_Click(object sender, RoutedEventArgs e)

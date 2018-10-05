@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
+using System.Windows.Media.Animation;
 
 namespace shtrih_interceptor
 {
@@ -46,6 +47,68 @@ namespace shtrih_interceptor
         private void settings_Click(object sender, RoutedEventArgs e)
         {
             Cashbox.settings();
+        }
+
+        public void MoveCanvas(Canvas moveCanvas, Canvas prevCanvas)
+        {
+            ThicknessAnimation move = new ThicknessAnimation();
+            move.Duration = TimeSpan.FromSeconds(0.2);
+            move.From = moveCanvas.Margin;
+            move.To = new Thickness(
+                0,
+                moveCanvas.Margin.Top,
+                moveCanvas.Margin.Right,
+                moveCanvas.Margin.Bottom
+            );
+
+            moveCanvas.BeginAnimation(MarginProperty, move);
+
+            move.From = prevCanvas.Margin;
+            move.To = new Thickness(
+                prevCanvas.Margin.Left - moveCanvas.Margin.Left,
+                prevCanvas.Margin.Top,
+                prevCanvas.Margin.Right,
+                prevCanvas.Margin.Bottom
+            );
+
+            prevCanvas.BeginAnimation(MarginProperty, move);
+        }
+
+        private void check_Click(object sender, RoutedEventArgs e)
+        {
+            MoveCanvas(
+                moveCanvas: checkPlace,
+                prevCanvas: mainPlace
+            );
+        }
+
+        private void backToMainFromCheck_Click(object sender, RoutedEventArgs e)
+        {
+            MoveCanvas(
+                moveCanvas: mainPlace,
+                prevCanvas: checkPlace
+            );
+        }
+
+        private void status_Click(object sender, RoutedEventArgs e)
+        {
+            MoveCanvas(
+                moveCanvas: statusPlace,
+                prevCanvas: mainPlace
+            );
+        }
+
+        private void backToMainFromStatus_Click(object sender, RoutedEventArgs e)
+        {
+            MoveCanvas(
+                moveCanvas: mainPlace,
+                prevCanvas: statusPlace
+            );
+        }
+
+        private void closeSession_Click(object sender, RoutedEventArgs e)
+        {
+            Cashbox.closeSession();
         }
     }
 }

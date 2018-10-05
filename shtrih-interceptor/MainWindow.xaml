@@ -5,12 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:shtrih_interceptor"
         mc:Ignorable="d"
-        Title="shtrih-interceptor" Height="300" Width="505">
+        Title="shtrih-interceptor" Height="364" Width="505" ResizeMode="CanMinimize">
     <Grid>
-        <Button x:Name="startServButton" Content="start serv" HorizontalAlignment="Left" Height="60" Margin="80,105,0,0" VerticalAlignment="Top" Width="191" Click="startServButton_Click"/>
-        <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="60" Margin="276,105,0,0" VerticalAlignment="Top" Width="12" Background="Gray"/>
-        <Canvas x:Name="activity" HorizontalAlignment="Left" Height="60" Margin="293,105,0,0" VerticalAlignment="Top" Width="12" Background="Gray"/>
-        <Button x:Name="settingsButton" Content="settings" HorizontalAlignment="Left" Height="60" Margin="310,105,0,0" VerticalAlignment="Top" Width="92" Click="settings_Click"/>
-
+        <Canvas x:Name="mainPlace">
+            <Button x:Name="startServButton" Content="запуск сервиса" HorizontalAlignment="Left" Height="60" Margin="80,105,0,0" VerticalAlignment="Top" Width="191" Click="startServButton_Click"/>
+            <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="60" Margin="276,105,0,0" VerticalAlignment="Top" Width="12" Background="Gray"/>
+            <Canvas x:Name="activity" HorizontalAlignment="Left" Height="60" Margin="293,105,0,0" VerticalAlignment="Top" Width="12" Background="Gray"/>
+            <Button x:Name="settingsButton" Content="настройки" HorizontalAlignment="Left" Height="60" Margin="310,105,0,0" VerticalAlignment="Top" Width="92" Click="settings_Click"/>
+            <Button x:Name="check" Content="чек вручную" HorizontalAlignment="Left" Height="42" Margin="244,170,0,0" VerticalAlignment="Top" Width="158" Click="check_Click"/>
+            <Button x:Name="status" Content="статусы вручную" HorizontalAlignment="Left" Height="42" Margin="80,170,0,0" VerticalAlignment="Top" Width="158" Click="status_Click"/>
+        </Canvas>
+        <Canvas x:Name="checkPlace" Margin="497,0,-497,0">
+            <Button x:Name="backToMainFromCheck" Content="назад" Height="42" Canvas.Left="57" Canvas.Top="174" Width="155" Click="backToMainFromCheck_Click"/>
+        </Canvas>
+        <Canvas x:Name="statusPlace" Margin="-502,0,502,0">
+            <Button x:Name="backToMainFromStatus" Content="назад" Height="42" Canvas.Left="279" Canvas.Top="171" Width="155" Click="backToMainFromStatus_Click"/>
+            <Button x:Name="closeSession" Content="отчёт с гашением" Height="48" Canvas.Left="279" Canvas.Top="70" Width="155" Click="closeSession_Click"/>
+        </Canvas>
     </Grid>
+
 </Window>

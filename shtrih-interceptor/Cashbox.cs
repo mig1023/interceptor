@@ -31,6 +31,14 @@ namespace shtrih_interceptor
             Driver.CheckConnection();
         }
 
+        public static void closeSession()
+        {
+            Driver.Password = 30; // ????
+            Driver.PrintReportWithCleaning();
+
+            Log.addWithCode("отчёт с гашением");
+        }
+
         public static string printDocPack(DocPack doc)
         {
             currentDrvPassword = doc.CashierPass;

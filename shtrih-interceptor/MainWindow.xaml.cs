@@ -18,6 +18,7 @@ using System.Windows.Media.Animation;
 
 namespace shtrih_interceptor
 {
+    public enum moveDirection { horizontal, vertical };
 
     public partial class MainWindow : Window
     {
@@ -49,27 +50,32 @@ namespace shtrih_interceptor
             Cashbox.settings();
         }
 
-        public void MoveCanvas(Canvas moveCanvas, Canvas prevCanvas)
+        private void closeSession_Click(object sender, RoutedEventArgs e)
         {
+            Cashbox.closeSession();
+        }
+
+        public void MoveCanvas(Canvas moveCanvas, Canvas prevCanvas, moveDirection direction = moveDirection.horizontal)
+        {
+            double left = (direction == moveDirection.horizontal ? 0 : moveCanvas.Margin.Left);
+            double top = (direction == moveDirection.vertical ? 0 : moveCanvas.Margin.Top);
+
             ThicknessAnimation move = new ThicknessAnimation();
             move.Duration = TimeSpan.FromSeconds(0.2);
             move.From = moveCanvas.Margin;
-            move.To = new Thickness(
-                0,
-                moveCanvas.Margin.Top,
-                moveCanvas.Margin.Right,
-                moveCanvas.Margin.Bottom
-            );
+
+            move.To = new Thickness(left, top, moveCanvas.Margin.Right, moveCanvas.Margin.Bottom);
 
             moveCanvas.BeginAnimation(MarginProperty, move);
 
+            left = (direction == moveDirection.horizontal ?
+                prevCanvas.Margin.Left - moveCanvas.Margin.Left : prevCanvas.Margin.Left);
+            top = (direction == moveDirection.vertical ?
+                prevCanvas.Margin.Top - moveCanvas.Margin.Top : prevCanvas.Margin.Top);
+
             move.From = prevCanvas.Margin;
-            move.To = new Thickness(
-                prevCanvas.Margin.Left - moveCanvas.Margin.Left,
-                prevCanvas.Margin.Top,
-                prevCanvas.Margin.Right,
-                prevCanvas.Margin.Bottom
-            );
+
+            move.To = new Thickness(left, top, prevCanvas.Margin.Right, prevCanvas.Margin.Bottom );
 
             prevCanvas.BeginAnimation(MarginProperty, move);
         }
@@ -106,9 +112,13 @@ namespace shtrih_interceptor
             );
         }
 
-        private void closeSession_Click(object sender, RoutedEventArgs e)
+        private void sendLogin_Click(object sender, RoutedEventArgs e)
         {
-            Cashbox.closeSession();
+            MoveCanvas(
+                moveCanvas: mainPlace,
+                prevCanvas: loginPlace, 
+                direction: moveDirection.vertical
+            );
         }
     }
 }

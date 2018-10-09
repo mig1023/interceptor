@@ -420,4 +420,132 @@ sub doc_services
 	return { services => $servsums, info => $info };
 }
 
+sub cash_box
+# //////////////////////////////////////////////////
+{
+	my $self = shift;
+	
+	my $vars = $self->{'VCS::Vars'};
+	
+	my $param = {};
+	
+	$param->{ $_ } = ( $vars->getparam( $_ ) || 0 ) for ( 'docid', 'ptype', 'summ' );
+	
+	$param->{ $_ } =~ s/[^0-9]//g for ( 'docid', 'ptype' );
+	
+	$param->{ summ } =~ s/[^0-9\.,]//g;
+	
+	return cash_box_output( $self, "ERROR|Ошибка параметров" )
+		if !$param->{ docid } or ( $param->{ ptype } != 1 and $param->{ ptype } != 2 );
+	
+	return cash_box_output( $self, "ERROR|Не введена сумма оплаты" )
+		if !$param->{ summ } and $param->{ ptype } == 1;	
+	
+	my ( $code, $desc ) = send_docpack( $self, $param->{ docid }, $param->{ ptype }, $param->{ summ } );
+	
+	if ( $code ne 'OK' ) {
+	
+		my $err_type = "(неизвестная ошибка)";
+	
+		$err_type = "(ошибка перехватчика)" if $code eq 'ERR1';
+		$err_type = "(ошибка кассы)" if $code eq 'ERR2';
+		$err_type = "(ошибка настроек)" if $code eq 'ERR3';
+	
+		return cash_box_output( $self, "ERROR|$err_type $desc" );
+	}
+	
+	return cash_box_output( $self, "OK|$desc" );
+}
+
+sub cash_box_auth
+# //////////////////////////////////////////////////
+{
+	my ( $self, $task, $id, $template, $slist, $authip, $clientip ) = @_;
+	
+	my $vars = $self->{'VCS::Vars'};
+	
+	my $param = {};
+	
+	$param->{ $_ } = ( $vars->getparam( $_ ) || '' ) for ( 'login', 'pass' );
+	
+	return cash_box_output( $self, "ERROR|Укажите данные для авторизации" ) if !$param->{ login } or !$param->{ pass };
+	
+	my ( $login, $pass ) = $vars->db->sel1("
+		SELECT Users.Login, CashPassword
+		FROM Users
+		JOIN Cashboxes_password ON Users.Login = Cashboxes_password.Login
+		WHERE Users.Login = ? AND Pass = ?",
+		$param->{ login }, $param->{ pass }
+	);
+	
+	return cash_box_output( $self, "ERROR|Неудачная авторизация в VMS" ) unless $login and $pass;
+	
+	return cash_box_output( $self, "OK|$pass" );
+}
+
+sub cash_box_centers
+# //////////////////////////////////////////////////
+{
+	my ( $self, $task, $id, $template, $slist, $authip, $clientip ) = @_;
+	
+	my $vars = $self->{'VCS::Vars'};
+	
+	my $login = $vars->getparam( 'login' ) || undef;
+	
+	return cash_box_output( $self, "" ) unless $login;
+	
+	my $centers_line = $vars->db->sel1("
+		SELECT branches FROM Users WHERE Login = ?", $login );
+	
+	my $centers_array = $vars->db->selallkeys("
+		SELECT BName FROM Branches WHERE ID in ($centers_line)" );
+	
+	return cash_box_output( $self, "" ) if @$centers_array == 0;
+	
+	my $centers_name = join ( '|', map { $_->{ BName } } @$centers_array );
+	
+	return cash_box_output( $self, $centers_name );
+}
+
+sub cash_box_vtype
+# //////////////////////////////////////////////////
+{
+	my ( $self, $task, $id, $template, $slist, $authip, $clientip ) = @_;
+	
+	my $vars = $self->{'VCS::Vars'};
+	
+	my $center = $vars->getparam( 'center' ) || '';
+	
+	return cash_box_output( $self, "" ) unless $center;
+	
+	my $vtypes_array = $vars->db->selallkeys("
+		SELECT VName, Centers FROM VisaTypes" );
+		
+	my $center_id = $vars->db->sel1("
+		SELECT ID FROM Branches WHERE BName = ?", $center );
+		
+	my $vtypes = '';
+	
+	for ( @$vtypes_array ) {
+	
+		my %centers = map { $_ => 1 } split( /,/, $_->{ Centers } );
+
+		$vtypes .= ( $vtypes ? '|' : '' ) . $_->{ VName } if exists $centers{ $center_id };
+	};
+	
+	return cash_box_output( $self, $vtypes );
+}
+
+sub cash_box_output
+# //////////////////////////////////////////////////
+{
+	my ( $self, $msg ) = @_;
+	
+	my $vars = $self->{ 'VCS::Vars' };
+
+	$vars->get_system->pheader( $vars );
+	
+	print $msg;
+}
+
 1;

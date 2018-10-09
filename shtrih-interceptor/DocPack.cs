@@ -27,14 +27,14 @@ namespace shtrih_interceptor
             // only for serialization
         }
 
-        decimal manualParseDecimal(string line)
+        static decimal manualParseDecimal(string line)
         {
             double decimalTemporary = double.Parse(line, CultureInfo.InvariantCulture); 
 
             return (decimal)decimalTemporary;
         }
 
-        public DocPack(string requestLine)
+        public void DocPackFromXML(string requestLine)
         {
             XmlDocument request = new XmlDocument();
 
@@ -62,6 +62,30 @@ namespace shtrih_interceptor
             this.Money = manualParseDecimal(info["Money"].InnerText);
 
             Log.addDocPack(this);
+        }
+
+        public void addInfo(string Cashier, int CashierPass, int MoneyType)
+        {
+            this.Cashier = Cashier;
+            this.CashierPass = CashierPass;
+            this.MoneyType = MoneyType;
+        }
+
+        public void addService(string ServiceName, int Quantity, decimal Price, int VAT)
+        {
+            Service newService = new Service();
+
+            newService.Name = ServiceName;
+            newService.Quantity = Quantity;
+            newService.Price = Price;
+            newService.VAT = VAT;
+
+            this.Services.Add(newService);
+        }
+
+        public void addMoney(string Summ)
+        {
+            this.Money = manualParseDecimal(Summ);
         }
     }
 }

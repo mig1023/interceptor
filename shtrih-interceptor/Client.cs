@@ -84,7 +84,9 @@ namespace shtrih_interceptor
             {
                 Log.add("md5 запроса корректен");
 
-                DocPack docPack = new DocPack(request);
+                DocPack docPack = new DocPack();
+
+                docPack.DocPackFromXML(request);
 
                 return Cashbox.printDocPack(docPack);
             }

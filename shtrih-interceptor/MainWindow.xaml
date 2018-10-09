@@ -13,22 +13,38 @@
             <Canvas x:Name="activity" HorizontalAlignment="Left" Height="60" Margin="293,105,0,0" VerticalAlignment="Top" Width="12" Background="Gray"/>
             <Button x:Name="settingsButton" Content="настройки" HorizontalAlignment="Left" Height="60" Margin="310,105,0,0" VerticalAlignment="Top" Width="92" Click="settings_Click"/>
             <Button x:Name="check" Content="чек вручную" HorizontalAlignment="Left" Height="42" Margin="244,170,0,0" VerticalAlignment="Top" Width="158" Click="check_Click"/>
-            <Button x:Name="status" Content="статусы вручную" HorizontalAlignment="Left" Height="42" Margin="80,170,0,0" VerticalAlignment="Top" Width="158" Click="status_Click"/>
+            <Button x:Name="status" Content="отчёты и повторы" HorizontalAlignment="Left" Height="42" Margin="80,170,0,0" VerticalAlignment="Top" Width="158" Click="status_Click"/>
         </Canvas>
         <Canvas x:Name="checkPlace" Margin="497,0,-497,0">
-            <Button x:Name="backToMainFromCheck" Content="назад" Height="42" Canvas.Left="57" Canvas.Top="174" Width="155" Click="backToMainFromCheck_Click"/>
+            <Button x:Name="backToMainFromCheck" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="273" Width="155" Click="backToMainFromCheck_Click"/>
+            <Button x:Name="addService" Content="сервисный" Height="50" Canvas.Left="19" Canvas.Top="55" Width="94" Click="addService_Click"/>
+            <Button x:Name="сloseCheck" Content="закрыть чек" Height="50" Canvas.Left="321" Canvas.Top="265" Width="155" Click="сloseCheck_Click"/>
+            <TextBox x:Name="moneyForCheck" Height="27" Canvas.Left="321" TextWrapping="Wrap" Text="100.00" Canvas.Top="233" Width="114"/>
+            <ComboBox x:Name="allCenters" Height="25" Canvas.Left="244" Canvas.Top="20" Width="232"/>
+
         </Canvas>
+
         <Canvas x:Name="statusPlace" Margin="-502,0,502,0">
-            <Button x:Name="backToMainFromStatus" Content="назад" Height="42" Canvas.Left="279" Canvas.Top="171" Width="155" Click="backToMainFromStatus_Click"/>
-            <Button x:Name="closeSession" Content="отчёт с гашением" Height="48" Canvas.Left="279" Canvas.Top="70" Width="155" Click="closeSession_Click"/>
+            <Button x:Name="backToMainFromStatus" Content="назад" Height="42" Canvas.Left="320" Canvas.Top="273" Width="155" Click="backToMainFromStatus_Click"/>
+            <Button x:Name="reportCleaning" Content="отчёт с гашением" Height="48" Canvas.Left="10" Canvas.Top="10" Width="155" Click="reportCleaning_Click"/>
+            <Button x:Name="repeatDocument" Content="повтор чека" Height="48" Canvas.Left="10" Canvas.Top="116" Width="155" Click="repeatDocument_Click"/>
+            <Button x:Name="reportWithoutCleaning" Content="отчёт без гашения" Height="48" Canvas.Left="170" Canvas.Top="10" Width="155" Click="reportWithoutCleaning_Click"/>
+            <Button x:Name="reportDepartment" Content="отчёт по отделам" Height="48" Canvas.Left="10" Canvas.Top="63" Width="155" Click="reportDepartment_Click"/>
+            <Button x:Name="reportTax" Content="отчёт по налогам" Height="48" Canvas.Left="170" Canvas.Top="63" Width="155" Click="reportTax_Click"/>
         </Canvas>
+
         <Canvas x:Name="loginPlace" Margin="-3,0,3,0">
             <Button x:Name="sendLogin" Content="залогиниться" Height="42" Canvas.Left="264" Canvas.Top="183" Width="155" Click="sendLogin_Click"/>
-            <TextBox x:Name="login" Height="22" Canvas.Left="159" TextWrapping="Wrap" Canvas.Top="109" Width="260" HorizontalAlignment="Left"/>
-            <PasswordBox x:Name="password" Height="22" Canvas.Left="159" Canvas.Top="141" Width="260"/>
-            <Label x:Name="labelLogin" Content="логин" Height="27" Canvas.Left="103" Canvas.Top="109" Width="56"/>
-            <Label x:Name="labelPass" Content="пароль" Height="31" Canvas.Left="103" Canvas.Top="136" Width="56"/>
+            <TextBox x:Name="login" Height="22" Canvas.Left="147" TextWrapping="Wrap" Canvas.Top="109" Width="272" HorizontalAlignment="Left"/>
+            <PasswordBox x:Name="password" Height="22" Canvas.Left="147" Canvas.Top="141" Width="272"/>
+            <Label x:Name="labelLogin" Content="логин" Height="27" Canvas.Left="86" Canvas.Top="107" Width="56"/>
+            <Label x:Name="labelPass" Content="пароль" Height="31" Canvas.Left="86" Canvas.Top="139" Width="56"/>
         </Canvas>
+        <Canvas x:Name="loginFail" Margin="0,336,0,-336" Background="#FFFF4E4E">
+            <Button x:Name="backToLoginFromFail" Content="попробовать ещё раз" Height="42" Canvas.Left="59" Canvas.Top="164" Width="211" Click="backToLoginFromFail_Click"/>
+            <Label x:Name="loginFailText" Content="Неизвестная ошибка" Height="33" Canvas.Left="52" Canvas.Top="126" Width="331" FontSize="16"/>
+        </Canvas>
+
     </Grid>
 
 </Window>

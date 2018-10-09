@@ -22,6 +22,9 @@ namespace shtrih_interceptor
 
     public partial class MainWindow : Window
     {
+
+        List<string> manDocPack = new List<string>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -43,16 +46,6 @@ namespace shtrih_interceptor
                 switchOn.Background = Brushes.LimeGreen;
                 startServButton.IsEnabled = false;
             }
-        }
-
-        private void settings_Click(object sender, RoutedEventArgs e)
-        {
-            Cashbox.settings();
-        }
-
-        private void closeSession_Click(object sender, RoutedEventArgs e)
-        {
-            Cashbox.closeSession();
         }
 
         public void MoveCanvas(Canvas moveCanvas, Canvas prevCanvas, moveDirection direction = moveDirection.horizontal)
@@ -82,6 +75,13 @@ namespace shtrih_interceptor
 
         private void check_Click(object sender, RoutedEventArgs e)
         {
+            manDocPack.Clear();
+
+            foreach (string center_name in CRM.getAllCenters(login.Text))
+                allCenters.Items.Add(center_name);
+
+            allCenters.SelectedIndex = 0;
+
             MoveCanvas(
                 moveCanvas: checkPlace,
                 prevCanvas: mainPlace
@@ -114,11 +114,77 @@ namespace shtrih_interceptor
 
         private void sendLogin_Click(object sender, RoutedEventArgs e)
         {
+            if (CRM.crmAuthentication(login.Text, CRM.generateMySQLHash(password.Password)))
+            {
+                MoveCanvas(
+                    moveCanvas: mainPlace,
+                    prevCanvas: loginPlace,
+                    direction: moveDirection.vertical
+                );
+            }
+            else
+            {
+                loginFailText.Content = CRM.loginError;
+
+                MoveCanvas(
+                    moveCanvas: loginFail,
+                    prevCanvas: loginPlace,
+                    direction: moveDirection.vertical
+                );
+            }
+        }
+
+        private void backToLoginFromFail_Click(object sender, RoutedEventArgs e)
+        {
+            password.Password = "";
+
             MoveCanvas(
-                moveCanvas: mainPlace,
-                prevCanvas: loginPlace, 
+                moveCanvas: loginPlace,
+                prevCanvas: loginFail,
                 direction: moveDirection.vertical
             );
+        }
+        private void settings_Click(object sender, RoutedEventArgs e)
+        {
+            Cashbox.settings();
+        }
+
+        private void reportCleaning_Click(object sender, RoutedEventArgs e)
+        {
+            Cashbox.reportCleaning();
+        }
+
+        private void reportWithoutCleaning_Click(object sender, RoutedEventArgs e)
+        {
+            Cashbox.reportWithoutCleaning();
+        }
+
+        private void reportDepartment_Click(object sender, RoutedEventArgs e)
+        {
+            Cashbox.reportDepartment();
+        }
+
+        private void repeatDocument_Click(object sender, RoutedEventArgs e)
+        {
+            Cashbox.repeatDocument();
+        }
+
+        private void reportTax_Click(object sender, RoutedEventArgs e)
+        {
+            Cashbox.reportTax();
+        }
+
+        private void addService_Click(object sender, RoutedEventArgs e)
+        {
+            manDocPack.Add("service");
+        }
+
+        private void сloseCheck_Click(object sender, RoutedEventArgs e)
+        {
+            //manDocPack.addInfo(login.Text, CRM.Password, 1);
+            //manDocPack.addMoney(moneyForCheck.Text);
+            //Cashbox.printDocPack(manDocPack);
+            CRM.sendManDocPack(manDocPack);
         }
     }
 }

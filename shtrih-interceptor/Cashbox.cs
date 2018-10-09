@@ -31,12 +31,44 @@ namespace shtrih_interceptor
             Driver.CheckConnection();
         }
 
-        public static void closeSession()
+        public static void repeatDocument()
         {
-            Driver.Password = 30; // ????
+            Driver.Password = CRM.Password;
+            Driver.RepeatDocument();
+
+            Log.addWithCode("распечатка повтора");
+        }
+
+        public static void reportCleaning()
+        {
+            Driver.Password = CRM.Password;
             Driver.PrintReportWithCleaning();
 
             Log.addWithCode("отчёт с гашением");
+        }
+
+        public static void reportWithoutCleaning()
+        {
+            Driver.Password = CRM.Password;
+            Driver.PrintReportWithoutCleaning();
+
+            Log.addWithCode("отчёт без гашения");
+        }
+
+        public static void reportDepartment()
+        {
+            Driver.Password = CRM.Password;
+            Driver.PrintDepartmentReport();
+
+            Log.addWithCode("отчёт по отделам");
+        }
+
+        public static void reportTax()
+        {
+            Driver.Password = CRM.Password;
+            Driver.PrintTaxReport();
+
+            Log.addWithCode("отчёт по налогам");
         }
 
         public static string printDocPack(DocPack doc)

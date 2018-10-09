@@ -65,9 +65,29 @@ namespace shtrih_interceptor
             return centerString.Split('|');
         }
 
-        public static void sendManDocPack(string[] manDocPack)
+        public static string[] getAllVType(string vcenterName)
         {
+            string vtypeString = "";
 
+            string url = CRM_URL + "/vcs/cashbox_vtype.htm?center=" + vcenterName;
+
+            try
+            {
+                vtypeString = getHtml(url);
+            }
+            catch
+            {
+                return null;
+            }
+
+            return vtypeString.Split('|');
+        }
+
+        public static void sendManDocPack(List<string> manDocPack, string login, int password, int moneyType, string money )
+        {
+            byte something = 1;
+            something++;
+            something += 2;
         }
 
         public static string generateMySQLHash(string line)

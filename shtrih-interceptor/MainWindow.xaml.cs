@@ -77,15 +77,33 @@ namespace shtrih_interceptor
         {
             manDocPack.Clear();
 
-            foreach (string center_name in CRM.getAllCenters(login.Text))
-                allCenters.Items.Add(center_name);
-
-            allCenters.SelectedIndex = 0;
+            updateCenters();
+            updateVTypes();
 
             MoveCanvas(
                 moveCanvas: checkPlace,
                 prevCanvas: mainPlace
             );
+        }
+
+        private void updateCenters()
+        {
+            allCenters.Items.Clear();
+
+            foreach (string center_name in CRM.getAllCenters(login.Text))
+                allCenters.Items.Add(center_name);
+
+            allCenters.SelectedIndex = 0;
+        }
+
+        private void updateVTypes()
+        {
+            allVisas.Items.Clear();
+
+            foreach (string visa_name in CRM.getAllVType(allCenters.SelectedItem.ToString()))
+                allVisas.Items.Add(visa_name);
+
+            allVisas.SelectedIndex = 0;
         }
 
         private void backToMainFromCheck_Click(object sender, RoutedEventArgs e)
@@ -174,17 +192,19 @@ namespace shtrih_interceptor
             Cashbox.reportTax();
         }
 
-        private void addService_Click(object sender, RoutedEventArgs e)
-        {
-            manDocPack.Add("service");
-        }
-
         private void сloseCheck_Click(object sender, RoutedEventArgs e)
         {
-            //manDocPack.addInfo(login.Text, CRM.Password, 1);
-            //manDocPack.addMoney(moneyForCheck.Text);
-            //Cashbox.printDocPack(manDocPack);
-            CRM.sendManDocPack(manDocPack);
+            CRM.sendManDocPack(manDocPack, login.Text, CRM.Password, 1, moneyForCheck.Text);
+        }
+
+        private void addService_Click(object sender, RoutedEventArgs e)
+        {
+            manDocPack.Add(this.Name);
+        }
+
+        private void allCenters_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            updateVTypes();
         }
     }
 }

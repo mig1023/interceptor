@@ -17,11 +17,39 @@
         </Canvas>
         <Canvas x:Name="checkPlace" Margin="497,0,-497,0">
             <Button x:Name="backToMainFromCheck" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="273" Width="155" Click="backToMainFromCheck_Click"/>
-            <Button x:Name="addService" Content="сервисный" Height="50" Canvas.Left="19" Canvas.Top="55" Width="94" Click="addService_Click"/>
-            <Button x:Name="сloseCheck" Content="закрыть чек" Height="50" Canvas.Left="321" Canvas.Top="265" Width="155" Click="сloseCheck_Click"/>
-            <TextBox x:Name="moneyForCheck" Height="27" Canvas.Left="321" TextWrapping="Wrap" Text="100.00" Canvas.Top="233" Width="114"/>
-            <ComboBox x:Name="allCenters" Height="25" Canvas.Left="244" Canvas.Top="20" Width="232"/>
+            <Button x:Name="сloseCheck" Content="оплата наличными" Height="42" Canvas.Left="256" Canvas.Top="273" Width="136" Click="сloseCheck_Click"/>
+            <TextBox x:Name="moneyForCheck" Height="26" Canvas.Left="188" TextWrapping="Wrap" Text="100.00" Canvas.Top="279" Width="63"/>
+            <ComboBox x:Name="allCenters" Height="25" Canvas.Left="19" Canvas.Top="16" Width="232" SelectionChanged="allCenters_SelectionChanged"/>
+            <ComboBox x:Name="allVisas" Height="25" Canvas.Left="265" Canvas.Top="16" Width="211"/>
 
+            <Button x:Name="service" Content="сервисный" Height="50" Canvas.Left="19" Canvas.Top="55" Width="94" Click="addService_Click"/>
+            <Button x:Name="service_urgent" Height="50" Canvas.Left="118" Canvas.Top="55" Width="114" Click="addService_Click">
+                <TextBlock TextAlignment="Center">срочный<LineBreak/>сервисный</TextBlock>
+            </Button>
+            <Button x:Name="vip_comfort" Content="вип комфорт" Height="50" Canvas.Left="237" Canvas.Top="55" Width="97" Click="addService_Click"/>
+            <Button x:Name="vip" Content="вип обслуживание" Height="50" Canvas.Left="339" Canvas.Top="55" Width="137" Click="addService_Click"/>
+            <Button x:Name="concil" Content="консульский" Height="50" Canvas.Left="19" Canvas.Top="110" Width="94" Click="addService_Click"/>
+            <Button x:Name="concil_urg_r" Height="50" Canvas.Left="118" Canvas.Top="110" Width="114" Click="addService_Click">
+                <TextBlock TextAlignment="Center">консульский<LineBreak/>срочный резидент</TextBlock>
+            </Button>
+            <Button x:Name="concil_n" Height="50" Canvas.Left="237" Canvas.Top="110" Width="97" Click="addService_Click">
+                <TextBlock TextAlignment="Center">консульский<LineBreak/>нерезидент</TextBlock>
+            </Button>
+            <Button x:Name="concil_n_age" Height="50" Canvas.Left="339" Canvas.Top="110" Width="137" Click="addService_Click">
+                <TextBlock TextAlignment="Center">консульский<LineBreak/>нерезидент (6-12 лет)</TextBlock>
+            </Button>
+            <Button x:Name="sms" Content="смс" Height="50" Canvas.Left="19" Canvas.Top="165" Width="94" Click="addService_Click"/>
+            <Button x:Name="vip_standart" Content="вип стандарт" Height="50" Canvas.Left="118" Canvas.Top="165" Width="114" Click="addService_Click"/>
+            <Button x:Name="ank" Height="50" Canvas.Left="237" Canvas.Top="165" Width="97" Click="addService_Click">
+                <TextBlock TextAlignment="Center">заполнение<LineBreak/>анкеты</TextBlock>
+            </Button>
+            <Button x:Name="print" Height="50" Canvas.Left="339" Canvas.Top="165" Width="137" Click="addService_Click">
+                <TextBlock TextAlignment="Center">распечатка<LineBreak/>документов</TextBlock>
+            </Button>
+            <Button x:Name="photo" Content="фото" Height="50" Canvas.Left="19" Canvas.Top="220" Width="94" Click="addService_Click"/>
+            <Button x:Name="xerox" Content="ксерокс" Height="50" Canvas.Left="118" Canvas.Top="220" Width="114" Click="addService_Click"/>
+            <Button x:Name="dhl" Content="доставка" Height="21" Canvas.Left="237" Canvas.Top="249" Width="114" Click="addService_Click"/>
+            <TextBox x:Name="moneyForDHL" Height="22" Canvas.Left="237" TextWrapping="Wrap" Text="100.00" Canvas.Top="222" Width="114"/>
         </Canvas>
 
         <Canvas x:Name="statusPlace" Margin="-502,0,502,0">

@@ -83,11 +83,29 @@ namespace shtrih_interceptor
             return vtypeString.Split('|');
         }
 
-        public static void sendManDocPack(List<string> manDocPack, string login, int password, int moneyType, string money )
+        public static bool sendManDocPack(List<string> manDocPack, string login, int password, int moneyType,
+            string money, string center, string vType)
         {
-            byte something = 1;
-            something++;
-            something += 2;
+
+            IPAddress ip = Dns.GetHostByName(Dns.GetHostName()).AddressList[0];
+            
+            string url = CRM_URL + "/vcs/cashbox_mandocpack.htm?" +
+                "login=" + login + "&pass=" + password.ToString() + "&moneytype=" + moneyType.ToString() +
+                "&money=" + money + "&center=" + center + "&vtype=" + vType +
+                "&services=" + String.Join("|", manDocPack.ToArray()) + "&callback=" + ip.ToString();
+
+            // CRC!!!
+
+            try
+            {
+                getHtml(url);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public static string generateMySQLHash(string line)

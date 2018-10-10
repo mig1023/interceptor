@@ -194,12 +194,13 @@ namespace shtrih_interceptor
 
         private void сloseCheck_Click(object sender, RoutedEventArgs e)
         {
-            CRM.sendManDocPack(manDocPack, login.Text, CRM.Password, 1, moneyForCheck.Text);
+            CRM.sendManDocPack(manDocPack, login.Text, CRM.Password, 1,
+                moneyForCheck.Text, allCenters.Text, allVisas.Text);
         }
 
         private void addService_Click(object sender, RoutedEventArgs e)
         {
-            manDocPack.Add(this.Name);
+            manDocPack.Add((sender as Button).Name);
         }
 
         private void allCenters_SelectionChanged(object sender, SelectionChangedEventArgs e)

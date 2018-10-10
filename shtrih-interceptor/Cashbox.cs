@@ -75,6 +75,8 @@ namespace shtrih_interceptor
         {
             currentDrvPassword = doc.CashierPass;
 
+            Driver.Beep();
+
             foreach (Service service in doc.Services)
             {
                 Driver.Password = currentDrvPassword;

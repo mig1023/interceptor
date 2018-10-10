@@ -39,20 +39,23 @@ sub send_docpack
 # //////////////////////////////////////////////////
 {
 
-	my ( $self, $docid, $ptype, $summ ) = @_;
+	my ( $self, $docid, $ptype, $summ, $data, $login, $pass, $callback ) = @_;
 	
-	my $data = {};
 	my $vars = $self->{ 'VCS::Vars' };
-	my $docobj = VCS::Docs::docs->new('VCS::Docs::docs', $vars);
-	my $error = $docobj->getDocData(\$data, $docid, 'individuals');
+	
+	if ( !$data ) {
+	
+		my $docobj = VCS::Docs::docs->new('VCS::Docs::docs', $vars);
+		my $error = $docobj->getDocData(\$data, $docid, 'individuals');
+	}	
 	
 	return ( "ERR3", "Договор юрлица не может быть оплачен" ) if $data->{ jurid };
 	
-	my $login = $vars->get_session->{'login'};
+	$login = $vars->get_session->{'login'} unless $login;
 	
-	my $pass = $vars->db->sel1("
+	$pass = $vars->db->sel1("
 		SELECT CashPassword FROM Cashboxes_password WHERE Login = ?", $login
-	);
+	) unless $pass;
 	
 	return ( "ERR3", "Неверный кассовый пароль пользователя" ) unless $pass;
 	
@@ -60,7 +63,7 @@ sub send_docpack
 
 	my $request = xml_create( $services->{ services }, $services->{ info } );
 	
-	my $resp = send_request( $vars, $request );
+	my $resp = send_request( $vars, $request, undef, $callback );
 	
 	$vars->db->query("
 		UPDATE Cashboxes_password SET LastUse = now(), LastResponse = ? WHERE Login = ?", {},
@@ -133,19 +136,27 @@ sub xml_create
 sub send_request
 # //////////////////////////////////////////////////
 {
-	my ( $vars, $line, $interceptor ) = @_;
+	my ( $vars, $line, $interceptor, $callback ) = @_;
 	
-	$interceptor = $vars->get_session->{ interceptor } unless $interceptor;
+	my $serv;
 	
-	my $serv = $vars->db->sel1("
-		SELECT InterceptorIP FROM Cashboxes_interceptors WHERE ID = ?",
-		$interceptor
-	);
+	if ( !$callback ) {
+	
+		$interceptor = $vars->get_session->{ interceptor } unless $interceptor;
+		
+		$serv = $vars->db->sel1("
+			SELECT InterceptorIP FROM Cashboxes_interceptors WHERE ID = ?",
+			$interceptor
+		);
+	}
+	else {
+		$serv = $callback;
+	}
 	
 	my $ua = LWP::UserAgent->new;
 	
 	$ua->agent( 'Mozilla/4.0 (compatible; MSIE 6.0; X11; Linux i686; en) Opera 7.60' );
-	
+
 	my $request = HTTP::Request->new( GET => 'http://'.$serv.'/?message='.$line.';' );
 
 	my $response = $ua->request( $request );
@@ -234,9 +245,10 @@ sub doc_services
 
 	my ( $cntres, $cntnres, $cntncon, $cntage, $smscnt, $shcnt, $shrows, $shind, $indexes, $dhlsum, $inssum, $inscnt ) = 
 		( 0, 0, 0, 0, 0, 0, {}, '', {}, 0, 0, 0 );
-
+warn "DATA::".Dumper($data);
 	if ( $data->{ shipping }==1 ) {
-		$dhlsum = $data->{'shipsum'};
+
+		$dhlsum = $data->{ shipsum };
 		$shcnt = 1;
 	}
 
@@ -389,14 +401,18 @@ sub doc_services
 		},
 	};
 
-	my $serv_hash = get_all_add_services( $self, $vars, $data->{ docid }, $data->{'rate'} );
+	if ( $data->{ docid } ) {
 	
-	for ( keys %$serv_hash ) {
-	
-		$servsums->{ $_ } = $serv_hash->{ $_ };
+		my $serv_hash = get_all_add_services( $self, $vars, $data->{ docid }, $data->{'rate'} );
+		
+		for ( keys %$serv_hash ) {
+		
+			$servsums->{ $_ } = $serv_hash->{ $_ };
+		}
 	}
 
 	my $total = 0;
+warn "servsums BEFORE::".Dumper($servsums);
 	for my $serv ( keys %$servsums ) {
 	
 		if ( !$servsums->{ $serv }->{ Quantity } or $servsums->{ $serv }->{ Price } eq '0.00' ) {
@@ -416,7 +432,7 @@ sub doc_services
 		Total => $total,
 		Money => $summ,
 	};
-	
+warn "servsums::".Dumper($servsums);	
 	return { services => $servsums, info => $info };
 }
 
@@ -534,6 +550,81 @@ sub cash_box_vtype
 	};
 	
 	return cash_box_output( $self, $vtypes );
+}
+
+sub cash_box_mandocpack
+# //////////////////////////////////////////////////
+{
+	my ( $self, $task, $id, $template, $slist, $authip, $clientip ) = @_;
+	
+	my $vars = $self->{ 'VCS::Vars' };
+
+	my $param = {};
+	my $serv_hash = {};
+	my $data = {};
+	
+	# CRC!!!!
+	
+	$param->{ $_ } = ( $vars->getparam( $_ ) || '' )
+		for ( 'login', 'pass', 'moneytype', 'money', 'services', 'center', 'vtype', 'callback' );
+
+		
+	my $center_id = $vars->db->sel1("
+		SELECT ID FROM Branches WHERE BName = ?", $param->{ center } );
+	my $vtype_id = 
+	
+	my $gconfig = $vars->getConfig('general');
+	my $rate = $vars->admfunc->getRate( $vars, $gconfig->{'base_currency'}, $vars->get_system->now_date(), $center_id );
+	
+	$data->{ ipdate } = $vars->get_system->now_date();
+	
+	$data->{ rate } = $vars->admfunc->getRate( $vars, $gconfig->{'base_currency'}, $data->{ ipdate }, $center_id );
+	
+	$data->{ vtype } = $vars->db->sel1("
+		SELECT ID FROM VisaTypes WHERE VName = ?", $param->{ vtype } );
+	
+	
+warn "services:: ".$param->{ services };
+
+	my @serv_line = split( /\|/, $param->{ services } );
+	
+	$serv_hash->{ $_ } += 1 for @serv_line;
+	
+	for ( keys $serv_hash ) {
+	
+		if ( $_ eq 'dhl' ) {
+
+			$data->{ newdhl } = 1;
+			$data->{ shipping } = 1;
+			$data->{ shipsum } = '100.00'; # <---------------------- !!!
+		}
+		
+		if ( $_ eq 'service' or $_ eq 'service_urgent' ) {
+		
+			$data->{ applicants } = [];
+			
+			for my $n ( 0..($serv_hash->{ $_ } - 1) ) {
+			
+				$data->{ applicants }->[ $n ]->{ Status } = 1;
+			}
+			
+			$data->{ urgent } = ( $_ eq 'service_urgent' ? 1 : 0 );
+		}
+
+		# vip_comfort
+		
+		if ( $_ eq 'vip' ) {
+
+			$data->{ vipsrv } = $serv_hash->{ $_ };
+		}
+	}
+warn "data::".Dumper($data);	
+	my @resp = send_docpack( $self, undef, $param->{ moneytype }, $param->{ money }, $data,
+		$param->{ login }, $param->{ pass }, $param->{ callback } );
+
+warn "return::".Dumper(\@resp);	
+	
+	return cash_box_output( $self, "OK" );
 }
 
 sub cash_box_output

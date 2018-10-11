@@ -6,14 +6,14 @@
         xmlns:local="clr-namespace:shtrih_interceptor"
         mc:Ignorable="d"
         Title="shtrih-interceptor" Height="420" Width="800" ResizeMode="CanMinimize">
-    <Grid>
+    <Grid x:Name="mainGrid">
         <Canvas x:Name="mainPlace" Margin="2,-392,-2,392">
-            <Button x:Name="startServButton" Content="запуск сервиса" HorizontalAlignment="Left" Height="60" Margin="80,105,0,0" VerticalAlignment="Top" Width="191" Click="startServButton_Click"/>
-            <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="60" Margin="276,105,0,0" VerticalAlignment="Top" Width="12" Background="Gray"/>
-            <Canvas x:Name="activity" HorizontalAlignment="Left" Height="60" Margin="293,105,0,0" VerticalAlignment="Top" Width="12" Background="Gray"/>
-            <Button x:Name="settingsButton" Content="настройки" HorizontalAlignment="Left" Height="60" Margin="310,105,0,0" VerticalAlignment="Top" Width="92" Click="settings_Click"/>
-            <Button x:Name="check" Content="чек вручную" IsEnabled="False" HorizontalAlignment="Left" Height="42" Margin="244,170,0,0" VerticalAlignment="Top" Width="158" Click="check_Click"/>
-            <Button x:Name="status" Content="отчёты и повторы" HorizontalAlignment="Left" Height="42" Margin="80,170,0,0" VerticalAlignment="Top" Width="158" Click="status_Click"/>
+            <Button x:Name="startServButton" Content="запуск сервиса" HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="235" Click="startServButton_Click" Canvas.Left="200" Canvas.Top="276"/>
+            <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="12" Background="Gray" Canvas.Left="440" Canvas.Top="276"/>
+            <Canvas x:Name="activity" HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="12" Background="Gray" Canvas.Left="457" Canvas.Top="276"/>
+            <Button x:Name="settingsButton" Content="настройки" HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="119" Click="settings_Click" Canvas.Left="474" Canvas.Top="276"/>
+            <Button x:Name="check" Content="чек вручную" IsEnabled="False" HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="158" Click="check_Click" Canvas.Left="598" Canvas.Top="276"/>
+            <Button x:Name="status" Content="отчёты и повторы" HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="158" Click="status_Click" Canvas.Left="37" Canvas.Top="276"/>
         </Canvas>
         <Canvas x:Name="checkPlace" Margin="796,0,-796,0">
             <Button x:Name="backToMainFromCheck" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromCheck_Click"/>
@@ -25,23 +25,24 @@
             <Button x:Name="service" Content="сервисный" Height="37" Canvas.Left="19" Canvas.Top="76" Width="179" Click="addService_Click"/>
             <Button x:Name="service_urgent" Content="срочный сервисный" Height="37" Canvas.Left="203" Canvas.Top="76" Width="179" Click="addService_Click"/>
             <Button x:Name="vip_comfort" Content="вип комфорт" Height="37" Canvas.Left="387" Canvas.Top="76" Width="179" Click="addService_Click"/>
-            <Button x:Name="vip" Content="вип обслуживание" Height="37" Canvas.Left="571" Canvas.Top="76" Width="197" Click="addService_Click"/>
-            <Button x:Name="concil" Content="консульский" Height="37" Canvas.Left="19" Canvas.Top="118" Width="179" Click="addService_Click"/>
+            <Button x:Name="vipsrv" Content="вип обслуживание" Height="37" Canvas.Left="571" Canvas.Top="76" Width="197" Click="addService_Click"/>
+            <Button x:Name="concil" Tag="" Content="консульский" Height="37" Canvas.Left="19" Canvas.Top="118" Width="179" Click="addService_Click"/>
             <Button x:Name="concil_urg_r" Content="КС срочный резидент" Height="37" Canvas.Left="203" Canvas.Top="118" Width="179" Click="addService_Click"/>
             <Button x:Name="concil_n" Content="КС нерезидент" Height="37" Canvas.Left="387" Canvas.Top="118" Width="179" Click="addService_Click"/>
             <Button x:Name="concil_n_age" Content="КС нерезидент 6-12 лет" Height="37" Canvas.Left="571" Canvas.Top="118" Width="197" Click="addService_Click"/>
-            <Button x:Name="sms" Content="смс" Height="37" Canvas.Left="19" Canvas.Top="160" Width="179" Click="addService_Click"/>
+            <Button x:Name="sms_status" Content="смс" Height="37" Canvas.Left="19" Canvas.Top="160" Width="179" Click="addService_Click"/>
             <Button x:Name="vip_standart" Content="вип стандарт" Height="37" Canvas.Left="203" Canvas.Top="160" Width="179" Click="addService_Click"/>
-            <Button x:Name="ank" Content="заполнение анкеты" Height="37" Canvas.Left="387" Canvas.Top="160" Width="179" Click="addService_Click"/>
-            <Button x:Name="print" Content="распечатка документов" Height="37" Canvas.Left="571" Canvas.Top="160" Width="197" Click="addService_Click"/>
-            <Button x:Name="photo" Content="фото" Height="37" Canvas.Left="19" Canvas.Top="202" Width="179" Click="addService_Click"/>
-            <Button x:Name="xerox" Content="ксерокс" Height="37" Canvas.Left="203" Canvas.Top="202" Width="179" Click="addService_Click"/>
-            <Button x:Name="dhl" Content="доставка" Height="37" Canvas.Left="626" Canvas.Top="202" Width="142" Click="addService_Click"/>
-            <TextBox x:Name="moneyForDHL" Height="37" Canvas.Left="487" TextWrapping="Wrap" Text="0.00" Canvas.Top="202" Width="104" FontSize="22"/>
+            <Button x:Name="anketasrv" Content="заполнение анкеты" Height="37" Canvas.Left="387" Canvas.Top="160" Width="179" Click="addService_Click"/>
+            <Button x:Name="printsrv" Content="распечатка документов" Height="37" Canvas.Left="571" Canvas.Top="160" Width="197" Click="addService_Click"/>
+            <Button x:Name="photosrv" Content="фото" Height="37" Canvas.Left="19" Canvas.Top="202" Width="155" Click="addService_Click"/>
+            <Button x:Name="xerox" Content="ксерокс" Height="37" Canvas.Left="179" Canvas.Top="202" Width="155" Click="addService_Click"/>
+            <Button x:Name="transum" Content="перевод" Height="37" Canvas.Left="339" Canvas.Top="202" Width="155" Click="addService_Click"/>
+            <Button x:Name="dhl" Content="доставка" Height="37" Canvas.Left="674" Canvas.Top="202" Width="94" Click="addService_Click"/>
+            <TextBox x:Name="moneyForDHL" Height="37" Canvas.Left="542" TextWrapping="Wrap" Text="0.00" Canvas.Top="202" Width="104" FontSize="22"/>
             <Button x:Name="printCheckMoney" Content="наличными" IsEnabled="False" Height="40" Canvas.Left="428" Canvas.Top="323" Width="110" Click="printCheckMoney_Click"/>
             <Button x:Name="printCheckCard" Content="картой" IsEnabled="False" Height="40" Canvas.Left="543" Canvas.Top="323" Width="110" Click="printCheckCard_Click"/>
             <Label x:Name="currency1" Content="₽" Canvas.Left="397" Canvas.Top="317" FontSize="28"/>
-            <Label x:Name="currency2" Content="₽" Canvas.Left="596" Canvas.Top="194" FontSize="28"/>
+            <Label x:Name="currency2" Content="₽" Canvas.Left="648" Canvas.Top="194" FontSize="28"/>
             <Button x:Name="returnSale" Content="возврат" IsEnabled="False" Height="40" Canvas.Left="658" Canvas.Top="323" Width="110" Click="returnSale_Click"/>
             <Label x:Name="total" Content="" Height="27" Canvas.Left="243" Canvas.Top="296" Width="149"/>
         </Canvas>

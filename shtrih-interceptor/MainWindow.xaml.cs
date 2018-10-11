@@ -23,8 +23,8 @@ namespace shtrih_interceptor
 
     public partial class MainWindow : Window
     {
-
         List<string> manDocPack = new List<string>();
+        List<Button> servButtonCleaningList = new List<Button>();
 
         public MainWindow()
         {
@@ -35,6 +35,12 @@ namespace shtrih_interceptor
             int MaxThreadsCount = Environment.ProcessorCount * 4;
             ThreadPool.SetMaxThreads(MaxThreadsCount, MaxThreadsCount);
             ThreadPool.SetMinThreads(2, 2);
+
+            foreach (string buttonName in new[] {
+                "service", "service_urgent", "vip_comfort", "vipsrv", "concil", "concil_urg_r",
+                "concil_n", "concil_n_age", "sms_status", "vip_standart", "anketasrv", "printsrv",
+                "photosrv", "xerox", "transum", "dhl"
+            }) servButtonCleaningList.Add((Button)mainGrid.FindName(buttonName));
         }
 
         private void startServButton_Click(object sender, RoutedEventArgs e)
@@ -116,9 +122,11 @@ namespace shtrih_interceptor
                 prevCanvas: checkPlace
             );
 
-            blockCheckButton(block: false);
+            
             Server.ShowActivity(busy: false);
             Cashbox.manDocPackForPrinting = null;
+
+            cleanCheck();
         }
 
         private void status_Click(object sender, RoutedEventArgs e)
@@ -205,21 +213,10 @@ namespace shtrih_interceptor
             printCheckCard.IsEnabled = (block ? true : false);
             returnSale.IsEnabled = (block ? true : false);
 
-            service.IsEnabled = (block ? false : true);
-            service_urgent.IsEnabled = (block ? false : true);
-            vip_comfort.IsEnabled = (block ? false : true);
-            vip.IsEnabled = (block ? false : true);
-            concil.IsEnabled = (block ? false : true);
-            concil_urg_r.IsEnabled = (block ? false : true);
-            concil_n.IsEnabled = (block ? false : true);
-            concil_n_age.IsEnabled = (block ? false : true);
-            sms.IsEnabled = (block ? false : true);
-            vip_standart.IsEnabled = (block ? false : true);
-            ank.IsEnabled = (block ? false : true);
-            print.IsEnabled = (block ? false : true);
-            photo.IsEnabled = (block ? false : true);
-            xerox.IsEnabled = (block ? false : true);
-            dhl.IsEnabled = (block ? false : true);
+            foreach(Button serv in servButtonCleaningList)
+                serv.IsEnabled = (block ? false : true);
+
+            moneyForDHL.IsEnabled = (block ? false : true);
         }
 
         private void сloseCheck_Click(object sender, RoutedEventArgs e)
@@ -260,16 +257,38 @@ namespace shtrih_interceptor
             updateVTypes();
         }
 
+        private void cleanCheck()
+        {
+            foreach (Button serv in servButtonCleaningList)
+            {
+                int bracketIndex = serv.Content.ToString().IndexOf('(');
+
+                if (bracketIndex > 0) serv.Content = serv.Content.ToString().Remove(bracketIndex);
+            }
+
+            blockCheckButton(block: false);
+
+            manDocPack.Clear();
+
+            moneyForDHL.Text = "0.00";
+            moneyForCheck.Text = "0.00";
+            total.Content = "";
+        }
+
         private void printCheckMoney_Click(object sender, RoutedEventArgs e)
         {
             decimal money = DocPack.manualParseDecimal(moneyForCheck.Text);
 
             Cashbox.printDocPack(Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money);
+
+            cleanCheck();
         }
 
         private void printCheckCard_Click(object sender, RoutedEventArgs e)
         {
             Cashbox.printDocPack(Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm);
+
+            cleanCheck();
         }
 
         private void returnSale_Click(object sender, RoutedEventArgs e)
@@ -277,6 +296,8 @@ namespace shtrih_interceptor
             decimal money = DocPack.manualParseDecimal(moneyForCheck.Text);
 
             Cashbox.printDocPack(Cashbox.manDocPackForPrinting, returnSale: true, MoneySumm: money);
+
+            cleanCheck();
         }
     }
 }

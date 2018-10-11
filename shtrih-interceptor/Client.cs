@@ -7,6 +7,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Windows;
+using System.Threading;
 
 namespace shtrih_interceptor
 {
@@ -61,6 +63,15 @@ namespace shtrih_interceptor
             Client.Close();
         }
 
+        public static void ShowTotal(string summ)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new ThreadStart(delegate
+            {
+                MainWindow main = (MainWindow)Application.Current.MainWindow;
+                main.total.Content = "сумма: " + summ;
+            }));
+        }
+
         public static string responsePrepare(string request)
         {
             if (CheckRequest.CheckConnection(request))
@@ -69,7 +80,7 @@ namespace shtrih_interceptor
 
                 string testResult = Diagnostics.makeBeepTest();
 
-                Server.ShowActivity(false);
+                Server.ShowActivity(busy: false);
 
                 return testResult;
             }
@@ -88,7 +99,17 @@ namespace shtrih_interceptor
 
                 docPack.DocPackFromXML(request);
 
-                return Cashbox.printDocPack(docPack);
+                if (docPack.RequestOnly == 1)
+                {
+                    Cashbox.manDocPackForPrinting = docPack;
+
+                    Cashbox.manDocPackSumm = docPack.Total;
+                    ShowTotal(docPack.Total.ToString());
+
+                    return "OK:Callback запрос получен";
+                } 
+                else
+                    return Cashbox.printDocPack(docPack);
             }
                 
         }

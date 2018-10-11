@@ -15,6 +15,9 @@ namespace shtrih_interceptor
         public static System.Timers.Timer repeatPrintingTimer = new System.Timers.Timer(5000);
         static int currentDrvPassword = 0;
 
+        public static DocPack manDocPackForPrinting;
+        public static decimal manDocPackSumm;
+
         static Cashbox()
         {
             Driver = new DrvFR();
@@ -71,11 +74,18 @@ namespace shtrih_interceptor
             Log.addWithCode("отчёт по налогам");
         }
 
-        public static string printDocPack(DocPack doc)
+        public static string printDocPack(DocPack doc, int MoneyType = -1,
+            bool returnSale = false, decimal? MoneySumm = null)
         {
             currentDrvPassword = doc.CashierPass;
 
-            Driver.Beep();
+            if (MoneyType != -1) doc.MoneyType = MoneyType;
+
+            if (returnSale)
+            {
+                Driver.CheckType = 2;
+                Driver.OpenCheck();
+            }
 
             foreach (Service service in doc.Services)
             {
@@ -90,7 +100,10 @@ namespace shtrih_interceptor
                 Driver.Tax3 = 0;
                 Driver.Tax4 = 0;
 
-                Driver.Sale();
+                if (returnSale)
+                    Driver.ReturnSale();
+                else
+                    Driver.Sale();
             }
 
             Driver.Password = currentDrvPassword;
@@ -98,15 +111,14 @@ namespace shtrih_interceptor
 
             if (doc.MoneyType == 1)
             {
-                Driver.Summ1 = doc.Money;
+                Driver.Summ1 = MoneySumm ?? doc.Money;
                 Driver.Summ2 = 0;
             }
             else if (doc.MoneyType == 2)
             {
-                Driver.Summ2 = doc.Money;
+                Driver.Summ2 = MoneySumm ?? doc.Money;
                 Driver.Summ1 = 0;
-            }
-                
+            }           
 
             Driver.CloseCheck();
 
@@ -122,7 +134,7 @@ namespace shtrih_interceptor
 
                 Log.addWithCode("отмена чека");
 
-                Server.ShowActivity(false);
+                Server.ShowActivity(busy: false);
             }
             else
             {
@@ -149,7 +161,7 @@ namespace shtrih_interceptor
                 repeatPrintingTimer.Enabled = false;
                 repeatPrintingTimer.Stop();
 
-                Server.ShowActivity(false);
+                Server.ShowActivity(busy: false);
             }
         }
 

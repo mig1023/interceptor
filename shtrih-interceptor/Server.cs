@@ -35,7 +35,7 @@ namespace shtrih_interceptor
 
             Log.add("новое соединение c " + RemoteEndPoint, freeLine: true);
 
-            ShowActivity(true);
+            ShowActivity(busy: true);
 
             new Client((TcpClient)state);
         }

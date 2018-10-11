@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Windows.Media.Animation;
+using System.Text.RegularExpressions;
 
 namespace shtrih_interceptor
 {
@@ -45,6 +46,7 @@ namespace shtrih_interceptor
                 Server.StartServer();
                 switchOn.Background = Brushes.LimeGreen;
                 startServButton.IsEnabled = false;
+                check.IsEnabled = true;
             }
         }
 
@@ -78,7 +80,6 @@ namespace shtrih_interceptor
             manDocPack.Clear();
 
             updateCenters();
-            updateVTypes();
 
             MoveCanvas(
                 moveCanvas: checkPlace,
@@ -98,6 +99,8 @@ namespace shtrih_interceptor
 
         private void updateVTypes()
         {
+            if (allCenters.SelectedItem == null) return;
+
             allVisas.Items.Clear();
 
             foreach (string visa_name in CRM.getAllVType(allCenters.SelectedItem.ToString()))
@@ -112,6 +115,10 @@ namespace shtrih_interceptor
                 moveCanvas: mainPlace,
                 prevCanvas: checkPlace
             );
+
+            blockCheckButton(block: false);
+            Server.ShowActivity(busy: false);
+            Cashbox.manDocPackForPrinting = null;
         }
 
         private void status_Click(object sender, RoutedEventArgs e)
@@ -192,20 +199,84 @@ namespace shtrih_interceptor
             Cashbox.reportTax();
         }
 
+        private void blockCheckButton(bool block)
+        {
+            printCheckMoney.IsEnabled = (block ? true : false);
+            printCheckCard.IsEnabled = (block ? true : false);
+            returnSale.IsEnabled = (block ? true : false);
+
+            service.IsEnabled = (block ? false : true);
+            service_urgent.IsEnabled = (block ? false : true);
+            vip_comfort.IsEnabled = (block ? false : true);
+            vip.IsEnabled = (block ? false : true);
+            concil.IsEnabled = (block ? false : true);
+            concil_urg_r.IsEnabled = (block ? false : true);
+            concil_n.IsEnabled = (block ? false : true);
+            concil_n_age.IsEnabled = (block ? false : true);
+            sms.IsEnabled = (block ? false : true);
+            vip_standart.IsEnabled = (block ? false : true);
+            ank.IsEnabled = (block ? false : true);
+            print.IsEnabled = (block ? false : true);
+            photo.IsEnabled = (block ? false : true);
+            xerox.IsEnabled = (block ? false : true);
+            dhl.IsEnabled = (block ? false : true);
+        }
+
         private void сloseCheck_Click(object sender, RoutedEventArgs e)
         {
             CRM.sendManDocPack(manDocPack, login.Text, CRM.Password, 1,
                 moneyForCheck.Text, allCenters.Text, allVisas.Text);
+
+            blockCheckButton(block: true);
         }
 
         private void addService_Click(object sender, RoutedEventArgs e)
         {
-            manDocPack.Add((sender as Button).Name);
+            Button Service = sender as Button;
+
+            if (Service.Name == "dhl")
+            {
+                manDocPack.Add(Service.Name + "=" + moneyForDHL.Text);
+            }
+            else
+                manDocPack.Add(Service.Name);
+
+            Match ReqMatch = Regex.Match(Service.Content.ToString(), @"^([^\d]+)\s\((\d+)\)");
+
+            if (ReqMatch.Success)
+            {
+                int servCount = Int32.Parse(ReqMatch.Groups[2].Value);
+
+                servCount++;
+
+                Service.Content = ReqMatch.Groups[1].Value + " (" + servCount.ToString() + ")";
+            }
+            else
+                Service.Content = Service.Content + " (1)";
         }
 
         private void allCenters_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             updateVTypes();
+        }
+
+        private void printCheckMoney_Click(object sender, RoutedEventArgs e)
+        {
+            decimal money = DocPack.manualParseDecimal(moneyForCheck.Text);
+
+            Cashbox.printDocPack(Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money);
+        }
+
+        private void printCheckCard_Click(object sender, RoutedEventArgs e)
+        {
+            Cashbox.printDocPack(Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm);
+        }
+
+        private void returnSale_Click(object sender, RoutedEventArgs e)
+        {
+            decimal money = DocPack.manualParseDecimal(moneyForCheck.Text);
+
+            Cashbox.printDocPack(Cashbox.manDocPackForPrinting, returnSale: true, MoneySumm: money);
         }
     }
 }

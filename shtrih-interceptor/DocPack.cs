@@ -22,12 +22,14 @@ namespace shtrih_interceptor
         public decimal Total;
         public decimal Money;
 
+        public int RequestOnly;
+
         public DocPack()
         {
             // only for serialization
         }
 
-        static decimal manualParseDecimal(string line)
+        public static decimal manualParseDecimal(string line)
         {
             double decimalTemporary = double.Parse(line, CultureInfo.InvariantCulture); 
 
@@ -60,6 +62,8 @@ namespace shtrih_interceptor
             this.MoneyType = int.Parse(info["MoneyType"].InnerText);
             this.Total = manualParseDecimal(info["Total"].InnerText);
             this.Money = manualParseDecimal(info["Money"].InnerText);
+
+            this.RequestOnly = int.Parse(info["RequestOnly"].InnerText);
 
             Log.addDocPack(this);
         }

@@ -59,7 +59,7 @@ sub send_docpack
 	
 	return ( "ERR3", "Неверный кассовый пароль пользователя" ) unless $pass;
 	
-	my $services = doc_services( $self, $data, $ptype, $summ, $login, $pass );
+	my $services = doc_services( $self, $data, $ptype, $summ, $login, $pass, $callback );
 
 	my $request = xml_create( $services->{ services }, $services->{ info } );
 	
@@ -127,6 +127,7 @@ sub xml_create
 			'<Control>' .
 				'<CRC>' . $md5 . '</CRC>' . 
 				'<Date>' . $currentDate . '</Date>' .
+				
 			'</Control>' .
 		'</toCashbox>';
 
@@ -239,13 +240,13 @@ sub get_all_add_services
 sub doc_services
 # //////////////////////////////////////////////////
 {
-	my ( $self, $data, $ptype, $summ, $login, $pass ) = @_;
+	my ( $self, $data, $ptype, $summ, $login, $pass, $callback ) = @_;
 
 	my $vars = $self->{'VCS::Vars'};
 
 	my ( $cntres, $cntnres, $cntncon, $cntage, $smscnt, $shcnt, $shrows, $shind, $indexes, $dhlsum, $inssum, $inscnt ) = 
 		( 0, 0, 0, 0, 0, 0, {}, '', {}, 0, 0, 0 );
-warn "DATA::".Dumper($data);
+
 	if ( $data->{ shipping }==1 ) {
 
 		$dhlsum = $data->{ shipsum };
@@ -309,10 +310,7 @@ warn "DATA::".Dumper($data);
 		$shsum = sprintf( "%.2f", $prices->{ shipping } * $shcnt );
 	}
 	
-	if ( $data->{ sms_status } == 1 ) {
-	
-		$smscnt = 1;
-	}
+	$smscnt = 1 if $data->{ sms_status } == 1;
 	
 	my $vprice = (
 		$data->{ urgent } ?
@@ -412,7 +410,7 @@ warn "DATA::".Dumper($data);
 	}
 
 	my $total = 0;
-warn "servsums BEFORE::".Dumper($servsums);
+warn Dumper($servsums);
 	for my $serv ( keys %$servsums ) {
 	
 		if ( !$servsums->{ $serv }->{ Quantity } or $servsums->{ $serv }->{ Price } eq '0.00' ) {
@@ -431,8 +429,9 @@ warn "servsums BEFORE::".Dumper($servsums);
 		MoneyType => $ptype,
 		Total => $total,
 		Money => $summ,
+		RequestOnly => ( $callback ? '1' : '0' ),
 	};
-warn "servsums::".Dumper($servsums);	
+
 	return { services => $servsums, info => $info };
 }
 
@@ -490,7 +489,9 @@ sub cash_box_auth
 		SELECT Users.Login, CashPassword
 		FROM Users
 		JOIN Cashboxes_password ON Users.Login = Cashboxes_password.Login
-		WHERE Users.Login = ? AND Pass = ?",
+		WHERE Users.Login = ? AND Pass = ? AND
+		(RoleID = 8 OR RoleID = 5 OR RoleID = 2)
+		AND Locked = 0",
 		$param->{ login }, $param->{ pass }
 	);
 	
@@ -558,6 +559,8 @@ sub cash_box_mandocpack
 	my ( $self, $task, $id, $template, $slist, $authip, $clientip ) = @_;
 	
 	my $vars = $self->{ 'VCS::Vars' };
+	
+	my $gconfig = $vars->getConfig('general');
 
 	my $param = {};
 	my $serv_hash = {};
@@ -568,12 +571,9 @@ sub cash_box_mandocpack
 	$param->{ $_ } = ( $vars->getparam( $_ ) || '' )
 		for ( 'login', 'pass', 'moneytype', 'money', 'services', 'center', 'vtype', 'callback' );
 
-		
 	my $center_id = $vars->db->sel1("
 		SELECT ID FROM Branches WHERE BName = ?", $param->{ center } );
-	my $vtype_id = 
 	
-	my $gconfig = $vars->getConfig('general');
 	my $rate = $vars->admfunc->getRate( $vars, $gconfig->{'base_currency'}, $vars->get_system->now_date(), $center_id );
 	
 	$data->{ ipdate } = $vars->get_system->now_date();
@@ -583,23 +583,22 @@ sub cash_box_mandocpack
 	$data->{ vtype } = $vars->db->sel1("
 		SELECT ID FROM VisaTypes WHERE VName = ?", $param->{ vtype } );
 	
-	
-warn "services:: ".$param->{ services };
-
 	my @serv_line = split( /\|/, $param->{ services } );
 	
 	$serv_hash->{ $_ } += 1 for @serv_line;
 	
+	my $urgent_docpack = 0;
+	
 	for ( keys $serv_hash ) {
 	
-		if ( $_ eq 'dhl' ) {
+		if ( /^dhl=(.+)$/ ) {
 
+			$data->{ shipsum } = $1;
 			$data->{ newdhl } = 1;
 			$data->{ shipping } = 1;
-			$data->{ shipsum } = '100.00'; # <---------------------- !!!
 		}
 		
-		if ( $_ eq 'service' or $_ eq 'service_urgent' ) {
+		if ( /^(service|service_urgent)$/ ) {
 		
 			$data->{ applicants } = [];
 			
@@ -608,22 +607,19 @@ warn "services:: ".$param->{ services };
 				$data->{ applicants }->[ $n ]->{ Status } = 1;
 			}
 			
-			$data->{ urgent } = ( $_ eq 'service_urgent' ? 1 : 0 );
+			$urgent_docpack += ( $_ eq 'service_urgent' ? 1 : 0 );
 		}
 
 		# vip_comfort
 		
-		if ( $_ eq 'vip' ) {
-
-			$data->{ vipsrv } = $serv_hash->{ $_ };
-		}
+		$data->{ $_ } = $serv_hash->{ $_ } if /^(vipsrv|sms_status|anketasrv|printsrv|printsrv|photosrv|xerox)$/;
 	}
-warn "data::".Dumper($data);	
+	
+	$data->{ urgent } =
+
 	my @resp = send_docpack( $self, undef, $param->{ moneytype }, $param->{ money }, $data,
 		$param->{ login }, $param->{ pass }, $param->{ callback } );
 
-warn "return::".Dumper(\@resp);	
-	
 	return cash_box_output( $self, "OK" );
 }
 

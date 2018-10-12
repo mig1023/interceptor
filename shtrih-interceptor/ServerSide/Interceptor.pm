@@ -259,7 +259,7 @@ sub doc_services
 
 		next if $ak->{ Status } == 7;
 
-		$apcnt++;
+		$apcnt++ unless $data->{ direct_docpack } and $ak->{ Status } != 1;
 		
 		if ( $ak->{ Concil } ) {
 		
@@ -317,6 +317,8 @@ sub doc_services
 		$prices->{ ( $data->{ jurid } ? 'j' : '' ) . 'urgent' } :
 		$prices->{ ( $data->{ jurid } ? 'j' : '') . 'visa' }
 	);
+	
+	my $urg_text = ( $data->{ urgent } ? ', срочн.' : '' );
 		
 	my $servsums = {
 		shipping => {
@@ -374,26 +376,26 @@ sub doc_services
 			VAT		=> 1,
 		},
 		cons_resident => {
-			Name		=> 'Консульский сбор (резидент)',
-			Quantity	=> ( $data->{'vcat'} eq 'C' ? $cntres : 0 ),
+			Name		=> "Консульский сбор (резидент$urg_text)",
+			Quantity	=> ( $data->{ vcat } eq 'C' ? $cntres : 0 ),
 			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) } ),
 			VAT		=> 0,
 		},
 		cons_noresident => {
-			Name		=> 'Консульский сбор (нерезидент)',
+			Name		=> "Консульский сбор (нерезидент$urg_text)",
 			Quantity	=> $cntnres,
 			Price		=> sprintf( '%.2f', $prices->{ 'conciln' . ( $data->{ urgent } ? 'u' : '' ) } ),
 			VAT		=> 0,
 		},
 		cons_age => {
-			Name		=> 'Консульский сбор (возраст)',
+			Name		=> "Консульский сбор (возраст$urg_text)",
 			Quantity	=> $cntage,
 			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) . '_' . $ages } ),
 			VAT		=> 0,
 		},
 		cons_d => {
-			Name		=> 'Консульский сбор (тип D)',
-			Quantity	=> ( $data->{'vcat'} eq 'D' ? $cntres : 0 ),
+			Name		=> "Консульский сбор (тип D$urg_text)",
+			Quantity	=> ( $data->{ vcat } eq 'D' ? $cntres : 0 ),
 			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) } ),
 			VAT		=> 0,
 		},
@@ -410,7 +412,7 @@ sub doc_services
 	}
 
 	my $total = 0;
-warn Dumper($servsums);
+
 	for my $serv ( keys %$servsums ) {
 	
 		if ( !$servsums->{ $serv }->{ Quantity } or $servsums->{ $serv }->{ Price } eq '0.00' ) {
@@ -564,30 +566,45 @@ sub cash_box_mandocpack
 
 	my $param = {};
 	my $serv_hash = {};
-	my $data = {};
 	
-	# CRC!!!!
+	my $data = { direct_docpack => 1 };
 	
 	$param->{ $_ } = ( $vars->getparam( $_ ) || '' )
-		for ( 'login', 'pass', 'moneytype', 'money', 'services', 'center', 'vtype', 'callback' );
+		for ( 'login', 'pass', 'moneytype', 'money', 'services', 'center', 'vtype', 'callback', 'rdate', 'crc' );
 
+	my $request_check = "login=" . $param->{ login } . "&pass=" . $param->{ pass } .
+		"&moneytype=" . $param->{ moneytype } . "&money=" . $param->{ money } . "&center=" . $param->{ center } .
+		"&vtype=" . $param->{ vtype } . "&rdate=" . $param->{ rdate } . "&services=" . $param->{ services } .
+		"&callback=" . $param->{ callback };
+	
+	
+	my $md5 = uc( Digest::MD5->new->add( $request_check )->hexdigest );
+	
+	return cash_box_output( $self, "ERROR|Контрольная сумма запроса неверна" ) unless $md5 eq $param->{ crc };
+		
 	my $center_id = $vars->db->sel1("
 		SELECT ID FROM Branches WHERE BName = ?", $param->{ center } );
+		
+	my $rate_date = $vars->get_system->now_date();
 	
-	my $rate = $vars->admfunc->getRate( $vars, $gconfig->{'base_currency'}, $vars->get_system->now_date(), $center_id );
+	$rate_date = "$3-$2-$1" if $param->{ rdate } =~ /(\d{2})\.(\d{2})\.(\d{4})/;
+	
+	my $rate = $vars->admfunc->getRate( $vars, $gconfig->{'base_currency'}, $rate_date, $center_id );
 	
 	$data->{ ipdate } = $vars->get_system->now_date();
 	
-	$data->{ rate } = $vars->admfunc->getRate( $vars, $gconfig->{'base_currency'}, $data->{ ipdate }, $center_id );
+	$data->{ rate } = $vars->admfunc->getRate( $vars, $gconfig->{'base_currency'}, $rate_date, $center_id );
 	
-	$data->{ vtype } = $vars->db->sel1("
-		SELECT ID FROM VisaTypes WHERE VName = ?", $param->{ vtype } );
-	
+	( $data->{ vtype }, $data->{ vcat } ) = $vars->db->sel1("
+		SELECT ID, category FROM VisaTypes WHERE VName = ?", $param->{ vtype } );
+
 	my @serv_line = split( /\|/, $param->{ services } );
 	
 	$serv_hash->{ $_ } += 1 for @serv_line;
 	
 	my $urgent_docpack = 0;
+	
+	my $concil_index = 0;
 	
 	for ( keys $serv_hash ) {
 	
@@ -609,18 +626,36 @@ sub cash_box_mandocpack
 			
 			$urgent_docpack += ( $_ eq 'service_urgent' ? 1 : 0 );
 		}
-
-		# vip_comfort
 		
+		if ( /^(concil|concil_urg_r|concil_n|concil_n_age)$/ ) {
+		
+			for my $n ( 0..($serv_hash->{ $_ } - 1) ) {
+			
+				$data->{ applicants }->[ $concil_index + $n ]->{ Concil } = 0 if /^(concil|concil_urg_r)$/;
+				
+				$data->{ applicants }->[ $concil_index + $n ]->{ AgeCatA } = 1 if /^concil_n_age$/;
+				
+				$data->{ applicants }->[ $concil_index + $n ]->{ iNRes } = 1 if /^concil_n$/;
+			}
+			
+			$concil_index += $serv_hash->{ $_ };
+			
+			$urgent_docpack += ( $_ eq 'concil_urg_r' ? 1 : 0 );
+		}
+
 		$data->{ $_ } = $serv_hash->{ $_ } if /^(vipsrv|sms_status|anketasrv|printsrv|printsrv|photosrv|xerox)$/;
+		
+		
+		# vip_comfort
+		# vip_standart
 	}
 	
-	$data->{ urgent } =
-
+	$data->{ urgent } = ( $urgent_docpack ? 1 : 0 );
+	
 	my @resp = send_docpack( $self, undef, $param->{ moneytype }, $param->{ money }, $data,
 		$param->{ login }, $param->{ pass }, $param->{ callback } );
 
-	return cash_box_output( $self, "OK" );
+	return cash_box_output( $self, "OK|Запрос получен" );
 }
 
 sub cash_box_output

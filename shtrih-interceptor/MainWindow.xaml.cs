@@ -100,6 +100,7 @@ namespace shtrih_interceptor
             status5.Content = speed;
             status6.Content = model;
             status7.Content = version;
+            status8.Content = status.ToLower();
         }
 
         private void updateCenters()

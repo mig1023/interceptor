@@ -199,7 +199,6 @@ namespace shtrih_interceptor
             status = Driver.ResultCodeDescription;
             version = Driver.ECRSoftVersion;
 
-
             Driver.GetDeviceMetrics();
             model = Driver.UDescription;
         }

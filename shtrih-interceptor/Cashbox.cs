@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DrvFRLib;
 using System.Timers;
+using System.Windows;
 
 namespace shtrih_interceptor
 {
@@ -21,6 +22,7 @@ namespace shtrih_interceptor
         static Cashbox()
         {
             Driver = new DrvFR();
+            Driver.FindDevice();
             repeatPrintingTimer.Elapsed += new ElapsedEventHandler(repeatPrint);
         }
 
@@ -40,6 +42,14 @@ namespace shtrih_interceptor
             Driver.RepeatDocument();
 
             Log.addWithCode("распечатка повтора");
+        }
+
+        public static void continueDocument()
+        {
+            Driver.Password = CRM.Password;
+            Driver.ContinuePrint();
+
+            Log.addWithCode("продолжение печати");
         }
 
         public static void reportCleaning()
@@ -175,15 +185,23 @@ namespace shtrih_interceptor
             return Driver.ResultCodeDescription;
         }
 
-        public static decimal getChange()
+        public static void getStatusData(out string port, out string speed, out string status,
+            out string version, out string model)
         {
-            return Driver.Change;
-        }
+            string[] baudeRate = new string[] { "2400", "4800", "9600", "19200", "38400", "57600", "115200" };
 
-        public static void settings()
-        {
-            Driver.ShowProperties();
+            Driver.GetECRStatus();
 
+            int portIndex = Driver.PortNumber + 1;
+
+            port = "com" + portIndex.ToString();
+            speed = baudeRate[Driver.BaudRate];
+            status = Driver.ResultCodeDescription;
+            version = Driver.ECRSoftVersion;
+
+
+            Driver.GetDeviceMetrics();
+            model = Driver.UDescription;
         }
     }
 }

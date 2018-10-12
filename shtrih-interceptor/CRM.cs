@@ -11,7 +11,8 @@ namespace shtrih_interceptor
 {
     class CRM
     {
-        const string CRM_URL = "127.0.0.1";
+        public const string CRM_URL_BASE = "127.0.0.1";
+        const string CRM_URL = "http://" + CRM_URL_BASE;
 
         public static int Password = 0;
         public static string loginError = "";
@@ -83,29 +84,42 @@ namespace shtrih_interceptor
             return vtypeString.Split('|');
         }
 
-        public static bool sendManDocPack(List<string> manDocPack, string login, int password, int moneyType,
-            string money, string center, string vType)
+        public static string getMyIP()
         {
-
             IPAddress ip = Dns.GetHostByName(Dns.GetHostName()).AddressList[0];
-            
-            string url = CRM_URL + "/vcs/cashbox_mandocpack.htm?" +
-                "login=" + login + "&pass=" + password.ToString() + "&moneytype=" + moneyType.ToString() +
-                "&money=" + money + "&center=" + center + "&vtype=" + vType +
-                "&services=" + String.Join("|", manDocPack.ToArray()) + "&callback=" + ip.ToString();
 
-            // CRC!!!
+            return ip.ToString();
+        }
+
+        public static bool sendManDocPack(List<string> manDocPack, string login, int password, int moneyType,
+            string money, string center, string vType, string returnDate)
+        {
+            string requestResult = "";
+
+            string fields =
+                "login=" + login + "&pass=" + password.ToString() + "&moneytype=" + moneyType.ToString() +
+                "&money=" + money + "&center=" + center + "&vtype=" + vType + "&rdate=" + returnDate +
+                "&services=" + String.Join("|", manDocPack.ToArray()) + "&callback=" + getMyIP();
+
+            string request = fields + "&crc=" + CheckRequest.createMD5(fields);
+
+            string url = CRM_URL + "/vcs/cashbox_mandocpack.htm?" + request;
 
             try
             {
-                getHtml(url);
+                requestResult = getHtml(url);
             }
             catch
             {
                 return false;
             }
 
-            return true;
+            string[] reslutData = requestResult.Split('|');
+
+            if (reslutData[0] == "OK")
+                return true;
+            else
+                return false;
         }
 
         public static string generateMySQLHash(string line)

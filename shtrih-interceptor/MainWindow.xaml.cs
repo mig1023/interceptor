@@ -16,6 +16,8 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Windows.Media.Animation;
 using System.Text.RegularExpressions;
+using System.Windows.Controls.Primitives;
+using System.Timers;
 
 namespace shtrih_interceptor
 {
@@ -25,6 +27,10 @@ namespace shtrih_interceptor
     {
         List<string> manDocPack = new List<string>();
         List<Button> servButtonCleaningList = new List<Button>();
+
+        public Canvas returnFromErrorTo;
+
+        public const string CURRENT_VERSION = "1.0a1";
 
         public MainWindow()
         {
@@ -41,19 +47,6 @@ namespace shtrih_interceptor
                 "concil_n", "concil_n_age", "sms_status", "vip_standart", "anketasrv", "printsrv",
                 "photosrv", "xerox", "transum", "dhl"
             }) servButtonCleaningList.Add((Button)mainGrid.FindName(buttonName));
-        }
-
-        private void startServButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (Diagnostics.failCashbox())
-                switchOn.Background = Brushes.Red;
-            else
-            {
-                Server.StartServer();
-                switchOn.Background = Brushes.LimeGreen;
-                startServButton.IsEnabled = false;
-                check.IsEnabled = true;
-            }
         }
 
         public void MoveCanvas(Canvas moveCanvas, Canvas prevCanvas, moveDirection direction = moveDirection.horizontal)
@@ -93,6 +86,22 @@ namespace shtrih_interceptor
             );
         }
 
+        private void updateStatuses()
+        {
+            string port, speed, status, version, model;
+
+            status1.Content = CURRENT_VERSION;
+            status2.Content = CRM.getMyIP();
+            status3.Content = CRM.CRM_URL_BASE;
+
+            Cashbox.getStatusData(out port, out speed, out status, out version, out model);
+
+            status4.Content = port;
+            status5.Content = speed;
+            status6.Content = model;
+            status7.Content = version;
+        }
+
         private void updateCenters()
         {
             allCenters.Items.Clear();
@@ -121,7 +130,6 @@ namespace shtrih_interceptor
                 moveCanvas: mainPlace,
                 prevCanvas: checkPlace
             );
-
             
             Server.ShowActivity(busy: false);
             Cashbox.manDocPackForPrinting = null;
@@ -154,10 +162,21 @@ namespace shtrih_interceptor
                     prevCanvas: loginPlace,
                     direction: moveDirection.vertical
                 );
+
+                updateStatuses();
+
+                if (Diagnostics.failCashbox())
+                    switchOn.Background = Brushes.Red;
+                else
+                {
+                    Server.StartServer();
+                    switchOn.Background = Brushes.LimeGreen;
+                }
             }
             else
             {
                 loginFailText.Content = CRM.loginError;
+                returnFromErrorTo = loginPlace;
 
                 MoveCanvas(
                     moveCanvas: loginFail,
@@ -167,19 +186,15 @@ namespace shtrih_interceptor
             }
         }
 
-        private void backToLoginFromFail_Click(object sender, RoutedEventArgs e)
+        private void returnFromError_Click(object sender, RoutedEventArgs e)
         {
             password.Password = "";
 
             MoveCanvas(
-                moveCanvas: loginPlace,
+                moveCanvas: returnFromErrorTo,
                 prevCanvas: loginFail,
                 direction: moveDirection.vertical
             );
-        }
-        private void settings_Click(object sender, RoutedEventArgs e)
-        {
-            Cashbox.settings();
         }
 
         private void reportCleaning_Click(object sender, RoutedEventArgs e)
@@ -221,10 +236,24 @@ namespace shtrih_interceptor
 
         private void сloseCheck_Click(object sender, RoutedEventArgs e)
         {
-            CRM.sendManDocPack(manDocPack, login.Text, CRM.Password, 1,
-                moneyForCheck.Text, allCenters.Text, allVisas.Text);
+            bool sendingSuccess = CRM.sendManDocPack(manDocPack, login.Text, CRM.Password, 1,
+                moneyForCheck.Text, allCenters.Text, allVisas.Text, returnDate.Text);
 
-            blockCheckButton(block: true);
+            if (sendingSuccess)
+            {
+                blockCheckButton(block: true);
+            }
+            else
+            {
+                loginFailText.Content = "Во время отправки запроса произошла ошибка";
+                returnFromErrorTo = checkPlace;
+
+                MoveCanvas(
+                    moveCanvas: loginFail,
+                    prevCanvas: checkPlace,
+                    direction: moveDirection.vertical
+                );
+            }
         }
 
         private void addService_Click(object sender, RoutedEventArgs e)
@@ -275,29 +304,59 @@ namespace shtrih_interceptor
             total.Content = "";
         }
 
+        private void showError(Canvas from, string error)
+        {
+            loginFailText.Content = error;
+            returnFromErrorTo = from;
+
+            MoveCanvas(
+                moveCanvas: loginFail,
+                prevCanvas: from,
+                direction: moveDirection.vertical
+            );
+        }
+
+        public void checkError(string[] result, Canvas place, string error)
+        {
+            if (result[0] == "OK")
+                cleanCheck();
+            else
+                showError(place, error + ": " + result[1]);
+        }
+
         private void printCheckMoney_Click(object sender, RoutedEventArgs e)
         {
             decimal money = DocPack.manualParseDecimal(moneyForCheck.Text);
 
-            Cashbox.printDocPack(Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money);
+            string[] result = Cashbox.printDocPack(Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money).Split(':');
 
-            cleanCheck();
+            checkError(result, checkPlace, "Ошибка кассы");
         }
 
         private void printCheckCard_Click(object sender, RoutedEventArgs e)
         {
-            Cashbox.printDocPack(Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm);
+            string[] result = Cashbox.printDocPack(Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm).Split(':');
 
-            cleanCheck();
+            checkError(result, checkPlace, "Ошибка кассы");
         }
 
         private void returnSale_Click(object sender, RoutedEventArgs e)
         {
             decimal money = DocPack.manualParseDecimal(moneyForCheck.Text);
 
-            Cashbox.printDocPack(Cashbox.manDocPackForPrinting, returnSale: true, MoneySumm: money);
+            string[] result = Cashbox.printDocPack(Cashbox.manDocPackForPrinting, returnSale: true, MoneySumm: money).Split(':');
 
-            cleanCheck();
+            checkError(result, checkPlace, "Ошибка кассы");
+        }
+
+        private void password_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter) sendLogin_Click(null, null);
+        }
+
+        private void continueDocument_Click(object sender, RoutedEventArgs e)
+        {
+            Cashbox.continueDocument();
         }
     }
 }

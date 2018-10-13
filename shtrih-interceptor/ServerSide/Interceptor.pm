@@ -419,7 +419,7 @@ sub doc_services
 			
 			delete $servsums->{ $serv };
 		}
-		else{
+		else {
 			$total += $servsums->{ $serv }->{ Price } * $servsums->{ $serv }->{ Quantity };
 		}
 	}
@@ -644,10 +644,6 @@ sub cash_box_mandocpack
 		}
 
 		$data->{ $_ } = $serv_hash->{ $_ } if /^(vipsrv|sms_status|anketasrv|printsrv|printsrv|photosrv|xerox)$/;
-		
-		
-		# vip_comfort
-		# vip_standart
 	}
 	
 	$data->{ urgent } = ( $urgent_docpack ? 1 : 0 );

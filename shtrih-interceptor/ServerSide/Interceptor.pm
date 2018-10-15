@@ -186,23 +186,51 @@ sub get_date
 sub get_all_add_services
 # //////////////////////////////////////////////////
 {
-	my ( $self, $vars, $docid, $rate ) = @_;
+	my ( $self, $vars, $data, $callback ) = @_;
 	
+	my $services = [];
+
 	my $serv_price = $vars->db->selallkeys("
-		SELECT ServiceID, Price FROM ServicesPriceRates WHERE PriceRateID = ?", $rate );
-		
-	my %serv_price = map { $_->{ ServiceID } => $_->{ Price } } @$serv_price;
-		
-	my $services = $vars->db->selallkeys("
-		SELECT Services.Name, DocPackService.ServiceID, ServiceFields.ValueType, ServiceFieldValuesINT.Value
-		FROM DocPackService
-		JOIN Services ON DocPackService.ServiceID = Services.ID
-		JOIN ServiceFields ON DocPackService.ServiceID = ServiceFields.ServiceID
-		JOIN ServiceFieldValuesINT ON ServiceFieldValuesINT.DocPackServiceID = DocPackService.ID
-		WHERE PackID = ?
-		GROUP BY DocPackServiceID",
-		$docid
+		SELECT ServiceID, Price FROM ServicesPriceRates WHERE PriceRateID = ?", $data->{ rate }
 	);
+
+	my %serv_price = map { $_->{ ServiceID } => $_->{ Price } } @$serv_price;
+
+	if ( !$callback ) {
+
+		$services = $vars->db->selallkeys("
+			SELECT Services.Name, DocPackService.ServiceID, ServiceFields.ValueType, ServiceFieldValuesINT.Value
+			FROM DocPackService
+			JOIN Services ON DocPackService.ServiceID = Services.ID
+			JOIN ServiceFields ON DocPackService.ServiceID = ServiceFields.ServiceID
+			JOIN ServiceFieldValuesINT ON ServiceFieldValuesINT.DocPackServiceID = DocPackService.ID
+			WHERE PackID = ?
+			GROUP BY DocPackServiceID",
+			$data->{ docid }
+		);
+	}
+	else {
+
+		my $serv_names = $vars->db->selallkeys( "SELECT ID, Name FROM Services" );
+		
+		my %services_name = map { $_->{ ID } => $_->{ Name } } @$serv_names;
+	
+		for ( 1..9 ) {
+		
+			if ( $data->{ "srv$_" } ) {
+			
+				my $value = ( $_ == 1 ? $serv_price{ $_ } : $data->{ "srv$_" } ) || 0;
+			
+				push $services, {
+				
+					ServiceID 	=> $_,
+					Name 		=> $services_name{ $_ },
+					Value 		=> $value,
+					ValueType 	=> ( $_ == 1 ? 1 : 2 ),
+				};
+			}
+		}
+	}
 	
 	my $serv_list = {};
 	
@@ -224,15 +252,17 @@ sub get_all_add_services
 		}
 		elsif ( $_->{ ValueType } == 2 ) {
 		
+			my $price = $serv_price{ $_->{ ServiceID } } || 0;
+		
 			$serv_list->{ "service$serv_index" } = {
 				Name		=> $_->{ Name },
 				Quantity	=> $_->{ Value },
-				Price		=> $serv_price{ $_->{ ServiceID } },
+				Price		=> $price,
 				VAT 		=> 1,
 			};
 		}
 	}
-	
+
 	return $serv_list;
 }
 
@@ -261,22 +291,25 @@ sub doc_services
 
 		$apcnt++ unless $data->{ direct_docpack } and $ak->{ Status } != 1;
 		
-		if ( $ak->{ Concil } ) {
+		if ( !$data->{ direct_docpack } or $ak->{ direct_concil } ) {
 		
-			$cntncon++;
-		}
-		else {
-			if ( $ak->{ AgeCatA } ) {
+			if ( $ak->{ Concil } ) {
 			
-				$cntage++;
+				$cntncon++;
 			}
 			else {
-				if ( $ak->{ iNRes } ) {
+				if ( $ak->{ AgeCatA } ) {
 				
-					$cntnres++;
+					$cntage++;
 				}
-				else {					
-					$cntres++;
+				else {
+					if ( $ak->{ iNRes } ) {
+					
+						$cntnres++;
+					}
+					else {					
+						$cntres++;
+					}
 				}
 			}
 		}
@@ -401,14 +434,12 @@ sub doc_services
 		},
 	};
 
-	if ( $data->{ docid } ) {
 	
-		my $serv_hash = get_all_add_services( $self, $vars, $data->{ docid }, $data->{'rate'} );
-		
-		for ( keys %$serv_hash ) {
-		
-			$servsums->{ $_ } = $serv_hash->{ $_ };
-		}
+	my $serv_hash = get_all_add_services( $self, $vars, $data, $callback );
+	
+	for ( keys %$serv_hash ) {
+	
+		$servsums->{ $_ } = $serv_hash->{ $_ };
 	}
 
 	my $total = 0;
@@ -419,7 +450,7 @@ sub doc_services
 			
 			delete $servsums->{ $serv };
 		}
-		else {
+		else{
 			$total += $servsums->{ $serv }->{ Price } * $servsums->{ $serv }->{ Quantity };
 		}
 	}
@@ -480,11 +511,11 @@ sub cash_box_auth
 	my ( $self, $task, $id, $template, $slist, $authip, $clientip ) = @_;
 	
 	my $vars = $self->{'VCS::Vars'};
-	
+
 	my $param = {};
 	
 	$param->{ $_ } = ( $vars->getparam( $_ ) || '' ) for ( 'login', 'pass' );
-	
+
 	return cash_box_output( $self, "ERROR|Укажите данные для авторизации" ) if !$param->{ login } or !$param->{ pass };
 	
 	my ( $login, $pass ) = $vars->db->sel1("
@@ -538,10 +569,12 @@ sub cash_box_vtype
 	return cash_box_output( $self, "" ) unless $center;
 	
 	my $vtypes_array = $vars->db->selallkeys("
-		SELECT VName, Centers FROM VisaTypes" );
+		SELECT VName, Centers FROM VisaTypes"
+	);
 		
 	my $center_id = $vars->db->sel1("
-		SELECT ID FROM Branches WHERE BName = ?", $center );
+		SELECT ID FROM Branches WHERE BName = ?", $center
+	);
 		
 	my $vtypes = '';
 	
@@ -583,7 +616,10 @@ sub cash_box_mandocpack
 	return cash_box_output( $self, "ERROR|Контрольная сумма запроса неверна" ) unless $md5 eq $param->{ crc };
 		
 	my $center_id = $vars->db->sel1("
-		SELECT ID FROM Branches WHERE BName = ?", $param->{ center } );
+		SELECT ID FROM Branches WHERE BName = ?", $param->{ center }
+	);
+		
+	$data->{ center } = $center_id;
 		
 	my $rate_date = $vars->get_system->now_date();
 	
@@ -596,15 +632,18 @@ sub cash_box_mandocpack
 	$data->{ rate } = $vars->admfunc->getRate( $vars, $gconfig->{'base_currency'}, $rate_date, $center_id );
 	
 	( $data->{ vtype }, $data->{ vcat } ) = $vars->db->sel1("
-		SELECT ID, category FROM VisaTypes WHERE VName = ?", $param->{ vtype } );
+		SELECT ID, category FROM VisaTypes WHERE VName = ?", $param->{ vtype }
+	);
 
 	my @serv_line = split( /\|/, $param->{ services } );
-	
+
 	$serv_hash->{ $_ } += 1 for @serv_line;
 	
 	my $urgent_docpack = 0;
 	
 	my $concil_index = 0;
+	
+	$data->{ applicants } = [];
 	
 	for ( keys $serv_hash ) {
 	
@@ -617,8 +656,6 @@ sub cash_box_mandocpack
 		
 		if ( /^(service|service_urgent)$/ ) {
 		
-			$data->{ applicants } = [];
-			
 			for my $n ( 0..($serv_hash->{ $_ } - 1) ) {
 			
 				$data->{ applicants }->[ $n ]->{ Status } = 1;
@@ -636,6 +673,8 @@ sub cash_box_mandocpack
 				$data->{ applicants }->[ $concil_index + $n ]->{ AgeCatA } = 1 if /^concil_n_age$/;
 				
 				$data->{ applicants }->[ $concil_index + $n ]->{ iNRes } = 1 if /^concil_n$/;
+				
+				$data->{ applicants }->[ $concil_index + $n ]->{ direct_concil } = 1;
 			}
 			
 			$concil_index += $serv_hash->{ $_ };
@@ -644,10 +683,14 @@ sub cash_box_mandocpack
 		}
 
 		$data->{ $_ } = $serv_hash->{ $_ } if /^(vipsrv|sms_status|anketasrv|printsrv|printsrv|photosrv|xerox)$/;
+		
+		$data->{ $_ } = $serv_hash->{ $_ } if /^(srv1|srv2|srv3|srv4|srv5|srv6|srv7|srv8|srv9)$/;
+		
+		# vip_standart
 	}
 	
 	$data->{ urgent } = ( $urgent_docpack ? 1 : 0 );
-	
+
 	my @resp = send_docpack( $self, undef, $param->{ moneytype }, $param->{ money }, $data,
 		$param->{ login }, $param->{ pass }, $param->{ callback } );
 

@@ -1,3 +1,3 @@
 # shtrih-interceptor
 
-Shtrih-M <--> CRM network integration system
+Shtrih-M cash register <--> CRM network integration system

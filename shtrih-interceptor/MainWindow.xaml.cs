@@ -43,9 +43,30 @@ namespace shtrih_interceptor
             ThreadPool.SetMinThreads(2, 2);
 
             foreach (string buttonName in new[] {
-                "service", "service_urgent", "vip_comfort", "vipsrv", "concil", "concil_urg_r",
-                "concil_n", "concil_n_age", "sms_status", "vip_standart", "anketasrv", "printsrv",
-                "photosrv", "xerox", "transum", "dhl"
+                "service",
+                "service_urgent",
+                "vip_comfort",
+                "vipsrv",
+                "concil",
+                "concil_urg_r",
+                "concil_n",
+                "concil_n_age",
+                "sms_status",
+                "anketasrv",
+                "printsrv",
+                "photosrv",
+                "xerox",
+                "transum",
+                "dhl",
+                "srv1",
+                "srv2",
+                "srv3",
+                "srv4",
+                "srv5",
+                "srv6",
+                "srv7",
+                "srv8",
+                "srv9"
             }) servButtonCleaningList.Add((Button)mainGrid.FindName(buttonName));
         }
 

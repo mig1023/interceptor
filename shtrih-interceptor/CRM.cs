@@ -27,9 +27,11 @@ namespace shtrih_interceptor
             {
                 authString = getHtml(url);
             }
-            catch
+            catch(WebException e)
             {
                 loginError = "Ошибка доступа к серверу";
+                Log.add("Ошибка доступа к серверу:"+e.Message);
+                Log.add("Доп.инфа:" + ((HttpWebResponse)e.Response).StatusDescription);
                 return false;
             }
 

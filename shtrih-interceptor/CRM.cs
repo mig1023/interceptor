@@ -27,11 +27,12 @@ namespace shtrih_interceptor
             {
                 authString = getHtml(url);
             }
-            catch(WebException e)
+            catch (WebException e)
             {
                 loginError = "Ошибка доступа к серверу";
-                Log.add("Ошибка доступа к серверу:"+e.Message);
-                Log.add("Доп.инфа:" + ((HttpWebResponse)e.Response).StatusDescription);
+
+                Log.addWeb(e.Message);
+
                 return false;
             }
 
@@ -42,10 +43,15 @@ namespace shtrih_interceptor
             if (authData[0] != "OK" || !Int32.TryParse(authData[1], out result))
             {
                 loginError = authData[1];
+
+                Log.add(loginError);
+
                 return false;
             }
 
             Password = Int32.Parse(authData[1]);
+
+            Log.add("успешный вход: " + login + "/" + authData[1]);
 
             return true;
         }
@@ -60,8 +66,10 @@ namespace shtrih_interceptor
             {
                 centerString = getHtml(url);
             }
-            catch
+            catch (WebException e)
             {
+                Log.addWeb("(центры) " + e.Message);
+
                 return null;
             }
 
@@ -78,8 +86,10 @@ namespace shtrih_interceptor
             {
                 vtypeString = getHtml(url);
             }
-            catch
+            catch (WebException e)
             {
+                Log.addWeb("(типы виз) " + e.Message);
+
                 return null;
             }
 
@@ -93,7 +103,7 @@ namespace shtrih_interceptor
             return ip.ToString();
         }
 
-        public static bool sendManDocPack(List<string> manDocPack, string login, int password, int moneyType,
+        public static string sendManDocPack(List<string> manDocPack, string login, int password, int moneyType,
             string money, string center, string vType, string returnDate)
         {
             string requestResult = "";
@@ -111,17 +121,14 @@ namespace shtrih_interceptor
             {
                 requestResult = getHtml(url);
             }
-            catch
+            catch (WebException e)
             {
-                return false;
+                Log.addWeb("(отправка запроса на чек) " + e.Message);
+
+                return "ERROR";
             }
 
-            string[] reslutData = requestResult.Split('|');
-
-            if (reslutData[0] == "OK")
-                return true;
-            else
-                return false;
+            return requestResult;
         }
 
         public static string generateMySQLHash(string line)

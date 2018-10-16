@@ -84,6 +84,32 @@ namespace shtrih_interceptor
             Log.addWithCode("отчёт по налогам");
         }
 
+        public static void cancelDocument()
+        {
+            Driver.Password = CRM.Password;
+            Driver.CancelCheck();
+
+            Log.addWithCode("отмена чека по кнопке");
+        }
+
+        public static void cashIncome(string summ)
+        {
+            Driver.Password = CRM.Password;
+            Driver.Summ1 = DocPack.manualParseDecimal(summ);
+            Driver.CashIncome();
+
+            Log.addWithCode("внесение денег (" + summ + ")");
+        }
+
+        public static void cashOutcome(string summ)
+        {
+            Driver.Password = CRM.Password;
+            Driver.Summ1 = DocPack.manualParseDecimal(summ);
+            Driver.CashOutcome();
+
+            Log.addWithCode("выплата денег (" + summ + ")");
+        }
+
         public static string printDocPack(DocPack doc, int MoneyType = -1,
             bool returnSale = false, decimal? MoneySumm = null)
         {

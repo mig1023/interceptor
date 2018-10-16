@@ -18,6 +18,7 @@ using System.Windows.Media.Animation;
 using System.Text.RegularExpressions;
 using System.Windows.Controls.Primitives;
 using System.Timers;
+using System.Reflection;
 
 namespace shtrih_interceptor
 {
@@ -43,9 +44,9 @@ namespace shtrih_interceptor
             ThreadPool.SetMinThreads(2, 2);
 
             foreach (string buttonName in new[] {
+                "closeCheck",
                 "service",
                 "service_urgent",
-                "vip_comfort",
                 "vipsrv",
                 "concil",
                 "concil_urg_r",
@@ -104,6 +105,15 @@ namespace shtrih_interceptor
             MoveCanvas(
                 moveCanvas: checkPlace,
                 prevCanvas: mainPlace
+            );
+        }
+
+        private void systemInfo_Click(object sender, RoutedEventArgs e)
+        {
+            MoveCanvas(
+                moveCanvas: systemInfoPlace,
+                prevCanvas: mainPlace,
+                direction: moveDirection.vertical
             );
         }
 
@@ -254,19 +264,44 @@ namespace shtrih_interceptor
                 serv.IsEnabled = (block ? false : true);
 
             moneyForDHL.IsEnabled = (block ? false : true);
+            allCenters.IsEnabled = (block ? false : true);
+            allVisas.IsEnabled = (block ? false : true);
+            returnDate.IsEnabled = (block ? false : true);
         }
 
         private void сloseCheck_Click(object sender, RoutedEventArgs e)
         {
-            bool sendingSuccess = CRM.sendManDocPack(manDocPack, login.Text, CRM.Password, 1,
+            string sendingSuccess = CRM.sendManDocPack(manDocPack, login.Text, CRM.Password, 1,
                 moneyForCheck.Text, allCenters.Text, allVisas.Text, returnDate.Text);
 
-            if (sendingSuccess)
+            string[] sendingData = sendingSuccess.Split('|');
+
+            if (sendingData[0] == "OK")
             {
+                Log.add("успешно закрыт чек");
+
                 blockCheckButton(block: true);
+            }
+            else if (sendingData[0] == "WARNING")
+            {
+                Log.add("некоторые услуги из чека не имеют цены: " + sendingData[1]);
+
+                MessageBoxResult result = MessageBox.Show(
+                    "Услуги имеют цену по прайслисту выбранного центра: " +
+                    sendingData[1] + "." +
+                    "Такие услуги не будут отображены в чеке. Продолжить?",
+                    "Внимание!",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                    blockCheckButton(block: true);
+                else
+                    cleanCheck();
             }
             else
             {
+                Log.add("во время формироания чека произошла ошибка");
+
                 loginFailText.Content = "Во время отправки запроса произошла ошибка";
                 returnFromErrorTo = checkPlace;
 
@@ -364,9 +399,7 @@ namespace shtrih_interceptor
 
         private void returnSale_Click(object sender, RoutedEventArgs e)
         {
-            decimal money = DocPack.manualParseDecimal(moneyForCheck.Text);
-
-            string[] result = Cashbox.printDocPack(Cashbox.manDocPackForPrinting, returnSale: true, MoneySumm: money).Split(':');
+            string[] result = Cashbox.printDocPack(Cashbox.manDocPackForPrinting, returnSale: true, MoneySumm: Cashbox.manDocPackSumm).Split(':');
 
             checkError(result, checkPlace, "Ошибка кассы");
         }
@@ -379,6 +412,45 @@ namespace shtrih_interceptor
         private void continueDocument_Click(object sender, RoutedEventArgs e)
         {
             Cashbox.continueDocument();
+        }
+
+        private void cashIncome_Click(object sender, RoutedEventArgs e)
+        {
+            Cashbox.cashIncome(moneyForIncome.Text);
+        }
+
+        private void cashOutcome_Click(object sender, RoutedEventArgs e)
+        {
+            Cashbox.cashOutcome(moneyForOutcome.Text);
+        }
+
+        private void backToMainFromInfo_Click(object sender, RoutedEventArgs e)
+        {
+            MoveCanvas(
+                moveCanvas: mainPlace,
+                prevCanvas: systemInfoPlace,
+                direction: moveDirection.vertical
+            );
+        }
+
+        private void statusImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            status_Click(null, null);
+        }
+
+        private void checkImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            check_Click(null, null);
+        }
+
+        private void settingsImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            systemInfo_Click(null, null);
+        }
+
+        private void cancelDocument_Click(object sender, RoutedEventArgs e)
+        {
+            Cashbox.cancelDocument();
         }
     }
 }

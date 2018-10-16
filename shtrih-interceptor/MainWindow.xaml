@@ -8,55 +8,42 @@
         Title="shtrih-interceptor" Height="420" Width="800" ResizeMode="CanMinimize">
     <Grid x:Name="mainGrid">
         <Canvas x:Name="mainPlace" Margin="2,-392,-2,392">
-            <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="12" Background="Gray" Canvas.Left="536" Canvas.Top="276"/>
-            <Canvas x:Name="activity" HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="12" Background="Gray" Canvas.Left="553" Canvas.Top="276"/>
-            <Button x:Name="check" Content="чек вручную" HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="158" Click="check_Click" Canvas.Left="572" Canvas.Top="276"/>
-            <Button x:Name="status" Content="отчёты и повторы" HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="158" Click="status_Click" Canvas.Left="371" Canvas.Top="276"/>
-            <Label x:Name="statusl_label" Content="версия приложения" Height="25" Canvas.Left="25" Canvas.Top="20" Width="122"/>
-            <Label x:Name="status2_label" Content="адрес приложения" Height="25" Canvas.Left="25" Canvas.Top="40" Width="122"/>
-            <Label x:Name="status3_label" Content="адрес vms" Height="25" Canvas.Left="25" Canvas.Top="60" Width="122"/>
-            <Label x:Name="status4_label" Content="порт кассы" Height="25" Canvas.Left="25" Canvas.Top="80" Width="122"/>
-            <Label x:Name="status5_label" Content="скорость кассы" Height="25" Canvas.Left="25" Canvas.Top="100" Width="122"/>
-            <Label x:Name="status6_label" Content="тип кассы" Height="25" Canvas.Left="25" Canvas.Top="120" Width="122"/>
-            <Label x:Name="status7_label" Content="версия прогр.кассы" Height="25" Canvas.Left="25" Canvas.Top="140" Width="122"/>
-            <Label x:Name="status8_label" Content="состояние" Height="25" Canvas.Left="25" Canvas.Top="160" Width="122"/>
-            <Label x:Name="status1" Content="" Height="25" Canvas.Left="184" Canvas.Top="20" Width="285"/>
-            <Label x:Name="status2" Content="" Height="25" Canvas.Left="184" Canvas.Top="40" Width="285"/>
-            <Label x:Name="status3" Content="" Height="25" Canvas.Left="184" Canvas.Top="60" Width="285"/>
-            <Label x:Name="status4" Content="" Height="25" Canvas.Left="184" Canvas.Top="80" Width="285"/>
-            <Label x:Name="status5" Content="" Height="25" Canvas.Left="184" Canvas.Top="100" Width="285"/>
-            <Label x:Name="status6" Content="" Height="25" Canvas.Left="184" Canvas.Top="120" Width="285"/>
-            <Label x:Name="status7" Content="" Height="25" Canvas.Left="184" Canvas.Top="140" Width="285"/>
-            <Label x:Name="status8" Content="" Height="25" Canvas.Left="184" Canvas.Top="160" Width="285"/>
+            <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="490" Canvas.Top="304"/>
+            <Canvas x:Name="activity" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="509" Canvas.Top="304"/>
+            <Button x:Name="check" Content="чек вручную" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Click="check_Click" Canvas.Left="261" Canvas.Top="304"/>
+            <Button x:Name="status" Content="отчёты и повторы" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Click="status_Click" Canvas.Left="32" Canvas.Top="304"/>
+            <Button x:Name="systemInfo" Content="техническая информация" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Click="systemInfo_Click" Canvas.Left="528" Canvas.Top="304"/>
+            <Image x:Name="statusImage" Height="150" Canvas.Left="76" Canvas.Top="89" Width="150" Source="reports.png" PreviewMouseDown="statusImage_PreviewMouseDown"/>
+            <Image x:Name="checkImage" Height="150" Canvas.Left="308" Canvas.Top="89" Width="150" Source="invoice.png" PreviewMouseDown="checkImage_PreviewMouseDown"/>
+            <Image x:Name="settingsImage" Height="150" Canvas.Left="548" Canvas.Top="89" Width="150" Source="settings.png" PreviewMouseDown="settingsImage_PreviewMouseDown"/>
         </Canvas>
         <Canvas x:Name="checkPlace" Margin="796,0,-796,0">
             <Button x:Name="backToMainFromCheck" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromCheck_Click"/>
-            <Button x:Name="сloseCheck" Content="закрыть чек" Height="42" Canvas.Left="19" Canvas.Top="323" Width="155" Click="сloseCheck_Click"/>
+            <Button x:Name="closeCheck" Content="закрыть чек" Height="42" Canvas.Left="19" Canvas.Top="323" Width="155" Click="сloseCheck_Click"/>
             <TextBox x:Name="moneyForCheck" Height="40" Canvas.Left="287" TextWrapping="Wrap" Text="0.00" Canvas.Top="323" Width="117" FontSize="22"/>
             <ComboBox x:Name="allCenters" Height="25" Canvas.Left="203" Canvas.Top="16" Width="232" SelectionChanged="allCenters_SelectionChanged"/>
             <ComboBox x:Name="allVisas" Height="25" Canvas.Left="442" Canvas.Top="16" Width="204"/>
 
             <Button x:Name="service" Content="сервисный" Height="37" Canvas.Left="19" Canvas.Top="67" Width="179" Click="addService_Click"/>
             <Button x:Name="service_urgent" Content="срочный сервисный" Height="37" Canvas.Left="203" Canvas.Top="67" Width="179" Click="addService_Click"/>
-            <Button x:Name="vip_comfort" Content="вип комфорт" Height="37" Canvas.Left="387" Canvas.Top="67" Width="179" Click="addService_Click"/>
             <Button x:Name="vipsrv" Content="вип обслуживание" Height="37" Canvas.Left="571" Canvas.Top="67" Width="197" Click="addService_Click"/>
             <Button x:Name="concil" Tag="" Content="консульский" Height="37" Canvas.Left="19" Canvas.Top="109" Width="179" Click="addService_Click"/>
             <Button x:Name="concil_urg_r" Content="КС срочный резидент" Height="37" Canvas.Left="203" Canvas.Top="109" Width="179" Click="addService_Click"/>
             <Button x:Name="concil_n" Content="КС нерезидент" Height="37" Canvas.Left="387" Canvas.Top="109" Width="179" Click="addService_Click"/>
             <Button x:Name="concil_n_age" Content="КС нерезидент 6-12 лет" Height="37" Canvas.Left="571" Canvas.Top="109" Width="197" Click="addService_Click"/>
             <Button x:Name="sms_status" Content="смс" Height="37" Canvas.Left="19" Canvas.Top="151" Width="179" Click="addService_Click"/>
-            <Button x:Name="srv4" Content="вип комфорт" Height="37" Canvas.Left="203" Canvas.Top="151" Width="179" Click="addService_Click"/>
+            <Button x:Name="srv4" Content="вип комфорт" Height="37" Canvas.Left="387" Canvas.Top="67" Width="179" Click="addService_Click"/>
             <Button x:Name="anketasrv" Content="заполнение анкеты" Height="37" Canvas.Left="387" Canvas.Top="151" Width="179" Click="addService_Click"/>
             <Button x:Name="printsrv" Content="распечатка документов" Height="37" Canvas.Left="571" Canvas.Top="151" Width="197" Click="addService_Click"/>
-            <Button x:Name="photosrv" Content="фото" Height="37" Canvas.Left="19" Canvas.Top="193" Width="179" Click="addService_Click"/>
-            <Button x:Name="xerox" Content="ксерокс" Height="37" Canvas.Left="203" Canvas.Top="193" Width="179" Click="addService_Click"/>
-            <Button x:Name="transum" Content="перевод" Height="37" Canvas.Left="387" Canvas.Top="193" Width="107" Click="addService_Click"/>
-            <Button x:Name="dhl" Content="&lt;---- доставка" Height="37" Canvas.Left="631" Canvas.Top="193" Width="137" Click="addService_Click"/>
-            <TextBox x:Name="moneyForDHL" Height="37" Canvas.Left="506" TextWrapping="Wrap" Text="0.00" Canvas.Top="193" Width="104" FontSize="22"/>
+            <Button x:Name="photosrv" Content="фото" Height="37" Canvas.Left="203" Canvas.Top="151" Width="179" Click="addService_Click"/>
+            <Button x:Name="xerox" Content="ксерокс" Height="37" Canvas.Left="19" Canvas.Top="193" Width="179" Click="addService_Click"/>
+            <Button x:Name="transum" Content="перевод" Height="37" Canvas.Left="203" Canvas.Top="193" Width="179" Click="addService_Click"/>
+            <Button x:Name="dhl" Content="&lt;---- доставка" Height="37" Canvas.Left="571" Canvas.Top="193" Width="197" Click="addService_Click"/>
+            <TextBox x:Name="moneyForDHL" Height="37" Canvas.Left="442" TextWrapping="Wrap" Text="0.00" Canvas.Top="193" Width="104" FontSize="22"/>
             <Button x:Name="printCheckMoney" Content="наличными" IsEnabled="False" Height="40" Canvas.Left="428" Canvas.Top="323" Width="110" Click="printCheckMoney_Click"/>
             <Button x:Name="printCheckCard" Content="картой" IsEnabled="False" Height="40" Canvas.Left="543" Canvas.Top="323" Width="110" Click="printCheckCard_Click"/>
             <Label x:Name="currency1" Content="₽" Canvas.Left="403" Canvas.Top="317" FontSize="28"/>
-            <Label x:Name="currency2" Content="₽" Canvas.Left="608" Canvas.Top="185" FontSize="28"/>
+            <Label x:Name="currency2" Content="₽" Canvas.Left="544" Canvas.Top="185" FontSize="28"/>
             <Button x:Name="returnSale" Content="возврат" IsEnabled="False" Height="40" Canvas.Left="658" Canvas.Top="323" Width="110" Click="returnSale_Click"/>
             <Label x:Name="total" Content="" Height="27" Canvas.Left="179" Canvas.Top="332" Width="103"/>
             <DatePicker x:Name="returnDate" Height="25" Canvas.Left="651" Canvas.Top="16" Width="117"/>
@@ -78,6 +65,13 @@
             <Button x:Name="reportDepartment" Content="отчёт по отделам" Height="48" Canvas.Left="335" Canvas.Top="15" Width="155" Click="reportDepartment_Click"/>
             <Button x:Name="reportTax" Content="отчёт по налогам" Height="48" Canvas.Left="495" Canvas.Top="15" Width="155" Click="reportTax_Click"/>
             <Button x:Name="continueDocument" Content="продолжить печать" Height="48" Canvas.Left="175" Canvas.Top="68" Width="155" Click="continueDocument_Click"/>
+            <Button x:Name="cancelDocument" Content="аннулировать чек" Height="48" Canvas.Left="335" Canvas.Top="68" Width="155" Click="cancelDocument_Click"/>
+            <Button x:Name="cashIncome" Content="&lt;---- внесение в кассу" Height="37" Canvas.Left="205" Canvas.Top="179" Width="197" Click="cashIncome_Click"/>
+            <TextBox x:Name="moneyForIncome" Height="37" Canvas.Left="19" TextWrapping="Wrap" Text="0.00" Canvas.Top="179" Width="156" FontSize="22"/>
+            <Label x:Name="currencyIncome" Content="₽" Canvas.Left="175" Canvas.Top="171" FontSize="28"/>
+            <Button x:Name="cashOutcome" Content="&lt;---- выплата из кассы" Height="37" Canvas.Left="205" Canvas.Top="224" Width="197" Click="cashOutcome_Click"/>
+            <TextBox x:Name="moneyForOutcome" Height="37" Canvas.Left="19" TextWrapping="Wrap" Text="0.00" Canvas.Top="224" Width="156" FontSize="22"/>
+            <Label x:Name="currencyOutcome" Content="₽" Canvas.Left="175" Canvas.Top="216" FontSize="28"/>
         </Canvas>
 
         <Canvas x:Name="loginPlace" Margin="-3,0,3,0">
@@ -90,6 +84,25 @@
         <Canvas x:Name="loginFail" Margin="0,392,0,-392" Background="#FFFF4E4E">
             <Button x:Name="backToLoginFromFail" Content="попробовать ещё раз" Height="42" Canvas.Left="59" Canvas.Top="164" Width="211" Click="returnFromError_Click"/>
             <Label x:Name="loginFailText" Content="Неизвестная ошибка" Height="33" Canvas.Left="52" Canvas.Top="126" Width="709" FontSize="16"/>
+        </Canvas>
+        <Canvas x:Name="systemInfoPlace" Margin="2,-393,-2,393">
+            <Button x:Name="backToMainFromInfo" Content="назад" Height="42" Canvas.Left="606" Canvas.Top="321" Width="155" Click="backToMainFromInfo_Click"/>
+            <Label x:Name="statusl_label" Content="версия приложения" Height="25" Canvas.Left="25" Canvas.Top="20" Width="122"/>
+            <Label x:Name="status2_label" Content="адрес приложения" Height="25" Canvas.Left="25" Canvas.Top="40" Width="122"/>
+            <Label x:Name="status3_label" Content="адрес vms" Height="25" Canvas.Left="25" Canvas.Top="60" Width="122"/>
+            <Label x:Name="status4_label" Content="порт кассы" Height="25" Canvas.Left="25" Canvas.Top="80" Width="122"/>
+            <Label x:Name="status5_label" Content="скорость кассы" Height="25" Canvas.Left="25" Canvas.Top="100" Width="122"/>
+            <Label x:Name="status6_label" Content="тип кассы" Height="25" Canvas.Left="25" Canvas.Top="120" Width="122"/>
+            <Label x:Name="status7_label" Content="версия прогр.кассы" Height="25" Canvas.Left="25" Canvas.Top="140" Width="122"/>
+            <Label x:Name="status8_label" Content="состояние" Height="25" Canvas.Left="25" Canvas.Top="160" Width="122"/>
+            <Label x:Name="status1" Content="" Height="25" Canvas.Left="184" Canvas.Top="20" Width="285"/>
+            <Label x:Name="status2" Content="" Height="25" Canvas.Left="184" Canvas.Top="40" Width="285"/>
+            <Label x:Name="status3" Content="" Height="25" Canvas.Left="184" Canvas.Top="60" Width="285"/>
+            <Label x:Name="status4" Content="" Height="25" Canvas.Left="184" Canvas.Top="80" Width="285"/>
+            <Label x:Name="status5" Content="" Height="25" Canvas.Left="184" Canvas.Top="100" Width="285"/>
+            <Label x:Name="status6" Content="" Height="25" Canvas.Left="184" Canvas.Top="120" Width="285"/>
+            <Label x:Name="status7" Content="" Height="25" Canvas.Left="184" Canvas.Top="140" Width="285"/>
+            <Label x:Name="status8" Content="" Height="25" Canvas.Left="184" Canvas.Top="160" Width="285"/>
         </Canvas>
 
     </Grid>

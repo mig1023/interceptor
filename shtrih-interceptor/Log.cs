@@ -19,6 +19,11 @@ namespace shtrih_interceptor
             add(line + ": " + Cashbox.getResultLine() + " [" + Cashbox.getResultCode() + "]", logType, freeLine);
         }
 
+        public static void addWeb(string line, string logType = "main", bool freeLine = false)
+        {
+            add("Ошибка доступа к серверу: " + line, logType, freeLine);
+        }
+
         public static void add(string line, string logType = "main", bool freeLine = false)
         {
             string logFileName;

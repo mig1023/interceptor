@@ -8,6 +8,8 @@ use Digest::MD5  qw(md5_hex);
 use Data::Dumper;
 use Encode qw(decode encode);
 
+	my $mandocpack_failserv = '';
+
 sub new
 # //////////////////////////////////////////////////
 {
@@ -154,6 +156,8 @@ sub send_request
 		$serv = $callback;
 	}
 	
+	return "ERR1:не установлена кассовая интеграция" unless $serv =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
+	
 	my $ua = LWP::UserAgent->new;
 	
 	$ua->agent( 'Mozilla/4.0 (compatible; MSIE 6.0; X11; Linux i686; en) Opera 7.60' );
@@ -193,7 +197,7 @@ sub get_all_add_services
 	my $serv_price = $vars->db->selallkeys("
 		SELECT ServiceID, Price FROM ServicesPriceRates WHERE PriceRateID = ?", $data->{ rate }
 	);
-
+	
 	my %serv_price = map { $_->{ ServiceID } => $_->{ Price } } @$serv_price;
 
 	if ( !$callback ) {
@@ -446,6 +450,14 @@ sub doc_services
 
 	for my $serv ( keys %$servsums ) {
 	
+		$mandocpack_failserv .= ( $mandocpack_failserv ? ', ' : '' ) . $servsums->{ $serv }->{ Name }
+			if $servsums->{ $serv }->{ Quantity }
+				and (
+					$servsums->{ $serv }->{ Price } eq '0.00'
+					or
+					!$servsums->{ $serv }->{ Price }
+				);
+	
 		if ( !$servsums->{ $serv }->{ Quantity } or $servsums->{ $serv }->{ Price } eq '0.00' ) {
 			
 			delete $servsums->{ $serv };
@@ -527,7 +539,7 @@ sub cash_box_auth
 		AND Locked = 0",
 		$param->{ login }, $param->{ pass }
 	);
-	
+
 	return cash_box_output( $self, "ERROR|Неудачная авторизация в VMS" ) unless $login and $pass;
 	
 	return cash_box_output( $self, "OK|$pass" );
@@ -596,7 +608,7 @@ sub cash_box_mandocpack
 	my $vars = $self->{ 'VCS::Vars' };
 	
 	my $gconfig = $vars->getConfig('general');
-
+	
 	my $param = {};
 	my $serv_hash = {};
 	
@@ -685,14 +697,16 @@ sub cash_box_mandocpack
 		$data->{ $_ } = $serv_hash->{ $_ } if /^(vipsrv|sms_status|anketasrv|printsrv|printsrv|photosrv|xerox)$/;
 		
 		$data->{ $_ } = $serv_hash->{ $_ } if /^(srv1|srv2|srv3|srv4|srv5|srv6|srv7|srv8|srv9)$/;
-		
-		# vip_standart
 	}
 	
 	$data->{ urgent } = ( $urgent_docpack ? 1 : 0 );
+	
+	$mandocpack_failserv = '';
 
 	my @resp = send_docpack( $self, undef, $param->{ moneytype }, $param->{ money }, $data,
 		$param->{ login }, $param->{ pass }, $param->{ callback } );
+		
+	return cash_box_output( $self, "WARNING|$mandocpack_failserv" ) if $mandocpack_failserv;
 
 	return cash_box_output( $self, "OK|Запрос получен" );
 }

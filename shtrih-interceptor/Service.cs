@@ -12,5 +12,6 @@ namespace shtrih_interceptor
         public int Quantity;
         public decimal Price;
         public int VAT;
+        public int Department;
     }
 }

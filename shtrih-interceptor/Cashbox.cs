@@ -131,6 +131,8 @@ namespace shtrih_interceptor
                 Driver.Price = service.Price;
                 Driver.StringForPrinting = service.Name;
 
+                Driver.Department = service.Department;
+
                 Driver.Tax1 = service.VAT;
                 Driver.Tax2 = 0;
                 Driver.Tax3 = 0;

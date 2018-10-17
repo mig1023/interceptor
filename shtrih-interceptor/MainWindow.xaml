@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:shtrih_interceptor"
         mc:Ignorable="d"
-        Title="shtrih-interceptor" Height="420" Width="800" ResizeMode="CanMinimize">
+        Title="interceptor" Height="420" Width="800" ResizeMode="CanMinimize">
     <Grid x:Name="mainGrid">
         <Canvas x:Name="mainPlace" Margin="2,-392,-2,392">
             <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="490" Canvas.Top="304"/>

@@ -50,6 +50,7 @@ namespace shtrih_interceptor
                 newService.Quantity = int.Parse(node["Quantity"].InnerText);
                 newService.Price = manualParseDecimal(node["Price"].InnerText);
                 newService.VAT = int.Parse(node["VAT"].InnerText);
+                newService.Department = int.Parse(node["Department"].InnerText);
 
                 this.Services.Add(newService);
             }

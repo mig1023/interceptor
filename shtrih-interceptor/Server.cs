@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace shtrih_interceptor
+namespace interceptor
 {
     class Server
     {

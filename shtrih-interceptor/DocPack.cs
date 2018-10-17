@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 
 
-namespace shtrih_interceptor
+namespace interceptor
 {
     public class DocPack
     {

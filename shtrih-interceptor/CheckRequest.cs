@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace shtrih_interceptor
+namespace interceptor
 {
     class CheckRequest
     {

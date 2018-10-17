@@ -7,7 +7,7 @@ using DrvFRLib;
 using System.Timers;
 using System.Windows;
 
-namespace shtrih_interceptor
+namespace interceptor
 {
     class Cashbox
     {

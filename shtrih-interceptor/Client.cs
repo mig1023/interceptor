@@ -10,7 +10,7 @@ using System.Xml;
 using System.Windows;
 using System.Threading;
 
-namespace shtrih_interceptor
+namespace interceptor
 {
     class Client
     {

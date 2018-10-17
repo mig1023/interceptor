@@ -20,7 +20,7 @@ using System.Windows.Controls.Primitives;
 using System.Timers;
 using System.Reflection;
 
-namespace shtrih_interceptor
+namespace interceptor
 {
     public enum moveDirection { horizontal, vertical };
 

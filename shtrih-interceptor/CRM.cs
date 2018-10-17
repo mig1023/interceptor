@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace shtrih_interceptor
+namespace interceptor
 {
     class CRM
     {

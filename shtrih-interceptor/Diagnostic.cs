@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace shtrih_interceptor
+namespace interceptor
 {
     class Diagnostics
     {

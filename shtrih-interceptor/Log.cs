@@ -10,7 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Xml.Serialization;
 
-namespace shtrih_interceptor
+namespace interceptor
 {
     class Log
     {

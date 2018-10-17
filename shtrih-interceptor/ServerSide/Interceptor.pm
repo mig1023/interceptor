@@ -251,7 +251,7 @@ sub get_all_add_services
 				Quantity	=> 1,
 				Price		=> $_->{ Value },
 				VAT 		=> 1,
-
+				Department	=> 1,
 			};
 		}
 		elsif ( $_->{ ValueType } == 2 ) {
@@ -263,6 +263,7 @@ sub get_all_add_services
 				Quantity	=> $_->{ Value },
 				Price		=> $price,
 				VAT 		=> 1,
+				Department	=> 1,
 			};
 		}
 	}
@@ -363,78 +364,91 @@ sub doc_services
 			Quantity	=> $shcnt,
 			Price		=> sprintf( "%.2f", $shsum ),
 			VAT		=> 1,
+			Department	=> 1,
 		},
 		sms => {
 			Name		=> 'Услуги по СМС оповещению',
 			Quantity	=> $smscnt,
 			Price		=> sprintf( "%.2f", $prices->{ sms } ),
 			VAT		=> 1,
+			Department	=> 1,
 		},
 		tran => {
 			Name		=> 'Услуги по переводу документов',
 			Quantity	=> $data->{ transum },
 			Price		=> sprintf( "%.2f", $prices->{ tran } ),
 			VAT		=> 1,
+			Department	=> 1,
 		},
 		xerox => {
 			Name		=> 'Услуги по копированию',
 			Quantity	=> $data->{ xerox },
 			Price		=> sprintf( "%.2f", $prices->{ xerox } ),
 			VAT		=> 1,
+			Department	=> 1,
 		},
 		visa => {
 			Name		=> ( $data->{'urgent'} ? 'Cрочн.cервисный' : 'Cервисный' ).' сбор',
 			Quantity	=> $apcnt,
 			Price		=> sprintf( "%.2f", $vprice ),
 			VAT		=> 1,
+			Department	=> 2,
 		},
 		ank => {
 			Name		=> '00502 Услуги по заполнению анкеты',
 			Quantity	=> $data->{ anketasrv },
 			Price		=> sprintf( "%.2f", $prices->{ anketasrv } ),
 			VAT		=> 1,
+			Department	=> 1,
 		},
 		print => {
 			Name		=> '00503 Услуги по распечатке',
 			Quantity	=> $data->{ printsrv },
 			Price		=> sprintf( "%.2f", $prices->{ printsrv } ),
 			VAT		=> 1,
+			Department	=> 1,
 		},
 		photo => {
 			Name		=> '00504 Услуги по фотографированию',
 			Quantity	=> $data->{ photosrv },
 			Price		=> sprintf( "%.2f", $prices->{ photosrv } ),
 			VAT		=> 1,
+			Department	=> 1,
 		},
 		vip => {
 			Name		=> 'ВИП обслуживание',
 			Quantity	=> $data->{ vipsrv },
 			Price		=> sprintf( "%.2f", $prices->{ vipsrv } ),
 			VAT		=> 1,
+			Department	=> 1,
 		},
 		cons_resident => {
 			Name		=> "Консульский сбор (резидент$urg_text)",
 			Quantity	=> ( $data->{ vcat } eq 'C' ? $cntres : 0 ),
 			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) } ),
 			VAT		=> 0,
+			Department	=> 3,
 		},
 		cons_noresident => {
 			Name		=> "Консульский сбор (нерезидент$urg_text)",
 			Quantity	=> $cntnres,
 			Price		=> sprintf( '%.2f', $prices->{ 'conciln' . ( $data->{ urgent } ? 'u' : '' ) } ),
 			VAT		=> 0,
+			Department	=> 3,
 		},
 		cons_age => {
 			Name		=> "Консульский сбор (возраст$urg_text)",
 			Quantity	=> $cntage,
 			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) . '_' . $ages } ),
 			VAT		=> 0,
+			Department	=> 3,
 		},
 		cons_d => {
 			Name		=> "Консульский сбор (тип D$urg_text)",
 			Quantity	=> ( $data->{ vcat } eq 'D' ? $cntres : 0 ),
 			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) } ),
 			VAT		=> 0,
+			Department	=> 3,
 		},
 	};
 
@@ -494,6 +508,8 @@ sub cash_box
 	$param->{ $_ } =~ s/[^0-9]//g for ( 'docid', 'ptype' );
 	
 	$param->{ summ } =~ s/[^0-9\.,]//g;
+	
+	$param->{ summ } =~ s/,/./g if $param->{ summ } =~ /,/;
 	
 	return cash_box_output( $self, "ERROR|Ошибка параметров" )
 		if !$param->{ docid } or ( $param->{ ptype } != 1 and $param->{ ptype } != 2 );

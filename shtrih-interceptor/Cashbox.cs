@@ -19,6 +19,8 @@ namespace interceptor
         public static DocPack manDocPackForPrinting;
         public static decimal manDocPackSumm;
 
+
+
         static Cashbox()
         {
             Driver = new DrvFR();
@@ -110,6 +112,66 @@ namespace interceptor
             Log.addWithCode("выплата денег (" + summ + ")");
         }
 
+        static string tableField(int tableNumber, int fieldNumber, int rowNumber, string fieldValue = "")
+        {
+            Driver.TableNumber = tableNumber;
+            Driver.FieldNumber = fieldNumber;
+            Driver.RowNumber = rowNumber;
+
+            Driver.GetFieldStruct();
+
+            Driver.ReadTable();
+
+            if (fieldValue != "")
+            {
+                if (fieldValue == Driver.ValueOfFieldString)
+                    Log.addWithCode("поле " + tableNumber + "/" + fieldNumber + "/" + rowNumber + "/" + fieldValue + " идентично");
+                else
+                {
+                    Log.addWithCode("запись поля " + tableNumber + "/" + fieldNumber + "/" + rowNumber + "/" + fieldValue);
+
+                    Driver.ValueOfFieldString = fieldValue;
+                    Driver.WriteTable();
+
+                    if (Driver.ResultCode != 0) return "";
+                }
+            }
+                
+            return Driver.ValueOfFieldString;
+        }
+
+        public static bool failCashboxField(int tableNumber, int fieldNumber, int rowNumber, string fieldValue)
+        {
+            return (tableField(tableNumber, fieldNumber, rowNumber) != fieldValue);
+        }
+
+        public static bool resettingCashbox()
+        {
+            foreach (CashboxData field in CashboxData.data)
+                if (tableField(field.tableNumber, field.fieldNumber, field.rowNumber, field.fieldValue) == "")
+                    return false;
+
+            return true;
+        }
+
+        public static string checkCashboxTables()
+        {
+            List<string> tablesCorrupted = new List<string>();
+
+            foreach (CashboxData field in CashboxData.data)
+                if (failCashboxField(field.tableNumber, field.fieldNumber, field.rowNumber, field.fieldValue))
+                    tablesCorrupted.Add(field.description);
+
+            return string.Join(", ", tablesCorrupted.ToArray());
+        }
+
+        public static void printLine()
+        {
+            Driver.Password = currentDrvPassword;
+            Driver.StringForPrinting = "------------------------------------";
+            Driver.PrintString();
+        } 
+
         public static string printDocPack(DocPack doc, int MoneyType = -1,
             bool returnSale = false, decimal? MoneySumm = null)
         {
@@ -142,6 +204,8 @@ namespace interceptor
                     Driver.ReturnSale();
                 else
                     Driver.Sale();
+
+                printLine();
             }
 
             Driver.Password = currentDrvPassword;

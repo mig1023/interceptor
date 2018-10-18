@@ -28,7 +28,7 @@ namespace interceptor
     {
         List<string> manDocPack = new List<string>();
         List<Button> servButtonCleaningList = new List<Button>();
-
+        public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
         public Canvas returnFromErrorTo;
 
         public const string CURRENT_VERSION = "1.0a1";
@@ -187,35 +187,39 @@ namespace interceptor
 
         private void sendLogin_Click(object sender, RoutedEventArgs e)
         {
-            if (CRM.crmAuthentication(login.Text, CRM.generateMySQLHash(password.Password)))
-            {
-                MoveCanvas(
-                    moveCanvas: mainPlace,
-                    prevCanvas: loginPlace,
-                    direction: moveDirection.vertical
-                );
+            Canvas canvasToGo = mainPlace;
 
-                updateStatuses();
-
-                if (Diagnostics.failCashbox())
-                    switchOn.Background = Brushes.Red;
-                else
-                {
-                    Server.StartServer();
-                    switchOn.Background = Brushes.LimeGreen;
-                }
-            }
-            else
+            if (!CRM.crmAuthentication(login.Text, CRM.generateMySQLHash(password.Password)))
             {
                 loginFailText.Content = CRM.loginError;
                 returnFromErrorTo = loginPlace;
-
-                MoveCanvas(
-                    moveCanvas: loginFail,
-                    prevCanvas: loginPlace,
-                    direction: moveDirection.vertical
-                );
+                canvasToGo = loginFail;
             }
+            else if (Diagnostics.failCashbox())
+            {
+                loginFailText.Content = "Ошибка подключения к кассе";
+                returnFromErrorTo = loginPlace;
+                canvasToGo = loginFail;
+            }
+            else if (Cashbox.checkCashboxTables() != "")
+            {
+                settingText2.Content = Cashbox.checkCashboxTables();
+                returnFromErrorTo = loginPlace;
+                canvasToGo = cashboxSettingsFail;
+            }
+            else
+            {
+                Server.StartServer();
+                switchOn.Background = Brushes.LimeGreen;
+            }
+
+            MoveCanvas(
+                moveCanvas: canvasToGo,
+                prevCanvas: loginPlace,
+                direction: moveDirection.vertical
+            );
+
+            updateStatuses();
         }
 
         private void returnFromError_Click(object sender, RoutedEventArgs e)
@@ -451,6 +455,42 @@ namespace interceptor
         private void cancelDocument_Click(object sender, RoutedEventArgs e)
         {
             Cashbox.cancelDocument();
+        }
+
+        private void backToLoginFromSettingsFial_Click(object sender, RoutedEventArgs e)
+        {
+            MoveCanvas(
+                moveCanvas: returnFromErrorTo,
+                prevCanvas: cashboxSettingsFail,
+                direction: moveDirection.vertical
+            );
+        }
+
+        private void reportAndRessetting_Click(object sender, RoutedEventArgs e)
+        {
+            Cashbox.reportCleaning();
+
+            restoringSettingsCashbox.Elapsed += new ElapsedEventHandler(repeatPrint);
+            restoringSettingsCashbox.Enabled = true;
+            restoringSettingsCashbox.Start();
+
+
+            Cashbox.resettingCashbox();
+
+            MoveCanvas(
+                moveCanvas: returnFromErrorTo,
+                prevCanvas: cashboxSettingsFail,
+                direction: moveDirection.vertical
+            );
+        }
+
+        public static void repeatPrint(object obj, ElapsedEventArgs e)
+        {
+            if (Cashbox.resettingCashbox())
+            {
+                restoringSettingsCashbox.Enabled = false;
+                restoringSettingsCashbox.Stop();
+            }
         }
     }
 }

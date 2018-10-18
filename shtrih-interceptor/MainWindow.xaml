@@ -167,6 +167,17 @@
             <Label x:Name="status7" Content="" Height="25" Canvas.Left="184" Canvas.Top="140" Width="285"/>
             <Label x:Name="status8" Content="" Height="25" Canvas.Left="184" Canvas.Top="160" Width="285"/>
         </Canvas>
+        <Canvas x:Name="cashboxSettingsFail" Margin="0,784,0,-784" Background="#FFFF4E4E">
+            <Button x:Name="backToLoginFromSettingsFial" Content="вернуться" Height="42" Canvas.Left="59" Canvas.Top="260" Width="211" Click="backToLoginFromSettingsFial_Click"/>
+            <Label x:Name="settingText1" Content="В настройках кассы обнаружены проблемы следующих полей:" Height="33" Canvas.Left="52" Canvas.Top="48" Width="480" FontSize="16"/>
+            <Label x:Name="settingText2" Content="" Height="33" Canvas.Left="52" Canvas.Top="68" Width="353" FontSize="16"/>
+            <Label x:Name="settingText3" Content="Для работы программы необходима перенастройка этих полей." Height="33" Canvas.Left="52" Canvas.Top="88" Width="480" FontSize="16"/>
+            <Label x:Name="settingText4" Content="Программа может сама попытаться исправить данные настроек кассы, но это потребует" Height="33" Canvas.Left="52" Canvas.Top="108" Width="681" FontSize="16"/>
+            <Label x:Name="settingText5" Content="перевода кассы в режим распечатки отчёта с гашением и закрытия смены." Height="33" Canvas.Left="52" Canvas.Top="128" Width="681" FontSize="16"/>
+            <Label x:Name="settingText6" Content="Если касса уже находится в режиме закрытия смены, то выберите перенастройку без отчёта" Height="33" Canvas.Left="52" Canvas.Top="148" Width="705" FontSize="16"/>
+            <Button x:Name="reportAndRessetting" Content="закрыть смену, распечатать отчёт и перенастроить" Height="42" Canvas.Left="59" Canvas.Top="202" Width="346" Click="reportAndRessetting_Click"/>
+            <Button x:Name="onlyRessetting" Content="только перенастроить" Height="42" Canvas.Left="410" Canvas.Top="202" Width="226"/>
+        </Canvas>
 
     </Grid>
 

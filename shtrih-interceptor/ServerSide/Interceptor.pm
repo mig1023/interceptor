@@ -222,9 +222,9 @@ sub get_all_add_services
 		for ( 1..9 ) {
 		
 			if ( $data->{ "srv$_" } ) {
-			
+		
 				my $value = ( $_ == 1 ? $serv_price{ $_ } : $data->{ "srv$_" } ) || 0;
-			
+				
 				push $services, {
 				
 					ServiceID 	=> $_,
@@ -235,7 +235,7 @@ sub get_all_add_services
 			}
 		}
 	}
-	
+
 	my $serv_list = {};
 	
 	my $serv_index = 0;
@@ -265,7 +265,7 @@ sub get_all_add_services
 				VAT 		=> 1,
 				Department	=> 1,
 			};
-		}
+		};
 	}
 
 	return $serv_list;
@@ -357,6 +357,8 @@ sub doc_services
 	);
 	
 	my $urg_text = ( $data->{ urgent } ? ', срочн.' : '' );
+	
+	my $special_department = ( $callback ? 3 : 1 );
 		
 	my $servsums = {
 		shipping => {
@@ -385,35 +387,35 @@ sub doc_services
 			Quantity	=> $data->{ xerox },
 			Price		=> sprintf( "%.2f", $prices->{ xerox } ),
 			VAT		=> 1,
-			Department	=> 1,
+			Department	=> $special_department,
 		},
 		visa => {
 			Name		=> ( $data->{'urgent'} ? 'Cрочн.cервисный' : 'Cервисный' ).' сбор',
 			Quantity	=> $apcnt,
 			Price		=> sprintf( "%.2f", $vprice ),
 			VAT		=> 1,
-			Department	=> 2,
+			Department	=> 1,
 		},
 		ank => {
 			Name		=> '00502 Услуги по заполнению анкеты',
 			Quantity	=> $data->{ anketasrv },
 			Price		=> sprintf( "%.2f", $prices->{ anketasrv } ),
 			VAT		=> 1,
-			Department	=> 1,
+			Department	=> $special_department,
 		},
 		print => {
 			Name		=> '00503 Услуги по распечатке',
 			Quantity	=> $data->{ printsrv },
 			Price		=> sprintf( "%.2f", $prices->{ printsrv } ),
 			VAT		=> 1,
-			Department	=> 1,
+			Department	=> $special_department,
 		},
 		photo => {
 			Name		=> '00504 Услуги по фотографированию',
 			Quantity	=> $data->{ photosrv },
 			Price		=> sprintf( "%.2f", $prices->{ photosrv } ),
 			VAT		=> 1,
-			Department	=> 1,
+			Department	=> $special_department,
 		},
 		vip => {
 			Name		=> 'ВИП обслуживание',
@@ -427,32 +429,31 @@ sub doc_services
 			Quantity	=> ( $data->{ vcat } eq 'C' ? $cntres : 0 ),
 			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) } ),
 			VAT		=> 0,
-			Department	=> 3,
+			Department	=> 2,
 		},
 		cons_noresident => {
 			Name		=> "Консульский сбор (нерезидент$urg_text)",
 			Quantity	=> $cntnres,
 			Price		=> sprintf( '%.2f', $prices->{ 'conciln' . ( $data->{ urgent } ? 'u' : '' ) } ),
 			VAT		=> 0,
-			Department	=> 3,
+			Department	=> 2,
 		},
 		cons_age => {
 			Name		=> "Консульский сбор (возраст$urg_text)",
 			Quantity	=> $cntage,
 			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) . '_' . $ages } ),
 			VAT		=> 0,
-			Department	=> 3,
+			Department	=> 2,
 		},
 		cons_d => {
 			Name		=> "Консульский сбор (тип D$urg_text)",
 			Quantity	=> ( $data->{ vcat } eq 'D' ? $cntres : 0 ),
 			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) } ),
 			VAT		=> 0,
-			Department	=> 3,
+			Department	=> 2,
 		},
 	};
 
-	
 	my $serv_hash = get_all_add_services( $self, $vars, $data, $callback );
 	
 	for ( keys %$serv_hash ) {
@@ -490,7 +491,7 @@ sub doc_services
 		Money => $summ,
 		RequestOnly => ( $callback ? '1' : '0' ),
 	};
-
+	
 	return { services => $servsums, info => $info };
 }
 

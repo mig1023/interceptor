@@ -8,7 +8,6 @@ use Digest::MD5  qw(md5_hex);
 use Data::Dumper;
 use Encode qw(decode encode);
 
-	my $mandocpack_failserv = '';
 
 sub new
 # //////////////////////////////////////////////////
@@ -61,7 +60,7 @@ sub send_docpack
 	
 	return ( "ERR3", "Неверный кассовый пароль пользователя" ) unless $pass;
 	
-	my $services = doc_services( $self, $data, $ptype, $summ, $login, $pass, $callback );
+	my ( $services, $services_fail ) = doc_services( $self, $data, $ptype, $summ, $login, $pass, $callback );
 
 	my $request = xml_create( $services->{ services }, $services->{ info } );
 	
@@ -72,7 +71,7 @@ sub send_docpack
 		$resp, $login
 	);
 	
-	return split( /:/, $resp );
+	return split( /:/, $resp ), $services_fail;
 }
 
 sub xml_create
@@ -156,7 +155,7 @@ sub send_request
 		$serv = $callback;
 	}
 	
-	return "ERR1:не установлена кассовая интеграция" unless $serv =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
+	return "ERR0:не установлена кассовая интеграция" unless $serv =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
 	
 	my $ua = LWP::UserAgent->new;
 	
@@ -461,7 +460,7 @@ sub doc_services
 		$servsums->{ $_ } = $serv_hash->{ $_ };
 	}
 
-	my $total = 0;
+	my ( $total, $mandocpack_failserv ) = ( 0, '' );
 
 	for my $serv ( keys %$servsums ) {
 	
@@ -492,7 +491,7 @@ sub doc_services
 		RequestOnly => ( $callback ? '1' : '0' ),
 	};
 	
-	return { services => $servsums, info => $info };
+	return { services => $servsums, info => $info }, $mandocpack_failserv;
 }
 
 sub cash_box
@@ -518,7 +517,7 @@ sub cash_box
 	return cash_box_output( $self, "ERROR|Не введена сумма оплаты" )
 		if !$param->{ summ } and $param->{ ptype } == 1;	
 	
-	my ( $code, $desc ) = send_docpack( $self, $param->{ docid }, $param->{ ptype }, $param->{ summ } );
+	my ( $code, $desc, undef ) = send_docpack( $self, $param->{ docid }, $param->{ ptype }, $param->{ summ } );
 	
 	if ( $code ne 'OK' ) {
 	
@@ -547,8 +546,8 @@ sub cash_box_auth
 
 	return cash_box_output( $self, "ERROR|Укажите данные для авторизации" ) if !$param->{ login } or !$param->{ pass };
 	
-	my ( $login, $pass ) = $vars->db->sel1("
-		SELECT Users.Login, CashPassword
+	my ( $login, $pass, $name, $surname, $secname ) = $vars->db->sel1("
+		SELECT Users.Login, CashPassword, Users.UserName, Users.UserLName, Users.UserSName
 		FROM Users
 		JOIN Cashboxes_password ON Users.Login = Cashboxes_password.Login
 		WHERE Users.Login = ? AND Pass = ? AND
@@ -559,7 +558,9 @@ sub cash_box_auth
 
 	return cash_box_output( $self, "ERROR|Неудачная авторизация в VMS" ) unless $login and $pass;
 	
-	return cash_box_output( $self, "OK|$pass" );
+	my $cashier = "$surname $name $secname";
+	
+	return cash_box_output( $self, "OK|$pass|$cashier" );
 }
 
 sub cash_box_centers
@@ -718,9 +719,7 @@ sub cash_box_mandocpack
 	
 	$data->{ urgent } = ( $urgent_docpack ? 1 : 0 );
 	
-	$mandocpack_failserv = '';
-
-	my @resp = send_docpack( $self, undef, $param->{ moneytype }, $param->{ money }, $data,
+	my ( undef, undef, $mandocpack_failserv ) = send_docpack( $self, undef, $param->{ moneytype }, $param->{ money }, $data,
 		$param->{ login }, $param->{ pass }, $param->{ callback } );
 		
 	return cash_box_output( $self, "WARNING|$mandocpack_failserv" ) if $mandocpack_failserv;

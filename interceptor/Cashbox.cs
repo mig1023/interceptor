@@ -119,22 +119,16 @@ namespace interceptor
             Driver.RowNumber = rowNumber;
 
             Driver.GetFieldStruct();
-
             Driver.ReadTable();
 
-            if (fieldValue != "")
+            if ((fieldValue != "") && (fieldValue != Driver.ValueOfFieldString))
             {
-                if (fieldValue == Driver.ValueOfFieldString)
-                    Log.addWithCode("поле " + tableNumber + "/" + fieldNumber + "/" + rowNumber + "/" + fieldValue + " идентично");
-                else
-                {
-                    Log.addWithCode("запись поля " + tableNumber + "/" + fieldNumber + "/" + rowNumber + "/" + fieldValue);
+                Log.addWithCode("запись поля " + tableNumber + "/" + fieldNumber + "/" + rowNumber + "/" + fieldValue);
 
-                    Driver.ValueOfFieldString = fieldValue;
-                    Driver.WriteTable();
+                Driver.ValueOfFieldString = fieldValue;
+                Driver.WriteTable();
 
-                    if (Driver.ResultCode != 0) return "";
-                }
+                if (Driver.ResultCode != 0) return "";
             }
                 
             return Driver.ValueOfFieldString;
@@ -165,25 +159,37 @@ namespace interceptor
             return string.Join(", ", tablesCorrupted.ToArray());
         }
 
-        public static void printLine()
+        public static void printLine(string text = "", bool line = false)
         {
             Driver.Password = currentDrvPassword;
-            Driver.StringForPrinting = "------------------------------------";
-            Driver.PrintString();
+
+            if (text != "")
+            {
+                Driver.StringForPrinting = text;
+                Driver.PrintString();
+            }
+
+            if (line)
+            {
+                Driver.StringForPrinting = "------------------------------------";
+                Driver.PrintString();
+            }
+            
         } 
 
         public static string printDocPack(DocPack doc, int MoneyType = -1,
             bool returnSale = false, decimal? MoneySumm = null)
         {
+            
+
             currentDrvPassword = doc.CashierPass;
 
             if (MoneyType != -1) doc.MoneyType = MoneyType;
 
-            if (returnSale)
-            {
-                Driver.CheckType = 2;
-                Driver.OpenCheck();
-            }
+            Driver.CheckType = (returnSale ? 2 : 0);
+            Driver.OpenCheck();
+
+            printLine("Кассир: " + CRM.Cashier, line: true);
 
             foreach (Service service in doc.Services)
             {
@@ -205,7 +211,7 @@ namespace interceptor
                 else
                     Driver.Sale();
 
-                printLine();
+                printLine(line: true);
             }
 
             Driver.Password = currentDrvPassword;
@@ -240,8 +246,8 @@ namespace interceptor
             }
             else
             {
-                repeatPrintingTimer.Enabled = true;
-                repeatPrintingTimer.Start();
+                //repeatPrintingTimer.Enabled = true;
+                //repeatPrintingTimer.Start();
             }
 
             if (checkClosingResult == 0)
@@ -275,6 +281,13 @@ namespace interceptor
         public static string getResultLine()
         {
             return Driver.ResultCodeDescription;
+        }
+
+        public static int currentMode()
+        {
+            Driver.GetECRStatus();
+
+            return Driver.ECRMode;
         }
 
         public static void getStatusData(out string port, out string speed, out string status,

@@ -15,6 +15,7 @@ namespace interceptor
         const string CRM_URL = "http://" + CRM_URL_BASE;
 
         public static int Password = 0;
+        public static string Cashier = "";
         public static string loginError = "";
 
         public static bool crmAuthentication(string login, string password)
@@ -51,7 +52,9 @@ namespace interceptor
 
             Password = Int32.Parse(authData[1]);
 
-            Log.add("успешный вход: " + login + "/" + authData[1]);
+            Cashier = authData[2];
+
+            Log.add("успешный вход: " + login + "/" + authData[1] + "(" + authData[2] + ")");
 
             return true;
         }

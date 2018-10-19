@@ -20,7 +20,7 @@ namespace interceptor
                     tableNumber = 6,
                     fieldNumber = 1,
                     rowNumber = 1,
-                    fieldValue = "1800", // <-----------------1800
+                    fieldValue = "1800",
                     description = "НДС/1/значение",
                 },
                 new CashboxData() {

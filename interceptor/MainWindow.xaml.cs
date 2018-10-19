@@ -194,18 +194,35 @@ namespace interceptor
                 loginFailText.Content = CRM.loginError;
                 returnFromErrorTo = loginPlace;
                 canvasToGo = loginFail;
+
+                Log.add("ошибка входа с логином " + login.Text);
             }
             else if (Diagnostics.failCashbox())
             {
                 loginFailText.Content = "Ошибка подключения к кассе";
                 returnFromErrorTo = loginPlace;
                 canvasToGo = loginFail;
+
+                Log.add("ошибка подключения к кассе");
             }
             else if (Cashbox.checkCashboxTables() != "")
             {
                 settingText2.Content = Cashbox.checkCashboxTables();
                 returnFromErrorTo = loginPlace;
                 canvasToGo = cashboxSettingsFail;
+
+                Log.add("ошибка настроек кассы");
+
+                if (Cashbox.currentMode() != 4)
+                {
+                    settingText5.Visibility = Visibility.Visible;
+                    reportAndRessetting.Content = "закрыть смену, распечатать отчёт и перенастроить";
+                }
+                else
+                {
+                    settingText5.Visibility = Visibility.Hidden;
+                    reportAndRessetting.Content = "перенастроить таблицы настроек";
+                }
             }
             else
             {
@@ -468,12 +485,11 @@ namespace interceptor
 
         private void reportAndRessetting_Click(object sender, RoutedEventArgs e)
         {
-            Cashbox.reportCleaning();
+            if (Cashbox.currentMode() != 4) Cashbox.reportCleaning();
 
-            restoringSettingsCashbox.Elapsed += new ElapsedEventHandler(repeatPrint);
+            restoringSettingsCashbox.Elapsed += new ElapsedEventHandler(restoreSetting);
             restoringSettingsCashbox.Enabled = true;
             restoringSettingsCashbox.Start();
-
 
             Cashbox.resettingCashbox();
 
@@ -484,7 +500,7 @@ namespace interceptor
             );
         }
 
-        public static void repeatPrint(object obj, ElapsedEventArgs e)
+        public static void restoreSetting(object obj, ElapsedEventArgs e)
         {
             if (Cashbox.resettingCashbox())
             {

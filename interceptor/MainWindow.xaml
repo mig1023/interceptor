@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:interceptor"
         mc:Ignorable="d"
-        Title="interceptor" Height="420" Width="800" ResizeMode="CanMinimize">
+        Title="interceptor" Height="420" Width="800" ResizeMode="CanMinimize" Icon="icon.png">
     <Grid x:Name="mainGrid">
         <Canvas x:Name="mainPlace" Margin="2,-392,-2,392">
             <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="490" Canvas.Top="304"/>
@@ -123,12 +123,12 @@
         <Canvas x:Name="statusPlace" Margin="-794,5,794,-5">
             <Button x:Name="backToMainFromStatus" Content="назад" Height="42" Canvas.Left="606" Canvas.Top="321" Width="155" Click="backToMainFromStatus_Click"/>
             <Button x:Name="reportCleaning" Content="отчёт с гашением" Height="48" Canvas.Left="15" Canvas.Top="15" Width="155" Click="reportCleaning_Click"/>
-            <Button x:Name="repeatDocument" Content="повтор чека" Height="48" Canvas.Left="15" Canvas.Top="68" Width="155" Click="repeatDocument_Click"/>
+            <Button x:Name="repeatDocument" Content="повтор чека" Height="48" Canvas.Left="15" Canvas.Top="98" Width="155" Click="repeatDocument_Click"/>
             <Button x:Name="reportWithoutCleaning" Content="отчёт без гашения" Height="48" Canvas.Left="175" Canvas.Top="15" Width="155" Click="reportWithoutCleaning_Click"/>
             <Button x:Name="reportDepartment" Content="отчёт по отделам" Height="48" Canvas.Left="335" Canvas.Top="15" Width="155" Click="reportDepartment_Click"/>
             <Button x:Name="reportTax" Content="отчёт по налогам" Height="48" Canvas.Left="495" Canvas.Top="15" Width="155" Click="reportTax_Click"/>
-            <Button x:Name="continueDocument" Content="продолжить печать" Height="48" Canvas.Left="175" Canvas.Top="68" Width="155" Click="continueDocument_Click"/>
-            <Button x:Name="cancelDocument" Content="аннулировать чек" Height="48" Canvas.Left="335" Canvas.Top="68" Width="155" Click="cancelDocument_Click"/>
+            <Button x:Name="continueDocument" Content="продолжить печать" Height="48" Canvas.Left="175" Canvas.Top="98" Width="155" Click="continueDocument_Click"/>
+            <Button x:Name="cancelDocument" Content="аннулировать чек" Height="48" Canvas.Left="335" Canvas.Top="98" Width="155" Click="cancelDocument_Click"/>
             <Button x:Name="cashIncome" Content="&lt;---- внесение в кассу" Height="37" Canvas.Left="205" Canvas.Top="179" Width="197" Click="cashIncome_Click"/>
             <TextBox x:Name="moneyForIncome" Height="37" Canvas.Left="19" TextWrapping="Wrap" Text="0.00" Canvas.Top="179" Width="156" FontSize="22"/>
             <Label x:Name="currencyIncome" Content="₽" Canvas.Left="175" Canvas.Top="171" FontSize="28"/>
@@ -157,7 +157,8 @@
             <Label x:Name="status5_label" Content="скорость кассы" Height="25" Canvas.Left="25" Canvas.Top="100" Width="122"/>
             <Label x:Name="status6_label" Content="тип кассы" Height="25" Canvas.Left="25" Canvas.Top="120" Width="122"/>
             <Label x:Name="status7_label" Content="версия прогр.кассы" Height="25" Canvas.Left="25" Canvas.Top="140" Width="122"/>
-            <Label x:Name="status8_label" Content="состояние" Height="25" Canvas.Left="25" Canvas.Top="160" Width="122"/>
+            <Label x:Name="status8_label" Content="запуск" Height="25" Canvas.Left="25" Canvas.Top="160" Width="122"/>
+            <Label x:Name="status9_label" Content="состояние" Height="25" Canvas.Left="25" Canvas.Top="180" Width="122"/>
             <Label x:Name="status1" Content="" Height="25" Canvas.Left="184" Canvas.Top="20" Width="285"/>
             <Label x:Name="status2" Content="" Height="25" Canvas.Left="184" Canvas.Top="40" Width="285"/>
             <Label x:Name="status3" Content="" Height="25" Canvas.Left="184" Canvas.Top="60" Width="285"/>
@@ -166,17 +167,18 @@
             <Label x:Name="status6" Content="" Height="25" Canvas.Left="184" Canvas.Top="120" Width="285"/>
             <Label x:Name="status7" Content="" Height="25" Canvas.Left="184" Canvas.Top="140" Width="285"/>
             <Label x:Name="status8" Content="" Height="25" Canvas.Left="184" Canvas.Top="160" Width="285"/>
+            <Label x:Name="status9" Content="{Binding currentError}" Height="25" Canvas.Left="184" Canvas.Top="180" Width="285"/>
         </Canvas>
-        <Canvas x:Name="cashboxSettingsFail" Margin="0,784,0,-784" Background="#FFFF4E4E">
-            <Button x:Name="backToLoginFromSettingsFial" Content="вернуться" Height="42" Canvas.Left="59" Canvas.Top="260" Width="211" Click="backToLoginFromSettingsFial_Click"/>
+        <Canvas x:Name="cashboxSettingsFail" Margin="0,394,0,-394" Background="#FFFF4E4E">
+            <Button x:Name="backToLoginFromSettingsFial" Content="вернуться" Height="42" Canvas.Left="59" Canvas.Top="268" Width="211" Click="backToLoginFromSettingsFial_Click"/>
             <Label x:Name="settingText1" Content="В настройках кассы обнаружены проблемы следующих полей:" Height="33" Canvas.Left="52" Canvas.Top="48" Width="480" FontSize="16"/>
             <Label x:Name="settingText2" Content="" Height="33" Canvas.Left="52" Canvas.Top="68" Width="353" FontSize="16"/>
             <Label x:Name="settingText3" Content="Для работы программы необходима перенастройка этих полей." Height="33" Canvas.Left="52" Canvas.Top="88" Width="480" FontSize="16"/>
-            <Label x:Name="settingText4" Content="Программа может сама попытаться исправить данные настроек кассы, но это потребует" Height="33" Canvas.Left="52" Canvas.Top="108" Width="681" FontSize="16"/>
-            <Label x:Name="settingText5" Content="перевода кассы в режим распечатки отчёта с гашением и закрытия смены." Height="33" Canvas.Left="52" Canvas.Top="128" Width="681" FontSize="16"/>
-            <Label x:Name="settingText6" Content="Если касса уже находится в режиме закрытия смены, то выберите перенастройку без отчёта" Height="33" Canvas.Left="52" Canvas.Top="148" Width="705" FontSize="16"/>
-            <Button x:Name="reportAndRessetting" Content="закрыть смену, распечатать отчёт и перенастроить" Height="42" Canvas.Left="59" Canvas.Top="202" Width="346" Click="reportAndRessetting_Click"/>
-            <Button x:Name="onlyRessetting" Content="только перенастроить" Height="42" Canvas.Left="410" Canvas.Top="202" Width="226"/>
+            <Label x:Name="settingText4" Content="Программа может сама попытаться исправить данные настроек кассы" Height="33" Canvas.Left="52" Canvas.Top="108" Width="681" FontSize="16"/>
+            <Label x:Name="settingText5" Content="Для этого потребуется закрыть смену и распечатать отчёт с гашением" Visibility="Hidden"  Height="33" Canvas.Left="52" Canvas.Top="128" Width="681" FontSize="16"/>
+            <Label x:Name="settingText6" Content="Если данное сообщение продолжит появляться после перенастройки - обратитесь" Height="33" Canvas.Left="52" Canvas.Top="148" Width="681" FontSize="16"/>
+            <Label x:Name="settingText7" Content="к системным администраторам" Height="33" Canvas.Left="52" Canvas.Top="168" Width="681" FontSize="16"/>
+            <Button x:Name="reportAndRessetting" Content="закрыть смену, распечатать отчёт и перенастроить" Height="42" Canvas.Left="59" Canvas.Top="214" Width="346" Click="reportAndRessetting_Click"/>
         </Canvas>
 
     </Grid>

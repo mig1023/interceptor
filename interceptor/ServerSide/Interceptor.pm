@@ -41,7 +41,7 @@ sub send_docpack
 {
 
 	my ( $self, $docid, $ptype, $summ, $data, $login, $pass, $callback ) = @_;
-	
+
 	my $vars = $self->{ 'VCS::Vars' };
 	
 	if ( !$data ) {
@@ -54,21 +54,35 @@ sub send_docpack
 	
 	$login = $vars->get_session->{'login'} unless $login;
 	
-	$pass = $vars->db->sel1("
-		SELECT CashPassword FROM Cashboxes_password WHERE Login = ?", $login
-	) unless $pass;
+	my $pass = '';
 	
-	return ( "ERR3", "Неверный кассовый пароль пользователя" ) unless $pass;
+	if ( !$callback && !$pass ) {
+	
+		return ( "ERR3", "Неверные настройки данных подключения" ) unless $vars->get_session->{ interceptor };
+		
+		$pass = $vars->db->sel1("
+			SELECT CashPassword FROM Cashboxes_interceptors WHERE ID = ?", $vars->get_session->{ interceptor }
+		);
+		
+	}
+	elsif ( !$pass ) {
+	
+		$pass = $vars->db->sel1("
+			SELECT CashPassword FROM Cashboxes_interceptors WHERE InterceptorIP = ?", $callback
+		);
+	}
+	
+	return ( "ERR3", "Неверный кассовый пароль в настройках" ) unless $pass;
 	
 	my ( $services, $services_fail ) = doc_services( $self, $data, $ptype, $summ, $login, $pass, $callback );
 
 	my $request = xml_create( $services->{ services }, $services->{ info } );
-	
+
 	my $resp = send_request( $vars, $request, undef, $callback );
 	
 	$vars->db->query("
-		UPDATE Cashboxes_password SET LastUse = now(), LastResponse = ? WHERE Login = ?", {},
-		$resp, $login
+		UPDATE Cashboxes_interceptors SET LastUse = now(), LastResponse = ? WHERE ID = ?", {},
+		$resp, $vars->get_session->{ interceptor }
 	);
 	
 	return split( /:/, $resp ), $services_fail;
@@ -542,25 +556,30 @@ sub cash_box_auth
 
 	my $param = {};
 	
-	$param->{ $_ } = ( $vars->getparam( $_ ) || '' ) for ( 'login', 'pass' );
+	$param->{ $_ } = ( $vars->getparam( $_ ) || '' ) for ( 'login', 'pass', 'ip' );
 
 	return cash_box_output( $self, "ERROR|Укажите данные для авторизации" ) if !$param->{ login } or !$param->{ pass };
 	
-	my ( $login, $pass, $name, $surname, $secname ) = $vars->db->sel1("
-		SELECT Users.Login, CashPassword, Users.UserName, Users.UserLName, Users.UserSName
+	my ( $login, $name, $surname, $secname ) = $vars->db->sel1("
+		SELECT Login, UserName, UserLName, UserSName
 		FROM Users
-		JOIN Cashboxes_password ON Users.Login = Cashboxes_password.Login
-		WHERE Users.Login = ? AND Pass = ? AND
+		WHERE Login = ? AND Pass = ? AND
 		(RoleID = 8 OR RoleID = 5 OR RoleID = 2)
 		AND Locked = 0",
 		$param->{ login }, $param->{ pass }
 	);
 
-	return cash_box_output( $self, "ERROR|Неудачная авторизация в VMS" ) unless $login and $pass;
+	return cash_box_output( $self, "ERROR|Неудачная авторизация в VMS" ) unless $login;
 	
-	my $cashier = "$surname $name $secname";
+	return cash_box_output( $self, "ERROR|Неверные данные IP-адреса" ) unless $param->{ ip } =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
+		
+	my $pass = $vars->db->sel1("
+		SELECT CashPassword FROM Cashboxes_interceptors WHERE InterceptorIP = ?", $param->{ ip }
+	);
 	
-	return cash_box_output( $self, "OK|$pass|$cashier" );
+	return cash_box_output( $self, "ERROR|IP-адрес не найден в БД или не установлен кассовый пароль" ) unless $pass;
+	
+	return cash_box_output( $self, "OK|$pass|$surname $name $secname" );
 }
 
 sub cash_box_centers
@@ -575,10 +594,12 @@ sub cash_box_centers
 	return cash_box_output( $self, "" ) unless $login;
 	
 	my $centers_line = $vars->db->sel1("
-		SELECT branches FROM Users WHERE Login = ?", $login );
+		SELECT branches FROM Users WHERE Login = ?", $login
+	);
 	
 	my $centers_array = $vars->db->selallkeys("
-		SELECT BName FROM Branches WHERE ID in ($centers_line)" );
+		SELECT BName FROM Branches WHERE ID in ($centers_line)"
+	);
 	
 	return cash_box_output( $self, "" ) if @$centers_array == 0;
 	
@@ -644,6 +665,9 @@ sub cash_box_mandocpack
 	my $md5 = uc( Digest::MD5->new->add( $request_check )->hexdigest );
 	
 	return cash_box_output( $self, "ERROR|Контрольная сумма запроса неверна" ) unless $md5 eq $param->{ crc };
+	
+	return cash_box_output( $self, "ERROR|не установлена кассовая интеграция" )
+		unless $param->{ callback } =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
 		
 	my $center_id = $vars->db->sel1("
 		SELECT ID FROM Branches WHERE BName = ?", $param->{ center }

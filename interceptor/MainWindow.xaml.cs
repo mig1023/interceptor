@@ -26,16 +26,20 @@ namespace interceptor
 
     public partial class MainWindow : Window
     {
+        public static MainWindow Instance { get; private set;  }
+
         List<string> manDocPack = new List<string>();
         List<Button> servButtonCleaningList = new List<Button>();
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
         public Canvas returnFromErrorTo;
 
         public const string CURRENT_VERSION = "1.0a1";
-
+            
         public MainWindow()
         {
             InitializeComponent();
+
+            Instance = this;
 
             Log.add("перехватчик запущен", freeLine: true);
 

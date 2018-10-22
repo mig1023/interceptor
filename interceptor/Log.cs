@@ -48,6 +48,8 @@ namespace interceptor
 
                 sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss") + " " + line);
             }
+
+            if (logType == "main") showCurrentStatus(line);
         } 
 
         public static void addDocPack(DocPack docForLog)
@@ -59,11 +61,20 @@ namespace interceptor
                 sw.WriteLine("");
                 sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss"));
                 sw.WriteLine("");
-
                 DocPackLog.Serialize(sw, docForLog);
-
                 sw.WriteLine("");
             }
+        }
+
+        public static void showCurrentStatus(string line)
+        {
+            if (Application.Current == null) return;
+             
+            Application.Current.Dispatcher.BeginInvoke(new ThreadStart(delegate
+            {
+                MainWindow main = (MainWindow)Application.Current.MainWindow;
+                main.status9.Content = line;
+            }));
         }
     }
 }

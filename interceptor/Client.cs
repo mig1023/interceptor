@@ -58,7 +58,7 @@ namespace interceptor
 
             SendResponse(Client, response);
 
-            Log.add("закрываем соединение");
+            Log.add("соединение закрыто");
 
             Client.Close();
         }

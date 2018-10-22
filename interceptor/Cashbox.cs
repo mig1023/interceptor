@@ -186,6 +186,7 @@ namespace interceptor
 
             if (MoneyType != -1) doc.MoneyType = MoneyType;
 
+            Driver.Password = currentDrvPassword;
             Driver.CheckType = (returnSale ? 2 : 0);
             Driver.OpenCheck();
 

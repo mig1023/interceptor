@@ -167,7 +167,7 @@
             <Label x:Name="status6" Content="" Height="25" Canvas.Left="184" Canvas.Top="120" Width="285"/>
             <Label x:Name="status7" Content="" Height="25" Canvas.Left="184" Canvas.Top="140" Width="285"/>
             <Label x:Name="status8" Content="" Height="25" Canvas.Left="184" Canvas.Top="160" Width="285"/>
-            <Label x:Name="status9" Content="{Binding currentError}" Height="25" Canvas.Left="184" Canvas.Top="180" Width="285"/>
+            <Label x:Name="status9" Content="" Height="25" Canvas.Left="184" Canvas.Top="180" Width="285"/>
         </Canvas>
         <Canvas x:Name="cashboxSettingsFail" Margin="0,394,0,-394" Background="#FFFF4E4E">
             <Button x:Name="backToLoginFromSettingsFial" Content="вернуться" Height="42" Canvas.Left="59" Canvas.Top="268" Width="211" Click="backToLoginFromSettingsFial_Click"/>

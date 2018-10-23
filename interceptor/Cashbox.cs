@@ -56,7 +56,7 @@ namespace interceptor
 
         public static void reportCleaning()
         {
-            Driver.Password = CRM.Password;
+            Driver.Password = CRM.AdminPassword;
             Driver.PrintReportWithCleaning();
 
             Log.addWithCode("отчёт с гашением");

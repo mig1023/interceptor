@@ -15,6 +15,8 @@ namespace interceptor
         const string CRM_URL = "http://" + CRM_URL_BASE;
 
         public static int Password = 0;
+        public const int AdminPassword = 0;
+
         public static string Cashier = "";
         public static string loginError = "";
 

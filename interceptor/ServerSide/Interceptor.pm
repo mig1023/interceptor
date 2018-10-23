@@ -485,12 +485,17 @@ sub doc_services
 					or
 					!$servsums->{ $serv }->{ Price }
 				);
-	
-		if ( !$servsums->{ $serv }->{ Quantity } or $servsums->{ $serv }->{ Price } eq '0.00' ) {
-			
+
+		if ( 
+			!$servsums->{ $serv }->{ Quantity } 
+			or
+			$servsums->{ $serv }->{ Price } eq '0.00' or !$servsums->{ $serv }->{ Price }
+		) {
+		
 			delete $servsums->{ $serv };
 		}
 		else{
+		
 			$total += $servsums->{ $serv }->{ Price } * $servsums->{ $serv }->{ Quantity };
 		}
 	}

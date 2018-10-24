@@ -81,6 +81,11 @@ sub send_docpack
 	my $resp = send_request( $vars, $request, undef, $callback );
 	
 	$vars->db->query("
+		UPDATE Cashboxes_logins SET LastUse = now() WHERE Login = ?", {},
+		$vars->get_session->{ login }
+	);
+	
+	$vars->db->query("
 		UPDATE Cashboxes_interceptors SET LastUse = now(), LastResponse = ? WHERE ID = ?", {},
 		$resp, $vars->get_session->{ interceptor }
 	);
@@ -494,7 +499,7 @@ sub doc_services
 		
 			delete $servsums->{ $serv };
 		}
-		else{
+		else {
 		
 			$total += $servsums->{ $serv }->{ Price } * $servsums->{ $serv }->{ Quantity };
 		}

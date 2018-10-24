@@ -70,7 +70,7 @@ namespace interceptor
             if (Listener != null)
             {
                 Listener.Stop();
-                Log.add("сервер остановлен");
+                Log.add("сервер остановлен", freeLine: true);
             }
         }
     }

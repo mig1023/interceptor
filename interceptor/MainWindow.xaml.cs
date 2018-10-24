@@ -33,7 +33,7 @@ namespace interceptor
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
         public Canvas returnFromErrorTo;
 
-        public const string CURRENT_VERSION = "1.0a1";
+        public const string CURRENT_VERSION = "1.0b";
             
         public MainWindow()
         {

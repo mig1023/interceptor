@@ -14,17 +14,19 @@ namespace interceptor
 {
     class Log
     {
-        public static void addWithCode(string line, string logType = "main", bool freeLine = false)
+        public static void addWithCode(string line, string logType = "main",
+            bool freeLine = false, bool title = false)
         {
-            add(line + ": " + Cashbox.getResultLine() + " [" + Cashbox.getResultCode() + "]", logType, freeLine);
+            add(line + ": " + Cashbox.getResultLine() + " [" + Cashbox.getResultCode() + "]",
+                logType, freeLine, title);
         }
 
-        public static void addWeb(string line, string logType = "main", bool freeLine = false)
+        public static void addWeb(string line, string logType = "main", bool freeLine = false, bool title = false)
         {
-            add("Ошибка доступа к серверу: " + line, logType, freeLine);
+            add("Ошибка доступа к серверу: " + line, logType, freeLine, title);
         }
 
-        public static void add(string line, string logType = "main", bool freeLine = false)
+        public static void add(string line, string logType = "main", bool freeLine = false, bool title = false)
         {
             string logFileName;
 
@@ -43,10 +45,20 @@ namespace interceptor
 
             using (StreamWriter sw = new StreamWriter(logFileName, true))
             {
-                if (freeLine)
+                if (freeLine || title)
                     sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss"));
 
                 sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss") + " " + line);
+
+                if (title)
+                {
+                    string symbLine = new string('/', line.Length);
+
+                    sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss") + " " + symbLine);
+                    sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss"));
+                }
+
+                if (logType == "http") sw.WriteLine();
             }
 
             if (logType == "main") showCurrentStatus(line);

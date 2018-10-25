@@ -41,7 +41,7 @@ namespace interceptor
 
             Instance = this;
 
-            Log.add("перехватчик запущен", freeLine: true);
+            Log.add("ПЕРЕХВАТЧИК ЗАПУЩЕН", title: true);
 
             int MaxThreadsCount = Environment.ProcessorCount * 4;
             ThreadPool.SetMaxThreads(MaxThreadsCount, MaxThreadsCount);

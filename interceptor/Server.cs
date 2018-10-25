@@ -60,9 +60,9 @@ namespace interceptor
 
         private static void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            new Server(80);
-
             Log.add("сервер запущен");
+
+            new Server(80);
         }
 
         ~Server()
@@ -70,7 +70,7 @@ namespace interceptor
             if (Listener != null)
             {
                 Listener.Stop();
-                Log.add("сервер остановлен", freeLine: true);
+                Log.add("сервер остановлен");
             }
         }
     }

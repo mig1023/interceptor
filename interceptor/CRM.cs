@@ -114,14 +114,20 @@ namespace interceptor
         {
             string requestResult = "";
 
+            string servicesList = String.Join("|", manDocPack.ToArray());
+
+            Log.add("запрос на чек: " + servicesList);
+
             string fields =
                 "login=" + login + "&pass=" + password.ToString() + "&moneytype=" + moneyType.ToString() +
                 "&money=" + money + "&center=" + center + "&vtype=" + vType + "&rdate=" + returnDate +
-                "&services=" + String.Join("|", manDocPack.ToArray()) + "&callback=" + getMyIP();
+                "&services=" + servicesList + "&callback=" + getMyIP();
 
             string request = fields + "&crc=" + CheckRequest.createMD5(fields);
 
             string url = CRM_URL + "/vcs/cashbox_mandocpack.htm?" + request;
+
+            Log.add(url, logType: "http");
 
             try
             {

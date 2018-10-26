@@ -45,20 +45,17 @@ namespace interceptor
 
             using (StreamWriter sw = new StreamWriter(logFileName, true))
             {
-                if (freeLine || title)
-                    sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss"));
+                if (freeLine || title) writeLine(sw, date: true);
 
-                sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss") + " " + line);
+                writeLine(sw, line: line, date: true);
 
                 if (title)
                 {
-                    string symbLine = new string('/', line.Length);
-
-                    sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss") + " " + symbLine);
-                    sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss"));
+                    writeLine(sw, line: new string('/', line.Length), date: true);
+                    writeLine(sw, date: true);
                 }
 
-                if (logType == "http") sw.WriteLine();
+                if (logType == "http") writeLine(sw);
             }
 
             if (logType == "main") showCurrentStatus(line);
@@ -70,12 +67,18 @@ namespace interceptor
 
             using (StreamWriter sw = new StreamWriter("shtrih-interceptor-doc.log", true))
             {
-                sw.WriteLine("");
-                sw.WriteLine(DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss"));
-                sw.WriteLine("");
+                writeLine(sw);
+                writeLine(sw, date: true);
+                writeLine(sw);
                 DocPackLog.Serialize(sw, docForLog);
-                sw.WriteLine("");
+                writeLine(sw);
             }
+        }
+
+        public static void writeLine(StreamWriter sw, string line = "", bool date = false)
+        {
+            string dateLine = (date ? DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss") : "");
+            sw.WriteLine(dateLine + (line != "" ? " " : "") + line);
         }
 
         public static void showCurrentStatus(string line)

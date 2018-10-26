@@ -325,7 +325,7 @@ namespace interceptor
             }
             else
             {
-                Log.add("во время формироания чека произошла ошибка");
+                Log.add("во время формирования чека произошла ошибка");
 
                 loginFailText.Content = "Во время отправки запроса произошла ошибка";
                 returnFromErrorTo = checkPlace;

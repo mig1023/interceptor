@@ -415,21 +415,21 @@ sub doc_services
 			Department	=> 1,
 		},
 		ank => {
-			Name		=> '00502 Услуги по заполнению анкеты',
+			Name		=> 'Услуги по заполнению анкеты',
 			Quantity	=> $data->{ anketasrv },
 			Price		=> sprintf( "%.2f", $prices->{ anketasrv } ),
 			VAT		=> 1,
 			Department	=> $special_department,
 		},
 		print => {
-			Name		=> '00503 Услуги по распечатке',
+			Name		=> 'Услуги по распечатке',
 			Quantity	=> $data->{ printsrv },
 			Price		=> sprintf( "%.2f", $prices->{ printsrv } ),
 			VAT		=> 1,
 			Department	=> $special_department,
 		},
 		photo => {
-			Name		=> '00504 Услуги по фотографированию',
+			Name		=> 'Услуги по фотографированию',
 			Quantity	=> $data->{ photosrv },
 			Price		=> sprintf( "%.2f", $prices->{ photosrv } ),
 			VAT		=> 1,
@@ -504,7 +504,7 @@ sub doc_services
 			$total += $servsums->{ $serv }->{ Price } * $servsums->{ $serv }->{ Quantity };
 		}
 	}
-	
+
 	my $info = {
 		AgrNumber => $data->{ docnum },
 		Cashier => $login,
@@ -746,11 +746,11 @@ sub cash_box_mandocpack
 			$urgent_docpack += ( $_ eq 'concil_urg_r' ? 1 : 0 );
 		}
 
-		$data->{ $_ } = $serv_hash->{ $_ } if /^(vipsrv|sms_status|anketasrv|printsrv|printsrv|photosrv|xerox)$/;
+		$data->{ $_ } = $serv_hash->{ $_ } if /^(vipsrv|sms_status|anketasrv|transum|printsrv|photosrv|xerox)$/;
 		
 		$data->{ $_ } = $serv_hash->{ $_ } if /^(srv1|srv2|srv3|srv4|srv5|srv6|srv7|srv8|srv9)$/;
 	}
-	
+
 	$data->{ urgent } = ( $urgent_docpack ? 1 : 0 );
 	
 	my ( undef, undef, $mandocpack_failserv ) = send_docpack( $self, undef, $param->{ moneytype }, $param->{ money }, $data,

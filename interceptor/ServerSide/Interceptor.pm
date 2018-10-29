@@ -566,9 +566,9 @@ sub cash_box_auth
 
 	my $param = {};
 	
-	$param->{ $_ } = ( $vars->getparam( $_ ) || '' ) for ( 'login', 'pass', 'ip' );
+	$param->{ $_ } = ( $vars->getparam( $_ ) || '' ) for ( 'login', 'p', 'ip', 'v' );
 
-	return cash_box_output( $self, "ERROR|Укажите данные для авторизации" ) if !$param->{ login } or !$param->{ pass };
+	return cash_box_output( $self, "ERROR|Укажите данные для авторизации" ) if !$param->{ login } or !$param->{ p };
 	
 	my ( $login, $name, $surname, $secname ) = $vars->db->sel1("
 		SELECT Login, UserName, UserLName, UserSName
@@ -576,7 +576,7 @@ sub cash_box_auth
 		WHERE Login = ? AND Pass = ? AND
 		(RoleID = 8 OR RoleID = 5 OR RoleID = 2)
 		AND Locked = 0",
-		$param->{ login }, $param->{ pass }
+		$param->{ login }, $param->{ p }
 	);
 
 	return cash_box_output( $self, "ERROR|Неудачная авторизация в VMS" ) unless $login;
@@ -588,6 +588,11 @@ sub cash_box_auth
 	);
 	
 	return cash_box_output( $self, "ERROR|IP-адрес не найден в БД или не установлен кассовый пароль" ) unless $pass;
+	
+	$vars->db->query("
+		UPDATE Cashboxes_interceptors SET LastVersion = ? WHERE InterceptorIP = ?", {},
+		$param->{ v }, $param->{ ip }
+	);
 	
 	return cash_box_output( $self, "OK|$pass|$surname $name $secname" );
 }

@@ -24,8 +24,8 @@ namespace interceptor
         {
             string authString = "";
 
-            string url = CRM_URL + "/vcs/cashbox_auth.htm?login=" +
-                login + "&pass=" + password + "&ip=" + getMyIP();
+            string url = CRM_URL + "/vcs/cashbox_auth.htm?login=" + login +
+                "&p=" + password + "&ip=" + getMyIP() + "&v=" + MainWindow.CURRENT_VERSION;
 
             try
             {

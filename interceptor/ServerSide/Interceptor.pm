@@ -174,7 +174,7 @@ sub send_request
 		$serv = $callback;
 	}
 	
-	return "ERR0:не установлена кассовая интеграция" unless $serv =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
+	return "ERR3:не установлена кассовая интеграция" unless $serv =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
 	
 	my $ua = LWP::UserAgent->new;
 	
@@ -184,7 +184,7 @@ sub send_request
 
 	my $response = $ua->request( $request );
 
-	return "ERR1:нет связи" if $response->{ _rc } != 200;
+	return "ERR1:нет связи с программой" if $response->{ _rc } != 200;
 	
 	return $response->{ _content };
 }
@@ -300,7 +300,7 @@ sub doc_services
 	my ( $cntres, $cntnres, $cntncon, $cntage, $smscnt, $shcnt, $shrows, $shind, $indexes, $dhlsum, $inssum, $inscnt ) = 
 		( 0, 0, 0, 0, 0, 0, {}, '', {}, 0, 0, 0 );
 
-	if ( $data->{ shipping }==1 ) {
+	if ( $data->{ shipping } == 1 ) {
 
 		$dhlsum = $data->{ shipsum };
 		$shcnt = 1;
@@ -531,9 +531,10 @@ sub cash_box
 	
 	$param->{ $_ } =~ s/[^0-9]//g for ( 'docid', 'ptype' );
 	
-	$param->{ summ } =~ s/[^0-9\.,]//g;
-	
 	$param->{ summ } =~ s/,/./g if $param->{ summ } =~ /,/;
+	
+	return cash_box_output( $self, "ERROR|Недопустимые символы в поле суммы" )
+		if $param->{ summ } =~ /[^0-9\.]/;
 	
 	return cash_box_output( $self, "ERROR|Ошибка параметров" )
 		if !$param->{ docid } or ( $param->{ ptype } != 1 and $param->{ ptype } != 2 );
@@ -547,7 +548,7 @@ sub cash_box
 	
 		my $err_type = "(неизвестная ошибка)";
 	
-		$err_type = "(ошибка перехватчика)" if $code eq 'ERR1';
+		$err_type = "(ошибка кассовой программы)" if $code eq 'ERR1';
 		$err_type = "(ошибка кассы)" if $code eq 'ERR2';
 		$err_type = "(ошибка настроек)" if $code eq 'ERR3';
 	

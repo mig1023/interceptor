@@ -172,7 +172,7 @@
         <Canvas x:Name="cashboxSettingsFail" Margin="0,394,0,-394" Background="#FFFF4E4E">
             <Button x:Name="backToLoginFromSettingsFial" Content="вернуться" Height="42" Canvas.Left="59" Canvas.Top="268" Width="211" Click="backToLoginFromSettingsFial_Click"/>
             <Label x:Name="settingText1" Content="В настройках кассы обнаружены проблемы следующих полей:" Height="33" Canvas.Left="52" Canvas.Top="48" Width="480" FontSize="16"/>
-            <Label x:Name="settingText2" Content="" Height="33" Canvas.Left="52" Canvas.Top="68" Width="353" FontSize="16"/>
+            <Label x:Name="settingText2" Content="" Height="33" Canvas.Left="52" Canvas.Top="68" Width="681" FontSize="16"/>
             <Label x:Name="settingText3" Content="Для работы программы необходима перенастройка этих полей." Height="33" Canvas.Left="52" Canvas.Top="88" Width="480" FontSize="16"/>
             <Label x:Name="settingText4" Content="Программа может сама попытаться исправить данные настроек кассы" Height="33" Canvas.Left="52" Canvas.Top="108" Width="681" FontSize="16"/>
             <Label x:Name="settingText5" Content="Для этого потребуется закрыть смену и распечатать отчёт с гашением" Visibility="Hidden"  Height="33" Canvas.Left="52" Canvas.Top="128" Width="681" FontSize="16"/>

@@ -38,78 +38,96 @@ namespace interceptor
             Driver.CheckConnection();
         }
 
-        public static void repeatDocument()
+        public static bool repeatDocument()
         {
             Driver.Password = CRM.Password;
             Driver.RepeatDocument();
 
             Log.addWithCode("распечатка повтора");
+
+            return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static void continueDocument()
+        public static bool continueDocument()
         {
             Driver.Password = CRM.Password;
             Driver.ContinuePrint();
 
             Log.addWithCode("продолжение печати");
+
+            return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static void reportCleaning()
+        public static bool reportCleaning()
         {
             Driver.Password = CRM.AdminPassword;
             Driver.PrintReportWithCleaning();
 
             Log.addWithCode("отчёт с гашением");
+
+            return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static void reportWithoutCleaning()
+        public static bool reportWithoutCleaning()
         {
             Driver.Password = CRM.Password;
             Driver.PrintReportWithoutCleaning();
 
             Log.addWithCode("отчёт без гашения");
+
+            return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static void reportDepartment()
+        public static bool reportDepartment()
         {
             Driver.Password = CRM.Password;
             Driver.PrintDepartmentReport();
 
             Log.addWithCode("отчёт по отделам");
+
+            return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static void reportTax()
+        public static bool reportTax()
         {
             Driver.Password = CRM.Password;
             Driver.PrintTaxReport();
 
             Log.addWithCode("отчёт по налогам");
+
+            return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static void cancelDocument()
+        public static bool cancelDocument()
         {
             Driver.Password = CRM.Password;
             Driver.CancelCheck();
 
             Log.addWithCode("отмена чека по кнопке");
+
+            return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static void cashIncome(string summ)
+        public static bool cashIncome(string summ)
         {
             Driver.Password = CRM.Password;
             Driver.Summ1 = DocPack.manualParseDecimal(summ);
             Driver.CashIncome();
 
             Log.addWithCode("внесение денег (" + summ + ")");
+
+            return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static void cashOutcome(string summ)
+        public static bool cashOutcome(string summ)
         {
             Driver.Password = CRM.Password;
             Driver.Summ1 = DocPack.manualParseDecimal(summ);
             Driver.CashOutcome();
 
             Log.addWithCode("выплата денег (" + summ + ")");
+
+            return (Driver.ResultCode == 0 ? true : false);
         }
 
         static string tableField(int tableNumber, int fieldNumber, int rowNumber, string fieldValue = "")

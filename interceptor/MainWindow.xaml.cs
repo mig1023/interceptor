@@ -256,27 +256,27 @@ namespace interceptor
 
         private void reportCleaning_Click(object sender, RoutedEventArgs e)
         {
-            Cashbox.reportCleaning();
+            if (!Cashbox.reportCleaning()) moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void reportWithoutCleaning_Click(object sender, RoutedEventArgs e)
         {
-            Cashbox.reportWithoutCleaning();
+            if (!Cashbox.reportWithoutCleaning()) moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void reportDepartment_Click(object sender, RoutedEventArgs e)
         {
-            Cashbox.reportDepartment();
+            if (!Cashbox.reportDepartment()) moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void repeatDocument_Click(object sender, RoutedEventArgs e)
         {
-            Cashbox.repeatDocument();
+            if (!Cashbox.repeatDocument()) moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void reportTax_Click(object sender, RoutedEventArgs e)
         {
-            Cashbox.reportTax();
+            if (!Cashbox.reportTax()) moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void blockCheckButton(bool block)
@@ -434,19 +434,31 @@ namespace interceptor
             if (e.Key == Key.Enter) sendLogin_Click(null, null);
         }
 
+        private void moveToErrorFromReports(string Line)
+        {
+            loginFailText.Content = Line;
+            returnFromErrorTo = statusPlace;
+
+            MoveCanvas(
+                moveCanvas: loginFail,
+                prevCanvas: statusPlace,
+                direction: moveDirection.vertical
+            );
+        }
+
         private void continueDocument_Click(object sender, RoutedEventArgs e)
         {
-            Cashbox.continueDocument();
+            if (!Cashbox.continueDocument()) moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void cashIncome_Click(object sender, RoutedEventArgs e)
         {
-            Cashbox.cashIncome(moneyForIncome.Text);
+            if (!Cashbox.cashIncome(moneyForIncome.Text)) moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void cashOutcome_Click(object sender, RoutedEventArgs e)
         {
-            Cashbox.cashOutcome(moneyForOutcome.Text);
+            if (!Cashbox.cashOutcome(moneyForOutcome.Text)) moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void backToMainFromInfo_Click(object sender, RoutedEventArgs e)
@@ -475,7 +487,7 @@ namespace interceptor
 
         private void cancelDocument_Click(object sender, RoutedEventArgs e)
         {
-            Cashbox.cancelDocument();
+            if (!Cashbox.cancelDocument()) moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void backToLoginFromSettingsFial_Click(object sender, RoutedEventArgs e)

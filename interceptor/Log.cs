@@ -15,18 +15,20 @@ namespace interceptor
     class Log
     {
         public static void addWithCode(string line, string logType = "main",
-            bool freeLine = false, bool title = false)
+            bool freeLine = false, bool freeLineAfter = false, bool title = false)
         {
             add(line + ": " + Cashbox.getResultLine() + " [" + Cashbox.getResultCode() + "]",
-                logType, freeLine, title);
+                logType, freeLine, freeLineAfter, title);
         }
 
-        public static void addWeb(string line, string logType = "main", bool freeLine = false, bool title = false)
+        public static void addWeb(string line, string logType = "main", bool freeLine = false,
+            bool freeLineAfter = false, bool title = false)
         {
-            add("Ошибка доступа к серверу: " + line, logType, freeLine, title);
+            add("Ошибка доступа к серверу: " + line, logType, freeLine, freeLineAfter, title);
         }
 
-        public static void add(string line, string logType = "main", bool freeLine = false, bool title = false)
+        public static void add(string line, string logType = "main",
+            bool freeLine = false, bool freeLineAfter = false, bool title = false)
         {
             string logFileName;
 
@@ -49,13 +51,11 @@ namespace interceptor
 
                 writeLine(sw, line: line, date: true);
 
-                if (title)
-                {
-                    writeLine(sw, line: new string('/', line.Length), date: true);
-                    writeLine(sw, date: true);
-                }
+                if (title) writeLine(sw, line: new string('/', line.Length), date: true);
 
                 if (logType == "http") writeLine(sw);
+
+                if (freeLineAfter) writeLine(sw, date: true);
             }
 
             if (logType == "main") showCurrentStatus(line);

@@ -33,7 +33,7 @@ namespace interceptor
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
         public Canvas returnFromErrorTo;
 
-        public const string CURRENT_VERSION = "1.0b";
+        public const string CURRENT_VERSION = "1.0с";
             
         public MainWindow()
         {
@@ -41,7 +41,8 @@ namespace interceptor
 
             Instance = this;
 
-            Log.add("ПЕРЕХВАТЧИК ЗАПУЩЕН (" + CURRENT_VERSION + ")", title: true);
+            Log.add("ПЕРЕХВАТЧИК ЗАПУЩЕН", title: true);
+            Log.add("версия " + CURRENT_VERSION, freeLineAfter: true);
 
             int MaxThreadsCount = Environment.ProcessorCount * 4;
             ThreadPool.SetMaxThreads(MaxThreadsCount, MaxThreadsCount);
@@ -203,7 +204,7 @@ namespace interceptor
             }
             else if (Diagnostics.failCashbox())
             {
-                loginFailText.Content = "Ошибка подключения к кассе";
+                loginFailText.Content = "Ошибка подключения к кассе. Проверьте подключение и перезапустите приложение";
                 returnFromErrorTo = loginPlace;
                 canvasToGo = loginFail;
 

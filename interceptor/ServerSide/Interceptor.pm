@@ -174,7 +174,7 @@ sub send_request
 		$serv = $callback;
 	}
 	
-	return "ERR3:не установлена кассовая интеграция" unless $serv =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
+	return "ERR4:не установлена кассовая интеграция" unless $serv =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
 	
 	my $ua = LWP::UserAgent->new;
 	
@@ -548,9 +548,9 @@ sub cash_box
 	
 		my $err_type = "(неизвестная ошибка)";
 	
-		$err_type = "(ошибка кассовой программы)" if $code eq 'ERR1';
-		$err_type = "(ошибка кассы)" if $code eq 'ERR2';
-		$err_type = "(ошибка настроек)" if $code eq 'ERR3';
+		$err_type = "(ошибка кассовой программы)" if $code =~ /^ERR1$/;
+		$err_type = "(ошибка кассы)" if $code =~ /^ERR2$/;
+		$err_type = "(ошибка настроек)" if $code =~ /^ERR(3|4)$/;
 	
 		return cash_box_output( $self, "ERROR|$err_type $desc" );
 	}

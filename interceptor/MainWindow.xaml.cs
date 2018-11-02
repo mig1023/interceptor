@@ -33,7 +33,7 @@ namespace interceptor
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
         public Canvas returnFromErrorTo;
 
-        public const string CURRENT_VERSION = "1.0с";
+        public const string CURRENT_VERSION = "1.с";
             
         public MainWindow()
         {
@@ -50,13 +50,9 @@ namespace interceptor
 
             foreach (string buttonName in new[] {
                 "closeCheck",
-                "service",
-                "service_urgent",
+                "service", "service_urgent",
                 "vipsrv",
-                "concil",
-                "concil_urg_r",
-                "concil_n",
-                "concil_n_age",
+                "concil", "concil_urg_r", "concil_n", "concil_n_age",
                 "sms_status",
                 "anketasrv",
                 "printsrv",
@@ -64,15 +60,7 @@ namespace interceptor
                 "xerox",
                 "transum",
                 "dhl",
-                "srv1",
-                "srv2",
-                "srv3",
-                "srv4",
-                "srv5",
-                "srv6",
-                "srv7",
-                "srv8",
-                "srv9"
+                "srv1", "srv2", "srv3", "srv4", "srv5", "srv6", "srv7", "srv8", "srv9"
             }) servButtonCleaningList.Add((Button)mainGrid.FindName(buttonName));
         }
 

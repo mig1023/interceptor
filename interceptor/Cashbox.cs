@@ -19,8 +19,6 @@ namespace interceptor
         public static DocPack manDocPackForPrinting;
         public static decimal manDocPackSumm;
 
-
-
         static Cashbox()
         {
             Driver = new DrvFR();
@@ -198,8 +196,6 @@ namespace interceptor
         public static string printDocPack(DocPack doc, int MoneyType = -1,
             bool returnSale = false, decimal? MoneySumm = null)
         {
-            
-
             currentDrvPassword = doc.CashierPass;
 
             if (MoneyType != -1) doc.MoneyType = MoneyType;

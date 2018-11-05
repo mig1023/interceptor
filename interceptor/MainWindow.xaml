@@ -159,6 +159,7 @@
             <Label x:Name="status7_label" Content="версия прогр.кассы" Height="25" Canvas.Left="25" Canvas.Top="140" Width="122"/>
             <Label x:Name="status8_label" Content="запуск" Height="25" Canvas.Left="25" Canvas.Top="160" Width="122"/>
             <Label x:Name="status9_label" Content="состояние" Height="25" Canvas.Left="25" Canvas.Top="180" Width="122"/>
+            <Label x:Name="status10_label" Content="текущий пользователь" Height="25" Canvas.Left="25" Canvas.Top="200" Width="141"/>
             <Label x:Name="status1" Content="" Height="25" Canvas.Left="184" Canvas.Top="20" Width="285"/>
             <Label x:Name="status2" Content="" Height="25" Canvas.Left="184" Canvas.Top="40" Width="285"/>
             <Label x:Name="status3" Content="" Height="25" Canvas.Left="184" Canvas.Top="60" Width="285"/>
@@ -168,6 +169,7 @@
             <Label x:Name="status7" Content="" Height="25" Canvas.Left="184" Canvas.Top="140" Width="285"/>
             <Label x:Name="status8" Content="" Height="25" Canvas.Left="184" Canvas.Top="160" Width="285"/>
             <Label x:Name="status9" Content="" Height="25" Canvas.Left="184" Canvas.Top="180" Width="285"/>
+            <Label x:Name="status10" Content="" Height="25" Canvas.Left="184" Canvas.Top="200" Width="285"/>
         </Canvas>
         <Canvas x:Name="cashboxSettingsFail" Margin="0,394,0,-394" Background="#FFFF4E4E">
             <Button x:Name="backToLoginFromSettingsFial" Content="вернуться" Height="42" Canvas.Left="59" Canvas.Top="268" Width="211" Click="backToLoginFromSettingsFial_Click"/>

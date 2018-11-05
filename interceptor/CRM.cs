@@ -17,6 +17,7 @@ namespace interceptor
         public static int Password = 0;
         public const int AdminPassword = 0;
 
+        public static string currentLogin = "";
         public static string Cashier = "";
         public static string loginError = "";
 

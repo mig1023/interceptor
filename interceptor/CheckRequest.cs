@@ -19,6 +19,20 @@ namespace interceptor
             return ReqMatch.Success;
         }
 
+        public static bool checkLoginInRequest(string from)
+        {
+            if (from == "") return false;
+
+            XmlDocument request = new XmlDocument();
+
+            request.LoadXml(from);
+
+            XmlNode senderCashierNode = request.SelectSingleNode("toCashbox/Info/Cashier");
+            string senderCashier = senderCashierNode.InnerText;
+
+            return senderCashier == CRM.currentLogin;
+        }
+
         public static bool CheckXml(string from)
         {
             if (from == "") return false;

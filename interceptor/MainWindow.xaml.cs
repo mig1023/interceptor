@@ -33,7 +33,7 @@ namespace interceptor
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
         public Canvas returnFromErrorTo;
 
-        public const string CURRENT_VERSION = "1.с";
+        public const string CURRENT_VERSION = "1.с1";
             
         public MainWindow()
         {
@@ -221,6 +221,9 @@ namespace interceptor
             {
                 Server.StartServer();
                 switchOn.Background = Brushes.LimeGreen;
+                CRM.currentLogin = login.Text;
+
+                status10.Content = login.Text.Replace("_", "__");
             }
 
             MoveCanvas(

@@ -74,6 +74,13 @@ namespace interceptor
 
         public static string responsePrepare(string request)
         {
+            if (!CheckRequest.checkLoginInRequest(request))
+            {
+                Log.add("конфликт логинов запроса и программы, возвращаем ошибку");
+
+                return "ERR3:Кассовая программа запущена другим пользователем";
+            }
+
             if (CheckRequest.CheckConnection(request))
             {
                 Log.add("бип-тест подключения к кассе");
@@ -93,7 +100,7 @@ namespace interceptor
             }
             else
             {
-                Log.add("md5 запроса корректен");
+                Log.add("md5 запроса корректен, логин соответствует");
 
                 DocPack docPack = new DocPack();
 

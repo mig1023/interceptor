@@ -198,7 +198,8 @@ namespace interceptor
         {
             currentDrvPassword = doc.CashierPass;
 
-            if (MoneyType != -1) doc.MoneyType = MoneyType;
+            if (MoneyType != -1)
+                doc.MoneyType = MoneyType;
 
             Driver.Password = currentDrvPassword;
             Driver.CheckType = (returnSale ? 2 : 0);

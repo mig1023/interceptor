@@ -47,15 +47,19 @@ namespace interceptor
 
             using (StreamWriter sw = new StreamWriter(logFileName, true))
             {
-                if (freeLine || title) writeLine(sw, date: true);
+                if (freeLine || title)
+                    writeLine(sw, date: true);
 
                 writeLine(sw, line: line, date: true);
 
-                if (title) writeLine(sw, line: new string('/', line.Length), date: true);
+                if (title)
+                    writeLine(sw, line: new string('/', line.Length), date: true);
 
-                if (logType == "http") writeLine(sw);
+                if (logType == "http")
+                    writeLine(sw);
 
-                if (freeLineAfter) writeLine(sw, date: true);
+                if (freeLineAfter)
+                    writeLine(sw, date: true);
             }
 
             if (logType == "main") showCurrentStatus(line);
@@ -83,7 +87,8 @@ namespace interceptor
 
         public static void showCurrentStatus(string line)
         {
-            if (Application.Current == null) return;
+            if (Application.Current == null)
+                return;
              
             Application.Current.Dispatcher.BeginInvoke(new ThreadStart(delegate
             {

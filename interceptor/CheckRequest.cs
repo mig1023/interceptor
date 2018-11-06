@@ -21,7 +21,8 @@ namespace interceptor
 
         public static bool checkLoginInRequest(string from)
         {
-            if (from == "") return false;
+            if (from == "")
+                return false;
 
             XmlDocument request = new XmlDocument();
 
@@ -35,7 +36,8 @@ namespace interceptor
 
         public static bool CheckXml(string from)
         {
-            if (from == "") return false;
+            if (from == "")
+                return false;
 
             XmlDocument request = new XmlDocument();
 
@@ -63,7 +65,8 @@ namespace interceptor
 
         private static string allXmlField(XmlElement item, int indent = 0)
         {
-            if (item.LocalName == "CRC") return "";
+            if (item.LocalName == "CRC")
+                return "";
 
             foreach (var child in item.ChildNodes)
             {
@@ -89,10 +92,10 @@ namespace interceptor
                 byte[] hashBytes = md5.ComputeHash(inputBytes);
 
                 StringBuilder sb = new StringBuilder();
+
                 for (int i = 0; i < hashBytes.Length; i++)
-                {
                     sb.Append(hashBytes[i].ToString("X2"));
-                }
+
                 return sb.ToString();
             }
         }

@@ -248,27 +248,32 @@ namespace interceptor
 
         private void reportCleaning_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.reportCleaning()) moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.reportCleaning())
+                moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void reportWithoutCleaning_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.reportWithoutCleaning()) moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.reportWithoutCleaning())
+                moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void reportDepartment_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.reportDepartment()) moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.reportDepartment())
+                moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void repeatDocument_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.repeatDocument()) moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.repeatDocument())
+                moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void reportTax_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.reportTax()) moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.reportTax())
+                moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void blockCheckButton(bool block)
@@ -288,8 +293,10 @@ namespace interceptor
 
         private void сloseCheck_Click(object sender, RoutedEventArgs e)
         {
-            string sendingSuccess = CRM.sendManDocPack(manDocPack, login.Text, CRM.Password, 1,
-                moneyForCheck.Text, allCenters.Text, allVisas.Text, returnDate.Text);
+            string sendingSuccess = CRM.sendManDocPack(
+                manDocPack, login.Text, CRM.Password, 1, moneyForCheck.Text,
+                allCenters.Text, allVisas.Text, returnDate.Text
+            );
 
             string[] sendingData = sendingSuccess.Split('|');
 
@@ -335,9 +342,7 @@ namespace interceptor
             Button Service = sender as Button;
 
             if (Service.Name == "dhl")
-            {
                 manDocPack.Add(Service.Name + "=" + moneyForDHL.Text);
-            }
             else
                 manDocPack.Add(Service.Name);
 
@@ -347,7 +352,7 @@ namespace interceptor
             {
                 int servCount = Int32.Parse(ReqMatch.Groups[2].Value);
 
-                servCount++;
+                servCount += 1;
 
                 Service.Content = ReqMatch.Groups[1].Value + " (" + servCount.ToString() + ")";
             }
@@ -402,28 +407,35 @@ namespace interceptor
         {
             decimal money = DocPack.manualParseDecimal(moneyForCheck.Text);
 
-            string[] result = Cashbox.printDocPack(Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money).Split(':');
+            string[] result = Cashbox.printDocPack(
+                Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money
+            ).Split(':');
 
             checkError(result, checkPlace, "Ошибка кассы");
         }
 
         private void printCheckCard_Click(object sender, RoutedEventArgs e)
         {
-            string[] result = Cashbox.printDocPack(Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm).Split(':');
+            string[] result = Cashbox.printDocPack(
+                Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
+            ).Split(':');
 
             checkError(result, checkPlace, "Ошибка кассы");
         }
 
         private void returnSale_Click(object sender, RoutedEventArgs e)
         {
-            string[] result = Cashbox.printDocPack(Cashbox.manDocPackForPrinting, returnSale: true, MoneySumm: Cashbox.manDocPackSumm).Split(':');
+            string[] result = Cashbox.printDocPack(
+                Cashbox.manDocPackForPrinting, returnSale: true, MoneySumm: Cashbox.manDocPackSumm
+            ).Split(':');
 
             checkError(result, checkPlace, "Ошибка кассы");
         }
 
         private void password_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter) sendLogin_Click(null, null);
+            if (e.Key == Key.Enter)
+                sendLogin_Click(null, null);
         }
 
         private void moveToErrorFromReports(string Line)
@@ -440,17 +452,20 @@ namespace interceptor
 
         private void continueDocument_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.continueDocument()) moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.continueDocument())
+                moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void cashIncome_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.cashIncome(moneyForIncome.Text)) moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.cashIncome(moneyForIncome.Text))
+                moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void cashOutcome_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.cashOutcome(moneyForOutcome.Text)) moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.cashOutcome(moneyForOutcome.Text))
+                moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void backToMainFromInfo_Click(object sender, RoutedEventArgs e)
@@ -479,7 +494,8 @@ namespace interceptor
 
         private void cancelDocument_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.cancelDocument()) moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.cancelDocument())
+                moveToErrorFromReports(Cashbox.getResultLine());
         }
 
         private void backToLoginFromSettingsFial_Click(object sender, RoutedEventArgs e)
@@ -493,7 +509,8 @@ namespace interceptor
 
         private void reportAndRessetting_Click(object sender, RoutedEventArgs e)
         {
-            if (Cashbox.currentMode() != 4) Cashbox.reportCleaning();
+            if (Cashbox.currentMode() != 4)
+                Cashbox.reportCleaning();
 
             restoringSettingsCashbox.Elapsed += new ElapsedEventHandler(restoreSetting);
             restoringSettingsCashbox.Enabled = true;

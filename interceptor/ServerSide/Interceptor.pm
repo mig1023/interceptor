@@ -31,6 +31,7 @@ sub send_connection_signal
 	my $request = '<?xml version="1.0" encoding="UTF-8"?>' . 
 		'<toCashbox>' . 
 			'<CheckConnection>MakeBeep</CheckConnection>' .
+			'<Info><Cashier>' . $vars->get_session->{'login'} . '</Cashier></Info>' .
 		'</toCashbox>';
 	
 	return send_request( $vars, $request, $interceptor );
@@ -98,8 +99,8 @@ sub xml_create
 {
 	my ( $services, $info ) = @_;
 	
+	my ( $md5line, $bytecode ) = ( '', '' );
 	
-	my $md5line = '';
 	my $xml = '<Services>';
 	
 	for my $service ( keys %$services ) {
@@ -134,10 +135,8 @@ sub xml_create
 	$md5line .= $currentDate;
 	
 	Encode::from_to( $md5line, 'utf-8', 'windows-1251' );
-	
-	my $bytecode = "";
-	
-	$bytecode .= ord($_) . " " for split( //, $md5line );
+
+	$bytecode .= ord( $_ ) . " " for split( //, $md5line );
 	
 	my $md5 = Digest::MD5->new->add( $bytecode )->hexdigest;
 	
@@ -174,7 +173,7 @@ sub send_request
 		$serv = $callback;
 	}
 	
-	return "ERR4:не установлена кассовая интеграция" unless $serv =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
+	return "ERR4:Не установлена кассовая интеграция" unless $serv =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
 	
 	my $ua = LWP::UserAgent->new;
 	
@@ -184,7 +183,7 @@ sub send_request
 
 	my $response = $ua->request( $request );
 
-	return "ERR1:нет связи с программой" if $response->{ _rc } != 200;
+	return "ERR1:Нет связи с кассовой программой (она не запущена?)" if $response->{ _rc } != 200;
 	
 	return $response->{ _content };
 }
@@ -195,11 +194,12 @@ sub get_date
 	my ( $sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst ) = localtime( time );
 	
 	$year += 1900;
+	
 	$mon++;
 	
 	for ( $sec, $min, $hour, $mday, $mon, $year ) { 
 	
-		$_ = '0'.$_ if $_ < 10;
+		$_ = '0' . $_ if $_ < 10;
 	};
 	
 	return "$year-$mon-$mday $hour:$min:$sec";
@@ -213,7 +213,8 @@ sub get_all_add_services
 	my $services = [];
 
 	my $serv_price = $vars->db->selallkeys("
-		SELECT ServiceID, Price FROM ServicesPriceRates WHERE PriceRateID = ?", $data->{ rate }
+		SELECT ServiceID, Price FROM ServicesPriceRates WHERE PriceRateID = ?",
+		$data->{ rate }
 	);
 	
 	my %serv_price = map { $_->{ ServiceID } => $_->{ Price } } @$serv_price;
@@ -236,7 +237,7 @@ sub get_all_add_services
 		my $serv_names = $vars->db->selallkeys( "SELECT ID, Name FROM Services" );
 		
 		my %services_name = map { $_->{ ID } => $_->{ Name } } @$serv_names;
-	
+
 		for ( 1..9 ) {
 		
 			if ( $data->{ "srv$_" } ) {
@@ -450,7 +451,7 @@ sub doc_services
 			Department	=> 2,
 		},
 		cons_noresident => {
-			Name		=> "Консульский сбор (нерезидент$urg_text)",
+			Name		=> "Консульский сбор (нерез.$urg_text)",
 			Quantity	=> $cntnres,
 			Price		=> sprintf( '%.2f', $prices->{ 'conciln' . ( $data->{ urgent } ? 'u' : '' ) } ),
 			VAT		=> 0,

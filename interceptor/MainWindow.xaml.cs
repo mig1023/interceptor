@@ -26,14 +26,14 @@ namespace interceptor
 
     public partial class MainWindow : Window
     {
-        public static MainWindow Instance { get; private set;  }
+        public static MainWindow Instance { get; private set; }
 
         List<string> manDocPack = new List<string>();
         List<Button> servButtonCleaningList = new List<Button>();
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
         public Canvas returnFromErrorTo;
 
-        public const string CURRENT_VERSION = "1.с1";
+        public const string CURRENT_VERSION = "1.с2";
             
         public MainWindow()
         {
@@ -41,8 +41,8 @@ namespace interceptor
 
             Instance = this;
 
-            Log.add("ПЕРЕХВАТЧИК ЗАПУЩЕН", title: true);
-            Log.add("версия " + CURRENT_VERSION, freeLineAfter: true);
+            Log.add("ПЕРЕХВАТЧИК ЗАПУЩЕН", freeLine: true);
+            Log.add("версия ---> " + CURRENT_VERSION, freeLineAfter: true);
 
             int MaxThreadsCount = Environment.ProcessorCount * 4;
             ThreadPool.SetMaxThreads(MaxThreadsCount, MaxThreadsCount);
@@ -62,6 +62,8 @@ namespace interceptor
                 "dhl",
                 "srv1", "srv2", "srv3", "srv4", "srv5", "srv6", "srv7", "srv8", "srv9"
             }) servButtonCleaningList.Add((Button)mainGrid.FindName(buttonName));
+
+            login.Focus();
         }
 
         public void MoveCanvas(Canvas moveCanvas, Canvas prevCanvas, moveDirection direction = moveDirection.horizontal)

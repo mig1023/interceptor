@@ -306,6 +306,13 @@ namespace interceptor
             return Driver.ECRMode;
         }
 
+        public static string currentModeDescription()
+        {
+            Driver.GetECRStatus();
+
+            return Driver.ECRModeDescription;
+        }
+
         public static void getStatusData(out string port, out string speed, out string status,
             out string version, out string model)
         {

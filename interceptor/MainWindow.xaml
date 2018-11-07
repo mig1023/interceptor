@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:interceptor"
         mc:Ignorable="d"
-        Title="interceptor" Height="420" Width="800" ResizeMode="CanMinimize" Icon="icon.png">
+        Title="interceptor" Height="420" Width="800" ResizeMode="CanMinimize" Icon="Images\icon.png">
     <Grid x:Name="mainGrid">
         <Canvas x:Name="mainPlace" Margin="2,-392,-2,392">
             <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="490" Canvas.Top="304"/>
@@ -13,9 +13,9 @@
             <Button x:Name="check" Content="чек вручную" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Click="check_Click" Canvas.Left="261" Canvas.Top="304"/>
             <Button x:Name="status" Content="отчёты и повторы" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Click="status_Click" Canvas.Left="32" Canvas.Top="304"/>
             <Button x:Name="systemInfo" Content="техническая информация" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Click="systemInfo_Click" Canvas.Left="528" Canvas.Top="304"/>
-            <Image x:Name="statusImage" Height="150" Canvas.Left="76" Canvas.Top="89" Width="150" Source="reports.png" PreviewMouseDown="statusImage_PreviewMouseDown"/>
-            <Image x:Name="checkImage" Height="150" Canvas.Left="308" Canvas.Top="89" Width="150" Source="invoice.png" PreviewMouseDown="checkImage_PreviewMouseDown"/>
-            <Image x:Name="settingsImage" Height="150" Canvas.Left="548" Canvas.Top="89" Width="150" Source="settings.png" PreviewMouseDown="settingsImage_PreviewMouseDown"/>
+            <Image x:Name="statusImage" Height="150" Canvas.Left="76" Canvas.Top="89" Width="150" Source="Images\reports.png" PreviewMouseDown="statusImage_PreviewMouseDown"/>
+            <Image x:Name="checkImage" Height="150" Canvas.Left="308" Canvas.Top="89" Width="150" Source="Images\invoice.png" PreviewMouseDown="checkImage_PreviewMouseDown"/>
+            <Image x:Name="settingsImage" Height="150" Canvas.Left="548" Canvas.Top="89" Width="150" Source="Images\settings.png" PreviewMouseDown="settingsImage_PreviewMouseDown"/>
         </Canvas>
         <Canvas x:Name="checkPlace" Margin="796,0,-796,0">
             <Button x:Name="backToMainFromCheck" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromCheck_Click"/>
@@ -160,6 +160,7 @@
             <Label x:Name="status8_label" Content="запуск" Height="25" Canvas.Left="25" Canvas.Top="160" Width="122"/>
             <Label x:Name="status9_label" Content="состояние" Height="25" Canvas.Left="25" Canvas.Top="180" Width="122"/>
             <Label x:Name="status10_label" Content="текущий пользователь" Height="25" Canvas.Left="25" Canvas.Top="200" Width="141"/>
+            <Label x:Name="status11_label" Content="режим кассы" Height="25" Canvas.Left="25" Canvas.Top="220" Width="141"/>
             <Label x:Name="status1" Content="" Height="25" Canvas.Left="184" Canvas.Top="20" Width="285"/>
             <Label x:Name="status2" Content="" Height="25" Canvas.Left="184" Canvas.Top="40" Width="285"/>
             <Label x:Name="status3" Content="" Height="25" Canvas.Left="184" Canvas.Top="60" Width="285"/>
@@ -170,6 +171,7 @@
             <Label x:Name="status8" Content="" Height="25" Canvas.Left="184" Canvas.Top="160" Width="285"/>
             <Label x:Name="status9" Content="" Height="25" Canvas.Left="184" Canvas.Top="180" Width="285"/>
             <Label x:Name="status10" Content="" Height="25" Canvas.Left="184" Canvas.Top="200" Width="285"/>
+            <Label x:Name="status11" Content="" Height="25" Canvas.Left="184" Canvas.Top="220" Width="285"/>
         </Canvas>
         <Canvas x:Name="cashboxSettingsFail" Margin="0,394,0,-394" Background="#FFFF4E4E">
             <Button x:Name="backToLoginFromSettingsFial" Content="вернуться" Height="42" Canvas.Left="59" Canvas.Top="268" Width="211" Click="backToLoginFromSettingsFial_Click"/>

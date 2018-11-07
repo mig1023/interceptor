@@ -15,20 +15,20 @@ namespace interceptor
     class Log
     {
         public static void addWithCode(string line, string logType = "main",
-            bool freeLine = false, bool freeLineAfter = false, bool title = false)
+            bool freeLine = false, bool freeLineAfter = false)
         {
             add(line + ": " + Cashbox.getResultLine() + " [" + Cashbox.getResultCode() + "]",
-                logType, freeLine, freeLineAfter, title);
+                logType, freeLine, freeLineAfter);
         }
 
         public static void addWeb(string line, string logType = "main", bool freeLine = false,
-            bool freeLineAfter = false, bool title = false)
+            bool freeLineAfter = false)
         {
-            add("Ошибка доступа к серверу: " + line, logType, freeLine, freeLineAfter, title);
+            add("Ошибка доступа к серверу: " + line, logType, freeLine, freeLineAfter);
         }
 
         public static void add(string line, string logType = "main",
-            bool freeLine = false, bool freeLineAfter = false, bool title = false)
+            bool freeLine = false, bool freeLineAfter = false)
         {
             string logFileName;
 
@@ -47,13 +47,10 @@ namespace interceptor
 
             using (StreamWriter sw = new StreamWriter(logFileName, true))
             {
-                if (freeLine || title)
+                if (freeLine)
                     writeLine(sw, date: true);
 
                 writeLine(sw, line: line, date: true);
-
-                if (title)
-                    writeLine(sw, line: new string('/', line.Length), date: true);
 
                 if (logType == "http")
                     writeLine(sw);
@@ -94,6 +91,7 @@ namespace interceptor
             {
                 MainWindow main = (MainWindow)Application.Current.MainWindow;
                 main.status9.Content = line;
+                main.status11.Content = Cashbox.currentModeDescription().ToLower();
             }));
         }
     }

@@ -117,7 +117,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="srv1" Content="консультационные услуги" Height="37" Canvas.Left="571" Canvas.Top="278" Width="197" Click="addService_Click"/>
+            <Button x:Name="srv1" Content="консультационные услуги" Height="37" Canvas.Left="571" Canvas.Top="277" Width="197" Click="addService_Click"/>
         </Canvas>
 
         <Canvas x:Name="statusPlace" Margin="-794,5,794,-5">

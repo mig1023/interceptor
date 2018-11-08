@@ -233,15 +233,14 @@ sub get_all_add_services
 		);
 	}
 	else {
-
 		my $serv_names = $vars->db->selallkeys( "SELECT ID, Name FROM Services" );
 		
 		my %services_name = map { $_->{ ID } => $_->{ Name } } @$serv_names;
 
-		for ( 1..9 ) {
+		for ( sort { $a <=> $b } keys %services_name ) {
 		
 			if ( $data->{ "srv$_" } ) {
-		
+
 				my $value = ( $_ == 1 ? $serv_price{ $_ } : $data->{ "srv$_" } ) || 0;
 				
 				push $services, {
@@ -266,6 +265,7 @@ sub get_all_add_services
 		if ( $_->{ ValueType } == 1 ) {
 			
 			$serv_list->{ "service$serv_index" } = {
+			
 				Name		=> $_->{ Name },
 				Quantity	=> 1,
 				Price		=> $_->{ Value },
@@ -278,6 +278,7 @@ sub get_all_add_services
 			my $price = $serv_price{ $_->{ ServiceID } } || 0;
 		
 			$serv_list->{ "service$serv_index" } = {
+			
 				Name		=> $_->{ Name },
 				Quantity	=> $_->{ Value },
 				Price		=> $price,

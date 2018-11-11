@@ -8,14 +8,14 @@
         Title="interceptor" Height="420" Width="800" ResizeMode="CanMinimize" Icon="Images\icon.png">
     <Grid x:Name="mainGrid">
         <Canvas x:Name="mainPlace" Margin="2,-392,-2,392">
-            <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="490" Canvas.Top="304"/>
-            <Canvas x:Name="activity" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="509" Canvas.Top="304"/>
+            <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="490" Canvas.Top="304" MouseDown="switchOn_MouseDown"/>
+            <Canvas x:Name="activity" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="509" Canvas.Top="304"  MouseDown="switchOn_MouseDown"/>
             <Button x:Name="check" Content="чек вручную" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Click="check_Click" Canvas.Left="261" Canvas.Top="304"/>
             <Button x:Name="status" Content="отчёты и повторы" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Click="status_Click" Canvas.Left="32" Canvas.Top="304"/>
-            <Button x:Name="systemInfo" Content="техническая информация" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Click="systemInfo_Click" Canvas.Left="528" Canvas.Top="304"/>
+            <Button x:Name="reception" Content="ресепшен" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Canvas.Left="528" Canvas.Top="304" Click="reception_Click"/>
             <Image x:Name="statusImage" Height="150" Canvas.Left="76" Canvas.Top="89" Width="150" Source="Images\reports.png" PreviewMouseDown="statusImage_PreviewMouseDown"/>
             <Image x:Name="checkImage" Height="150" Canvas.Left="308" Canvas.Top="89" Width="150" Source="Images\invoice.png" PreviewMouseDown="checkImage_PreviewMouseDown"/>
-            <Image x:Name="settingsImage" Height="150" Canvas.Left="548" Canvas.Top="89" Width="150" Source="Images\settings.png" PreviewMouseDown="settingsImage_PreviewMouseDown"/>
+            <Image x:Name="receptionImage" Height="150" Canvas.Left="548" Canvas.Top="89" Width="150" Source="Images\reception.png" PreviewMouseDown="receptionImage_PreviewMouseDown"/>
         </Canvas>
         <Canvas x:Name="checkPlace" Margin="796,0,-796,0">
             <Button x:Name="backToMainFromCheck" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromCheck_Click"/>
@@ -118,6 +118,21 @@
                 </Button.Background>
             </Button>
             <Button x:Name="srv1" Content="консультационные услуги" Height="37" Canvas.Left="571" Canvas.Top="277" Width="197" Click="addService_Click"/>
+        </Canvas>
+        <Canvas x:Name="receptionPlace" Margin="1595,0,-1595,0">
+            <Button x:Name="backToMainFromReception" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click"/>
+            <Button x:Name="closeRCheck" Content="закрыть чек" Height="42" Canvas.Left="19" Canvas.Top="323" Width="155" Click="сloseCheck_Click"/>
+            <TextBox x:Name="moneyForRCheck" Height="40" Canvas.Left="287" TextWrapping="Wrap" Text="0.00" Canvas.Top="323" Width="117" FontSize="22"/>
+
+            <Button x:Name="anketasrvR" Content="заполнение анкеты" Height="37" Canvas.Left="387" Canvas.Top="151" Width="179" Click="addService_Click"/>
+            <Button x:Name="printsrvR" Content="распечатка документов" Height="37" Canvas.Left="571" Canvas.Top="151" Width="197" Click="addService_Click"/>
+            <Button x:Name="photosrvR" Content="фото" Height="37" Canvas.Left="203" Canvas.Top="151" Width="179" Click="addService_Click"/>
+            <Button x:Name="xeroxR" Content="ксерокс" Height="37" Canvas.Left="19" Canvas.Top="193" Width="179" Click="addService_Click"/>
+            <Label x:Name="currencyR1" Content="₽" Canvas.Left="403" Canvas.Top="317" FontSize="28"/>
+            <Label x:Name="currencyR2" Content="₽" Canvas.Left="544" Canvas.Top="185" FontSize="28"/>
+            <Button x:Name="returnRSale" Content="возврат" IsEnabled="False" Height="40" Canvas.Left="658" Canvas.Top="323" Width="110" Click="returnSale_Click"/>
+            <Label x:Name="totalR" Content="" Height="27" Canvas.Left="179" Canvas.Top="332" Width="103"/>
+            <DatePicker x:Name="returnRDate" Height="25" Canvas.Left="651" Canvas.Top="16" Width="117"/>
         </Canvas>
 
         <Canvas x:Name="statusPlace" Margin="-794,5,794,-5">

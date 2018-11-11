@@ -103,15 +103,6 @@ namespace interceptor
             );
         }
 
-        private void systemInfo_Click(object sender, RoutedEventArgs e)
-        {
-            MoveCanvas(
-                moveCanvas: systemInfoPlace,
-                prevCanvas: mainPlace,
-                direction: moveDirection.vertical
-            );
-        }
-
         private void updateStatuses()
         {
             string port, speed, status, version, model;
@@ -489,9 +480,9 @@ namespace interceptor
             check_Click(null, null);
         }
 
-        private void settingsImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void receptionImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            systemInfo_Click(null, null);
+            reception_Click(null, null);
         }
 
         private void cancelDocument_Click(object sender, RoutedEventArgs e)
@@ -535,5 +526,41 @@ namespace interceptor
                 restoringSettingsCashbox.Stop();
             }
         }
+
+        private void switchOn_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MoveCanvas(
+                moveCanvas: systemInfoPlace,
+                prevCanvas: mainPlace,
+                direction: moveDirection.vertical
+            );
+        }
+
+        private void reception_Click(object sender, RoutedEventArgs e)
+        {
+            // manDocPack.Clear();
+
+            // updateCenters();
+
+            MoveCanvas(
+                moveCanvas: receptionPlace,
+                prevCanvas: mainPlace
+            );
+        }
+
+        private void backToMainFromReception_Click(object sender, RoutedEventArgs e)
+        {
+            MoveCanvas(
+                moveCanvas: mainPlace,
+                prevCanvas: receptionPlace
+            );
+
+            Server.ShowActivity(busy: false);
+            Cashbox.manDocPackForPrinting = null;
+
+            // cleanCheck();
+        }
+
+
     }
 }

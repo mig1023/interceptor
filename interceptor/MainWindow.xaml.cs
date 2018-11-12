@@ -30,6 +30,7 @@ namespace interceptor
 
         List<string> manDocPack = new List<string>();
         List<Button> servButtonCleaningList = new List<Button>();
+        List<Button> receptionButtonCleaningList = new List<Button>();
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
         public Canvas returnFromErrorTo;
 
@@ -62,6 +63,10 @@ namespace interceptor
                 "dhl",
                 "srv1", "srv2", "srv3", "srv4", "srv5", "srv6", "srv7", "srv8", "srv9"
             }) servButtonCleaningList.Add((Button)mainGrid.FindName(buttonName));
+
+            foreach (string buttonName in new[] {
+                "anketasrvR", "printsrvR", "photosrvR", "xeroxR"
+            }) receptionButtonCleaningList.Add((Button)mainGrid.FindName(buttonName));
 
             login.Focus();
         }
@@ -558,9 +563,33 @@ namespace interceptor
             Server.ShowActivity(busy: false);
             Cashbox.manDocPackForPrinting = null;
 
+            appNumber.Focus();
+
             // cleanCheck();
         }
 
+        private void appNumber_KeyUp(object sender, KeyEventArgs e)
+        {
+            appNumber.Text = Regex.Replace(appNumber.Text, @"[^0-9/]", "");
+            string appNumberClean = Regex.Replace(appNumber.Text, @"[^0-9]", "");
 
+            if (appNumberClean.Length == 15)
+            {
+                anketasrvR.IsEnabled = true;
+                printsrvR.IsEnabled = true;
+                photosrvR.IsEnabled = true;
+                xeroxR.IsEnabled = true;
+            }
+            else
+            {
+                anketasrvR.IsEnabled = false;
+                printsrvR.IsEnabled = false;
+                photosrvR.IsEnabled = false;
+                xeroxR.IsEnabled = false;
+            }
+
+            //if (e.Key == Key.Enter)
+            //    sendLogin_Click(null, null);
+        }
     }
 }

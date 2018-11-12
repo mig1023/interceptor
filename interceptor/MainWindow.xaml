@@ -24,10 +24,10 @@
             <ComboBox x:Name="allCenters" Height="25" Canvas.Left="203" Canvas.Top="16" Width="232" SelectionChanged="allCenters_SelectionChanged"/>
             <ComboBox x:Name="allVisas" Height="25" Canvas.Left="442" Canvas.Top="16" Width="204"/>
 
-            <Button x:Name="service" Content="сервисный" Height="37" Canvas.Left="19" Canvas.Top="67" Width="179" Click="addService_Click"/>
-            <Button x:Name="service_urgent" Content="срочный сервисный" Height="37" Canvas.Left="203" Canvas.Top="67" Width="179" Click="addService_Click"/>
-            <Button x:Name="vipsrv" Content="вип обслуживание" Height="37" Canvas.Left="571" Canvas.Top="67" Width="197" Click="addService_Click"/>
-            <Button x:Name="concil" Tag="" Content="консульский" Height="37" Canvas.Left="19" Canvas.Top="109" Width="179" Click="addService_Click">
+            <Button x:Name="service" Content="сервисный" Height="37" Canvas.Left="19" Canvas.Top="67" Width="179" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="service_urgent" Content="срочный сервисный" Height="37" Canvas.Left="203" Canvas.Top="67" Width="179" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="vipsrv" Content="вип обслуживание" Height="37" Canvas.Left="571" Canvas.Top="67" Width="197" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="concil" Content="консульский" Height="37" Canvas.Left="19" Canvas.Top="109" Width="179" Tag="checkButtons" Click="addService_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFD2DEFF" Offset="0.5"/>
@@ -35,7 +35,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="concil_urg_r" Content="КС срочный резидент" Height="37" Canvas.Left="203" Canvas.Top="109" Width="179" Click="addService_Click">
+            <Button x:Name="concil_urg_r" Content="КС срочный резидент" Height="37" Canvas.Left="203" Canvas.Top="109" Width="179" Tag="checkButtons" Click="addService_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFD2DEFF" Offset="0.5"/>
@@ -43,7 +43,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="concil_n" Content="КС нерезидент" Height="37" Canvas.Left="387" Canvas.Top="109" Width="179" Click="addService_Click">
+            <Button x:Name="concil_n" Content="КС нерезидент" Height="37" Canvas.Left="387" Canvas.Top="109" Width="179" Tag="checkButtons" Click="addService_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFD2DEFF" Offset="0.5"/>
@@ -51,7 +51,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="concil_n_age" Content="КС нерезидент 6-12 лет" Height="37" Canvas.Left="571" Canvas.Top="109" Width="197" Click="addService_Click">
+            <Button x:Name="concil_n_age" Content="КС нерезидент 6-12 лет" Height="37" Canvas.Left="571" Canvas.Top="109" Width="197" Tag="checkButtons" Click="addService_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFD2DEFF" Offset="0.5"/>
@@ -59,14 +59,14 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="sms_status" Content="смс" Height="37" Canvas.Left="19" Canvas.Top="151" Width="179" Click="addService_Click"/>
-            <Button x:Name="srv4" Content="вип комфорт" Height="37" Canvas.Left="387" Canvas.Top="67" Width="179" Click="addService_Click"/>
-            <Button x:Name="anketasrv" Content="заполнение анкеты" Height="37" Canvas.Left="387" Canvas.Top="151" Width="179" Click="addService_Click"/>
-            <Button x:Name="printsrv" Content="распечатка документов" Height="37" Canvas.Left="571" Canvas.Top="151" Width="197" Click="addService_Click"/>
-            <Button x:Name="photosrv" Content="фото" Height="37" Canvas.Left="203" Canvas.Top="151" Width="179" Click="addService_Click"/>
-            <Button x:Name="xerox" Content="ксерокс" Height="37" Canvas.Left="19" Canvas.Top="193" Width="179" Click="addService_Click"/>
-            <Button x:Name="transum" Content="перевод" Height="37" Canvas.Left="203" Canvas.Top="193" Width="179" Click="addService_Click"/>
-            <Button x:Name="dhl" Content="&lt;---- доставка" Height="37" Canvas.Left="571" Canvas.Top="193" Width="197" Click="addService_Click"/>
+            <Button x:Name="sms_status" Content="смс" Height="37" Canvas.Left="19" Canvas.Top="151" Width="179" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="srv4" Content="вип комфорт" Height="37" Canvas.Left="387" Canvas.Top="67" Width="179" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="anketasrv" Content="заполнение анкеты" Height="37" Canvas.Left="387" Canvas.Top="151" Width="179" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="printsrv" Content="распечатка документов" Height="37" Canvas.Left="571" Canvas.Top="151" Width="197" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="photosrv" Content="фото" Height="37" Canvas.Left="203" Canvas.Top="151" Width="179" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="xerox" Content="ксерокс" Height="37" Canvas.Left="19" Canvas.Top="193" Width="179" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="transum" Content="перевод" Height="37" Canvas.Left="203" Canvas.Top="193" Width="179" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="dhl" Content="&lt;---- доставка" Height="37" Canvas.Left="571" Canvas.Top="193" Width="197" Tag="checkButtons" Click="addService_Click"/>
             <TextBox x:Name="moneyForDHL" Height="37" Canvas.Left="442" TextWrapping="Wrap" Text="0.00" Canvas.Top="193" Width="104" FontSize="22"/>
             <Button x:Name="printCheckMoney" Content="наличными" IsEnabled="False" Height="40" Canvas.Left="428" Canvas.Top="323" Width="110" Click="printCheckMoney_Click"/>
             <Button x:Name="printCheckCard" Content="картой" IsEnabled="False" Height="40" Canvas.Left="543" Canvas.Top="323" Width="110" Click="printCheckCard_Click"/>
@@ -75,9 +75,9 @@
             <Button x:Name="returnSale" Content="возврат" IsEnabled="False" Height="40" Canvas.Left="658" Canvas.Top="323" Width="110" Click="returnSale_Click"/>
             <Label x:Name="total" Content="" Height="27" Canvas.Left="179" Canvas.Top="332" Width="103"/>
             <DatePicker x:Name="returnDate" Height="25" Canvas.Left="651" Canvas.Top="16" Width="117"/>
-            <Button x:Name="srv2" Content="primetime" Height="37" Canvas.Left="19" Canvas.Top="235" Width="179" Click="addService_Click"/>
-            <Button x:Name="srv3" Content="primetime SPB" Height="37" Canvas.Left="203" Canvas.Top="235" Width="179" Click="addService_Click"/>
-            <Button x:Name="srv5" Content="покупка квит.C01" Height="37" Canvas.Left="387" Canvas.Top="235" Width="179" Click="addService_Click">
+            <Button x:Name="srv2" Content="primetime" Height="37" Canvas.Left="19" Canvas.Top="235" Width="179" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="srv3" Content="primetime SPB" Height="37" Canvas.Left="203" Canvas.Top="235" Width="179" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="srv5" Content="покупка квит.C01" Height="37" Canvas.Left="387" Canvas.Top="235" Width="179" Tag="checkButtons" Click="addService_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFB5FDC2" Offset="0.5"/>
@@ -85,7 +85,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="srv6" Content="покупка квит.C02" Height="37" Canvas.Left="571" Canvas.Top="235" Width="197" Click="addService_Click">
+            <Button x:Name="srv6" Content="покупка квит.C02" Height="37" Canvas.Left="571" Canvas.Top="235" Width="197" Tag="checkButtons" Click="addService_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFB5FDC2" Offset="0.5"/>
@@ -93,7 +93,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="srv7" Content="покупка квит.C03" Height="37" Canvas.Left="19" Canvas.Top="277" Width="179" Click="addService_Click">
+            <Button x:Name="srv7" Content="покупка квит.C03" Height="37" Canvas.Left="19" Canvas.Top="277" Width="179" Tag="checkButtons" Click="addService_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFB5FDC2" Offset="0.5"/>
@@ -101,7 +101,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="srv8" Content="покупка квит.D04" Height="37" Canvas.Left="203" Canvas.Top="277" Width="179" Click="addService_Click">
+            <Button x:Name="srv8" Content="покупка квит.D04" Height="37" Canvas.Left="203" Canvas.Top="277" Width="179" Tag="checkButtons" Click="addService_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFB5FDC2" Offset="0.5"/>
@@ -109,7 +109,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="srv9" Content="покупка квит.D05" Height="37" Canvas.Left="387" Canvas.Top="277" Width="179" Click="addService_Click">
+            <Button x:Name="srv9" Content="покупка квит.D05" Height="37" Canvas.Left="387" Canvas.Top="277" Width="179" Tag="checkButtons" Click="addService_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFB5FDC2" Offset="0.5"/>
@@ -117,22 +117,21 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="srv1" Content="консультационные услуги" Height="37" Canvas.Left="571" Canvas.Top="277" Width="197" Click="addService_Click"/>
+            <Button x:Name="srv1" Content="консультационные услуги" Height="37" Canvas.Left="571" Canvas.Top="277" Width="197" Tag="checkButtons" Click="addService_Click"/>
         </Canvas>
         <Canvas x:Name="receptionPlace" Margin="1595,0,-1595,0">
             <Button x:Name="backToMainFromReception" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click"/>
             <Button x:Name="closeRCheck" Content="закрыть чек" Height="42" Canvas.Left="19" Canvas.Top="323" Width="155" Click="сloseCheck_Click"/>
             <TextBox x:Name="moneyForRCheck" Height="40" Canvas.Left="287" TextWrapping="Wrap" Text="0.00" Canvas.Top="323" Width="117" FontSize="22"/>
 
-            <Button x:Name="anketasrvR" Content="заполнение анкеты" Height="37" Canvas.Left="387" Canvas.Top="151" Width="179" Click="addService_Click"/>
-            <Button x:Name="printsrvR" Content="распечатка документов" Height="37" Canvas.Left="571" Canvas.Top="151" Width="197" Click="addService_Click"/>
-            <Button x:Name="photosrvR" Content="фото" Height="37" Canvas.Left="203" Canvas.Top="151" Width="179" Click="addService_Click"/>
-            <Button x:Name="xeroxR" Content="ксерокс" Height="37" Canvas.Left="19" Canvas.Top="193" Width="179" Click="addService_Click"/>
+            <Button x:Name="anketasrvR" IsEnabled="False" Content="заполнение анкеты" Height="48" Canvas.Left="19" Canvas.Top="235" Width="376" Click="addService_Click"  FontSize="18"/>
+            <Button x:Name="printsrvR" IsEnabled="False" Content="распечатка документов" Height="48" Canvas.Left="400" Canvas.Top="235" Width="376" Click="addService_Click" FontSize="18"/>
+            <Button x:Name="photosrvR" IsEnabled="False" Content="фото" Height="48" Canvas.Left="400" Canvas.Top="182" Width="376" Click="addService_Click"  FontSize="18"/>
+            <Button x:Name="xeroxR" IsEnabled="False" Content="ксерокс" Height="48" Canvas.Left="19" Canvas.Top="182" Width="376" Click="addService_Click"  FontSize="18"/>
             <Label x:Name="currencyR1" Content="₽" Canvas.Left="403" Canvas.Top="317" FontSize="28"/>
-            <Label x:Name="currencyR2" Content="₽" Canvas.Left="544" Canvas.Top="185" FontSize="28"/>
-            <Button x:Name="returnRSale" Content="возврат" IsEnabled="False" Height="40" Canvas.Left="658" Canvas.Top="323" Width="110" Click="returnSale_Click"/>
             <Label x:Name="totalR" Content="" Height="27" Canvas.Left="179" Canvas.Top="332" Width="103"/>
-            <DatePicker x:Name="returnRDate" Height="25" Canvas.Left="651" Canvas.Top="16" Width="117"/>
+            <TextBox x:Name="appNumber" Height="38" Canvas.Left="339" TextWrapping="Wrap" Text="001/2018/11/12/0001" Canvas.Top="110" Width="248" FontSize="24" KeyUp="appNumber_KeyUp"/>
+            <Label x:Name="appNumberLabel" Content="номер записи" Height="34" Canvas.Left="201" Canvas.Top="114" Width="170" FontSize="18"/>
         </Canvas>
 
         <Canvas x:Name="statusPlace" Margin="-794,5,794,-5">

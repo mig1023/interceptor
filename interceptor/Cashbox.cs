@@ -262,8 +262,8 @@ namespace interceptor
             }
             else
             {
-                repeatPrintingTimer.Enabled = true;
-                repeatPrintingTimer.Start();
+                // repeatPrintingTimer.Enabled = true; // <----- отладка
+                // repeatPrintingTimer.Start();
             }
 
             if (checkClosingResult == 0)

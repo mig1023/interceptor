@@ -543,6 +543,8 @@ namespace interceptor
 
         private void reception_Click(object sender, RoutedEventArgs e)
         {
+            return; // <------- пока не готово
+
             // manDocPack.Clear();
 
             // updateCenters();

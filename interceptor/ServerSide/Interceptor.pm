@@ -222,7 +222,8 @@ sub get_all_add_services
 	if ( !$callback ) {
 
 		$services = $vars->db->selallkeys("
-			SELECT Services.Name, DocPackService.ServiceID, ServiceFields.ValueType, ServiceFieldValuesINT.Value
+			SELECT Services.ID as ServiceID, Services.Name, DocPackService.ServiceID,
+			ServiceFields.ValueType, ServiceFieldValuesINT.Value
 			FROM DocPackService
 			JOIN Services ON DocPackService.ServiceID = Services.ID
 			JOIN ServiceFields ON DocPackService.ServiceID = ServiceFields.ServiceID
@@ -243,7 +244,7 @@ sub get_all_add_services
 
 				my $value = ( $_ == 1 ? $serv_price{ $_ } : $data->{ "srv$_" } ) || 0;
 				
-				push $services, {
+				push @$services, {
 				
 					ServiceID 	=> $_,
 					Name 		=> $services_name{ $_ },
@@ -256,15 +257,16 @@ sub get_all_add_services
 
 	my $serv_list = {};
 	
-	my $serv_index = 0;
+	# my $serv_index = 0;
 	
 	for ( @$services ) {
 	
-		$serv_index++;
+		# $serv_index++;
 	
 		if ( $_->{ ValueType } == 1 ) {
 			
-			$serv_list->{ "service$serv_index" } = {
+			# $serv_list->{ "service$serv_index" } = {
+			$serv_list->{ "service" . $_->{ ServiceID } } = {
 			
 				Name		=> $_->{ Name },
 				Quantity	=> 1,
@@ -277,7 +279,8 @@ sub get_all_add_services
 		
 			my $price = $serv_price{ $_->{ ServiceID } } || 0;
 		
-			$serv_list->{ "service$serv_index" } = {
+			# $serv_list->{ "service$serv_index" } = {
+			$serv_list->{ "service" . $_->{ ServiceID } } = {
 			
 				Name		=> $_->{ Name },
 				Quantity	=> $_->{ Value },
@@ -291,6 +294,69 @@ sub get_all_add_services
 	return $serv_list;
 }
 
+sub get_service_code
+# //////////////////////////////////////////////////
+{
+	my ( $self, $serv, $center, $urgance, $ord ) = @_;
+	
+	my $country = '(ITA';
+		
+	my $center_id = {
+		1	=> '00', # MSK
+		44	=> '92', # MSK K
+		41	=> '92', # MSK PT
+		45	=> '92', # MSK VIP C
+		40	=> '92', # VIP MSK K
+		31	=> '91', # VIP
+		32	=> '91', # TP
+	};
+	
+	my $serv_group = {
+		'shipping'	=> '501',
+		'sms'		=> '300',
+		'tran'		=> '000', # ??
+		'xerox'		=> '400',
+		'ank'		=> '502',
+		'print'		=> '503',
+		'photo'		=> '504',
+		'vip'		=> '505',
+
+		'service1' 	=> '506',
+		'service2' 	=> '704',
+		'service3' 	=> '000', # ??
+		'service4' 	=> '705',
+		'service5' 	=> '511',
+		'service6' 	=> '512',
+		'service7' 	=> '513',
+		'service8' 	=> '514',
+		'service9' 	=> '515',
+		'service10' 	=> '000', # ??
+	};
+	
+	my $cons_group = {
+		'cons_resident' => 
+		'cons_noresident' => 
+		'cons_age' => 
+		'cons_d' => 
+	};
+	
+	return if $cons_group->{ $serv };
+	
+	if ( $serv eq 'visa' ) {
+	
+		my $pay_type = 1;
+		
+		my $urgance_code = ( $urgance ? '1' : '0' );
+		
+		my $agent = 1;
+		
+		return $country . $center_id->{ $center } . $pay_type . $urgance_code . $agent . ') ';
+	}
+	else {
+	
+		return $country . $center_id->{ $center } . $serv_group->{ $serv } . ') ';
+	}
+}
 
 sub doc_services
 # //////////////////////////////////////////////////
@@ -370,16 +436,13 @@ sub doc_services
 	
 	$smscnt = 1 if $data->{ sms_status } == 1;
 	
-	my $vprice = (
-		$data->{ urgent } ?
-		$prices->{ ( $data->{ jurid } ? 'j' : '' ) . 'urgent' } :
-		$prices->{ ( $data->{ jurid } ? 'j' : '') . 'visa' }
-	);
+	my $vprice = ( $data->{ urgent } ? $prices->{ 'urgent' } : $prices->{ 'visa' } );
 	
 	my $urg_text = ( $data->{ urgent } ? ', срочн.' : '' );
 	
-	my $special_department = ( $callback ? 3 : 1 );
-		
+	# my $special_department = ( $callback ? 3 : 1 );
+	my $special_department = 1; # <------------- reception!
+	
 	my $servsums = {
 		shipping => {
 			Name		=> 'Услуги по доставке на дом',
@@ -410,7 +473,7 @@ sub doc_services
 			Department	=> $special_department,
 		},
 		visa => {
-			Name		=> ( $data->{'urgent'} ? 'Cрочн.cервисный' : 'Cервисный' ).' сбор',
+			Name		=> 'Услуги по оформлению документов для получения виз в Италию',
 			Quantity	=> $apcnt,
 			Price		=> sprintf( "%.2f", $vprice ),
 			VAT		=> 1,
@@ -481,9 +544,12 @@ sub doc_services
 		$servsums->{ $_ } = $serv_hash->{ $_ };
 	}
 
-	my ( $total, $mandocpack_failserv ) = ( 0, '' );
+	my ( $total, $mandocpack_failserv, $ord ) = ( 0, '', 1 );
 
 	for my $serv ( keys %$servsums ) {
+	
+		$servsums->{ $serv }->{ Name } =
+			get_service_code( $self, $serv, $data->{ center }, $data->{ urgent }, $ord ) . $servsums->{ $serv }->{ Name };
 	
 		$mandocpack_failserv .= ( $mandocpack_failserv ? ', ' : '' ) . $servsums->{ $serv }->{ Name }
 			if $servsums->{ $serv }->{ Quantity }
@@ -502,6 +568,8 @@ sub doc_services
 			delete $servsums->{ $serv };
 		}
 		else {
+		
+			$ord += 1;
 		
 			$total += $servsums->{ $serv }->{ Price } * $servsums->{ $serv }->{ Quantity };
 		}
@@ -717,7 +785,7 @@ sub cash_box_mandocpack
 	
 	$data->{ applicants } = [];
 	
-	for ( keys $serv_hash ) {
+	for ( keys %$serv_hash ) {
 	
 		if ( /^dhl=(.+)$/ ) {
 

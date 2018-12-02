@@ -34,28 +34,17 @@ namespace interceptor
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
         public Canvas returnFromErrorTo;
 
-        // /////////////////////////////////////////////////
-        // 1.a - первая версия для внутреннего тестирования
-        // 1.a1 - добавлена возможность напрямую из программы создавать чеки, отчёты, внесение и выплаты
-        // 1.b - версия для демонстрации и согласований
-        // 1.с - версия для подготовки к внедрению
-        // 1.c1 - защита от подключения из VMS под другим логином
-        // 1.c2 - больше технических данных
-        // 1.c3 - версия с услугами ресепшена (с pdf актом)
-        // 1.c4 - с кодами услуг в чеке
-        // 1.d - версия тестовой кассы
-        // 1.d1 - исправлена ошибка админ.пароля для доступа к отчётам
-        // 1.d2 - возврат наличными/чеком
-        // 1.d3 - акты ресепшена загружаются в VMS
-        // /////////////////////////////////////////////////
+        public const string CURRENT_VERSION = "1.e";
 
-        public const string CURRENT_VERSION = "1.d3";
+        public const bool TEST_VERSION = false;
             
         public MainWindow()
         {
             InitializeComponent();
 
             Instance = this;
+
+            if (TEST_VERSION) this.Title += " test";
 
             Log.add("ПЕРЕХВАТЧИК ЗАПУЩЕН", freeLine: true);
             Log.add("версия ---> " + CURRENT_VERSION, freeLineAfter: true);
@@ -74,7 +63,7 @@ namespace interceptor
                 "printsrv",
                 "photosrv",
                 "xerox",
-                "dhl",
+                "dhl", "insurance",
                 "srv1", "srv2", "srv3", "srv4", "srv5", "srv6", "srv7", "srv8", "srv9"
             }) servButtonCleaningList.Add((Button)mainGrid.FindName(buttonName));
 
@@ -315,7 +304,7 @@ namespace interceptor
             printRCheckCard.IsEnabled = (block ? true : false);
 
             foreach (Button serv in receptionButtonCleaningList)
-                serv.IsEnabled = (block ? false : true);
+                serv.IsEnabled = false;
 
             appNumber.IsEnabled = (block ? false : true);
         }
@@ -353,9 +342,9 @@ namespace interceptor
             }
             else
             {
-                Log.add("во время формирования чека произошла ошибка");
+                Log.add("во время формирования чека произошла ошибка: " + sendingData[1]);
 
-                loginFailText.Content = "Во время отправки запроса произошла ошибка";
+                loginFailText.Content = sendingData[1];
                 returnFromErrorTo = checkPlace;
 
                 MoveCanvas(
@@ -372,6 +361,8 @@ namespace interceptor
 
             if (Service.Name == "dhl")
                 manDocPack.Add(Service.Name + "=" + moneyForDHL.Text);
+            else if (Service.Name == "insurance")
+                manDocPack.Add(Service.Name + "=" + moneyForInsurance.Text);
             else
                 manDocPack.Add(Service.Name);
 
@@ -429,6 +420,7 @@ namespace interceptor
 
             moneyForDHL.Text = "0.00";
             moneyForCheck.Text = "0.00";
+            moneyForInsurance.Text = "0.00";
             total.Content = "";
             totalR.Content = "";
         }
@@ -449,6 +441,7 @@ namespace interceptor
             moneyForRCheck.Text = "0.00";
             total.Content = "";
             totalR.Content = "";
+            appNumber.Text = "";
         }
 
         private void showError(Canvas from, string error)
@@ -613,21 +606,6 @@ namespace interceptor
 
         private void reception_Click(object sender, RoutedEventArgs e)
         {
-
-            // --------------------------------------------
-
-            //loginFailText.Content = "Пока не готово";
-            //returnFromErrorTo = mainPlace;
-
-            //MoveCanvas(
-            //    moveCanvas: loginFail,
-            //    prevCanvas: mainPlace,
-            //    direction: moveDirection.vertical
-            //);
-            //return; // <----- ещё не готово
-
-            // --------------------------------------------
-
             manDocPack.Clear();
 
             updateCenters();
@@ -709,9 +687,9 @@ namespace interceptor
             }
             else
             {
-                Log.add("во время формирования чека произошла ошибка");
+                Log.add("во время формирования чека произошла ошибка: " + sendingData[1]);
 
-                loginFailText.Content = "Во время отправки запроса произошла ошибка";
+                loginFailText.Content = sendingData[1];
                 returnFromErrorTo = receptionPlace;
 
                 MoveCanvas(

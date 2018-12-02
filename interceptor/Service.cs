@@ -13,5 +13,8 @@ namespace interceptor
         public decimal Price;
         public int VAT;
         public int Department;
+
+        public int ReceptionID;
+        public int ReturnShipping;
     }
 }

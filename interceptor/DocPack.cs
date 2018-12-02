@@ -52,6 +52,16 @@ namespace interceptor
                 newService.VAT = int.Parse(node["VAT"].InnerText);
                 newService.Department = int.Parse(node["Department"].InnerText);
 
+                if (node.SelectSingleNode("ReceptionID") != null)
+                    newService.ReceptionID = int.Parse(node["ReceptionID"].InnerText);
+                else
+                    newService.ReceptionID = 0;
+
+                if (node.SelectSingleNode("ReturnShipping") != null)
+                    newService.ReturnShipping = int.Parse(node["ReturnShipping"].InnerText);
+                else
+                    newService.ReturnShipping = 0;
+
                 this.Services.Add(newService);
             }
 

@@ -13,9 +13,10 @@ namespace interceptor
 {
     class CRM
     {
-        public const string CRM_URL_BASE = "127.0.0.1";
-
-        const string CRM_URL = "http://" + CRM_URL_BASE;
+        const string CRM_URL_FIGHT = "127.0.0.1";
+        const string CRM_URL_TEST = "127.0.0.1";
+        public const string CRM_URL_BASE = (MainWindow.TEST_VERSION ? CRM_URL_TEST : CRM_URL_FIGHT);
+        public const string CRM_URL = "http://" + CRM_URL_BASE;
 
         public static int Password = 0;
         public const int AdminPassword = 0;
@@ -203,9 +204,13 @@ namespace interceptor
             }
         }
 
-        public static void sendFile(string pathToFile, string appID)
+        public static void sendFile(string pathToFile, string appID, string actNum,
+            string xerox, string form, string print, string photo)
         {
             string url = CRM_URL + "/vcs/cashbox_upload.htm";
+
+            Log.add("Отправлена информация в БД об акте для AppID " + appID);
+            Log.add("Копирование: " + xerox + " Анкета: " + form + " Распечатка: " + print + " Фото: " + photo);
 
             var md5 = System.Security.Cryptography.MD5.Create();
             string md5sum = BitConverter.ToString(
@@ -223,6 +228,13 @@ namespace interceptor
             parameters.Add("md5", md5sum);
             parameters.Add("login", currentLogin);
             parameters.Add("appID", appID);
+
+            parameters.Add("xerox", xerox);
+            parameters.Add("form", form);
+            parameters.Add("photo", photo);
+            parameters.Add("print", print);
+            parameters.Add("actnum", actNum);
+
             client.QueryString = parameters;
 
             Uri fServer = new Uri(url);

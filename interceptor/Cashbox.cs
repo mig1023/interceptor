@@ -201,6 +201,9 @@ namespace interceptor
             if (MoneyType != -1)
                 doc.MoneyType = MoneyType;
 
+            if (doc.Services.Count > 0 && doc.Services[0].ReturnShipping == 1)
+                returnSale = true;
+
             Driver.Password = currentDrvPassword;
             Driver.CheckType = (returnSale ? 2 : 0);
             Driver.OpenCheck();
@@ -260,7 +263,7 @@ namespace interceptor
 
                 Server.ShowActivity(busy: false);
             }
-            else
+            else if (!MainWindow.TEST_VERSION)
             {
                 repeatPrintingTimer.Enabled = true;
                 repeatPrintingTimer.Start();

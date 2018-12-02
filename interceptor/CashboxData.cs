@@ -56,7 +56,7 @@ namespace interceptor
                     tableNumber = 5,
                     fieldNumber = 1,
                     rowNumber = 2,
-                    fieldValue = "КАРТОЙ",
+                    fieldValue = "БЕЗНАЛИЧНЫМИ",
                     description = "оплата/2",
                 },
 

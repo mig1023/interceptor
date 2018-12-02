@@ -36,6 +36,8 @@ namespace interceptor
         {
             string[] appData = appDataString.Split('|');
 
+            decimal[] receptionServices = { 0, 0, 0, 0, 0 };
+
             if (appData[0] != "OK")
             {
                 Log.addWeb("Ошибка вернувшихся данных записи");
@@ -58,6 +60,8 @@ namespace interceptor
             cb.SetColorFill(BaseColor.BLACK);
             cb.SetFontAndSize(bf, 10);
 
+            string actNum = appNumber(appData[2]) + "/ДОП" + receiptIndex.ToString();
+
             for (int i = 0; i < 2; i++)
             {
                 if (i > 0)
@@ -65,10 +69,10 @@ namespace interceptor
                     AddText();
                     AddText();
                     AddText(
+                        "- - - - - - - - - - - - - - - - - - - - - - - -" +
+                        " линия отрыва " +
                         "- - - - - - - - - - - - - - - - - - - - - - -" +
-                        " линия разрыва " +
-                        "- - - - - - - - - - - - - - - - - - - - - - -" +
-                        " линия разрыва " +
+                        " линия отрыва " +
                         "- - - - - - - - - - - - - - - - - - - - - - -"
                     );
                     AddText();
@@ -77,7 +81,7 @@ namespace interceptor
                     CURRENT_ROW = 0;
                 }
 
-                AddTitle("Акт N " + appNumber(appData[2]) + "/ДОП" + receiptIndex.ToString());
+                AddTitle("Акт N " + actNum);
                 AddTitle("выполненных работ на дополнительные услуги");
 
                 AddText("г.Москва");
@@ -99,11 +103,11 @@ namespace interceptor
                     decimal total = service.Price * service.Quantity;
 
                     AddRow("N", service.Name, "шт", service.Quantity.ToString(),
-                        service.Price.ToString(), total.ToString());
+                        service.Price.ToString() + ".00", total.ToString() + ".00");
                 }
 
                 AddText();
-                AddText("ИТОГО : " + Cashbox.manDocPackSumm + " руб", x: 450, y: CurrentY(), noNewLine: true);
+                AddText("ИТОГО : " + Cashbox.manDocPackSumm + " руб 00 коп", x: 450, y: CurrentY(), noNewLine: true);
 
                 AddText("Услуги оказаны в полном объеме и в срок.");
                 AddText("Услуги оплачены Заказчиком в сумме: " + appData[3].ToLower());
@@ -113,18 +117,18 @@ namespace interceptor
                 AddText();
                 AddText();
                 AddText("Подписи сторон:");
-                AddText();
-                AddText("М.П.");
+                
                 AddText();
                 AddText(
-                    "Сдал: ___________________ / ______________________ /"
+                    "Исполнитель: _______________ / __________________ /"
                     + "       " +
-                    "Принял: ____________________ / _____________________ /"
+                    "заказчик: _______________ / " + appData[1] + " /"
                 );
 
                 AddText();
                 AddText("(ФИО)", x: 175, y: CurrentY(), noNewLine: true);
-                AddText("(ФИО)", x: 460, y: CurrentY(), noNewLine: true);
+                AddText("(ФИО)", x: 415, y: CurrentY(), noNewLine: true);
+                AddText("М.П.");
             }
 
 
@@ -139,7 +143,23 @@ namespace interceptor
 
             Log.add("Сформирован акт " + fileName);
 
-            CRM.sendFile(fileName, appData[6]);
+            foreach (Service service in doc.Services)
+            {
+                decimal total = service.Price * service.Quantity;
+
+                if (service.ReceptionID > 0)
+                    receptionServices[service.ReceptionID] += total;
+            }
+
+            CRM.sendFile(
+                pathToFile: fileName,
+                appID: appData[6],
+                actNum: actNum,
+                xerox: receptionServices[1].ToString(),
+                form: receptionServices[2].ToString(),
+                print: receptionServices[3].ToString(),
+                photo: receptionServices[4].ToString()
+            );
         }
 
         static public void AddTextBox(bool header = false)

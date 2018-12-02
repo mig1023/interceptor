@@ -6,14 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using System.Text.RegularExpressions;
 
 namespace interceptor
 {
     class Receipt
     {
-        const int MARGIN_TOP = 50;
+        const int MARGIN_TOP = 15;
         const int MARGIN_LEFT = 30;
-        const int LINE_HEIGHT = 15;
+        const int LINE_HEIGHT = 13;
 
         static int[] COLUMN_WIDTH = { 0, 20, 250, 50, 60, 75 };
         static int CURRENT_LINE = 0;
@@ -22,63 +23,130 @@ namespace interceptor
         static Document document;
         static PdfContentByte cb;
 
-        public static void printReceipt()
+        public static string appNumber(string appNum)
         {
+            Match ReqMatch = Regex.Match(appNum, @"^(\d{3})(\d{4})(\d{2})(\d{2})(\d{4})$");
+
+            return ReqMatch.Groups[1].Value + "/" + ReqMatch.Groups[2].Value + "/" +
+                ReqMatch.Groups[3].Value + "/" + ReqMatch.Groups[4].Value + "/" +
+                ReqMatch.Groups[5].Value;
+        }
+
+        public static void printReceipt(string appDataString, DocPack doc)
+        {
+            string[] appData = appDataString.Split('|');
+
+            if (appData[0] != "OK")
+            {
+                Log.addWeb("Ошибка вернувшихся данных записи");
+                return;
+            }
+
+            int receiptIndex = int.Parse(appData[5]) + 1;
+
+            string fileName = appData[2] + "_D_" + receiptIndex.ToString() + ".pdf";
+
             document = new Document();
-            FileStream fs = new FileStream("newFile.pdf", FileMode.Create, FileAccess.Write);
+            FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
             PdfWriter writer = PdfWriter.GetInstance(document, fs);
             document.Open();
 
             cb = writer.DirectContent;
 
             BaseFont bf = BaseFont.CreateFont("FONT.TTF", Encoding.GetEncoding(1251).BodyName, BaseFont.NOT_EMBEDDED);
-            Font font = new Font(bf, Font.DEFAULTSIZE, Font.NORMAL);
 
             cb.SetColorFill(BaseColor.BLACK);
             cb.SetFontAndSize(bf, 10);
 
-            AddTitle("Акт N 001/2018/11/09/0001/ДОП");
-            AddTitle("выполненных работ на дополнительные услуги");
+            for (int i = 0; i < 2; i++)
+            {
+                if (i > 0)
+                {
+                    AddText();
+                    AddText();
+                    AddText(
+                        "- - - - - - - - - - - - - - - - - - - - - - -" +
+                        " линия разрыва " +
+                        "- - - - - - - - - - - - - - - - - - - - - - -" +
+                        " линия разрыва " +
+                        "- - - - - - - - - - - - - - - - - - - - - - -"
+                    );
+                    AddText();
+                    AddText();
 
-            AddText("г.Москва");
-            AddText("09/11/2018", x: 520, y: CurrentY(), noNewLine: true);
+                    CURRENT_ROW = 0;
+                }
 
-            AddText();
+                AddTitle("Акт N " + appNumber(appData[2]) + "/ДОП" + receiptIndex.ToString());
+                AddTitle("выполненных работ на дополнительные услуги");
 
-            AddText("Заявитель: Петров Иван Иванович (номер записи 001/2018/11/09/0001)");
-            AddText("Исполнитель: ООО Виза Менеджмент Сервич");
+                AddText("г.Москва");
+                AddText(DateTime.Now.ToString("dd MMMM yyyy"), x: 500, y: CurrentY(), noNewLine: true);
 
-            AddText("Оказаны следующие виды работ:");
+                AddText();
 
-            AddRow("п/п", "Наименование работы(услуги)", "Ед.изм.", "Кол-во", "Цена", "Сумма", header: true, aligment: 1);
-            AddRow("", "", "", "", "(с учетом", "(с учетом", withBox: false, header: true, aligment: 1);
-            AddRow("", "", "", "", "НДС 18%), руб", "НДС 18%), руб", withBox: false, header: true, aligment: 1);
+                AddText("Заявитель: " + appData[1] + " (номер записи " + appNumber(appData[2]) + ")");
+                AddText("Исполнитель: ООО \"Виза Менеджмент Сервиc\"");
 
-            AddRow("N", "Услуга фотографирования", "шт", "1", "100", "100");
-            AddRow("N", "Услуга ксерокопирования", "шт", "2", "200", "400");
-            AddRow("N", "Услуга заполнения анкеты", "шт", "2", "300", "600");
-            AddRow("N", "Услуга распечатки документов", "шт", "2", "400", "800");
+                AddText("Оказаны следующие виды работ:");
 
-            AddText();
+                AddRow("", "", "", "", "Цена", "Сумма", header: true, aligment: 1);
+                AddRow("    " + "п/п", "Наименование работы(услуги)", "Ед.изм.", "Кол-во", "(с учетом", "(с учетом", withBox: false, header: true, aligment: 1);
+                AddRow("", "", "", "", "НДС 18%), руб", "НДС 18%), руб", withBox: false, header: true, aligment: 1);
 
-            AddText("ИТОГО: Тысяча семьсот рублей, в т.ч. НДС 18% сто рублей");
+                foreach (Service service in doc.Services)
+                {
+                    decimal total = service.Price * service.Quantity;
 
-            AddText();
-            AddText();
-            AddText("М.П.");
-            AddText("Сдал:", x: 200, y: CurrentY(), noNewLine: true);
-            AddText("Принял:", x: 350, y: CurrentY(), noNewLine: true);
+                    AddRow("N", service.Name, "шт", service.Quantity.ToString(),
+                        service.Price.ToString(), total.ToString());
+                }
+
+                AddText();
+                AddText("ИТОГО : " + Cashbox.manDocPackSumm + " руб", x: 450, y: CurrentY(), noNewLine: true);
+
+                AddText("Услуги оказаны в полном объеме и в срок.");
+                AddText("Услуги оплачены Заказчиком в сумме: " + appData[3].ToLower());
+                AddText("в т.ч. НДС 18% " + appData[4].ToLower());
+                AddText("Стороны друг к другу претензий не имеют.");
+
+                AddText();
+                AddText();
+                AddText("Подписи сторон:");
+                AddText();
+                AddText("М.П.");
+                AddText();
+                AddText(
+                    "Сдал: ___________________ / ______________________ /"
+                    + "       " +
+                    "Принял: ____________________ / _____________________ /"
+                );
+
+                AddText();
+                AddText("(ФИО)", x: 175, y: CurrentY(), noNewLine: true);
+                AddText("(ФИО)", x: 460, y: CurrentY(), noNewLine: true);
+            }
+
 
             document.Close();
             fs.Close();
             writer.Close();
+
+            System.Diagnostics.Process.Start(fileName);
+
+            CURRENT_LINE = 0;
+            CURRENT_ROW = 0;
+
+            Log.add("Сформирован акт " + fileName);
+
+            CRM.sendFile(fileName, appData[6]);
         }
 
         static public void AddTextBox(bool header = false)
         {
-            int columnHeight = (header ? 45 : 15);
+            int columnHeight = (header ? LINE_HEIGHT*3 : LINE_HEIGHT);
 
-            float yPos = CurrentY() + 5;
+            float yPos = CurrentY() + 3;
             float xPosLeft = MARGIN_LEFT + 3;
             float xPosRight = document.PageSize.Width - MARGIN_LEFT;
 

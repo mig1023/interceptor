@@ -34,7 +34,22 @@ namespace interceptor
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
         public Canvas returnFromErrorTo;
 
-        public const string CURRENT_VERSION = "1.с2";
+        // /////////////////////////////////////////////////
+        // 1.a - первая версия для внутреннего тестирования
+        // 1.a1 - добавлена возможность напрямую из программы создавать чеки, отчёты, внесение и выплаты
+        // 1.b - версия для демонстрации и согласований
+        // 1.с - версия для подготовки к внедрению
+        // 1.c1 - защита от подключения из VMS под другим логином
+        // 1.c2 - больше технических данных
+        // 1.c3 - версия с услугами ресепшена (с pdf актом)
+        // 1.c4 - с кодами услуг в чеке
+        // 1.d - версия тестовой кассы
+        // 1.d1 - исправлена ошибка админ.пароля для доступа к отчётам
+        // 1.d2 - возврат наличными/чеком
+        // 1.d3 - акты ресепшена загружаются в VMS
+        // /////////////////////////////////////////////////
+
+        public const string CURRENT_VERSION = "1.d3";
             
         public MainWindow()
         {
@@ -59,7 +74,6 @@ namespace interceptor
                 "printsrv",
                 "photosrv",
                 "xerox",
-                "transum",
                 "dhl",
                 "srv1", "srv2", "srv3", "srv4", "srv5", "srv6", "srv7", "srv8", "srv9"
             }) servButtonCleaningList.Add((Button)mainGrid.FindName(buttonName));
@@ -276,17 +290,34 @@ namespace interceptor
 
         private void blockCheckButton(bool block)
         {
+            moneyForCheck.IsEnabled = (block ? true : false);
             printCheckMoney.IsEnabled = (block ? true : false);
             printCheckCard.IsEnabled = (block ? true : false);
             returnSale.IsEnabled = (block ? true : false);
+            returnSaleCard.IsEnabled = (block ? true : false);
 
-            foreach(Button serv in servButtonCleaningList)
+            foreach (Button serv in servButtonCleaningList)
                 serv.IsEnabled = (block ? false : true);
 
+            allCenters.IsEnabled = (block ? false : true);
+            allVisas.IsEnabled = (block ? false : true);
+            returnDate.IsEnabled = (block ? false : true);
             moneyForDHL.IsEnabled = (block ? false : true);
             allCenters.IsEnabled = (block ? false : true);
             allVisas.IsEnabled = (block ? false : true);
             returnDate.IsEnabled = (block ? false : true);
+        }
+
+        private void blockRCheckButton(bool block)
+        {
+            moneyForRCheck.IsEnabled = (block ? true : false);
+            printRCheckMoney.IsEnabled = (block ? true : false);
+            printRCheckCard.IsEnabled = (block ? true : false);
+
+            foreach (Button serv in receptionButtonCleaningList)
+                serv.IsEnabled = (block ? false : true);
+
+            appNumber.IsEnabled = (block ? false : true);
         }
 
         private void сloseCheck_Click(object sender, RoutedEventArgs e)
@@ -309,9 +340,9 @@ namespace interceptor
                 Log.add("некоторые услуги из чека не имеют цены: " + sendingData[1]);
 
                 MessageBoxResult result = MessageBox.Show(
-                    "Услуги имеют цену по прайслисту выбранного центра: " +
+                    "Услуги не имеют цену по прайслисту выбранного центра:\n" +
                     sendingData[1] + "." +
-                    "Такие услуги не будут отображены в чеке. Продолжить?",
+                    "\nТакие услуги не будут отображены в чеке. Продолжить?",
                     "Внимание!",
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
 
@@ -358,6 +389,26 @@ namespace interceptor
                 Service.Content = Service.Content + " (1)";
         }
 
+        private void addRService_Click(object sender, RoutedEventArgs e)
+        {
+            Button Service = sender as Button;
+
+            manDocPack.Add(Service.Name.TrimEnd('R'));
+
+            Match ReqMatch = Regex.Match(Service.Content.ToString(), @"^([^\d]+)\s\((\d+)\)");
+
+            if (ReqMatch.Success)
+            {
+                int servCount = Int32.Parse(ReqMatch.Groups[2].Value);
+
+                servCount += 1;
+
+                Service.Content = ReqMatch.Groups[1].Value + " (" + servCount.ToString() + ")";
+            }
+            else
+                Service.Content = Service.Content + " (1)";
+        }
+
         private void allCenters_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             updateVTypes();
@@ -379,6 +430,25 @@ namespace interceptor
             moneyForDHL.Text = "0.00";
             moneyForCheck.Text = "0.00";
             total.Content = "";
+            totalR.Content = "";
+        }
+
+        private void cleanRCheck()
+        {
+            foreach (Button serv in receptionButtonCleaningList)
+            {
+                int bracketIndex = serv.Content.ToString().IndexOf('(');
+
+                if (bracketIndex > 0) serv.Content = serv.Content.ToString().Remove(bracketIndex);
+            }
+
+            blockRCheckButton(block: false);
+
+            manDocPack.Clear();
+
+            moneyForRCheck.Text = "0.00";
+            total.Content = "";
+            totalR.Content = "";
         }
 
         private void showError(Canvas from, string error)
@@ -543,16 +613,31 @@ namespace interceptor
 
         private void reception_Click(object sender, RoutedEventArgs e)
         {
-            return; // <------- пока не готово
 
-            // manDocPack.Clear();
+            // --------------------------------------------
 
-            // updateCenters();
+            //loginFailText.Content = "Пока не готово";
+            //returnFromErrorTo = mainPlace;
+
+            //MoveCanvas(
+            //    moveCanvas: loginFail,
+            //    prevCanvas: mainPlace,
+            //    direction: moveDirection.vertical
+            //);
+            //return; // <----- ещё не готово
+
+            // --------------------------------------------
+
+            manDocPack.Clear();
+
+            updateCenters();
 
             MoveCanvas(
                 moveCanvas: receptionPlace,
                 prevCanvas: mainPlace
             );
+
+            appNumber.Focus();
         }
 
         private void backToMainFromReception_Click(object sender, RoutedEventArgs e)
@@ -565,9 +650,7 @@ namespace interceptor
             Server.ShowActivity(busy: false);
             Cashbox.manDocPackForPrinting = null;
 
-            appNumber.Focus();
-
-            // cleanCheck();
+            cleanRCheck();
         }
 
         private void appNumber_KeyUp(object sender, KeyEventArgs e)
@@ -575,7 +658,7 @@ namespace interceptor
             appNumber.Text = Regex.Replace(appNumber.Text, @"[^0-9/]", "");
             string appNumberClean = Regex.Replace(appNumber.Text, @"[^0-9]", "");
 
-            if (appNumberClean.Length == 15)
+            if ((appNumberClean.Length == 15) || (appNumberClean.Length == 9))
             {
                 anketasrvR.IsEnabled = true;
                 printsrvR.IsEnabled = true;
@@ -589,9 +672,103 @@ namespace interceptor
                 photosrvR.IsEnabled = false;
                 xeroxR.IsEnabled = false;
             }
+        }
 
-            //if (e.Key == Key.Enter)
-            //    sendLogin_Click(null, null);
+        private void closeRCheck_Click(object sender, RoutedEventArgs e)
+        {
+            string appNumberClean = Regex.Replace(appNumber.Text, @"[^0-9]", "");
+
+            string sendingSuccess = CRM.sendManDocPack(
+                manDocPack, login.Text, CRM.Password, 1, moneyForRCheck.Text,
+                appNumberClean, allVisas.Text, returnDate.Text, reception: true
+            );
+
+            string[] sendingData = sendingSuccess.Split('|');
+
+            if (sendingData[0] == "OK")
+            {
+                Log.add("успешно закрыт чек ресепшена");
+
+                blockRCheckButton(block: true);
+            }
+            else if (sendingData[0] == "WARNING")
+            {
+                Log.add("некоторые услуги из чека не имеют цены: " + sendingData[1]);
+
+                MessageBoxResult result = MessageBox.Show(
+                    "Услуги не имеют цену по прайслисту выбранного центра: " +
+                    sendingData[1] + "." +
+                    "Такие услуги не будут отображены в чеке. Продолжить?",
+                    "Внимание!",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                    blockRCheckButton(block: true);
+                else
+                    cleanRCheck();
+            }
+            else
+            {
+                Log.add("во время формирования чека произошла ошибка");
+
+                loginFailText.Content = "Во время отправки запроса произошла ошибка";
+                returnFromErrorTo = receptionPlace;
+
+                MoveCanvas(
+                    moveCanvas: loginFail,
+                    prevCanvas: receptionPlace,
+                    direction: moveDirection.vertical
+                );
+            }
+        }
+
+        private void printRCheckMoney_Click(object sender, RoutedEventArgs e)
+        {
+            decimal money = DocPack.manualParseDecimal(moneyForRCheck.Text);
+
+            string[] result = Cashbox.printDocPack(
+                Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money
+            ).Split(':');
+
+            checkError(result, receptionPlace, "Ошибка кассы");
+
+            if (result[0] == "OK")
+                getAppInfoAndPrintRecepeit(Cashbox.manDocPackSumm.ToString());
+        }
+
+        private void printRCheckCard_Click(object sender, RoutedEventArgs e)
+        {
+            string[] result = Cashbox.printDocPack(
+                Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
+            ).Split(':');
+
+            checkError(result, receptionPlace, "Ошибка кассы");
+
+            if (result[0] == "OK")
+                getAppInfoAndPrintRecepeit(Cashbox.manDocPackSumm.ToString());
+        }
+
+        private void getAppInfoAndPrintRecepeit(string summ)
+        {
+            Receipt.printReceipt(CRM.appNumberData(appNumber.Text, summ), Cashbox.manDocPackForPrinting);
+            cleanRCheck();
+        }
+
+        private void appNumberClean_Click(object sender, RoutedEventArgs e)
+        {
+            appNumber.Text = "";
+            cleanRCheck();
+            appNumber_KeyUp(null, null);
+            appNumber.Focus();
+        }
+
+        private void returnSaleCard_Click(object sender, RoutedEventArgs e)
+        {
+            string[] result = Cashbox.printDocPack(
+                Cashbox.manDocPackForPrinting, returnSale: true, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
+            ).Split(':');
+
+            checkError(result, checkPlace, "Ошибка кассы");
         }
     }
 }

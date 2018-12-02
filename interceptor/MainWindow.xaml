@@ -10,23 +10,79 @@
         <Canvas x:Name="mainPlace" Margin="2,-392,-2,392">
             <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="490" Canvas.Top="304" MouseDown="switchOn_MouseDown"/>
             <Canvas x:Name="activity" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="509" Canvas.Top="304"  MouseDown="switchOn_MouseDown"/>
-            <Button x:Name="check" Content="чек вручную" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Click="check_Click" Canvas.Left="261" Canvas.Top="304"/>
-            <Button x:Name="status" Content="отчёты и повторы" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Click="status_Click" Canvas.Left="32" Canvas.Top="304"/>
-            <Button x:Name="reception" Content="ресепшен" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Canvas.Left="528" Canvas.Top="304" Click="reception_Click"/>
+            <Button x:Name="check" Content="чек вручную" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Click="check_Click" Canvas.Left="261" Canvas.Top="304">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="status" Content="отчёты и повторы" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Click="status_Click" Canvas.Left="32" Canvas.Top="304">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="reception" Content="ресепшен" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="224" Canvas.Left="528" Canvas.Top="304" Click="reception_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
             <Image x:Name="statusImage" Height="150" Canvas.Left="76" Canvas.Top="89" Width="150" Source="Images\reports.png" PreviewMouseDown="statusImage_PreviewMouseDown"/>
             <Image x:Name="checkImage" Height="150" Canvas.Left="308" Canvas.Top="89" Width="150" Source="Images\invoice.png" PreviewMouseDown="checkImage_PreviewMouseDown"/>
             <Image x:Name="receptionImage" Height="150" Canvas.Left="548" Canvas.Top="89" Width="150" Source="Images\reception.png" PreviewMouseDown="receptionImage_PreviewMouseDown"/>
         </Canvas>
         <Canvas x:Name="checkPlace" Margin="796,0,-796,0">
-            <Button x:Name="backToMainFromCheck" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromCheck_Click"/>
-            <Button x:Name="closeCheck" Content="закрыть чек" Height="42" Canvas.Left="19" Canvas.Top="323" Width="155" Click="сloseCheck_Click"/>
-            <TextBox x:Name="moneyForCheck" Height="40" Canvas.Left="287" TextWrapping="Wrap" Text="0.00" Canvas.Top="323" Width="117" FontSize="22"/>
+            <Button x:Name="backToMainFromCheck" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromCheck_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="closeCheck" Content="подытог" Height="44" Canvas.Left="19" Canvas.Top="321" Width="155" Click="сloseCheck_Click" FontSize="16">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <TextBox x:Name="moneyForCheck" IsEnabled="False" Height="40" Canvas.Left="287" TextWrapping="Wrap" Text="0.00" Canvas.Top="323" Width="117" FontSize="22"/>
             <ComboBox x:Name="allCenters" Height="25" Canvas.Left="203" Canvas.Top="16" Width="232" SelectionChanged="allCenters_SelectionChanged"/>
             <ComboBox x:Name="allVisas" Height="25" Canvas.Left="442" Canvas.Top="16" Width="204"/>
 
-            <Button x:Name="service" Content="сервисный" Height="37" Canvas.Left="19" Canvas.Top="67" Width="179" Tag="checkButtons" Click="addService_Click"/>
-            <Button x:Name="service_urgent" Content="срочный сервисный" Height="37" Canvas.Left="203" Canvas.Top="67" Width="179" Tag="checkButtons" Click="addService_Click"/>
-            <Button x:Name="vipsrv" Content="вип обслуживание" Height="37" Canvas.Left="571" Canvas.Top="67" Width="197" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="service" Content="сервисный" Height="37" Canvas.Left="19" Canvas.Top="67" Width="179" Tag="checkButtons" Click="addService_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="service_urgent" Content="срочный сервисный" Height="37" Canvas.Left="203" Canvas.Top="67" Width="179" Tag="checkButtons" Click="addService_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="vipsrv" Content="вип обслуживание" Height="37" Canvas.Left="571" Canvas.Top="67" Width="197" Tag="checkButtons" Click="addService_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF9FFD2" Offset="0.5"/>
+                        <GradientStop Color="#FFF7FFA5" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
             <Button x:Name="concil" Content="консульский" Height="37" Canvas.Left="19" Canvas.Top="109" Width="179" Tag="checkButtons" Click="addService_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -59,24 +115,116 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="sms_status" Content="смс" Height="37" Canvas.Left="19" Canvas.Top="151" Width="179" Tag="checkButtons" Click="addService_Click"/>
-            <Button x:Name="srv4" Content="вип комфорт" Height="37" Canvas.Left="387" Canvas.Top="67" Width="179" Tag="checkButtons" Click="addService_Click"/>
-            <Button x:Name="anketasrv" Content="заполнение анкеты" Height="37" Canvas.Left="387" Canvas.Top="151" Width="179" Tag="checkButtons" Click="addService_Click"/>
-            <Button x:Name="printsrv" Content="распечатка документов" Height="37" Canvas.Left="571" Canvas.Top="151" Width="197" Tag="checkButtons" Click="addService_Click"/>
-            <Button x:Name="photosrv" Content="фото" Height="37" Canvas.Left="203" Canvas.Top="151" Width="179" Tag="checkButtons" Click="addService_Click"/>
-            <Button x:Name="xerox" Content="ксерокс" Height="37" Canvas.Left="19" Canvas.Top="193" Width="179" Tag="checkButtons" Click="addService_Click"/>
-            <Button x:Name="transum" Content="перевод" Height="37" Canvas.Left="203" Canvas.Top="193" Width="179" Tag="checkButtons" Click="addService_Click"/>
-            <Button x:Name="dhl" Content="&lt;---- доставка" Height="37" Canvas.Left="571" Canvas.Top="193" Width="197" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="sms_status" Content="смс" Height="37" Canvas.Left="19" Canvas.Top="151" Width="179" Tag="checkButtons" Click="addService_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="srv4" Content="вип комфорт" Height="37" Canvas.Left="387" Canvas.Top="67" Width="179" Tag="checkButtons" Click="addService_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF9FFD2" Offset="0.5"/>
+                        <GradientStop Color="#FFF7FFA5" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="anketasrv" Content="заполнение анкеты" Height="37" Canvas.Left="387" Canvas.Top="151" Width="179" Tag="checkButtons" Click="addService_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="printsrv" Content="распечатка документов" Height="37" Canvas.Left="571" Canvas.Top="151" Width="197" Tag="checkButtons" Click="addService_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="photosrv" Content="фото" Height="37" Canvas.Left="203" Canvas.Top="151" Width="179" Tag="checkButtons" Click="addService_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="xerox" Content="ксерокс" Height="37" Canvas.Left="19" Canvas.Top="193" Width="179" Tag="checkButtons" Click="addService_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="dhl" Content="&lt;---- доставка" Height="37" Canvas.Left="571" Canvas.Top="193" Width="197" Tag="checkButtons" Click="addService_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
             <TextBox x:Name="moneyForDHL" Height="37" Canvas.Left="442" TextWrapping="Wrap" Text="0.00" Canvas.Top="193" Width="104" FontSize="22"/>
-            <Button x:Name="printCheckMoney" Content="наличными" IsEnabled="False" Height="40" Canvas.Left="428" Canvas.Top="323" Width="110" Click="printCheckMoney_Click"/>
-            <Button x:Name="printCheckCard" Content="картой" IsEnabled="False" Height="40" Canvas.Left="543" Canvas.Top="323" Width="110" Click="printCheckCard_Click"/>
-            <Label x:Name="currency1" Content="₽" Canvas.Left="403" Canvas.Top="317" FontSize="28"/>
-            <Label x:Name="currency2" Content="₽" Canvas.Left="544" Canvas.Top="185" FontSize="28"/>
-            <Button x:Name="returnSale" Content="возврат" IsEnabled="False" Height="40" Canvas.Left="658" Canvas.Top="323" Width="110" Click="returnSale_Click"/>
+            <Button x:Name="printCheckMoney" Content="наличными" IsEnabled="False" Height="44" Canvas.Left="428" Canvas.Top="321" Width="105" Click="printCheckMoney_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="printCheckCard" Content="картой" IsEnabled="False" Height="44" Canvas.Left="538" Canvas.Top="321" Width="105" Click="printCheckCard_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label x:Name="currency1" Content="Р" Canvas.Left="403" Canvas.Top="317" FontSize="28"/>
+            <Label x:Name="currency2" Content="Р" Canvas.Left="544" Canvas.Top="185" FontSize="28"/>
+            <Button x:Name="returnSale" Content="возврат наличными" IsEnabled="False" Height="20" Canvas.Left="648" Canvas.Top="321" Width="120" Click="returnSale_Click" FontSize="11">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="returnSaleCard" Content="возврат на карту" IsEnabled="False" Height="20" Canvas.Left="648" Canvas.Top="345" Width="120" FontSize="11" Click="returnSaleCard_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
             <Label x:Name="total" Content="" Height="27" Canvas.Left="179" Canvas.Top="332" Width="103"/>
+            <Label x:Name="dhlLabel" Content="стоимость доставки:" Height="32" Canvas.Left="278" Canvas.Top="197" Width="168" FontSize="16"/>
             <DatePicker x:Name="returnDate" Height="25" Canvas.Left="651" Canvas.Top="16" Width="117"/>
-            <Button x:Name="srv2" Content="primetime" Height="37" Canvas.Left="19" Canvas.Top="235" Width="179" Tag="checkButtons" Click="addService_Click"/>
-            <Button x:Name="srv3" Content="primetime SPB" Height="37" Canvas.Left="203" Canvas.Top="235" Width="179" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="srv2" Content="primetime" Height="37" Canvas.Left="19" Canvas.Top="235" Width="179" Tag="checkButtons" Click="addService_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF9FFD2" Offset="0.5"/>
+                        <GradientStop Color="#FFF7FFA5" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="srv3" Content="primetime SPB" Height="37" Canvas.Left="203" Canvas.Top="235" Width="179" Tag="checkButtons" Click="addService_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF9FFD2" Offset="0.5"/>
+                        <GradientStop Color="#FFF7FFA5" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
             <Button x:Name="srv5" Content="покупка квит.C01" Height="37" Canvas.Left="387" Canvas.Top="235" Width="179" Tag="checkButtons" Click="addService_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -117,53 +265,216 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="srv1" Content="консультационные услуги" Height="37" Canvas.Left="571" Canvas.Top="277" Width="197" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="srv1" Content="консультационные услуги" Height="37" Canvas.Left="571" Canvas.Top="277" Width="197" Tag="checkButtons" Click="addService_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
         </Canvas>
-        <Canvas x:Name="receptionPlace" Margin="1595,0,-1595,0">
-            <Button x:Name="backToMainFromReception" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click"/>
-            <Button x:Name="closeRCheck" Content="закрыть чек" Height="42" Canvas.Left="19" Canvas.Top="323" Width="155" Click="сloseCheck_Click"/>
-            <TextBox x:Name="moneyForRCheck" Height="40" Canvas.Left="287" TextWrapping="Wrap" Text="0.00" Canvas.Top="323" Width="117" FontSize="22"/>
-
-            <Button x:Name="anketasrvR" IsEnabled="False" Content="заполнение анкеты" Height="48" Canvas.Left="19" Canvas.Top="235" Width="376" Click="addService_Click"  FontSize="18"/>
-            <Button x:Name="printsrvR" IsEnabled="False" Content="распечатка документов" Height="48" Canvas.Left="400" Canvas.Top="235" Width="376" Click="addService_Click" FontSize="18"/>
-            <Button x:Name="photosrvR" IsEnabled="False" Content="фото" Height="48" Canvas.Left="400" Canvas.Top="182" Width="376" Click="addService_Click"  FontSize="18"/>
-            <Button x:Name="xeroxR" IsEnabled="False" Content="ксерокс" Height="48" Canvas.Left="19" Canvas.Top="182" Width="376" Click="addService_Click"  FontSize="18"/>
-            <Label x:Name="currencyR1" Content="₽" Canvas.Left="403" Canvas.Top="317" FontSize="28"/>
+        <Canvas x:Name="receptionPlace" Margin="799,0,-799,0">
+            <Button x:Name="backToMainFromReception" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="closeRCheck" Content="подытог" Height="42" Canvas.Left="19" Canvas.Top="323" Width="155" Click="closeRCheck_Click"  FontSize="16">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <TextBox x:Name="moneyForRCheck" IsEnabled="False" Height="40" Canvas.Left="287" TextWrapping="Wrap" Text="0.00" Canvas.Top="323" Width="117" FontSize="22"/>
+            <Button x:Name="printRCheckMoney" Content="наличными" IsEnabled="False" Height="40" Canvas.Left="427" Canvas.Top="323" Width="171" Click="printRCheckMoney_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="printRCheckCard" Content="картой" IsEnabled="False" Height="40" Canvas.Left="605" Canvas.Top="323" Width="171" Click="printRCheckCard_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="anketasrvR" IsEnabled="False" Content="заполнение анкеты" Height="77" Canvas.Left="180" Canvas.Top="209" Width="242" Click="addRService_Click"  FontSize="18">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF9FFD2" Offset="0.5"/>
+                        <GradientStop Color="#FFF7FFA5" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="printsrvR" IsEnabled="False" Content="распечатка" Height="77" Canvas.Left="585" Canvas.Top="209" Width="191" Click="addRService_Click" FontSize="18">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFFFD2D2" Offset="0.5"/>
+                        <GradientStop Color="#FFFFA5A5" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="photosrvR" IsEnabled="False" Content="фото" Height="77" Canvas.Left="427" Canvas.Top="209" Width="153" Click="addRService_Click"  FontSize="18">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFD2DEFF" Offset="0.5"/>
+                        <GradientStop Color="#FFA5BDFF" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="xeroxR" IsEnabled="False" Content="ксерокс" Height="77" Canvas.Left="19" Canvas.Top="209" Width="153" Click="addRService_Click"  FontSize="18">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFB5FDC2" Offset="0.5"/>
+                        <GradientStop Color="#FF7FEE9D" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label x:Name="currencyR1" Content="Р" Canvas.Left="403" Canvas.Top="317" FontSize="28"/>
             <Label x:Name="totalR" Content="" Height="27" Canvas.Left="179" Canvas.Top="332" Width="103"/>
-            <TextBox x:Name="appNumber" Height="38" Canvas.Left="339" TextWrapping="Wrap" Text="001/2018/11/12/0001" Canvas.Top="110" Width="248" FontSize="24" KeyUp="appNumber_KeyUp"/>
-            <Label x:Name="appNumberLabel" Content="номер записи" Height="34" Canvas.Left="201" Canvas.Top="114" Width="170" FontSize="18"/>
+            <TextBox x:Name="appNumber" Height="38" Canvas.Left="376" TextWrapping="Wrap" Text="" Canvas.Top="110" Width="248" FontSize="24" KeyUp="appNumber_KeyUp"/>
+            <Label x:Name="appNumberLabel" Content="номер записи или паспорта" Height="34" Canvas.Left="130" Canvas.Top="114" Width="241" FontSize="18"/>
+            <Button x:Name="appNumberClean" Content="Х" Height="38" Canvas.Left="633" Canvas.Top="110" Width="29" Click="appNumberClean_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
         </Canvas>
 
         <Canvas x:Name="statusPlace" Margin="-794,5,794,-5">
-            <Button x:Name="backToMainFromStatus" Content="назад" Height="42" Canvas.Left="606" Canvas.Top="321" Width="155" Click="backToMainFromStatus_Click"/>
-            <Button x:Name="reportCleaning" Content="отчёт с гашением" Height="48" Canvas.Left="15" Canvas.Top="15" Width="155" Click="reportCleaning_Click"/>
-            <Button x:Name="repeatDocument" Content="повтор чека" Height="48" Canvas.Left="15" Canvas.Top="98" Width="155" Click="repeatDocument_Click"/>
-            <Button x:Name="reportWithoutCleaning" Content="отчёт без гашения" Height="48" Canvas.Left="175" Canvas.Top="15" Width="155" Click="reportWithoutCleaning_Click"/>
-            <Button x:Name="reportDepartment" Content="отчёт по отделам" Height="48" Canvas.Left="335" Canvas.Top="15" Width="155" Click="reportDepartment_Click"/>
-            <Button x:Name="reportTax" Content="отчёт по налогам" Height="48" Canvas.Left="495" Canvas.Top="15" Width="155" Click="reportTax_Click"/>
-            <Button x:Name="continueDocument" Content="продолжить печать" Height="48" Canvas.Left="175" Canvas.Top="98" Width="155" Click="continueDocument_Click"/>
-            <Button x:Name="cancelDocument" Content="аннулировать чек" Height="48" Canvas.Left="335" Canvas.Top="98" Width="155" Click="cancelDocument_Click"/>
-            <Button x:Name="cashIncome" Content="&lt;---- внесение в кассу" Height="37" Canvas.Left="205" Canvas.Top="179" Width="197" Click="cashIncome_Click"/>
-            <TextBox x:Name="moneyForIncome" Height="37" Canvas.Left="19" TextWrapping="Wrap" Text="0.00" Canvas.Top="179" Width="156" FontSize="22"/>
-            <Label x:Name="currencyIncome" Content="₽" Canvas.Left="175" Canvas.Top="171" FontSize="28"/>
-            <Button x:Name="cashOutcome" Content="&lt;---- выплата из кассы" Height="37" Canvas.Left="205" Canvas.Top="224" Width="197" Click="cashOutcome_Click"/>
-            <TextBox x:Name="moneyForOutcome" Height="37" Canvas.Left="19" TextWrapping="Wrap" Text="0.00" Canvas.Top="224" Width="156" FontSize="22"/>
-            <Label x:Name="currencyOutcome" Content="₽" Canvas.Left="175" Canvas.Top="216" FontSize="28"/>
+            <Button x:Name="backToMainFromStatus" Content="назад" Height="42" Canvas.Left="606" Canvas.Top="321" Width="155" Click="backToMainFromStatus_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="reportCleaning" Content="отчёт с гашением" Height="48" Canvas.Left="21" Canvas.Top="20" Width="155" Click="reportCleaning_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="repeatDocument" Content="повтор чека" Height="48" Canvas.Left="21" Canvas.Top="103" Width="155" Click="repeatDocument_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="reportWithoutCleaning" Content="отчёт без гашения" Height="48" Canvas.Left="181" Canvas.Top="20" Width="155" Click="reportWithoutCleaning_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="reportDepartment" Content="отчёт по отделам" Height="48" Canvas.Left="341" Canvas.Top="20" Width="155" Click="reportDepartment_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="reportTax" Content="отчёт по налогам" Height="48" Canvas.Left="501" Canvas.Top="20" Width="155" Click="reportTax_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="continueDocument" Content="продолжить печать" Height="48" Canvas.Left="181" Canvas.Top="103" Width="155" Click="continueDocument_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="cancelDocument" Content="аннулировать чек" Height="48" Canvas.Left="341" Canvas.Top="103" Width="155" Click="cancelDocument_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button x:Name="cashIncome" Content="&lt;---- внесение в кассу" Height="37" Canvas.Left="211" Canvas.Top="184" Width="197" Click="cashIncome_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <TextBox x:Name="moneyForIncome" Height="37" Canvas.Left="25" TextWrapping="Wrap" Text="0.00" Canvas.Top="184" Width="156" FontSize="22"/>
+            <Label x:Name="currencyIncome" Content="Р" Canvas.Left="181" Canvas.Top="176" FontSize="28"/>
+            <Button x:Name="cashOutcome" Content="&lt;---- выплата из кассы" Height="37" Canvas.Left="211" Canvas.Top="229" Width="197" Click="cashOutcome_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <TextBox x:Name="moneyForOutcome" Height="37" Canvas.Left="25" TextWrapping="Wrap" Text="0.00" Canvas.Top="229" Width="156" FontSize="22"/>
+            <Label x:Name="currencyOutcome" Content="Р" Canvas.Left="181" Canvas.Top="221" FontSize="28"/>
         </Canvas>
 
         <Canvas x:Name="loginPlace" Margin="-3,0,3,0">
-            <Button x:Name="sendLogin" Content="залогиниться" Height="42" Canvas.Left="415" Canvas.Top="210" Width="155" Click="sendLogin_Click"/>
+            <Button x:Name="sendLogin" Content="залогиниться" Height="42" Canvas.Left="415" Canvas.Top="210" Width="155" Click="sendLogin_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
             <TextBox x:Name="login" Height="22" Canvas.Left="298" TextWrapping="Wrap" Canvas.Top="130" Width="272" HorizontalAlignment="Left"/>
             <PasswordBox x:Name="password" Height="22" Canvas.Left="298" Canvas.Top="162" Width="272" KeyDown="password_KeyDown"/>
             <Label x:Name="labelLogin" Content="логин" Height="27" Canvas.Left="237" Canvas.Top="128" Width="56"/>
             <Label x:Name="labelPass" Content="пароль" Height="31" Canvas.Left="237" Canvas.Top="160" Width="56"/>
         </Canvas>
-        <Canvas x:Name="loginFail" Margin="0,392,0,-392" Background="#FFFF4E4E">
-            <Button x:Name="backToLoginFromFail" Content="попробовать ещё раз" Height="42" Canvas.Left="59" Canvas.Top="164" Width="211" Click="returnFromError_Click"/>
+        <Canvas x:Name="loginFail" Margin="0,397,0,-397" Background="#FFFF4E4E">
+            <Button x:Name="backToLoginFromFail" Content="попробовать ещё раз" Height="42" Canvas.Left="59" Canvas.Top="164" Width="211" Click="returnFromError_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
             <Label x:Name="loginFailText" Content="Неизвестная ошибка" Height="33" Canvas.Left="52" Canvas.Top="126" Width="709" FontSize="16"/>
         </Canvas>
         <Canvas x:Name="systemInfoPlace" Margin="2,-393,-2,393">
-            <Button x:Name="backToMainFromInfo" Content="назад" Height="42" Canvas.Left="606" Canvas.Top="321" Width="155" Click="backToMainFromInfo_Click"/>
+            <Button x:Name="backToMainFromInfo" Content="назад" Height="42" Canvas.Left="606" Canvas.Top="321" Width="155" Click="backToMainFromInfo_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
             <Label x:Name="statusl_label" Content="версия приложения" Height="25" Canvas.Left="25" Canvas.Top="20" Width="122"/>
             <Label x:Name="status2_label" Content="адрес приложения" Height="25" Canvas.Left="25" Canvas.Top="40" Width="122"/>
             <Label x:Name="status3_label" Content="адрес vms" Height="25" Canvas.Left="25" Canvas.Top="60" Width="122"/>
@@ -187,8 +498,15 @@
             <Label x:Name="status10" Content="" Height="25" Canvas.Left="184" Canvas.Top="200" Width="285"/>
             <Label x:Name="status11" Content="" Height="25" Canvas.Left="184" Canvas.Top="220" Width="285"/>
         </Canvas>
-        <Canvas x:Name="cashboxSettingsFail" Margin="0,394,0,-394" Background="#FFFF4E4E">
-            <Button x:Name="backToLoginFromSettingsFial" Content="вернуться" Height="42" Canvas.Left="59" Canvas.Top="268" Width="211" Click="backToLoginFromSettingsFial_Click"/>
+        <Canvas x:Name="cashboxSettingsFail" Margin="0,399,0,-399" Background="#FFFF4E4E">
+            <Button x:Name="backToLoginFromSettingsFial" Content="вернуться" Height="42" Canvas.Left="59" Canvas.Top="268" Width="211" Click="backToLoginFromSettingsFial_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
             <Label x:Name="settingText1" Content="В настройках кассы обнаружены проблемы следующих полей:" Height="33" Canvas.Left="52" Canvas.Top="48" Width="480" FontSize="16"/>
             <Label x:Name="settingText2" Content="" Height="33" Canvas.Left="52" Canvas.Top="68" Width="681" FontSize="16"/>
             <Label x:Name="settingText3" Content="Для работы программы необходима перенастройка этих полей." Height="33" Canvas.Left="52" Canvas.Top="88" Width="480" FontSize="16"/>
@@ -196,7 +514,14 @@
             <Label x:Name="settingText5" Content="Для этого потребуется закрыть смену и распечатать отчёт с гашением" Visibility="Hidden"  Height="33" Canvas.Left="52" Canvas.Top="128" Width="681" FontSize="16"/>
             <Label x:Name="settingText6" Content="Если данное сообщение продолжит появляться после перенастройки - обратитесь" Height="33" Canvas.Left="52" Canvas.Top="148" Width="681" FontSize="16"/>
             <Label x:Name="settingText7" Content="к системным администраторам" Height="33" Canvas.Left="52" Canvas.Top="168" Width="681" FontSize="16"/>
-            <Button x:Name="reportAndRessetting" Content="закрыть смену, распечатать отчёт и перенастроить" Height="42" Canvas.Left="59" Canvas.Top="214" Width="346" Click="reportAndRessetting_Click"/>
+            <Button x:Name="reportAndRessetting" Content="закрыть смену, распечатать отчёт и перенастроить" Height="42" Canvas.Left="59" Canvas.Top="214" Width="346" Click="reportAndRessetting_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
+                        <GradientStop Color="#FFD8D8D8" Offset="0.5"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
         </Canvas>
 
     </Grid>

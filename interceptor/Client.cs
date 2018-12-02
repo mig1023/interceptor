@@ -69,6 +69,7 @@ namespace interceptor
             {
                 MainWindow main = (MainWindow)Application.Current.MainWindow;
                 main.total.Content = "сумма: " + summ;
+                main.totalR.Content = "сумма: " + summ;
             }));
         }
 

@@ -6,12 +6,15 @@ using System.Net;
 using System.Threading.Tasks;
 using System.IO;
 using System.Security.Cryptography;
+using System.Collections.Specialized;
+using System.Text.RegularExpressions;
 
 namespace interceptor
 {
     class CRM
     {
         public const string CRM_URL_BASE = "127.0.0.1";
+
         const string CRM_URL = "http://" + CRM_URL_BASE;
 
         public static int Password = 0;
@@ -110,8 +113,36 @@ namespace interceptor
             return ip.ToString();
         }
 
+        public static string appNumberData(string appNumber, string summ)
+        {
+            string requestResult = "";
+
+            string appNumberClean = Regex.Replace(appNumber, @"[^0-9]", "");
+
+            string fields = "app=" + appNumberClean + "&summ=" + summ;
+
+            string request = fields + "&crc=" + CheckRequest.createMD5(fields);
+
+            string url = CRM_URL + "/vcs/cashbox_appinfo.htm?" + request;
+
+            Log.add(url, logType: "http");
+
+            try
+            {
+                requestResult = getHtml(url);
+            }
+            catch (WebException e)
+            {
+                Log.addWeb("(отправка запроса на информацию о записи) " + e.Message);
+
+                return "ERROR";
+            }
+
+            return requestResult;
+        }
+
         public static string sendManDocPack(List<string> manDocPack, string login, int password, int moneyType,
-            string money, string center, string vType, string returnDate)
+            string money, string center, string vType, string returnDate, bool reception = false)
         {
             string requestResult = "";
 
@@ -122,7 +153,7 @@ namespace interceptor
             string fields =
                 "login=" + login + "&pass=" + password.ToString() + "&moneytype=" + moneyType.ToString() +
                 "&money=" + money + "&center=" + center + "&vtype=" + vType + "&rdate=" + returnDate +
-                "&services=" + servicesList + "&callback=" + getMyIP();
+                "&services=" + servicesList + "&callback=" + getMyIP() + "&r=" + (reception ? "1" : "0");
 
             string request = fields + "&crc=" + CheckRequest.createMD5(fields);
 
@@ -170,6 +201,43 @@ namespace interceptor
                     return reader.ReadToEnd();
                 }
             }
+        }
+
+        public static void sendFile(string pathToFile, string appID)
+        {
+            string url = CRM_URL + "/vcs/cashbox_upload.htm";
+
+            var md5 = System.Security.Cryptography.MD5.Create();
+            string md5sum = BitConverter.ToString(
+                md5.ComputeHash(
+                    File.ReadAllBytes(pathToFile)
+                )
+            ).Replace("-", "").ToLower();
+
+            WebClient client = new WebClient();
+            client.Proxy = WebRequest.DefaultWebProxy;
+            client.Proxy.Credentials = CredentialCache.DefaultCredentials;
+            client.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+
+            NameValueCollection parameters = new NameValueCollection();
+            parameters.Add("md5", md5sum);
+            parameters.Add("login", currentLogin);
+            parameters.Add("appID", appID);
+            client.QueryString = parameters;
+
+            Uri fServer = new Uri(url);
+            client.UploadFileAsync(fServer, pathToFile);
+            client.UploadFileCompleted += sendFileComplete;
+        }
+
+        private static void sendFileComplete(object sender, UploadFileCompletedEventArgs e)
+        {
+            string[] serverResult = System.Text.Encoding.UTF8.GetString(e.Result).Split('|');
+
+            if (e.Error == null && serverResult[0] == "OK")
+                Log.add("Акт успешно загружен на сервер");
+            else
+                Log.add($"Ошибка загрузки акта на сервер: {e.Error}");
         }
     }
 }

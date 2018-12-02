@@ -64,6 +64,15 @@ namespace interceptor
             this.Total = manualParseDecimal(info["Total"].InnerText);
             this.Money = manualParseDecimal(info["Money"].InnerText);
 
+            if ( (this.MoneyType == 2) && (this.Total != this.Money))
+            {
+                Log.add("Ошибка расхождения сумм при оплате картой " + 
+                    "(Total: " + this.Total + " <=> Money: " + this.Money  + ")");
+                Log.add("Выполнено приведение к сумме Total");
+
+                this.Money = this.Total;
+            }
+
             this.RequestOnly = int.Parse(info["RequestOnly"].InnerText);
 
             Log.addDocPack(this);

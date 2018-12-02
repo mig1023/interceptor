@@ -68,7 +68,7 @@ namespace interceptor
 
         public static bool reportWithoutCleaning()
         {
-            Driver.Password = CRM.Password;
+            Driver.Password = CRM.AdminPassword;
             Driver.PrintReportWithoutCleaning();
 
             Log.addWithCode("отчёт без гашения");
@@ -78,7 +78,7 @@ namespace interceptor
 
         public static bool reportDepartment()
         {
-            Driver.Password = CRM.Password;
+            Driver.Password = CRM.AdminPassword;
             Driver.PrintDepartmentReport();
 
             Log.addWithCode("отчёт по отделам");
@@ -88,7 +88,7 @@ namespace interceptor
 
         public static bool reportTax()
         {
-            Driver.Password = CRM.Password;
+            Driver.Password = CRM.AdminPassword;
             Driver.PrintTaxReport();
 
             Log.addWithCode("отчёт по налогам");
@@ -262,8 +262,8 @@ namespace interceptor
             }
             else
             {
-                // repeatPrintingTimer.Enabled = true; // <----- отладка
-                // repeatPrintingTimer.Start();
+                repeatPrintingTimer.Enabled = true;
+                repeatPrintingTimer.Start();
             }
 
             if (checkClosingResult == 0)

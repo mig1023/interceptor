@@ -41,14 +41,14 @@ sub send_docpack
 # //////////////////////////////////////////////////
 {
 
-	my ( $self, $docid, $ptype, $summ, $data, $login, $pass, $callback ) = @_;
+	my ( $self, $docid, $ptype, $summ, $data, $login, $pass, $callback, $r, $sh_return ) = @_;
 
 	my $vars = $self->{ 'VCS::Vars' };
 	
 	if ( !$data ) {
 	
-		my $docobj = VCS::Docs::docs->new('VCS::Docs::docs', $vars);
-		my $error = $docobj->getDocData(\$data, $docid, 'individuals');
+		my $docobj = VCS::Docs::docs->new( 'VCS::Docs::docs', $vars );
+		my $error = $docobj->getDocData( \$data, $docid, 'individuals' );
 	}	
 	
 	return ( "ERR3", "Договор юрлица не может быть оплачен" ) if $data->{ jurid };
@@ -75,16 +75,11 @@ sub send_docpack
 	
 	return ( "ERR3", "Неверный кассовый пароль в настройках" ) unless $pass;
 	
-	my ( $services, $services_fail ) = doc_services( $self, $data, $ptype, $summ, $login, $pass, $callback );
+	my ( $services, $services_fail ) = doc_services( $self, $data, $ptype, $summ, $login, $pass, $callback, $r, $sh_return );
 
 	my $request = xml_create( $services->{ services }, $services->{ info } );
 
 	my $resp = send_request( $vars, $request, undef, $callback );
-	
-	$vars->db->query("
-		UPDATE Cashboxes_logins SET LastUse = now() WHERE Login = ?", {},
-		$vars->get_session->{ login }
-	);
 	
 	$vars->db->query("
 		UPDATE Cashboxes_interceptors SET LastUse = now(), LastResponse = ? WHERE ID = ?", {},
@@ -257,15 +252,10 @@ sub get_all_add_services
 
 	my $serv_list = {};
 	
-	# my $serv_index = 0;
-	
 	for ( @$services ) {
-	
-		# $serv_index++;
 	
 		if ( $_->{ ValueType } == 1 ) {
 			
-			# $serv_list->{ "service$serv_index" } = {
 			$serv_list->{ "service" . $_->{ ServiceID } } = {
 			
 				Name		=> $_->{ Name },
@@ -279,7 +269,6 @@ sub get_all_add_services
 		
 			my $price = $serv_price{ $_->{ ServiceID } } || 0;
 		
-			# $serv_list->{ "service$serv_index" } = {
 			$serv_list->{ "service" . $_->{ ServiceID } } = {
 			
 				Name		=> $_->{ Name },
@@ -303,18 +292,41 @@ sub get_service_code
 		
 	my $center_id = {
 		1	=> '00', # MSK
-		44	=> '92', # MSK K
-		41	=> '92', # MSK PT
-		45	=> '92', # MSK VIP C
-		40	=> '92', # VIP MSK K
+		2	=> '01',
+		9	=> '02',
+		8	=> '03',
+		3	=> '04',
+		5	=> '05',
+		7	=> '06',
+		6	=> '07',
+		4	=> '08',
+		12	=> '10',
+		13	=> '11',
+		14	=> '12',
+		15	=> '14',
+		16	=> '15',
+		18	=> '16',
+		17	=> '17',
+		19	=> '18',
+		20	=> '19',
+		22	=> '20',
+		21	=> '21',
+		23	=> '22',
+		25	=> '25',
+		24	=> '26',
+		26	=> '27',
 		31	=> '91', # VIP
 		32	=> '91', # TP
+		40	=> '92', # VIP MSK K
+		41	=> '92', # MSK PT
+		44	=> '92', # MSK K
+		45	=> '92', # MSK VIP C
 	};
 	
 	my $serv_group = {
 		'shipping'	=> '501',
 		'sms'		=> '300',
-		'tran'		=> '000', # ??
+		'tran'		=> '000',
 		'xerox'		=> '400',
 		'ank'		=> '502',
 		'print'		=> '503',
@@ -323,24 +335,15 @@ sub get_service_code
 
 		'service1' 	=> '506',
 		'service2' 	=> '704',
-		'service3' 	=> '000', # ??
+		'service3' 	=> '000',
 		'service4' 	=> '705',
 		'service5' 	=> '511',
 		'service6' 	=> '512',
 		'service7' 	=> '513',
 		'service8' 	=> '514',
 		'service9' 	=> '515',
-		'service10' 	=> '000', # ??
+		'service10' 	=> '000',
 	};
-	
-	my $cons_group = {
-		'cons_resident' => 
-		'cons_noresident' => 
-		'cons_age' => 
-		'cons_d' => 
-	};
-	
-	return if $cons_group->{ $serv };
 	
 	if ( $serv eq 'visa' ) {
 	
@@ -361,7 +364,7 @@ sub get_service_code
 sub doc_services
 # //////////////////////////////////////////////////
 {
-	my ( $self, $data, $ptype, $summ, $login, $pass, $callback ) = @_;
+	my ( $self, $data, $ptype, $summ, $login, $pass, $callback, $reception, $sh_return ) = @_;
 
 	my $vars = $self->{'VCS::Vars'};
 
@@ -422,8 +425,14 @@ sub doc_services
 		$data->{ rate }
 	);
 	
-	my $prices = $vars->admfunc->getPrices( $vars, $data->{ rate }, $data->{ vtype }, $data->{ ipdate } );
+	$data->{ concilPaymentDate } =~ /(\d{2})\.(\d{2})\.(\d{4})/;
 
+	my $concil_payment_date = "$3-$2-$1";
+	
+	my $prices = $vars->admfunc->getPrices( $vars, $data->{ rate }, $data->{ vtype }, $concil_payment_date );
+	
+	my $insurance = $data->{ insurance_manual_service } || '0.00';
+	
 	my $shsum = 0;
 	
 	if ( $data->{ newdhl } ) {
@@ -438,21 +447,20 @@ sub doc_services
 	
 	my $vprice = ( $data->{ urgent } ? $prices->{ 'urgent' } : $prices->{ 'visa' } );
 	
-	my $urg_text = ( $data->{ urgent } ? ', срочн.' : '' );
-	
-	# my $special_department = ( $callback ? 3 : 1 );
-	my $special_department = 1; # <------------- reception!
+	my $special_department = ( $reception ? 3 : 1 );
 	
 	my $servsums = {
 		shipping => {
-			Name		=> 'Услуги по доставке на дом',
+			Name		=> 'Услуги по доставке документов на дом',
 			Quantity	=> $shcnt,
 			Price		=> sprintf( "%.2f", $shsum ),
 			VAT		=> 1,
 			Department	=> 1,
+			Shipping	=> 1,
+			ReturnShipping	=> ( $sh_return ? 1 : 0 ),
 		},
 		sms => {
-			Name		=> 'Услуги по СМС оповещению',
+			Name		=> ' Услуги по оповещению (СМС сообщение)',
 			Quantity	=> $smscnt,
 			Price		=> sprintf( "%.2f", $prices->{ sms } ),
 			VAT		=> 1,
@@ -466,77 +474,95 @@ sub doc_services
 			Department	=> 1,
 		},
 		xerox => {
-			Name		=> 'Услуги по копированию',
+			Name		=> 'Услуги по копированию документов',
 			Quantity	=> $data->{ xerox },
 			Price		=> sprintf( "%.2f", $prices->{ xerox } ),
 			VAT		=> 1,
 			Department	=> $special_department,
+			ReceptionID	=> 1,
 		},
 		visa => {
-			Name		=> 'Услуги по оформлению документов для получения виз в Италию',
+			Name		=> 'Услуги по оформлению документов',
 			Quantity	=> $apcnt,
 			Price		=> sprintf( "%.2f", $vprice ),
 			VAT		=> 1,
 			Department	=> 1,
 		},
 		ank => {
-			Name		=> 'Услуги по заполнению анкеты',
+			Name		=> 'Услуги по заполнению и распечатке анкеты' . ( $reception ? '' : ' заявителя' ),
 			Quantity	=> $data->{ anketasrv },
 			Price		=> sprintf( "%.2f", $prices->{ anketasrv } ),
 			VAT		=> 1,
 			Department	=> $special_department,
+			ReceptionID	=> 2,
 		},
 		print => {
-			Name		=> 'Услуги по распечатке',
+			Name		=> 'Услуги по распечатке документов',
 			Quantity	=> $data->{ printsrv },
 			Price		=> sprintf( "%.2f", $prices->{ printsrv } ),
 			VAT		=> 1,
 			Department	=> $special_department,
+			ReceptionID	=> 3,
 		},
 		photo => {
-			Name		=> 'Услуги по фотографированию',
+			Name		=> 'Услуги фотосъемке и изготовлению фото',
 			Quantity	=> $data->{ photosrv },
 			Price		=> sprintf( "%.2f", $prices->{ photosrv } ),
 			VAT		=> 1,
 			Department	=> $special_department,
+			ReceptionID	=> 4,
 		},
 		vip => {
-			Name		=> 'ВИП обслуживание',
+			Name		=> 'Услуги по ВИП обслуживанию',
 			Quantity	=> $data->{ vipsrv },
 			Price		=> sprintf( "%.2f", $prices->{ vipsrv } ),
 			VAT		=> 1,
 			Department	=> 1,
 		},
-		cons_resident => {
-			Name		=> "Консульский сбор (резидент$urg_text)",
-			Quantity	=> ( $data->{ vcat } eq 'C' ? $cntres : 0 ),
-			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) } ),
+		insurance => {
+			Name		=> 'Страховка',
+			Quantity	=> ( $data->{ insurance_manual_service } ? 1 : 0 ),
+			Price		=> sprintf( "%.2f", $insurance ),
 			VAT		=> 0,
-			Department	=> 2,
-		},
-		cons_noresident => {
-			Name		=> "Консульский сбор (нерез.$urg_text)",
-			Quantity	=> $cntnres,
-			Price		=> sprintf( '%.2f', $prices->{ 'conciln' . ( $data->{ urgent } ? 'u' : '' ) } ),
-			VAT		=> 0,
-			Department	=> 2,
-		},
-		cons_age => {
-			Name		=> "Консульский сбор (возраст$urg_text)",
-			Quantity	=> $cntage,
-			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) . '_' . $ages } ),
-			VAT		=> 0,
-			Department	=> 2,
-		},
-		cons_d => {
-			Name		=> "Консульский сбор (тип D$urg_text)",
-			Quantity	=> ( $data->{ vcat } eq 'D' ? $cntres : 0 ),
-			Price		=> sprintf( '%.2f', $prices->{ 'concilr' . ( $data->{ urgent } ? 'u' : '' ) } ),
-			VAT		=> 0,
-			Department	=> 2,
+			Department	=> 4,
+			WithoutServCode	=> 1,
 		},
 	};
+	
+	my $concil_price = {};
+	my $u = ( $data->{ urgent } ? 'u' : '' );
+	
+	concil_add_price( $concil_price, $prices, "concilr$u", $cntres ) if $data->{ vcat } eq 'C';
+	concil_add_price( $concil_price, $prices, "conciln$u", $cntnres );
+	concil_add_price( $concil_price, $prices, "concilr$u" . '_' . $ages, $cntage );
+	concil_add_price( $concil_price, $prices, "concilr$u", $cntres ) if $data->{ vcat } eq 'D';
 
+	my $consil_index = 0;
+	
+	my $concil_price_to_name = {
+		35  => 'C01',
+		50  => 'D05',
+		60  => 'C03',
+		70  => 'C02',
+		116 => 'D04',
+	};
+	
+	for ( keys %$concil_price ) {
+	
+		$consil_index += 1;
+		
+		my $concil_name = $concil_price_to_name->{ $concil_price->{ $_ }->{ type } } || '';
+	
+		$servsums->{ "concil$consil_index" } = {
+			Name		=> "Консульский сбор $concil_name",
+			Quantity	=> $concil_price->{ $_ }->{ cnt },
+			Price		=> $_,
+			VAT		=> 0,
+			Department	=> 2,
+			WithoutServCode	=> 1,
+		};
+	}
+	
 	my $serv_hash = get_all_add_services( $self, $vars, $data, $callback );
 	
 	for ( keys %$serv_hash ) {
@@ -549,7 +575,8 @@ sub doc_services
 	for my $serv ( keys %$servsums ) {
 	
 		$servsums->{ $serv }->{ Name } =
-			get_service_code( $self, $serv, $data->{ center }, $data->{ urgent }, $ord ) . $servsums->{ $serv }->{ Name };
+			get_service_code( $self, $serv, $data->{ center }, $data->{ urgent }, $ord ) . $servsums->{ $serv }->{ Name }
+				unless $servsums->{ $serv }->{ WithoutServCode };
 	
 		$mandocpack_failserv .= ( $mandocpack_failserv ? ', ' : '' ) . $servsums->{ $serv }->{ Name }
 			if $servsums->{ $serv }->{ Quantity }
@@ -560,9 +587,13 @@ sub doc_services
 				);
 
 		if ( 
-			!$servsums->{ $serv }->{ Quantity } 
-			or
-			$servsums->{ $serv }->{ Price } eq '0.00' or !$servsums->{ $serv }->{ Price }
+			(
+				!$servsums->{ $serv }->{ Quantity } 
+				or
+				$servsums->{ $serv }->{ Price } eq '0.00' or !$servsums->{ $serv }->{ Price }
+			) or (
+				$sh_return && !$servsums->{ $serv }->{ Shipping }
+			)
 		) {
 		
 			delete $servsums->{ $serv };
@@ -584,8 +615,72 @@ sub doc_services
 		Money => $summ,
 		RequestOnly => ( $callback ? '1' : '0' ),
 	};
-	
+
 	return { services => $servsums, info => $info }, $mandocpack_failserv;
+}
+
+sub concil_add_price
+# //////////////////////////////////////////////////
+{
+	my ( $concil_price, $prices, $price_type, $cnt ) = @_;
+
+	my $current_cnt;
+	
+	if ( ref( $concil_price->{ sprintf( '%.2f', $prices->{ $price_type } ) } ) eq 'HASH' ) {
+	
+		$current_cnt = $concil_price->{ sprintf( '%.2f', $prices->{ $price_type } ) }->{ cnt } || 0;
+	}
+	else {
+		$current_cnt = 0;
+		$concil_price->{ sprintf( '%.2f', $prices->{ $price_type } ) } = {};
+	}
+	
+	$concil_price->{ sprintf( '%.2f', $prices->{ $price_type } ) }->{ cnt } = $current_cnt + $cnt;
+	
+	$concil_price->{ sprintf( '%.2f', $prices->{ $price_type } ) }->{ type } = $prices->{ 'o' . $price_type };
+	
+	return $concil_price;
+}
+
+sub cash_box_output_error_check
+# //////////////////////////////////////////////////
+{
+	my ( $self, $code, $desc ) = @_;
+
+	if ( $code ne 'OK' ) {
+	
+		my $err_type = "(неизвестная ошибка)";
+	
+		$err_type = "(ошибка кассовой программы)" if $code =~ /^ERR1$/;
+		$err_type = "(ошибка кассы)" if $code =~ /^ERR2$/;
+		$err_type = "(ошибка настроек)" if $code =~ /^ERR(3|4)$/;
+	
+		return cash_box_output( $self, "ERROR|$err_type $desc" );
+	}
+	
+	return cash_box_output( $self, "OK|$desc" );
+}
+
+sub cash_box_ship_return
+# //////////////////////////////////////////////////
+{
+	my $self = shift;
+	
+	my $vars = $self->{'VCS::Vars'};
+
+	my $docid = $vars->getparam( 'docid' ) || 0;
+	
+	return cash_box_output( $self, "ERROR|Ошибка параметров" )
+		unless $docid;
+	
+	my ( $ptype, $summ ) = $vars->db->sel1("
+		SELECT PType, TShipSum FROM DocPack WHERE ID = ?",
+		$docid
+	);
+	
+	my ( $code, $desc, undef ) = send_docpack( $self, $docid, $ptype, $summ, undef, undef, undef, undef, undef, 'sh_return' );
+	
+	cash_box_output_error_check( $self, $code, $desc );
 }
 
 sub cash_box
@@ -614,18 +709,7 @@ sub cash_box
 	
 	my ( $code, $desc, undef ) = send_docpack( $self, $param->{ docid }, $param->{ ptype }, $param->{ summ } );
 	
-	if ( $code ne 'OK' ) {
-	
-		my $err_type = "(неизвестная ошибка)";
-	
-		$err_type = "(ошибка кассовой программы)" if $code =~ /^ERR1$/;
-		$err_type = "(ошибка кассы)" if $code =~ /^ERR2$/;
-		$err_type = "(ошибка настроек)" if $code =~ /^ERR(3|4)$/;
-	
-		return cash_box_output( $self, "ERROR|$err_type $desc" );
-	}
-	
-	return cash_box_output( $self, "OK|$desc" );
+	cash_box_output_error_check( $self, $code, $desc );
 }
 
 sub cash_box_auth
@@ -725,6 +809,166 @@ sub cash_box_vtype
 	return cash_box_output( $self, $vtypes );
 }
 
+sub download_receipt
+{
+	my ( $self, $task, $id, $template ) = @_;
+	
+	my $vars = $self->{'VCS::Vars'};
+	
+	my $gconfig = $vars->getConfig( 'general' );
+	
+	my $file_id = $vars->getparam('rid');
+	
+	my $file = $vars->db->selallkeys("
+		SELECT CRC, OriginalName FROM Cashboxes_receipt 
+		WHERE ID = ?", $file_id
+	)->[0];
+   
+	my $file_path = $gconfig->{ tmp_folder } . "cashbox_receipt/" . $file->{ CRC };
+
+	my $content = '';
+	
+	open my $filefile, '<', $file_path or die;
+	
+	while ( <$filefile> ) {
+		$content .= $_;
+	}
+	close $filefile;
+	
+	print "HTTP/1.1 200 Ok\n";
+	print "Content-type: application/x-www-form-urlencoded; name=\"" . $file->{ CRC } . "\"\n";
+	print "Content-Disposition: attachment; filename=\"" . $file->{ OriginalName } . "\"\n";
+	print "\n";
+ 
+	print $content;
+}
+
+sub cash_box_upload
+# //////////////////////////////////////////////////
+{
+	my ( $self, $task, $id, $template, $slist, $authip, $clientip ) = @_;
+
+	my $vars = $self->{ 'VCS::Vars' };
+	
+	my $param = {};
+	
+	my $gconfig = $vars->getConfig( 'general' );
+	
+	$param->{ $_ } = ( $vars->getparam( $_ ) || 0 )
+		for ( 'md5', 'appID', 'actnum', 'login', 'xerox', 'form', 'photo', 'print' );
+
+        my $fobj = $vars->getparamfile('file');
+	
+	$vars->get_system->pheader( $vars );
+		
+	return print "ERROR|Неверный запрос на загрузку файла"
+		unless $param->{ md5 } and $fobj and $param->{ appID } and $param->{ login };
+           
+        my $up_name = $gconfig->{ tmp_folder } . "cashbox_receipt/" . $param->{ md5 };
+		
+	my ( $file, $buffer );
+	
+	open $file, '>', $up_name or die;
+	
+	binmode $file;
+	
+	while ( my $bytesread = read( $fobj->{ file }, $buffer, 1024 ) ) {
+	
+		print $file $buffer;
+		
+		$buffer = "";
+	} 
+	
+	close $file;  
+
+	open my $file_check, '<', $up_name;
+	
+	my $md5file = Digest::MD5->new->addfile( $file_check )->hexdigest;
+	
+	close $file_check;
+	
+	if ( $md5file ne $param->{ md5 } ) { 
+	   
+		unlink $up_name;
+               
+		print "ERROR|Ошибка передачи файла";
+	}
+	else {
+		$vars->db->query("
+			INSERT INTO Cashboxes_receipt (Login, AppID, ActNum, Upload,
+			CRC, OriginalName, Xerox, Form, Photo, Print) 
+			VALUES (?, ?, ?, CURDATE(), ?, ?, ?, ?, ?, ?)", {},
+			$param->{ login }, $param->{ appID }, $param->{ actnum }, $param->{ md5 }, $fobj->{ filename },
+			$param->{ xerox }, $param->{ form }, $param->{ photo }, $param->{ print }
+		);
+		
+		print "OK|Файл загружен";
+	}
+}
+
+sub cash_box_appinfo
+# //////////////////////////////////////////////////
+{
+	my ( $self, $task, $id, $template, $slist, $authip, $clientip ) = @_;
+
+	my $vars = $self->{ 'VCS::Vars' };
+	
+	my $gconfig = $vars->getConfig('general');
+	
+	my $param = {};
+	
+	$param->{ $_ } = ( $vars->getparam( $_ ) || '' ) for ( 'app', 'summ', 'crc' );
+	
+	my $request_check = "app=" . $param->{ app } . "&summ=" . $param->{ summ };
+		
+	my $md5 = uc( Digest::MD5->new->add( $request_check )->hexdigest );
+	
+	return cash_box_output( $self, "ERROR|Контрольная сумма запроса неверна" ) unless $md5 eq $param->{ crc };
+	
+	my ( $person_arr, $ord_num ) = ( {}, 0 );
+
+	if ( length( $param->{ app } ) == 15 ) {
+
+		$person_arr = $vars->db->selallkeys("
+			SELECT ID, AppNum, LName, FName, MName FROM Appointments WHERE AppNum = ?", $param->{ app }
+		)->[0];
+	}
+	elsif ( length( $param->{ app } ) == 9 ) {
+	
+		$person_arr = $vars->db->selallkeys("
+			SELECT Appointments.ID, AppNum, Appointments.LName, Appointments.FName, Appointments.MName
+			FROM Appointments
+			JOIN AppData ON Appointments.ID = AppData.AppID
+			WHERE AppData.PassNum = ? GROUP BY Appointments.ID", 
+			$param->{ app }
+		)->[0];
+	}
+	else {
+		$person_arr = {};
+	}
+	
+	if ( $person_arr->{ ID } ) {
+	
+		$ord_num = $vars->db->sel1("
+			SELECT COUNT(ID) FROM Cashboxes_receipt WHERE AppID = ?", $person_arr->{ ID }
+		) || 0;
+	}
+	
+	my $person = $person_arr->{ LName } . ' ' . $person_arr->{ FName } . ' ' . $person_arr->{ MName };
+	
+	my $appnum = $person_arr->{ AppNum };
+	
+	my $appid = $person_arr->{ ID };
+
+	my $summ_text = $vars->admfunc->sum_to_russtr( 'RUR', $param->{ summ } );
+	
+	my $vat = $param->{ summ } * $gconfig->{'VAT'} / ( 100 + $gconfig->{'VAT'} );
+	
+	my $vat_text = $vars->admfunc->sum_to_russtr( 'RUR', $vat );
+
+	return cash_box_output( $self, "OK|$person|$appnum|$summ_text|$vat_text|$ord_num|$appid" );
+}
+
 sub cash_box_mandocpack
 # //////////////////////////////////////////////////
 {
@@ -740,24 +984,55 @@ sub cash_box_mandocpack
 	my $data = { direct_docpack => 1 };
 	
 	$param->{ $_ } = ( $vars->getparam( $_ ) || '' )
-		for ( 'login', 'pass', 'moneytype', 'money', 'services', 'center', 'vtype', 'callback', 'rdate', 'crc' );
+		for ( 'login', 'pass', 'moneytype', 'money', 'services', 'center', 'vtype', 'callback', 'rdate', 'crc', 'r' );
 
 	my $request_check = "login=" . $param->{ login } . "&pass=" . $param->{ pass } .
 		"&moneytype=" . $param->{ moneytype } . "&money=" . $param->{ money } . "&center=" . $param->{ center } .
 		"&vtype=" . $param->{ vtype } . "&rdate=" . $param->{ rdate } . "&services=" . $param->{ services } .
-		"&callback=" . $param->{ callback };
+		"&callback=" . $param->{ callback } . "&r=" . ( $param->{ r } ? '1' : '0' );
 	
 	
 	my $md5 = uc( Digest::MD5->new->add( $request_check )->hexdigest );
 	
 	return cash_box_output( $self, "ERROR|Контрольная сумма запроса неверна" ) unless $md5 eq $param->{ crc };
 	
-	return cash_box_output( $self, "ERROR|не установлена кассовая интеграция" )
+	return cash_box_output( $self, "ERROR|Не установлена кассовая интеграция" )
 		unless $param->{ callback } =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
 		
-	my $center_id = $vars->db->sel1("
-		SELECT ID FROM Branches WHERE BName = ?", $param->{ center }
-	);
+	my $center_id = undef;
+
+	if ( $param->{ r } && ( length( $param->{ center } ) == 15 ) ) {
+	
+		$param->{ center } =~ /^(\d{3})/;
+		
+		my $center_id_line = $1;
+		
+		$center_id_line =~ s/^[0]+//;
+	
+		$center_id = $vars->db->sel1("
+			SELECT ID FROM Branches WHERE ID = ?", $center_id_line
+		);
+	}
+	elsif ( $param->{ r } && ( length( $param->{ center } ) == 9 ) ) {
+	
+		$center_id = $vars->db->sel1("
+			SELECT Branches.ID
+			FROM Appointments
+			JOIN AppData ON Appointments.ID = AppData.AppID
+			JOIN Branches ON Appointments.CenterID = Branches.ID
+			WHERE AppData.PassNum = ? 
+			ORDER BY ID DESC LIMIT 1",
+			$param->{ center }
+		);
+	}
+	else {
+
+		$center_id = $vars->db->sel1("
+			SELECT ID FROM Branches WHERE BName = ?", $param->{ center }
+		);
+	}
+	
+	return cash_box_output( $self, "ERROR|Данные записи не найдены" ) unless $center_id;
 		
 	$data->{ center } = $center_id;
 		
@@ -766,6 +1041,8 @@ sub cash_box_mandocpack
 	$rate_date = "$3-$2-$1" if $param->{ rdate } =~ /(\d{2})\.(\d{2})\.(\d{4})/;
 	
 	my $rate = $vars->admfunc->getRate( $vars, $gconfig->{'base_currency'}, $rate_date, $center_id );
+	
+	$data->{ concilPaymentDate } = $param->{ rdate };
 	
 	$data->{ ipdate } = $vars->get_system->now_date();
 	
@@ -793,6 +1070,8 @@ sub cash_box_mandocpack
 			$data->{ newdhl } = 1;
 			$data->{ shipping } = 1;
 		}
+		
+		$data->{ insurance_manual_service } = $1 if /^insurance=(.+)$/;
 		
 		if ( /^(service|service_urgent)$/ ) {
 		
@@ -830,7 +1109,7 @@ sub cash_box_mandocpack
 	$data->{ urgent } = ( $urgent_docpack ? 1 : 0 );
 	
 	my ( undef, undef, $mandocpack_failserv ) = send_docpack( $self, undef, $param->{ moneytype }, $param->{ money }, $data,
-		$param->{ login }, $param->{ pass }, $param->{ callback } );
+		$param->{ login }, $param->{ pass }, $param->{ callback }, $param->{ r } );
 		
 	return cash_box_output( $self, "WARNING|$mandocpack_failserv" ) if $mandocpack_failserv;
 

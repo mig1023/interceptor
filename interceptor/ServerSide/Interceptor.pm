@@ -1116,6 +1116,20 @@ sub cash_box_mandocpack
 	return cash_box_output( $self, "OK|Запрос получен" );
 }
 
+sub get_access_for_cashbox_payment
+# //////////////////////////////////////////////////
+{
+	my $self = shift;
+	
+	my $vars = $self->{ 'VCS::Vars' };
+
+	my $interceptor_ip = $vars->db->sel1("
+		SELECT InterceptorIP FROM Cashboxes_interceptors WHERE ID = ?", $vars->get_session->{ interceptor }
+	) || undef;
+	
+	return ( $interceptor_ip =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/ ? 1 : 0 );
+}
+
 sub cash_box_output
 # //////////////////////////////////////////////////
 {

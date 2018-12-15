@@ -18,29 +18,29 @@ namespace interceptor
         public const string CRM_URL_BASE = (MainWindow.TEST_VERSION ? CRM_URL_TEST : CRM_URL_FIGHT);
         public const string CRM_URL = "http://" + CRM_URL_BASE;
 
-        public static int Password = 0;
-        public const int AdminPassword = 0;
+        public static int password = 0;
+        public const int adminPassword = 0;
 
         public static string currentLogin = "";
-        public static string Cashier = "";
+        public static string cashier = "";
         public static string loginError = "";
 
-        public static bool crmAuthentication(string login, string password)
+        public static bool CrmAuthentication(string login, string passwordLine)
         {
             string authString = "";
 
             string url = CRM_URL + "/vcs/cashbox_auth.htm?login=" + login +
-                "&p=" + password + "&ip=" + getMyIP() + "&v=" + MainWindow.CURRENT_VERSION;
+                "&p=" + passwordLine + "&ip=" + GetMyIP() + "&v=" + MainWindow.CURRENT_VERSION;
 
             try
             {
-                authString = getHtml(url);
+                authString = GetHtml(url);
             }
             catch (WebException e)
             {
                 loginError = "Ошибка доступа к серверу";
 
-                Log.addWeb(e.Message);
+                Log.AddWeb(e.Message);
 
                 return false;
             }
@@ -53,21 +53,21 @@ namespace interceptor
             {
                 loginError = authData[1];
 
-                Log.add(loginError);
+                Log.Add(loginError);
 
                 return false;
             }
 
-            Password = Int32.Parse(authData[1]);
+            password = Int32.Parse(authData[1]);
 
-            Cashier = authData[2];
+            cashier = authData[2];
 
-            Log.add("успешный вход: " + login + "/" + authData[1] + "(" + authData[2] + ")");
+            Log.Add("успешный вход: " + login + "/" + authData[1] + "(" + authData[2] + ")");
 
             return true;
         }
 
-        public static string[] getAllCenters(string login)
+        public static string[] GetAllCenters(string login)
         {
             string centerString = "";
 
@@ -75,11 +75,11 @@ namespace interceptor
 
             try
             {
-                centerString = getHtml(url);
+                centerString = GetHtml(url);
             }
             catch (WebException e)
             {
-                Log.addWeb("(центры) " + e.Message);
+                Log.AddWeb("(центры) " + e.Message);
 
                 return null;
             }
@@ -87,7 +87,7 @@ namespace interceptor
             return centerString.Split('|');
         }
 
-        public static string[] getAllVType(string vcenterName)
+        public static string[] GetAllVType(string vcenterName)
         {
             string vtypeString = "";
 
@@ -95,11 +95,11 @@ namespace interceptor
 
             try
             {
-                vtypeString = getHtml(url);
+                vtypeString = GetHtml(url);
             }
             catch (WebException e)
             {
-                Log.addWeb("(типы виз) " + e.Message);
+                Log.AddWeb("(типы виз) " + e.Message);
 
                 return null;
             }
@@ -107,14 +107,14 @@ namespace interceptor
             return vtypeString.Split('|');
         }
 
-        public static string getMyIP()
+        public static string GetMyIP()
         {
             IPAddress ip = Dns.GetHostByName(Dns.GetHostName()).AddressList[0];
 
             return ip.ToString();
         }
 
-        public static string appNumberData(string appNumber, string summ)
+        public static string AppNumberData(string appNumber, string summ)
         {
             string requestResult = "";
 
@@ -122,19 +122,19 @@ namespace interceptor
 
             string fields = "app=" + appNumberClean + "&summ=" + summ;
 
-            string request = fields + "&crc=" + CheckRequest.createMD5(fields);
+            string request = fields + "&crc=" + CheckRequest.CreateMD5(fields);
 
             string url = CRM_URL + "/vcs/cashbox_appinfo.htm?" + request;
 
-            Log.add(url, logType: "http");
+            Log.Add(url, logType: "http");
 
             try
             {
-                requestResult = getHtml(url);
+                requestResult = GetHtml(url);
             }
             catch (WebException e)
             {
-                Log.addWeb("(отправка запроса на информацию о записи) " + e.Message);
+                Log.AddWeb("(отправка запроса на информацию о записи) " + e.Message);
 
                 return "ERROR";
             }
@@ -142,33 +142,33 @@ namespace interceptor
             return requestResult;
         }
 
-        public static string sendManDocPack(List<string> manDocPack, string login, int password, int moneyType,
+        public static string SendManDocPack(List<string> manDocPack, string login, int password, int moneyType,
             string money, string center, string vType, string returnDate, bool reception = false)
         {
             string requestResult = "";
 
             string servicesList = String.Join("|", manDocPack.ToArray());
 
-            Log.add("запрос на чек: " + servicesList);
+            Log.Add("запрос на чек: " + servicesList);
 
             string fields =
                 "login=" + login + "&pass=" + password.ToString() + "&moneytype=" + moneyType.ToString() +
                 "&money=" + money + "&center=" + center + "&vtype=" + vType + "&rdate=" + returnDate +
-                "&services=" + servicesList + "&callback=" + getMyIP() + "&r=" + (reception ? "1" : "0");
+                "&services=" + servicesList + "&callback=" + GetMyIP() + "&r=" + (reception ? "1" : "0");
 
-            string request = fields + "&crc=" + CheckRequest.createMD5(fields);
+            string request = fields + "&crc=" + CheckRequest.CreateMD5(fields);
 
             string url = CRM_URL + "/vcs/cashbox_mandocpack.htm?" + request;
 
-            Log.add(url, logType: "http");
+            Log.Add(url, logType: "http");
 
             try
             {
-                requestResult = getHtml(url);
+                requestResult = GetHtml(url);
             }
             catch (WebException e)
             {
-                Log.addWeb("(отправка запроса на чек) " + e.Message);
+                Log.AddWeb("(отправка запроса на чек) " + e.Message);
 
                 return "ERROR";
             }
@@ -176,7 +176,7 @@ namespace interceptor
             return requestResult;
         }
 
-        public static string generateMySQLHash(string line)
+        public static string GenerateMySQLHash(string line)
         {
             byte[] lineArray = Encoding.UTF8.GetBytes(line);
 
@@ -192,7 +192,7 @@ namespace interceptor
             return "*" + sha1hash.ToString();
         }
 
-        public static string getHtml(string url)
+        public static string GetHtml(string url)
         {
             WebClient client = new WebClient();
             using (Stream data = client.OpenRead(url))
@@ -204,13 +204,13 @@ namespace interceptor
             }
         }
 
-        public static void sendFile(string pathToFile, string appID, string actNum,
+        public static void SendFile(string pathToFile, string appID, string actNum,
             string xerox, string form, string print, string photo)
         {
             string url = CRM_URL + "/vcs/cashbox_upload.htm";
 
-            Log.add("Отправлена информация в БД об акте для AppID " + appID);
-            Log.add("Копирование: " + xerox + " Анкета: " + form + " Распечатка: " + print + " Фото: " + photo);
+            Log.Add("Отправлена информация в БД об акте для AppID " + appID);
+            Log.Add("Копирование: " + xerox + " Анкета: " + form + " Распечатка: " + print + " Фото: " + photo);
 
             var md5 = System.Security.Cryptography.MD5.Create();
             string md5sum = BitConverter.ToString(
@@ -239,17 +239,17 @@ namespace interceptor
 
             Uri fServer = new Uri(url);
             client.UploadFileAsync(fServer, pathToFile);
-            client.UploadFileCompleted += sendFileComplete;
+            client.UploadFileCompleted += SendFileComplete;
         }
 
-        private static void sendFileComplete(object sender, UploadFileCompletedEventArgs e)
+        private static void SendFileComplete(object sender, UploadFileCompletedEventArgs e)
         {
             string[] serverResult = System.Text.Encoding.UTF8.GetString(e.Result).Split('|');
 
             if (e.Error == null && serverResult[0] == "OK")
-                Log.add("Акт успешно загружен на сервер");
+                Log.Add("Акт успешно загружен на сервер");
             else
-                Log.add($"Ошибка загрузки акта на сервер: {e.Error}");
+                Log.Add($"Ошибка загрузки акта на сервер: {e.Error}");
         }
     }
 }

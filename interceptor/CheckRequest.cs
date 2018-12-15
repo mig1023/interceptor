@@ -19,7 +19,7 @@ namespace interceptor
             return ReqMatch.Success;
         }
 
-        public static bool checkLoginInRequest(string from)
+        public static bool CheckLoginInRequest(string from)
         {
             if (from == "")
                 return false;
@@ -50,7 +50,7 @@ namespace interceptor
 
             MD5_LINE_TMP = "";
 
-            string md5lineTMP = allXmlField(root);
+            string md5lineTMP = AllXmlField(root);
 
             byte[] bytes = Encoding.GetEncoding(1251).GetBytes(md5lineTMP);
             string byteLine = "";
@@ -58,12 +58,12 @@ namespace interceptor
             foreach (byte b in bytes)
                 byteLine += b.ToString() + " ";
 
-            string md5line = createMD5(byteLine).ToLower();
+            string md5line = CreateMD5(byteLine).ToLower();
 
             return md5line == md5;
         }
 
-        private static string allXmlField(XmlElement item, int indent = 0)
+        private static string AllXmlField(XmlElement item, int indent = 0)
         {
             if (item.LocalName == "CRC")
                 return "";
@@ -71,7 +71,7 @@ namespace interceptor
             foreach (var child in item.ChildNodes)
             {
                 if (child is XmlElement)
-                    allXmlField((XmlElement)child, indent + 1);
+                    AllXmlField((XmlElement)child, indent + 1);
 
                 if (child is XmlText)
                 {
@@ -84,7 +84,7 @@ namespace interceptor
             return MD5_LINE_TMP;
         }
 
-        public static string createMD5(string input)
+        public static string CreateMD5(string input)
         {
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
             {

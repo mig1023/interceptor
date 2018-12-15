@@ -23,112 +23,112 @@ namespace interceptor
         {
             Driver = new DrvFR();
             Driver.FindDevice();
-            repeatPrintingTimer.Elapsed += new ElapsedEventHandler(repeatPrint);
+            repeatPrintingTimer.Elapsed += new ElapsedEventHandler(RepeatPrint);
         }
 
-        public static void makeBeep()
+        public static void MakeBeep()
         {
             Driver.Beep();
         }
 
-        public static void checkConnection()
+        public static void CheckConnection()
         {
             Driver.CheckConnection();
         }
 
-        public static bool repeatDocument()
+        public static bool RepeatDocument()
         {
-            Driver.Password = CRM.Password;
+            Driver.Password = CRM.password;
             Driver.RepeatDocument();
 
-            Log.addWithCode("распечатка повтора");
+            Log.AddWithCode("распечатка повтора");
 
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool continueDocument()
+        public static bool ContinueDocument()
         {
-            Driver.Password = CRM.Password;
+            Driver.Password = CRM.password;
             Driver.ContinuePrint();
 
-            Log.addWithCode("продолжение печати");
+            Log.AddWithCode("продолжение печати");
 
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool reportCleaning()
+        public static bool ReportCleaning()
         {
-            Driver.Password = CRM.AdminPassword;
+            Driver.Password = CRM.adminPassword;
             Driver.PrintReportWithCleaning();
 
-            Log.addWithCode("отчёт с гашением");
+            Log.AddWithCode("отчёт с гашением");
 
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool reportWithoutCleaning()
+        public static bool ReportWithoutCleaning()
         {
-            Driver.Password = CRM.AdminPassword;
+            Driver.Password = CRM.adminPassword;
             Driver.PrintReportWithoutCleaning();
 
-            Log.addWithCode("отчёт без гашения");
+            Log.AddWithCode("отчёт без гашения");
 
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool reportDepartment()
+        public static bool ReportDepartment()
         {
-            Driver.Password = CRM.AdminPassword;
+            Driver.Password = CRM.adminPassword;
             Driver.PrintDepartmentReport();
 
-            Log.addWithCode("отчёт по отделам");
+            Log.AddWithCode("отчёт по отделам");
 
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool reportTax()
+        public static bool ReportTax()
         {
-            Driver.Password = CRM.AdminPassword;
+            Driver.Password = CRM.adminPassword;
             Driver.PrintTaxReport();
 
-            Log.addWithCode("отчёт по налогам");
+            Log.AddWithCode("отчёт по налогам");
 
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool cancelDocument()
+        public static bool CancelDocument()
         {
-            Driver.Password = CRM.Password;
+            Driver.Password = CRM.password;
             Driver.CancelCheck();
 
-            Log.addWithCode("отмена чека по кнопке");
+            Log.AddWithCode("отмена чека по кнопке");
 
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool cashIncome(string summ)
+        public static bool CashIncome(string summ)
         {
-            Driver.Password = CRM.Password;
+            Driver.Password = CRM.password;
             Driver.Summ1 = DocPack.manualParseDecimal(summ);
             Driver.CashIncome();
 
-            Log.addWithCode("внесение денег (" + summ + ")");
+            Log.AddWithCode("внесение денег (" + summ + ")");
 
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool cashOutcome(string summ)
+        public static bool CashOutcome(string summ)
         {
-            Driver.Password = CRM.Password;
+            Driver.Password = CRM.password;
             Driver.Summ1 = DocPack.manualParseDecimal(summ);
             Driver.CashOutcome();
 
-            Log.addWithCode("выплата денег (" + summ + ")");
+            Log.AddWithCode("выплата денег (" + summ + ")");
 
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        static string tableField(int tableNumber, int fieldNumber, int rowNumber, string fieldValue = "")
+        static string TableField(int tableNumber, int fieldNumber, int rowNumber, string fieldValue = "")
         {
             Driver.TableNumber = tableNumber;
             Driver.FieldNumber = fieldNumber;
@@ -139,7 +139,7 @@ namespace interceptor
 
             if ((fieldValue != "") && (fieldValue != Driver.ValueOfFieldString))
             {
-                Log.addWithCode("запись поля " + tableNumber + "/" + fieldNumber + "/" + rowNumber + "/" + fieldValue);
+                Log.AddWithCode("запись поля " + tableNumber + "/" + fieldNumber + "/" + rowNumber + "/" + fieldValue);
 
                 Driver.ValueOfFieldString = fieldValue;
                 Driver.WriteTable();
@@ -150,32 +150,32 @@ namespace interceptor
             return Driver.ValueOfFieldString;
         }
 
-        public static bool failCashboxField(int tableNumber, int fieldNumber, int rowNumber, string fieldValue)
+        public static bool FailCashboxField(int tableNumber, int fieldNumber, int rowNumber, string fieldValue)
         {
-            return (tableField(tableNumber, fieldNumber, rowNumber) != fieldValue);
+            return (TableField(tableNumber, fieldNumber, rowNumber) != fieldValue);
         }
 
         public static bool resettingCashbox()
         {
             foreach (CashboxData field in CashboxData.data)
-                if (tableField(field.tableNumber, field.fieldNumber, field.rowNumber, field.fieldValue) == "")
+                if (TableField(field.tableNumber, field.fieldNumber, field.rowNumber, field.fieldValue) == "")
                     return false;
 
             return true;
         }
 
-        public static string checkCashboxTables()
+        public static string CheckCashboxTables()
         {
             List<string> tablesCorrupted = new List<string>();
 
             foreach (CashboxData field in CashboxData.data)
-                if (failCashboxField(field.tableNumber, field.fieldNumber, field.rowNumber, field.fieldValue))
+                if (FailCashboxField(field.tableNumber, field.fieldNumber, field.rowNumber, field.fieldValue))
                     tablesCorrupted.Add(field.description);
 
             return string.Join(", ", tablesCorrupted.ToArray());
         }
 
-        public static void printLine(string text = "", bool line = false)
+        public static void PrintLine(string text = "", bool line = false)
         {
             Driver.Password = currentDrvPassword;
 
@@ -193,7 +193,7 @@ namespace interceptor
             
         } 
 
-        public static string printDocPack(DocPack doc, int MoneyType = -1,
+        public static string PrintDocPack(DocPack doc, int MoneyType = -1,
             bool returnSale = false, decimal? MoneySumm = null)
         {
             currentDrvPassword = doc.CashierPass;
@@ -208,7 +208,7 @@ namespace interceptor
             Driver.CheckType = (returnSale ? 2 : 0);
             Driver.OpenCheck();
 
-            printLine("Кассир: " + CRM.Cashier, line: true);
+            PrintLine("Кассир: " + CRM.cashier, line: true);
 
             foreach (Service service in doc.Services)
             {
@@ -230,7 +230,7 @@ namespace interceptor
                 else
                     Driver.Sale();
 
-                printLine(line: true);
+                PrintLine(line: true);
             }
 
             Driver.Password = currentDrvPassword;
@@ -252,14 +252,14 @@ namespace interceptor
             int checkClosingResult = Driver.ResultCode;
             string checkClosingErrorText = Driver.ResultCodeDescription;
 
-            Log.addWithCode("распечатка чека");
+            Log.AddWithCode("распечатка чека");
 
             if (checkClosingResult != 0)
             {
                 Driver.Password = currentDrvPassword;
                 Driver.CancelCheck();
 
-                Log.addWithCode("отмена чека");
+                Log.AddWithCode("отмена чека");
 
                 Server.ShowActivity(busy: false);
             }
@@ -275,14 +275,14 @@ namespace interceptor
                 return "ERR2:" + checkClosingErrorText;
         }
 
-        public static void repeatPrint(object obj, ElapsedEventArgs e)
+        public static void RepeatPrint(object obj, ElapsedEventArgs e)
         {
             Driver.Password = currentDrvPassword;
             Driver.RepeatDocument();
 
-            int printSuccess = getResultCode();
+            int printSuccess = GetResultCode();
 
-            Log.addWithCode("распечатка повтора");
+            Log.AddWithCode("распечатка повтора");
 
             if (printSuccess == 0) {
                 repeatPrintingTimer.Enabled = false;
@@ -292,31 +292,31 @@ namespace interceptor
             }
         }
 
-        public static int getResultCode()
+        public static int GetResultCode()
         {
             return Driver.ResultCode;
         }
 
-        public static string getResultLine()
+        public static string GetResultLine()
         {
             return Driver.ResultCodeDescription;
         }
 
-        public static int currentMode()
+        public static int CurrentMode()
         {
             Driver.GetECRStatus();
 
             return Driver.ECRMode;
         }
 
-        public static string currentModeDescription()
+        public static string CurrentModeDescription()
         {
             Driver.GetECRStatus();
 
             return Driver.ECRModeDescription;
         }
 
-        public static void getStatusData(out string port, out string speed, out string status,
+        public static void GetStatusData(out string port, out string speed, out string status,
             out string version, out string model)
         {
             string[] baudeRate = new string[] { "2400", "4800", "9600", "19200", "38400", "57600", "115200" };

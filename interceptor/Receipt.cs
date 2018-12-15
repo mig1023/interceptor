@@ -23,7 +23,7 @@ namespace interceptor
         static Document document;
         static PdfContentByte cb;
 
-        public static string appNumber(string appNum)
+        public static string AppNumber(string appNum)
         {
             Match ReqMatch = Regex.Match(appNum, @"^(\d{3})(\d{4})(\d{2})(\d{2})(\d{4})$");
 
@@ -32,7 +32,7 @@ namespace interceptor
                 ReqMatch.Groups[5].Value;
         }
 
-        public static void printReceipt(string appDataString, DocPack doc)
+        public static void PrintReceipt(string appDataString, DocPack doc)
         {
             string[] appData = appDataString.Split('|');
 
@@ -40,7 +40,7 @@ namespace interceptor
 
             if (appData[0] != "OK")
             {
-                Log.addWeb("Ошибка вернувшихся данных записи");
+                Log.AddWeb("Ошибка вернувшихся данных записи");
                 return;
             }
 
@@ -60,7 +60,7 @@ namespace interceptor
             cb.SetColorFill(BaseColor.BLACK);
             cb.SetFontAndSize(bf, 10);
 
-            string actNum = appNumber(appData[2]) + "/ДОП" + receiptIndex.ToString();
+            string actNum = AppNumber(appData[2]) + "/ДОП" + receiptIndex.ToString();
 
             for (int i = 0; i < 2; i++)
             {
@@ -89,7 +89,7 @@ namespace interceptor
 
                 AddText();
 
-                AddText("Заявитель: " + appData[1] + " (номер записи " + appNumber(appData[2]) + ")");
+                AddText("Заявитель: " + appData[1] + " (номер записи " + AppNumber(appData[2]) + ")");
                 AddText("Исполнитель: ООО \"Виза Менеджмент Сервиc\"");
 
                 AddText("Оказаны следующие виды работ:");
@@ -141,7 +141,7 @@ namespace interceptor
             CURRENT_LINE = 0;
             CURRENT_ROW = 0;
 
-            Log.add("Сформирован акт " + fileName);
+            Log.Add("Сформирован акт " + fileName);
 
             foreach (Service service in doc.Services)
             {
@@ -151,7 +151,7 @@ namespace interceptor
                     receptionServices[service.ReceptionID] += total;
             }
 
-            CRM.sendFile(
+            CRM.SendFile(
                 pathToFile: fileName,
                 appID: appData[6],
                 actNum: actNum,

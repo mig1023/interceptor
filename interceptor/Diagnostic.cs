@@ -8,20 +8,20 @@ namespace interceptor
 {
     class Diagnostics
     {
-        public static bool failCashbox()
+        public static bool FailCashbox()
         {
-            Cashbox.checkConnection();
+            Cashbox.CheckConnection();
 
-            Log.addWithCode("проверка связи с кассой");
+            Log.AddWithCode("проверка связи с кассой");
 
-            return ( Cashbox.getResultCode() != 0 ? true : false );
+            return ( Cashbox.GetResultCode() != 0 ? true : false );
         }
 
-        public static string makeBeepTest()
+        public static string MakeBeepTest()
         {
-            Cashbox.makeBeep();
+            Cashbox.MakeBeep();
 
-            return (Cashbox.getResultCode() == 0 ? "OK" : "ERR2:Касса не отвечает");
+            return (Cashbox.GetResultCode() == 0 ? "OK" : "ERR2:Касса не отвечает");
         }
     }
 }

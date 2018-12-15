@@ -14,20 +14,20 @@ namespace interceptor
 {
     class Log
     {
-        public static void addWithCode(string line, string logType = "main",
+        public static void AddWithCode(string line, string logType = "main",
             bool freeLine = false, bool freeLineAfter = false)
         {
-            add(line + ": " + Cashbox.getResultLine() + " [" + Cashbox.getResultCode() + "]",
+            Add(line + ": " + Cashbox.GetResultLine() + " [" + Cashbox.GetResultCode() + "]",
                 logType, freeLine, freeLineAfter);
         }
 
-        public static void addWeb(string line, string logType = "main", bool freeLine = false,
+        public static void AddWeb(string line, string logType = "main", bool freeLine = false,
             bool freeLineAfter = false)
         {
-            add("Ошибка доступа к серверу: " + line, logType, freeLine, freeLineAfter);
+            Add("Ошибка доступа к серверу: " + line, logType, freeLine, freeLineAfter);
         }
 
-        public static void add(string line, string logType = "main",
+        public static void Add(string line, string logType = "main",
             bool freeLine = false, bool freeLineAfter = false)
         {
             string logFileName;
@@ -48,41 +48,41 @@ namespace interceptor
             using (StreamWriter sw = new StreamWriter(logFileName, true))
             {
                 if (freeLine)
-                    writeLine(sw, date: true);
+                    WriteLine(sw, date: true);
 
-                writeLine(sw, line: line, date: true);
+                WriteLine(sw, line: line, date: true);
 
                 if (logType == "http")
-                    writeLine(sw);
+                    WriteLine(sw);
 
                 if (freeLineAfter)
-                    writeLine(sw, date: true);
+                    WriteLine(sw, date: true);
             }
 
-            if (logType == "main") showCurrentStatus(line);
+            if (logType == "main") ShowCurrentStatus(line);
         } 
 
-        public static void addDocPack(DocPack docForLog)
+        public static void AddDocPack(DocPack docForLog)
         {
             XmlSerializer DocPackLog = new XmlSerializer(typeof(DocPack));
 
             using (StreamWriter sw = new StreamWriter("shtrih-interceptor-doc.log", true))
             {
-                writeLine(sw);
-                writeLine(sw, date: true);
-                writeLine(sw);
+                WriteLine(sw);
+                WriteLine(sw, date: true);
+                WriteLine(sw);
                 DocPackLog.Serialize(sw, docForLog);
-                writeLine(sw);
+                WriteLine(sw);
             }
         }
 
-        public static void writeLine(StreamWriter sw, string line = "", bool date = false)
+        public static void WriteLine(StreamWriter sw, string line = "", bool date = false)
         {
             string dateLine = (date ? DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss") : "");
             sw.WriteLine(dateLine + (line != "" ? " " : "") + line);
         }
 
-        public static void showCurrentStatus(string line)
+        public static void ShowCurrentStatus(string line)
         {
             if (Application.Current == null)
                 return;
@@ -91,7 +91,7 @@ namespace interceptor
             {
                 MainWindow main = (MainWindow)Application.Current.MainWindow;
                 main.status9.Content = line;
-                main.status11.Content = Cashbox.currentModeDescription().ToLower();
+                main.status11.Content = Cashbox.CurrentModeDescription().ToLower();
             }));
         }
     }

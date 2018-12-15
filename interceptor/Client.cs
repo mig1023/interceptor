@@ -26,7 +26,7 @@ namespace interceptor
 
         private void SendResponse(TcpClient Client, string line)
         {
-            Log.add("отправлен ответ: " + line);
+            Log.Add("отправлен ответ: " + line);
 
             byte[] Buffer = EncodeToUTF8(line);
 
@@ -50,15 +50,15 @@ namespace interceptor
 
             Request = Uri.UnescapeDataString(Request);
 
-            Log.add(Request, logType: "http");
+            Log.Add(Request, logType: "http");
 
             Match ReqMatch = Regex.Match(Request, @"message=([^;]+?);");
 
-            string response = responsePrepare(ReqMatch.Groups[1].Value);
+            string response = ResponsePrepare(ReqMatch.Groups[1].Value);
 
             SendResponse(Client, response);
 
-            Log.add("соединение закрыто");
+            Log.Add("соединение закрыто");
 
             Client.Close();
         }
@@ -73,20 +73,20 @@ namespace interceptor
             }));
         }
 
-        public static string responsePrepare(string request)
+        public static string ResponsePrepare(string request)
         {
-            if (!CheckRequest.checkLoginInRequest(request))
+            if (!CheckRequest.CheckLoginInRequest(request))
             {
-                Log.add("конфликт логинов запроса и программы, возвращаем ошибку");
+                Log.Add("конфликт логинов запроса и программы, возвращаем ошибку");
 
                 return "ERR3:Кассовая программа запущена другим пользователем";
             }
 
             if (CheckRequest.CheckConnection(request))
             {
-                Log.add("бип-тест подключения к кассе");
+                Log.Add("бип-тест подключения к кассе");
 
-                string testResult = Diagnostics.makeBeepTest();
+                string testResult = Diagnostics.MakeBeepTest();
 
                 Server.ShowActivity(busy: false);
 
@@ -95,13 +95,13 @@ namespace interceptor
 
             if (!CheckRequest.CheckXml(request))
             {
-                Log.add("md5 ошибочен, возвращаем ошибку данных");
+                Log.Add("md5 ошибочен, возвращаем ошибку данных");
 
                 return "ERR1:Ошибка переданных данных";
             }
             else
             {
-                Log.add("md5 запроса корректен, логин соответствует");
+                Log.Add("md5 запроса корректен, логин соответствует");
 
                 DocPack docPack = new DocPack();
 
@@ -117,7 +117,7 @@ namespace interceptor
                     return "OK:Callback запрос получен";
                 } 
                 else
-                    return Cashbox.printDocPack(docPack);
+                    return Cashbox.PrintDocPack(docPack);
             }
                 
         }

@@ -33,7 +33,7 @@ namespace interceptor
         {
             string RemoteEndPoint = (state as TcpClient).Client.RemoteEndPoint.ToString();
 
-            Log.add("новое соединение c " + RemoteEndPoint, freeLine: true);
+            Log.Add("новое соединение c " + RemoteEndPoint, freeLine: true);
 
             ShowActivity(busy: true);
 
@@ -60,7 +60,7 @@ namespace interceptor
 
         private static void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            Log.add("сервер запущен");
+            Log.Add("сервер запущен");
 
             new Server(80);
         }
@@ -70,7 +70,7 @@ namespace interceptor
             if (Listener != null)
             {
                 Listener.Stop();
-                Log.add("сервер остановлен");
+                Log.Add("сервер остановлен");
             }
         }
     }

@@ -76,26 +76,26 @@ namespace interceptor
 
             if ( (this.MoneyType == 2) && (this.Total != this.Money))
             {
-                Log.add("Ошибка расхождения сумм при оплате картой " + 
+                Log.Add("Ошибка расхождения сумм при оплате картой " + 
                     "(Total: " + this.Total + " <=> Money: " + this.Money  + ")");
-                Log.add("Выполнено приведение к сумме Total");
+                Log.Add("Выполнено приведение к сумме Total");
 
                 this.Money = this.Total;
             }
 
             this.RequestOnly = int.Parse(info["RequestOnly"].InnerText);
 
-            Log.addDocPack(this);
+            Log.AddDocPack(this);
         }
 
-        public void addInfo(string Cashier, int CashierPass, int MoneyType)
+        public void AddInfo(string Cashier, int CashierPass, int MoneyType)
         {
             this.Cashier = Cashier;
             this.CashierPass = CashierPass;
             this.MoneyType = MoneyType;
         }
 
-        public void addService(string ServiceName, int Quantity, decimal Price, int VAT)
+        public void AddService(string ServiceName, int Quantity, decimal Price, int VAT)
         {
             Service newService = new Service();
 
@@ -107,7 +107,7 @@ namespace interceptor
             this.Services.Add(newService);
         }
 
-        public void addMoney(string Summ)
+        public void AddMoney(string Summ)
         {
             this.Money = manualParseDecimal(Summ);
         }

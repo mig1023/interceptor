@@ -36,7 +36,7 @@ namespace interceptor
 
         public const string CURRENT_VERSION = "1.e";
 
-        public const bool TEST_VERSION = false;
+        public const bool TEST_VERSION = true;
             
         public MainWindow()
         {
@@ -46,8 +46,8 @@ namespace interceptor
 
             if (TEST_VERSION) this.Title += " test";
 
-            Log.add("ПЕРЕХВАТЧИК ЗАПУЩЕН", freeLine: true);
-            Log.add("версия ---> " + CURRENT_VERSION, freeLineAfter: true);
+            Log.Add("ПЕРЕХВАТЧИК ЗАПУЩЕН", freeLine: true);
+            Log.Add("версия ---> " + CURRENT_VERSION, freeLineAfter: true);
 
             int MaxThreadsCount = Environment.ProcessorCount * 4;
             ThreadPool.SetMaxThreads(MaxThreadsCount, MaxThreadsCount);
@@ -103,7 +103,7 @@ namespace interceptor
         {
             manDocPack.Clear();
 
-            updateCenters();
+            UpdateCenters();
 
             MoveCanvas(
                 moveCanvas: checkPlace,
@@ -111,15 +111,15 @@ namespace interceptor
             );
         }
 
-        private void updateStatuses()
+        private void UpdateStatuses()
         {
             string port, speed, status, version, model;
 
             status1.Content = CURRENT_VERSION;
-            status2.Content = CRM.getMyIP();
+            status2.Content = CRM.GetMyIP();
             status3.Content = CRM.CRM_URL_BASE;
 
-            Cashbox.getStatusData(out port, out speed, out status, out version, out model);
+            Cashbox.GetStatusData(out port, out speed, out status, out version, out model);
 
             status4.Content = port;
             status5.Content = speed;
@@ -128,23 +128,23 @@ namespace interceptor
             status8.Content = status.ToLower();
         }
 
-        private void updateCenters()
+        private void UpdateCenters()
         {
             allCenters.Items.Clear();
 
-            foreach (string center_name in CRM.getAllCenters(login.Text))
+            foreach (string center_name in CRM.GetAllCenters(login.Text))
                 allCenters.Items.Add(center_name);
 
             allCenters.SelectedIndex = 0;
         }
 
-        private void updateVTypes()
+        private void UpdateVTypes()
         {
             if (allCenters.SelectedItem == null) return;
 
             allVisas.Items.Clear();
 
-            foreach (string visa_name in CRM.getAllVType(allCenters.SelectedItem.ToString()))
+            foreach (string visa_name in CRM.GetAllVType(allCenters.SelectedItem.ToString()))
                 allVisas.Items.Add(visa_name);
 
             allVisas.SelectedIndex = 0;
@@ -160,7 +160,7 @@ namespace interceptor
             Server.ShowActivity(busy: false);
             Cashbox.manDocPackForPrinting = null;
 
-            cleanCheck();
+            CleanCheck();
         }
 
         private void status_Click(object sender, RoutedEventArgs e)
@@ -183,31 +183,31 @@ namespace interceptor
         {
             Canvas canvasToGo = mainPlace;
 
-            if (!CRM.crmAuthentication(login.Text, CRM.generateMySQLHash(password.Password)))
+            if (!CRM.CrmAuthentication(login.Text, CRM.GenerateMySQLHash(password.Password)))
             {
                 loginFailText.Content = CRM.loginError;
                 returnFromErrorTo = loginPlace;
                 canvasToGo = loginFail;
 
-                Log.add("ошибка входа с логином " + login.Text);
+                Log.Add("ошибка входа с логином " + login.Text);
             }
-            else if (Diagnostics.failCashbox())
+            else if (Diagnostics.FailCashbox())
             {
                 loginFailText.Content = "Ошибка подключения к кассе. Проверьте подключение и перезапустите приложение";
                 returnFromErrorTo = loginPlace;
                 canvasToGo = loginFail;
 
-                Log.add("ошибка подключения к кассе");
+                Log.Add("ошибка подключения к кассе");
             }
-            else if (Cashbox.checkCashboxTables() != "")
+            else if (Cashbox.CheckCashboxTables() != "")
             {
-                settingText2.Content = Cashbox.checkCashboxTables();
+                settingText2.Content = Cashbox.CheckCashboxTables();
                 returnFromErrorTo = loginPlace;
                 canvasToGo = cashboxSettingsFail;
 
-                Log.add("ошибка настроек кассы");
+                Log.Add("ошибка настроек кассы");
 
-                if (Cashbox.currentMode() != 4)
+                if (Cashbox.CurrentMode() != 4)
                 {
                     settingText5.Visibility = Visibility.Visible;
                     reportAndRessetting.Content = "закрыть смену, распечатать отчёт и перенастроить";
@@ -233,7 +233,7 @@ namespace interceptor
                 direction: moveDirection.vertical
             );
 
-            updateStatuses();
+            UpdateStatuses();
         }
 
         private void returnFromError_Click(object sender, RoutedEventArgs e)
@@ -249,35 +249,35 @@ namespace interceptor
 
         private void reportCleaning_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.reportCleaning())
-                moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.ReportCleaning())
+                moveToErrorFromReports(Cashbox.GetResultLine());
         }
 
         private void reportWithoutCleaning_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.reportWithoutCleaning())
-                moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.ReportWithoutCleaning())
+                moveToErrorFromReports(Cashbox.GetResultLine());
         }
 
         private void reportDepartment_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.reportDepartment())
-                moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.ReportDepartment())
+                moveToErrorFromReports(Cashbox.GetResultLine());
         }
 
         private void repeatDocument_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.repeatDocument())
-                moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.RepeatDocument())
+                moveToErrorFromReports(Cashbox.GetResultLine());
         }
 
         private void reportTax_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.reportTax())
-                moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.ReportTax())
+                moveToErrorFromReports(Cashbox.GetResultLine());
         }
 
-        private void blockCheckButton(bool block)
+        private void BlockCheckButton(bool block)
         {
             moneyForCheck.IsEnabled = (block ? true : false);
             printCheckMoney.IsEnabled = (block ? true : false);
@@ -297,7 +297,7 @@ namespace interceptor
             returnDate.IsEnabled = (block ? false : true);
         }
 
-        private void blockRCheckButton(bool block)
+        private void BlockRCheckButton(bool block)
         {
             moneyForRCheck.IsEnabled = (block ? true : false);
             printRCheckMoney.IsEnabled = (block ? true : false);
@@ -311,8 +311,8 @@ namespace interceptor
 
         private void сloseCheck_Click(object sender, RoutedEventArgs e)
         {
-            string sendingSuccess = CRM.sendManDocPack(
-                manDocPack, login.Text, CRM.Password, 1, moneyForCheck.Text,
+            string sendingSuccess = CRM.SendManDocPack(
+                manDocPack, login.Text, CRM.password, 1, moneyForCheck.Text,
                 allCenters.Text, allVisas.Text, returnDate.Text
             );
 
@@ -320,13 +320,13 @@ namespace interceptor
 
             if (sendingData[0] == "OK")
             {
-                Log.add("успешно закрыт чек");
+                Log.Add("успешно закрыт чек");
 
-                blockCheckButton(block: true);
+                BlockCheckButton(block: true);
             }
             else if (sendingData[0] == "WARNING")
             {
-                Log.add("некоторые услуги из чека не имеют цены: " + sendingData[1]);
+                Log.Add("некоторые услуги из чека не имеют цены: " + sendingData[1]);
 
                 MessageBoxResult result = MessageBox.Show(
                     "Услуги не имеют цену по прайслисту выбранного центра:\n" +
@@ -336,13 +336,13 @@ namespace interceptor
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
-                    blockCheckButton(block: true);
+                    BlockCheckButton(block: true);
                 else
-                    cleanCheck();
+                    CleanCheck();
             }
             else
             {
-                Log.add("во время формирования чека произошла ошибка: " + sendingData[1]);
+                Log.Add("во время формирования чека произошла ошибка: " + sendingData[1]);
 
                 loginFailText.Content = sendingData[1];
                 returnFromErrorTo = checkPlace;
@@ -402,10 +402,10 @@ namespace interceptor
 
         private void allCenters_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            updateVTypes();
+            UpdateVTypes();
         }
 
-        private void cleanCheck()
+        private void CleanCheck()
         {
             foreach (Button serv in servButtonCleaningList)
             {
@@ -414,7 +414,7 @@ namespace interceptor
                 if (bracketIndex > 0) serv.Content = serv.Content.ToString().Remove(bracketIndex);
             }
 
-            blockCheckButton(block: false);
+            BlockCheckButton(block: false);
 
             manDocPack.Clear();
 
@@ -425,7 +425,7 @@ namespace interceptor
             totalR.Content = "";
         }
 
-        private void cleanRCheck()
+        private void CleanRCheck()
         {
             foreach (Button serv in receptionButtonCleaningList)
             {
@@ -434,7 +434,7 @@ namespace interceptor
                 if (bracketIndex > 0) serv.Content = serv.Content.ToString().Remove(bracketIndex);
             }
 
-            blockRCheckButton(block: false);
+            BlockRCheckButton(block: false);
 
             manDocPack.Clear();
 
@@ -444,7 +444,7 @@ namespace interceptor
             appNumber.Text = "";
         }
 
-        private void showError(Canvas from, string error)
+        private void ShowError(Canvas from, string error)
         {
             loginFailText.Content = error;
             returnFromErrorTo = from;
@@ -456,41 +456,41 @@ namespace interceptor
             );
         }
 
-        public void checkError(string[] result, Canvas place, string error)
+        public void CheckError(string[] result, Canvas place, string error)
         {
             if (result[0] == "OK")
-                cleanCheck();
+                CleanCheck();
             else
-                showError(place, error + ": " + result[1]);
+                ShowError(place, error + ": " + result[1]);
         }
 
         private void printCheckMoney_Click(object sender, RoutedEventArgs e)
         {
             decimal money = DocPack.manualParseDecimal(moneyForCheck.Text);
 
-            string[] result = Cashbox.printDocPack(
+            string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money
             ).Split(':');
 
-            checkError(result, checkPlace, "Ошибка кассы");
+            CheckError(result, checkPlace, "Ошибка кассы");
         }
 
         private void printCheckCard_Click(object sender, RoutedEventArgs e)
         {
-            string[] result = Cashbox.printDocPack(
+            string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
             ).Split(':');
 
-            checkError(result, checkPlace, "Ошибка кассы");
+            CheckError(result, checkPlace, "Ошибка кассы");
         }
 
         private void returnSale_Click(object sender, RoutedEventArgs e)
         {
-            string[] result = Cashbox.printDocPack(
+            string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, returnSale: true, MoneySumm: Cashbox.manDocPackSumm
             ).Split(':');
 
-            checkError(result, checkPlace, "Ошибка кассы");
+            CheckError(result, checkPlace, "Ошибка кассы");
         }
 
         private void password_KeyDown(object sender, KeyEventArgs e)
@@ -513,20 +513,20 @@ namespace interceptor
 
         private void continueDocument_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.continueDocument())
-                moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.ContinueDocument())
+                moveToErrorFromReports(Cashbox.GetResultLine());
         }
 
         private void cashIncome_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.cashIncome(moneyForIncome.Text))
-                moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.CashIncome(moneyForIncome.Text))
+                moveToErrorFromReports(Cashbox.GetResultLine());
         }
 
         private void cashOutcome_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.cashOutcome(moneyForOutcome.Text))
-                moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.CashOutcome(moneyForOutcome.Text))
+                moveToErrorFromReports(Cashbox.GetResultLine());
         }
 
         private void backToMainFromInfo_Click(object sender, RoutedEventArgs e)
@@ -555,8 +555,8 @@ namespace interceptor
 
         private void cancelDocument_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.cancelDocument())
-                moveToErrorFromReports(Cashbox.getResultLine());
+            if (!Cashbox.CancelDocument())
+                moveToErrorFromReports(Cashbox.GetResultLine());
         }
 
         private void backToLoginFromSettingsFial_Click(object sender, RoutedEventArgs e)
@@ -570,10 +570,10 @@ namespace interceptor
 
         private void reportAndRessetting_Click(object sender, RoutedEventArgs e)
         {
-            if (Cashbox.currentMode() != 4)
-                Cashbox.reportCleaning();
+            if (Cashbox.CurrentMode() != 4)
+                Cashbox.ReportCleaning();
 
-            restoringSettingsCashbox.Elapsed += new ElapsedEventHandler(restoreSetting);
+            restoringSettingsCashbox.Elapsed += new ElapsedEventHandler(RestoreSetting);
             restoringSettingsCashbox.Enabled = true;
             restoringSettingsCashbox.Start();
 
@@ -586,7 +586,7 @@ namespace interceptor
             );
         }
 
-        public static void restoreSetting(object obj, ElapsedEventArgs e)
+        public static void RestoreSetting(object obj, ElapsedEventArgs e)
         {
             if (Cashbox.resettingCashbox())
             {
@@ -608,7 +608,7 @@ namespace interceptor
         {
             manDocPack.Clear();
 
-            updateCenters();
+            UpdateCenters();
 
             MoveCanvas(
                 moveCanvas: receptionPlace,
@@ -628,7 +628,7 @@ namespace interceptor
             Server.ShowActivity(busy: false);
             Cashbox.manDocPackForPrinting = null;
 
-            cleanRCheck();
+            CleanRCheck();
         }
 
         private void appNumber_KeyUp(object sender, KeyEventArgs e)
@@ -656,8 +656,8 @@ namespace interceptor
         {
             string appNumberClean = Regex.Replace(appNumber.Text, @"[^0-9]", "");
 
-            string sendingSuccess = CRM.sendManDocPack(
-                manDocPack, login.Text, CRM.Password, 1, moneyForRCheck.Text,
+            string sendingSuccess = CRM.SendManDocPack(
+                manDocPack, login.Text, CRM.password, 1, moneyForRCheck.Text,
                 appNumberClean, allVisas.Text, returnDate.Text, reception: true
             );
 
@@ -665,13 +665,13 @@ namespace interceptor
 
             if (sendingData[0] == "OK")
             {
-                Log.add("успешно закрыт чек ресепшена");
+                Log.Add("успешно закрыт чек ресепшена");
 
-                blockRCheckButton(block: true);
+                BlockRCheckButton(block: true);
             }
             else if (sendingData[0] == "WARNING")
             {
-                Log.add("некоторые услуги из чека не имеют цены: " + sendingData[1]);
+                Log.Add("некоторые услуги из чека не имеют цены: " + sendingData[1]);
 
                 MessageBoxResult result = MessageBox.Show(
                     "Услуги не имеют цену по прайслисту выбранного центра: " +
@@ -681,13 +681,13 @@ namespace interceptor
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
-                    blockRCheckButton(block: true);
+                    BlockRCheckButton(block: true);
                 else
-                    cleanRCheck();
+                    CleanRCheck();
             }
             else
             {
-                Log.add("во время формирования чека произошла ошибка: " + sendingData[1]);
+                Log.Add("во время формирования чека произошла ошибка: " + sendingData[1]);
 
                 loginFailText.Content = sendingData[1];
                 returnFromErrorTo = receptionPlace;
@@ -704,11 +704,11 @@ namespace interceptor
         {
             decimal money = DocPack.manualParseDecimal(moneyForRCheck.Text);
 
-            string[] result = Cashbox.printDocPack(
+            string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money
             ).Split(':');
 
-            checkError(result, receptionPlace, "Ошибка кассы");
+            CheckError(result, receptionPlace, "Ошибка кассы");
 
             if (result[0] == "OK")
                 getAppInfoAndPrintRecepeit(Cashbox.manDocPackSumm.ToString());
@@ -716,11 +716,11 @@ namespace interceptor
 
         private void printRCheckCard_Click(object sender, RoutedEventArgs e)
         {
-            string[] result = Cashbox.printDocPack(
+            string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
             ).Split(':');
 
-            checkError(result, receptionPlace, "Ошибка кассы");
+            CheckError(result, receptionPlace, "Ошибка кассы");
 
             if (result[0] == "OK")
                 getAppInfoAndPrintRecepeit(Cashbox.manDocPackSumm.ToString());
@@ -728,25 +728,25 @@ namespace interceptor
 
         private void getAppInfoAndPrintRecepeit(string summ)
         {
-            Receipt.printReceipt(CRM.appNumberData(appNumber.Text, summ), Cashbox.manDocPackForPrinting);
-            cleanRCheck();
+            Receipt.PrintReceipt(CRM.AppNumberData(appNumber.Text, summ), Cashbox.manDocPackForPrinting);
+            CleanRCheck();
         }
 
         private void appNumberClean_Click(object sender, RoutedEventArgs e)
         {
             appNumber.Text = "";
-            cleanRCheck();
+            CleanRCheck();
             appNumber_KeyUp(null, null);
             appNumber.Focus();
         }
 
         private void returnSaleCard_Click(object sender, RoutedEventArgs e)
         {
-            string[] result = Cashbox.printDocPack(
+            string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, returnSale: true, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
             ).Split(':');
 
-            checkError(result, checkPlace, "Ошибка кассы");
+            CheckError(result, checkPlace, "Ошибка кассы");
         }
     }
 }

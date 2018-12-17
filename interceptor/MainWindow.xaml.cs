@@ -218,6 +218,13 @@ namespace interceptor
                     reportAndRessetting.Content = "перенастроить таблицы настроек";
                 }
             }
+            else if (AutoUpdate.Update())
+            {
+                returnFromErrorTo = loginPlace;
+                canvasToGo = needUpdateRestart;
+
+                Log.Add("необходима перезагрузка для обновления");
+            }
             else
             {
                 Server.StartServer();

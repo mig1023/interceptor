@@ -225,12 +225,14 @@ namespace interceptor
                 if (AutoUpdate.Update(updateData))
                 {
                     updateText.Content = "Програме необходимо обновиться. В процессе обновления программа будет перезапущена";
+                    needUpdateRestart.Background = Brushes.LimeGreen;
                     Log.Add("необходим перезагрузка для обновления");
                 }
                 else
                 {
                     updateText.Content = "В процессе обновления программы произошла ошибка загрузки необходимых данных!\nПожалуйста, обратитесь к системным администраторам";
                     updateButton.Visibility = Visibility.Hidden;
+                    needUpdateRestart.Background = (Brush)new BrushConverter().ConvertFromString("#FFFF4E4E");
                     Log.Add("Ошибка обновления: контрольные суммы файлов не совпали");
                 }
 

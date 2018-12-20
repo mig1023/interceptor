@@ -10,58 +10,53 @@ namespace interceptor
 {
     class AutoUpdate
     {
-        const string URL_UPDATE = "127.0.0.1";
+        const string URL_UPDATE = "127.0.0.1/";
         const string URL_MANIFEST = URL_UPDATE + "manifest.update";
         const string UPDATE_DIR = "update\\";
 
-        public static bool Update()
+        public static bool Update(string[] updateFiles)
         {
-            string[] updateFiles;
+            Log.Add("необходимо обновление до версии " + updateFiles[0]);
 
-            if (NeedUpdating(out updateFiles))
+            WebClient webClient = new WebClient();
+
+            Directory.CreateDirectory(UPDATE_DIR);
+
+            for (int file = 1; file < updateFiles.Count(); file += 2)
             {
-                Log.Add("необходимо обновление до версии " + updateFiles[0]);
+                webClient.DownloadFile(URL_UPDATE + updateFiles[file], UPDATE_DIR + updateFiles[file]);
 
-                WebClient webClient = new WebClient();
+                Log.Add("скачан файл: " + updateFiles[file]);
 
-                Directory.CreateDirectory(UPDATE_DIR);
+                string[] lines = System.IO.File.ReadAllLines(UPDATE_DIR + updateFiles[file]);
 
-                for (int file = 1; file < updateFiles.Count(); file++)
-                {
-                    webClient.DownloadFile(URL_UPDATE + updateFiles[file], UPDATE_DIR + updateFiles[file]);
+                string crcCheck = CheckRequest.CreateMD5(string.Join("", lines));
 
-                    Log.Add("скачан файл: " + updateFiles[file]);
-                }
-
-                return true;
+                if (crcCheck != updateFiles[file + 1])
+                    return false;
             }
-            else
-                return false; 
+
+            return true;
         }
 
-        public static bool NeedUpdating(out string[] updateFiles)
+        public static string[] NeedUpdating()
         {
             string versionDataLine = "";
 
             try
             {
                 versionDataLine = CRM.GetHtml(URL_MANIFEST);
-                
             }
             catch (WebException e)
             {
                 Log.AddWeb("(ошибка проверки версии обновления) " + e.Message);
 
-                updateFiles = new string[0];
-
-                return false;
+                return new string[0];
             }
 
             string[] versionData = versionDataLine.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
-            updateFiles = versionData;
-
-            return (versionData[0] == MainWindow.CURRENT_VERSION ? false : true);
+            return (versionData[0] == MainWindow.CURRENT_VERSION ? new string[0] : versionData);
         }
     }
 }

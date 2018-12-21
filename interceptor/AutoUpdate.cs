@@ -5,6 +5,7 @@ using System.Net;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace interceptor
 {
@@ -12,51 +13,76 @@ namespace interceptor
     {
         const string URL_UPDATE = "127.0.0.1/";
         const string URL_MANIFEST = URL_UPDATE + "manifest.update";
-        const string UPDATE_DIR = "update\\";
+        static string UPDATE_DIR = "update_" + DateTime.Now.ToString("yyyyMMMMdd") + "\\";
 
-        public static bool Update(string[] updateFiles)
+        public static bool Update(string updateFiles)
         {
-            Log.Add("необходимо обновление до версии " + updateFiles[0]);
+            Log.Add("необходимо обновление до версии " + GetLastVersion(updateFiles));
+
+            XmlDocument updateData = new XmlDocument();
+
+            updateData.LoadXml(updateFiles);
 
             WebClient webClient = new WebClient();
 
             Directory.CreateDirectory(UPDATE_DIR);
 
-            for (int file = 1; file < updateFiles.Count(); file += 2)
+            foreach (XmlNode node in updateData.SelectNodes("Update/Files/File"))
             {
-                webClient.DownloadFile(URL_UPDATE + updateFiles[file], UPDATE_DIR + updateFiles[file]);
+                string name = node["Name"].InnerText;
 
-                Log.Add("скачан файл: " + updateFiles[file]);
+                webClient.DownloadFile(URL_UPDATE + name, UPDATE_DIR + name);
 
-                string[] lines = System.IO.File.ReadAllLines(UPDATE_DIR + updateFiles[file]);
+                Log.Add("скачан файл: " + name);
+
+                string[] lines = System.IO.File.ReadAllLines(UPDATE_DIR + name);
 
                 string crcCheck = CheckRequest.CreateMD5(string.Join("", lines));
 
-                if (crcCheck != updateFiles[file + 1])
+                if (crcCheck != node["CRC"].InnerText)
                     return false;
             }
 
             return true;
         }
 
-        public static string[] NeedUpdating()
+        public static string NeedUpdating()
         {
-            string versionDataLine = "";
+            string versionData = "";
 
             try
             {
-                versionDataLine = CRM.GetHtml(URL_MANIFEST);
+                versionData = CRM.GetHtml(URL_MANIFEST);
             }
             catch (WebException e)
             {
                 Log.AddWeb("(ошибка проверки версии обновления) " + e.Message);
 
-                return new string[0];
+                return "";
             }
 
-            string[] versionData = versionDataLine.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            string version = GetLastVersion(versionData);
 
-            return (versionData[0] == MainWindow.CURRENT_VERSION ? new string[0] : versionData);
+            if (version == "")
+                return "";
+            else if (version == MainWindow.CURRENT_VERSION)
+                return "";
+            else
+                return versionData;
+        }
+
+        public static string GetLastVersion(string from)
+        {
+            if (from == "")
+                return "";
+
+            XmlDocument xmlData = new XmlDocument();
+
+            xmlData.LoadXml(from);
+
+            XmlNode lastVersionXml = xmlData.SelectSingleNode("Update/LastVersion");
+
+            return lastVersionXml.InnerText;
         }
     }
 }

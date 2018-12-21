@@ -183,7 +183,7 @@ namespace interceptor
         {
             Canvas canvasToGo = mainPlace;
 
-            string[] updateData = AutoUpdate.NeedUpdating();
+            string updateData = AutoUpdate.NeedUpdating();
 
             if (!CRM.CrmAuthentication(login.Text, CRM.GenerateMySQLHash(password.Password)))
             {
@@ -220,20 +220,20 @@ namespace interceptor
                     reportAndRessetting.Content = "перенастроить таблицы настроек";
                 }
             }
-            else if (updateData.Count() > 0)
+            else if (updateData != "")
             {
                 if (AutoUpdate.Update(updateData))
                 {
                     updateText.Content = "Програме необходимо обновиться. В процессе обновления программа будет перезапущена";
                     needUpdateRestart.Background = Brushes.LimeGreen;
-                    Log.Add("необходим перезагрузка для обновления");
+                    Log.Add("необходима перезагрузка для обновления");
                 }
                 else
                 {
                     updateText.Content = "В процессе обновления программы произошла ошибка загрузки необходимых данных!\nПожалуйста, обратитесь к системным администраторам";
                     updateButton.Visibility = Visibility.Hidden;
                     needUpdateRestart.Background = (Brush)new BrushConverter().ConvertFromString("#FFFF4E4E");
-                    Log.Add("Ошибка обновления: контрольные суммы файлов не совпали");
+                    Log.Add("ошибка обновления: контрольные суммы файлов не совпали");
                 }
 
                 returnFromErrorTo = loginPlace;

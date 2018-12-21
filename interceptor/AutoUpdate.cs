@@ -13,7 +13,7 @@ namespace interceptor
     {
         const string URL_UPDATE = "127.0.0.1/";
         const string URL_MANIFEST = URL_UPDATE + "manifest.update";
-        static string UPDATE_DIR = "update_" + DateTime.Now.ToString("yyyyMMMMdd") + "\\";
+        static string UPDATE_DIR = "update_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + "\\";
 
         public static bool Update(string updateFiles)
         {

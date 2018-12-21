@@ -15,7 +15,7 @@ namespace interceptor
         const string URL_MANIFEST = URL_UPDATE + "manifest.update";
         static string UPDATE_DIR = "update_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + "\\";
 
-        public static bool Update(string updateFiles)
+        public static string Update(string updateFiles)
         {
             Log.Add("необходимо обновление до версии " + GetLastVersion(updateFiles));
 
@@ -40,10 +40,10 @@ namespace interceptor
                 string crcCheck = CheckRequest.CreateMD5(string.Join("", lines));
 
                 if (crcCheck != node["CRC"].InnerText)
-                    return false;
+                    return "";
             }
 
-            return true;
+            return UPDATE_DIR;
         }
 
         public static string NeedUpdating()

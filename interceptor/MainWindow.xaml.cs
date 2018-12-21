@@ -37,7 +37,10 @@ namespace interceptor
         public const string CURRENT_VERSION = "1.e";
 
         public const bool TEST_VERSION = true;
-            
+
+        public string updateDir = "";
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -222,10 +225,12 @@ namespace interceptor
             }
             else if (updateData != "")
             {
-                if (AutoUpdate.Update(updateData))
+                updateDir = AutoUpdate.Update(updateData);
+
+                if (updateDir != "")
                 {
                     updateText.Content = "Програме необходимо обновиться. В процессе обновления программа будет перезапущена";
-                    needUpdateRestart.Background = Brushes.LimeGreen;
+                    needUpdateRestart.Background = (Brush)new BrushConverter().ConvertFromString("#33FF66");
                     Log.Add("необходима перезагрузка для обновления");
                 }
                 else

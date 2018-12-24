@@ -49,6 +49,8 @@ namespace interceptor
 
         public static void StartUpdater()
         {
+            Log.Add("запущен процесс обновления и перезапуска");
+
             Process.Start("autoupdate.exe", "interceptor.exe " + UPDATE_DIR);
             Process.GetCurrentProcess().Kill();
         }

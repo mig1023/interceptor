@@ -47,7 +47,7 @@ namespace interceptor
 
             Instance = this;
 
-            if (TEST_VERSION) this.Title += " test";
+            if (TEST_VERSION) this.Title += " <--- test";
 
             Log.Add("ПЕРЕХВАТЧИК ЗАПУЩЕН", freeLine: true);
             Log.Add("версия ---> " + CURRENT_VERSION, freeLineAfter: true);

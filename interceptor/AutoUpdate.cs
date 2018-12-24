@@ -5,6 +5,7 @@ using System.Net;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Xml;
 
 namespace interceptor
@@ -44,6 +45,12 @@ namespace interceptor
             }
 
             return UPDATE_DIR;
+        }
+
+        public static void StartUpdater()
+        {
+            Process.Start("autoupdate.exe", "interceptor.exe " + UPDATE_DIR);
+            Process.GetCurrentProcess().Kill();
         }
 
         public static string NeedUpdating()

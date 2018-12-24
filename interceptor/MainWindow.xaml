@@ -535,7 +535,8 @@
             </Button>
         </Canvas>
         <Canvas x:Name="needUpdateRestart" Margin="0,397,0,-397" Background="#FFFF4E4E">
-            <Button x:Name="updateButton" Content="обновить и перезапустить" Height="42" Canvas.Left="59" Canvas.Top="184" Width="211">
+            <Label x:Name="updateText" Content="Програме необходимо обновиться. В процессе обновления программа будет перезапущена" Height="80" Canvas.Left="52" Canvas.Top="146" Width="709" FontSize="16"/>
+            <Button x:Name="updateButton" Content="обновить и перезапустить" Height="42" Canvas.Left="59" Canvas.Top="184" Width="211" Click="updateButton_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
@@ -543,7 +544,6 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Label x:Name="updateText" Content="Програме необходимо обновиться. В процессе обновления программа будет перезапущена" Height="80" Canvas.Left="52" Canvas.Top="146" Width="709" FontSize="16"/>
         </Canvas>
     </Grid>
 

@@ -13,8 +13,6 @@ namespace autoupdate
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("START");
-
             string interceptor = args[0].Replace(".exe", "");
 
             while (Process.GetProcessesByName(interceptor).Length > 0)
@@ -22,10 +20,20 @@ namespace autoupdate
 
             string[] files = Directory.GetFiles(args[1]);
 
-            foreach(string x in files)
-                Console.WriteLine(x);
+            foreach(string file in files)
+            {
+                string fileNewName = Path.GetFileName(file);
 
-            string s = Console.ReadLine();
+                if (File.Exists(fileNewName))
+                    File.Delete(fileNewName);
+
+                File.Move(file, fileNewName);
+            }
+
+            DirectoryInfo oldDirectory = new DirectoryInfo(args[1]);
+            oldDirectory.Delete();
+
+            Process.Start(args[0]);
         }
     }
 }

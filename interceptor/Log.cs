@@ -14,7 +14,7 @@ namespace interceptor
 {
     class Log
     {
-        const string UPDATE_LOGS_DIR = "Logs";
+        const string UPDATE_LOGS_DIR = "logs";
 
         public static void AddWithCode(string line, string logType = "main",
             bool freeLine = false, bool freeLineAfter = false)
@@ -79,7 +79,7 @@ namespace interceptor
 
         public static void LogDirectory()
         {
-            if (Directory.Exists(UPDATE_LOGS_DIR))
+            if (!Directory.Exists(UPDATE_LOGS_DIR))
                 Directory.CreateDirectory(UPDATE_LOGS_DIR);
         }
 

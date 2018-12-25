@@ -22,7 +22,7 @@ namespace autoupdate
 
             string[] files = Directory.GetFiles(args[1]);
 
-            foreach(string file in files)
+            foreach (string file in files)
             {
                 string fileNewName = Path.GetFileName(file);
 
@@ -36,9 +36,12 @@ namespace autoupdate
                 File.Move(file, fileNewName);
             }
 
-            Log("удаление папки обновления " + args[1]);
-            DirectoryInfo oldDirectory = new DirectoryInfo(args[1]);
-            oldDirectory.Delete();
+            Log("удаление папок обновлений");
+
+            string[] dirs = Directory.GetDirectories(Directory.GetCurrentDirectory(), "update_*");
+
+            foreach (string dir in dirs)
+                Directory.Delete(dir, true);
 
             Log("перезапуск процесса " + args[0]);
             Process.Start(args[0]);
@@ -46,7 +49,7 @@ namespace autoupdate
 
         public static void Log(string line)
         {
-            string logFileName = "interceptor-update.log";
+            string logFileName = "logs\\interceptor-update.log";
 
             using (StreamWriter sw = new StreamWriter(logFileName, true))
             {

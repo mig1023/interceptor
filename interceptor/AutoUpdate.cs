@@ -18,7 +18,7 @@ namespace interceptor
 
         public static string Update(string updateFiles)
         {
-            Log.Add("необходимо обновление до версии " + GetLastVersion(updateFiles), "update");
+            Log.Add("необходимо обновление до версии " + GetLastVersion(updateFiles), "update", freeLine: true);
 
             XmlDocument updateData = new XmlDocument();
 

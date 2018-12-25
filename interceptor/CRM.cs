@@ -21,13 +21,13 @@ namespace interceptor
         public static int password = 0;
         public const int adminPassword = 0;
 
-        public static string currentLogin = "";
-        public static string cashier = "";
-        public static string loginError = "";
+        public static string currentLogin = String.Empty;
+        public static string cashier = String.Empty;
+        public static string loginError = String.Empty;
 
         public static bool CrmAuthentication(string login, string passwordLine)
         {
-            string authString = "";
+            string authString = String.Empty;
 
             string url = CRM_URL + "/vcs/cashbox_auth.htm?login=" + login +
                 "&p=" + passwordLine + "&ip=" + GetMyIP() + "&v=" + MainWindow.CURRENT_VERSION;
@@ -69,7 +69,7 @@ namespace interceptor
 
         public static string[] GetAllCenters(string login)
         {
-            string centerString = "";
+            string centerString = String.Empty;
 
             string url = CRM_URL + "/vcs/cashbox_centers.htm?login=" + login;
 
@@ -89,7 +89,7 @@ namespace interceptor
 
         public static string[] GetAllVType(string vcenterName)
         {
-            string vtypeString = "";
+            string vtypeString = String.Empty;
 
             string url = CRM_URL + "/vcs/cashbox_vtype.htm?center=" + vcenterName;
 
@@ -116,9 +116,9 @@ namespace interceptor
 
         public static string AppNumberData(string appNumber, string summ)
         {
-            string requestResult = "";
+            string requestResult = String.Empty;
 
-            string appNumberClean = Regex.Replace(appNumber, @"[^0-9]", "");
+            string appNumberClean = Regex.Replace(appNumber, @"[^0-9]", String.Empty);
 
             string fields = "app=" + appNumberClean + "&summ=" + summ;
 
@@ -145,7 +145,7 @@ namespace interceptor
         public static string SendManDocPack(List<string> manDocPack, string login, int password, int moneyType,
             string money, string center, string vType, string returnDate, bool reception = false)
         {
-            string requestResult = "";
+            string requestResult = String.Empty;
 
             string servicesList = String.Join("|", manDocPack.ToArray());
 
@@ -217,7 +217,7 @@ namespace interceptor
                 md5.ComputeHash(
                     File.ReadAllBytes(pathToFile)
                 )
-            ).Replace("-", "").ToLower();
+            ).Replace("-", String.Empty).ToLower();
 
             WebClient client = new WebClient();
             client.Proxy = WebRequest.DefaultWebProxy;

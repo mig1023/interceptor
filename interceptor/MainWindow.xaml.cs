@@ -38,7 +38,7 @@ namespace interceptor
 
         public const bool TEST_VERSION = true;
 
-        public string updateDir = "";
+        public string updateDir = String.Empty;
 
 
         public MainWindow()
@@ -205,7 +205,7 @@ namespace interceptor
 
                 Log.Add("ошибка подключения к кассе");
             }
-            else if (Cashbox.CheckCashboxTables() != "")
+            else if (Cashbox.CheckCashboxTables() != String.Empty)
             {
                 settingText2.Content = Cashbox.CheckCashboxTables();
                 returnFromErrorTo = loginPlace;
@@ -224,22 +224,23 @@ namespace interceptor
                     reportAndRessetting.Content = "перенастроить таблицы настроек";
                 }
             }
-            else if (updateData != "")
+            else if (updateData != String.Empty)
             {
                 updateDir = AutoUpdate.Update(updateData);
 
-                if (updateDir != "")
+                if (updateDir != String.Empty)
                 {
                     updateText.Content = "Програме необходимо обновиться. В процессе обновления программа будет перезапущена";
                     needUpdateRestart.Background = (Brush)new BrushConverter().ConvertFromString("#33FF66");
-                    Log.Add("необходима перезагрузка для обновления");
+
+                    Log.Add("необходимо обновление с перезапуском", "update");
                 }
                 else
                 {
                     updateText.Content = "В процессе обновления программы произошла ошибка загрузки необходимых данных!\nПожалуйста, обратитесь к системным администраторам";
                     updateButton.Visibility = Visibility.Hidden;
                     needUpdateRestart.Background = (Brush)new BrushConverter().ConvertFromString("#FFFF4E4E");
-                    Log.Add("ошибка обновления: контрольные суммы файлов не совпали");
+                    Log.Add("ошибка обновления: контрольные суммы файлов не совпали", "update");
                 }
 
                 returnFromErrorTo = loginPlace;
@@ -265,7 +266,7 @@ namespace interceptor
 
         private void returnFromError_Click(object sender, RoutedEventArgs e)
         {
-            password.Password = "";
+            password.Password = String.Empty;
 
             MoveCanvas(
                 moveCanvas: returnFromErrorTo,
@@ -448,8 +449,8 @@ namespace interceptor
             moneyForDHL.Text = "0.00";
             moneyForCheck.Text = "0.00";
             moneyForInsurance.Text = "0.00";
-            total.Content = "";
-            totalR.Content = "";
+            total.Content = String.Empty;
+            totalR.Content = String.Empty;
         }
 
         private void CleanRCheck()
@@ -466,9 +467,9 @@ namespace interceptor
             manDocPack.Clear();
 
             moneyForRCheck.Text = "0.00";
-            total.Content = "";
-            totalR.Content = "";
-            appNumber.Text = "";
+            total.Content = String.Empty;
+            totalR.Content = String.Empty;
+            appNumber.Text = String.Empty;
         }
 
         private void ShowError(Canvas from, string error)
@@ -660,8 +661,8 @@ namespace interceptor
 
         private void appNumber_KeyUp(object sender, KeyEventArgs e)
         {
-            appNumber.Text = Regex.Replace(appNumber.Text, @"[^0-9/]", "");
-            string appNumberClean = Regex.Replace(appNumber.Text, @"[^0-9]", "");
+            appNumber.Text = Regex.Replace(appNumber.Text, @"[^0-9/]", String.Empty);
+            string appNumberClean = Regex.Replace(appNumber.Text, @"[^0-9]", String.Empty);
 
             if ((appNumberClean.Length == 15) || (appNumberClean.Length == 9))
             {
@@ -681,7 +682,7 @@ namespace interceptor
 
         private void closeRCheck_Click(object sender, RoutedEventArgs e)
         {
-            string appNumberClean = Regex.Replace(appNumber.Text, @"[^0-9]", "");
+            string appNumberClean = Regex.Replace(appNumber.Text, @"[^0-9]", String.Empty);
 
             string sendingSuccess = CRM.SendManDocPack(
                 manDocPack, login.Text, CRM.password, 1, moneyForRCheck.Text,
@@ -761,7 +762,7 @@ namespace interceptor
 
         private void appNumberClean_Click(object sender, RoutedEventArgs e)
         {
-            appNumber.Text = "";
+            appNumber.Text = String.Empty;
             CleanRCheck();
             appNumber_KeyUp(null, null);
             appNumber.Focus();

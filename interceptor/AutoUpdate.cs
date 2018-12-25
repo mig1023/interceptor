@@ -18,7 +18,7 @@ namespace interceptor
 
         public static string Update(string updateFiles)
         {
-            Log.Add("необходимо обновление до версии " + GetLastVersion(updateFiles));
+            Log.Add("необходимо обновление до версии " + GetLastVersion(updateFiles), "update");
 
             XmlDocument updateData = new XmlDocument();
 
@@ -34,14 +34,14 @@ namespace interceptor
 
                 webClient.DownloadFile(URL_UPDATE + name, UPDATE_DIR + name);
 
-                Log.Add("скачан файл: " + name);
+                Log.Add("скачан файл: " + name, "update");
 
                 string[] lines = System.IO.File.ReadAllLines(UPDATE_DIR + name);
 
-                string crcCheck = CheckRequest.CreateMD5(string.Join("", lines));
+                string crcCheck = CheckRequest.CreateMD5(string.Join(String.Empty, lines));
 
                 if (crcCheck != node["CRC"].InnerText)
-                    return "";
+                    return String.Empty;
             }
 
             return UPDATE_DIR;
@@ -49,7 +49,7 @@ namespace interceptor
 
         public static void StartUpdater()
         {
-            Log.Add("запущен процесс обновления и перезапуска");
+            Log.Add("запущен процесс обновления и перезапуска", "update");
 
             Process.Start("autoupdate.exe", "interceptor.exe " + UPDATE_DIR);
             Process.GetCurrentProcess().Kill();
@@ -57,7 +57,7 @@ namespace interceptor
 
         public static string NeedUpdating()
         {
-            string versionData = "";
+            string versionData;
 
             try
             {
@@ -65,25 +65,23 @@ namespace interceptor
             }
             catch (WebException e)
             {
-                Log.AddWeb("(ошибка проверки версии обновления) " + e.Message);
+                Log.AddWeb(e.Message, "update");
 
-                return "";
+                return String.Empty;
             }
 
             string version = GetLastVersion(versionData);
 
-            if (version == "")
-                return "";
-            else if (version == MainWindow.CURRENT_VERSION)
-                return "";
+            if ((version == String.Empty) || (version == MainWindow.CURRENT_VERSION))
+                return String.Empty;
             else
                 return versionData;
         }
 
         public static string GetLastVersion(string from)
         {
-            if (from == "")
-                return "";
+            if (from == String.Empty)
+                return String.Empty;
 
             XmlDocument xmlData = new XmlDocument();
 

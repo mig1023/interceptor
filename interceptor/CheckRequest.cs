@@ -21,7 +21,7 @@ namespace interceptor
 
         public static bool CheckLoginInRequest(string from)
         {
-            if (from == "")
+            if (from == String.Empty)
                 return false;
 
             XmlDocument request = new XmlDocument();
@@ -36,7 +36,7 @@ namespace interceptor
 
         public static bool CheckXml(string from)
         {
-            if (from == "")
+            if (from == String.Empty)
                 return false;
 
             XmlDocument request = new XmlDocument();
@@ -48,12 +48,12 @@ namespace interceptor
 
             var root = request.DocumentElement;
 
-            MD5_LINE_TMP = "";
+            MD5_LINE_TMP = String.Empty;
 
             string md5lineTMP = AllXmlField(root);
 
             byte[] bytes = Encoding.GetEncoding(1251).GetBytes(md5lineTMP);
-            string byteLine = "";
+            string byteLine = String.Empty;
 
             foreach (byte b in bytes)
                 byteLine += b.ToString() + " ";
@@ -66,7 +66,7 @@ namespace interceptor
         private static string AllXmlField(XmlElement item, int indent = 0)
         {
             if (item.LocalName == "CRC")
-                return "";
+                return String.Empty;
 
             foreach (var child in item.ChildNodes)
             {

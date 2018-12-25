@@ -14,6 +14,8 @@ namespace interceptor
 {
     class Log
     {
+        const string UPDATE_LOGS_DIR = "Logs";
+
         public static void AddWithCode(string line, string logType = "main",
             bool freeLine = false, bool freeLineAfter = false)
         {
@@ -24,26 +26,15 @@ namespace interceptor
         public static void AddWeb(string line, string logType = "main", bool freeLine = false,
             bool freeLineAfter = false)
         {
-            Add("Ошибка доступа к серверу: " + line, logType, freeLine, freeLineAfter);
+            Add("ошибка доступа к серверу: " + line, logType, freeLine, freeLineAfter);
         }
 
         public static void Add(string line, string logType = "main",
             bool freeLine = false, bool freeLineAfter = false)
         {
-            string logFileName;
+            LogDirectory();
 
-            switch (logType)
-            {
-                case "main":
-                    logFileName = "shtrih-interceptor-main.log";
-                    break;
-                case "http":
-                    logFileName = "shtrih-interceptor-http.log";
-                    break;
-                default:
-                    logFileName = "shtrih-interceptor-etc.log";
-                    break;
-            } 
+            string logFileName = UPDATE_LOGS_DIR + "\\interceptor-" + logType + ".log";
 
             using (StreamWriter sw = new StreamWriter(logFileName, true))
             {
@@ -66,7 +57,11 @@ namespace interceptor
         {
             XmlSerializer DocPackLog = new XmlSerializer(typeof(DocPack));
 
-            using (StreamWriter sw = new StreamWriter("shtrih-interceptor-doc.log", true))
+            LogDirectory();
+
+            string logFileName = UPDATE_LOGS_DIR + "\\interceptor-doc.log";
+
+            using (StreamWriter sw = new StreamWriter(logFileName, true))
             {
                 WriteLine(sw);
                 WriteLine(sw, date: true);
@@ -78,8 +73,14 @@ namespace interceptor
 
         public static void WriteLine(StreamWriter sw, string line = "", bool date = false)
         {
-            string dateLine = (date ? DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss") : "");
-            sw.WriteLine(dateLine + (line != "" ? " " : "") + line);
+            string dateLine = (date ? DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss") : String.Empty);
+            sw.WriteLine(dateLine + (line != String.Empty ? " " : String.Empty) + line);
+        }
+
+        public static void LogDirectory()
+        {
+            if (Directory.Exists(UPDATE_LOGS_DIR))
+                Directory.CreateDirectory(UPDATE_LOGS_DIR);
         }
 
         public static void ShowCurrentStatus(string line)

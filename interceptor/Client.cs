@@ -37,7 +37,7 @@ namespace interceptor
 
         public Client(TcpClient Client)
         {
-            string Request = "";
+            string Request = String.Empty;
             byte[] Buffer = new byte[1024];
             int Count;
 

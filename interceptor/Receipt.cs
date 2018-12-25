@@ -20,6 +20,8 @@ namespace interceptor
         static int CURRENT_LINE = 0;
         static int CURRENT_ROW = 0;
 
+        const string RECEIPT_DIR = "receipts";
+
         static Document document;
         static PdfContentByte cb;
 
@@ -46,7 +48,10 @@ namespace interceptor
 
             int receiptIndex = int.Parse(appData[5]) + 1;
 
-            string fileName = appData[2] + "_D_" + receiptIndex.ToString() + ".pdf";
+            if (!Directory.Exists(RECEIPT_DIR))
+                Directory.CreateDirectory(RECEIPT_DIR);
+
+            string fileName = RECEIPT_DIR + "\\" + appData[2] + "_D_" + receiptIndex.ToString() + ".pdf";
 
             document = new Document();
             FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);

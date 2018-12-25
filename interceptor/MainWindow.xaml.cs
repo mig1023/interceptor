@@ -231,7 +231,7 @@ namespace interceptor
                 if (updateDir != String.Empty)
                 {
                     updateText.Content = "Програме необходимо обновиться. В процессе обновления программа будет перезапущена";
-                    needUpdateRestart.Background = (Brush)new BrushConverter().ConvertFromString("#33FF66");
+                    needUpdateRestart.Background = (Brush)new BrushConverter().ConvertFromString("#28CC51");
 
                     Log.Add("необходимо обновление с перезапуском", "update");
                 }

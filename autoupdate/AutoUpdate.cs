@@ -27,23 +27,18 @@ namespace autoupdate
                 string fileNewName = Path.GetFileName(file);
 
                 if (File.Exists(fileNewName))
-                {
-                    Log("удаление старого файла " + fileNewName);
                     File.Delete(fileNewName);
-                }
 
                 Log("перемещение нового файла " + fileNewName);
                 File.Move(file, fileNewName);
             }
-
-            Log("удаление папок обновлений");
 
             string[] dirs = Directory.GetDirectories(Directory.GetCurrentDirectory(), "update_*");
 
             foreach (string dir in dirs)
                 Directory.Delete(dir, true);
 
-            Log("перезапуск процесса " + args[0]);
+            Log("перезапуск " + interceptor);
             Process.Start(args[0]);
         }
 

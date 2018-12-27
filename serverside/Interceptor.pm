@@ -1154,6 +1154,8 @@ sub cashbox_payment_control
 		WHERE DocPack.AgreementNo = ?",
 		$param->{ docnum }
 	);
+	
+	return cash_box_output( $self, "ERROR|Договор не найден по номеру" ) unless $statuses->[0]->{ ID };
 
 	my $all_status_is_ok = 1;
 	

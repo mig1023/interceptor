@@ -271,10 +271,7 @@ namespace interceptor
 
             string[] control = controlString.Split('|');
 
-            if (control[0] == "OK")
-                Log.Add("договор проверен на статус оплаты: " + control[1]);
-            else
-                Log.Add("ошибка проверки статуса договора: " + control[1]);
+            Log.Add("контроль оплаты: " + control[1]);
         }
     }
 }

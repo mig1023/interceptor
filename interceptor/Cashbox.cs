@@ -265,7 +265,7 @@ namespace interceptor
 
                 Server.ShowActivity(busy: false);
             }
-            else //if (!MainWindow.TEST_VERSION)
+            else if (!MainWindow.TEST_VERSION)
             {
                 repeatPrintingTimer.Enabled = true;
                 repeatPrintingTimer.Start();

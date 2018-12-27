@@ -1130,6 +1130,69 @@ sub get_access_for_cashbox_payment
 	return ( $interceptor_ip =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/ ? 1 : 0 );
 }
 
+sub cashbox_payment_control
+# //////////////////////////////////////////////////
+{
+	my ( $self, $task, $id, $template, $slist, $authip, $clientip ) = @_;
+	
+	my $vars = $self->{ 'VCS::Vars' };
+	
+	my $param = {};
+	
+	$param->{ $_ } = ( $vars->getparam( $_ ) || '' ) for ( 'login', 'p', 'docnum' );
+	
+	return cash_box_output( $self, "ERROR|Ошибка параметров" )
+		if !$param->{ login } or !$param->{ p } or !$param->{ docnum };
+		
+	$param->{ docnum } =~ s/[^\d]+//g;	
+
+	my $statuses = $vars->db->selallkeys("	
+		SELECT DocPack.ID, DocPackList.ID as DID, PStatus, Status
+		FROM DocPack
+		JOIN DocPackInfo ON DocPack.ID = DocPackInfo.PackID
+		JOIN DocPackList ON DocPackInfo.ID = DocPackList.PackInfoID
+		WHERE DocPack.AgreementNo = ?",
+		$param->{ docnum }
+	);
+
+	my $all_status_is_ok = 1;
+	
+	my $dpacklist_array = [];
+	
+	for ( @$statuses ) {
+	
+		$all_status_is_ok = 0 if $_->{ PStatus } != 2 or $_->{ Status } != 2;
+		
+		push( @$dpacklist_array, $_->{ DID } );
+	}
+	
+	return cash_box_output( $self, "OK|Договор был оплачен" ) if $all_status_is_ok;	
+	
+	my ( $login, $name, $surname, $secname ) = $vars->db->sel1("
+		SELECT Login, UserName, UserLName, UserSName
+		FROM Users
+		WHERE Login = ? AND Pass = ? AND
+		(RoleID = 8 OR RoleID = 5 OR RoleID = 2)
+		AND Locked = 0",
+		$param->{ login }, $param->{ p }
+	);
+
+	return cash_box_output( $self, "ERROR|Неверный логин или пароль" ) unless $login;
+	
+	$vars->db->query("
+		UPDATE DocPack SET PStatus = 2 WHERE ID = ? AND PStatus = 1", {},
+		$statuses->[0]->{ ID }
+	);
+	
+	my $dpacklist = join( "','", @$dpacklist_array );
+
+	$vars->db->query("
+		UPDATE DocPackList SET Status = 2, SDate = now() WHERE ID IN ('$dpacklist') AND Status = 1"
+	);
+	
+	return cash_box_output( $self, "OK|Проблемы решены" );
+}
+
 sub cash_box_output
 # //////////////////////////////////////////////////
 {

@@ -22,6 +22,7 @@ namespace interceptor
         public const int adminPassword = 0;
 
         public static string currentLogin = String.Empty;
+        public static string currentPassword = String.Empty;
         public static string cashier = String.Empty;
         public static string loginError = String.Empty;
 
@@ -209,8 +210,8 @@ namespace interceptor
         {
             string url = CRM_URL + "/vcs/cashbox_upload.htm";
 
-            Log.Add("Отправлена информация в БД об акте для AppID " + appID);
-            Log.Add("Копирование: " + xerox + " Анкета: " + form + " Распечатка: " + print + " Фото: " + photo);
+            Log.Add("отправлена информация в БД об акте для AppID " + appID);
+            Log.Add("копирование: " + xerox + " Анкета: " + form + " Распечатка: " + print + " Фото: " + photo);
 
             var md5 = System.Security.Cryptography.MD5.Create();
             string md5sum = BitConverter.ToString(
@@ -247,9 +248,33 @@ namespace interceptor
             string[] serverResult = System.Text.Encoding.UTF8.GetString(e.Result).Split('|');
 
             if (e.Error == null && serverResult[0] == "OK")
-                Log.Add("Акт успешно загружен на сервер");
+                Log.Add("акт успешно загружен на сервер");
             else
-                Log.Add($"Ошибка загрузки акта на сервер: {e.Error}");
+                Log.Add($"ошибка загрузки акта на сервер: {e.Error}");
+        }
+
+        public static void CashboxPaymentControl(string agrNumber)
+        {
+            string controlString = String.Empty;
+
+            string url = CRM_URL + "/individuals/cashbox_payment_control.htm?" +
+                "docnum=" + agrNumber + "&login="+ currentLogin + "&p=" + currentPassword;
+
+            try
+            {
+                controlString = GetHtml(url);
+            }
+            catch (WebException e)
+            {
+                Log.AddWeb("(ошибка контроля оплаты) " + e.Message);
+            }
+
+            string[] control = controlString.Split('|');
+
+            if (control[0] == "OK")
+                Log.Add("договор проверен на статус оплаты: " + control[1]);
+            else
+                Log.Add("ошибка проверки статуса договора: " + control[1]);
         }
     }
 }

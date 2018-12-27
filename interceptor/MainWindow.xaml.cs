@@ -34,7 +34,7 @@ namespace interceptor
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
         public Canvas returnFromErrorTo;
 
-        public const string CURRENT_VERSION = "1.e";
+        public const string CURRENT_VERSION = "1.e2";
 
         public const bool TEST_VERSION = true;
 
@@ -189,7 +189,9 @@ namespace interceptor
 
             string updateData = AutoUpdate.NeedUpdating();
 
-            if (!CRM.CrmAuthentication(login.Text, CRM.GenerateMySQLHash(password.Password)))
+            string passwordHash = CRM.GenerateMySQLHash(password.Password);
+
+            if (!CRM.CrmAuthentication(login.Text, passwordHash))
             {
                 loginFailText.Content = CRM.loginError;
                 returnFromErrorTo = loginPlace;
@@ -252,6 +254,7 @@ namespace interceptor
                 Server.StartServer();
                 switchOn.Background = Brushes.LimeGreen;
                 CRM.currentLogin = login.Text;
+                CRM.currentPassword = passwordHash;
 
                 status10.Content = login.Text.Replace("_", "__");
             }

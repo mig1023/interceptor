@@ -15,6 +15,7 @@ namespace interceptor
 
         public static System.Timers.Timer repeatPrintingTimer = new System.Timers.Timer(5000);
         static int currentDrvPassword = 0;
+        static string currentDocPack = String.Empty;
 
         public static DocPack manDocPackForPrinting;
         public static decimal manDocPackSumm;
@@ -197,6 +198,7 @@ namespace interceptor
             bool returnSale = false, decimal? MoneySumm = null)
         {
             currentDrvPassword = doc.CashierPass;
+            currentDocPack = doc.AgrNumber;
 
             if (MoneyType != -1)
                 doc.MoneyType = MoneyType;
@@ -263,7 +265,7 @@ namespace interceptor
 
                 Server.ShowActivity(busy: false);
             }
-            else if (!MainWindow.TEST_VERSION)
+            else //if (!MainWindow.TEST_VERSION)
             {
                 repeatPrintingTimer.Enabled = true;
                 repeatPrintingTimer.Start();
@@ -287,6 +289,8 @@ namespace interceptor
             if (printSuccess == 0) {
                 repeatPrintingTimer.Enabled = false;
                 repeatPrintingTimer.Stop();
+
+                CRM.CashboxPaymentControl(currentDocPack);
 
                 Server.ShowActivity(busy: false);
             }

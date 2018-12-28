@@ -1181,6 +1181,8 @@ sub cashbox_payment_control
 
 	return cash_box_output( $self, "ERROR|Неверный логин или пароль" ) unless $login;
 	
+	$vars->db->query( "LOCK TABLES DocPack WRITE, DocPackList WRITE" );
+	
 	$vars->db->query("
 		UPDATE DocPack SET PStatus = 2 WHERE ID = ? AND PStatus = 1", {},
 		$statuses->[0]->{ ID }
@@ -1191,6 +1193,8 @@ sub cashbox_payment_control
 	$vars->db->query("
 		UPDATE DocPackList SET Status = 2, SDate = now() WHERE ID IN ('$dpacklist') AND Status = 1"
 	);
+	
+	$vars->db->query( "UNLOCK TABLES" );
 	
 	return cash_box_output( $self, "OK|Проблемы решены" );
 }

@@ -32,22 +32,29 @@ namespace interceptor
         public static void Add(string line, string logType = "main",
             bool freeLine = false, bool freeLineAfter = false)
         {
-            LogDirectory();
-
-            string logFileName = UPDATE_LOGS_DIR + "\\interceptor-" + logType + ".log";
-
-            using (StreamWriter sw = new StreamWriter(logFileName, true))
+            try
             {
-                if (freeLine)
-                    WriteLine(sw, date: true);
+                LogDirectory();
 
-                WriteLine(sw, line: line, date: true);
+                string logFileName = UPDATE_LOGS_DIR + "\\interceptor-" + logType + ".log";
 
-                if (logType == "http")
-                    WriteLine(sw);
+                using (StreamWriter sw = new StreamWriter(logFileName, true))
+                {
+                    if (freeLine)
+                        WriteLine(sw, date: true);
 
-                if (freeLineAfter)
-                    WriteLine(sw, date: true);
+                    WriteLine(sw, line: line, date: true);
+
+                    if (logType == "http")
+                        WriteLine(sw);
+
+                    if (freeLineAfter)
+                        WriteLine(sw, date: true);
+                }
+            }
+            finally
+            {
+                // nothing to do here
             }
 
             if (logType == "main") ShowCurrentStatus(line);
@@ -57,17 +64,24 @@ namespace interceptor
         {
             XmlSerializer DocPackLog = new XmlSerializer(typeof(DocPack));
 
-            LogDirectory();
-
-            string logFileName = UPDATE_LOGS_DIR + "\\interceptor-doc.log";
-
-            using (StreamWriter sw = new StreamWriter(logFileName, true))
+            try
             {
-                WriteLine(sw);
-                WriteLine(sw, date: true);
-                WriteLine(sw);
-                DocPackLog.Serialize(sw, docForLog);
-                WriteLine(sw);
+                LogDirectory();
+
+                string logFileName = UPDATE_LOGS_DIR + "\\interceptor-doc.log";
+
+                using (StreamWriter sw = new StreamWriter(logFileName, true))
+                {
+                    WriteLine(sw);
+                    WriteLine(sw, date: true);
+                    WriteLine(sw);
+                    DocPackLog.Serialize(sw, docForLog);
+                    WriteLine(sw);
+                }
+            }
+            finally
+            {
+                // nothing to do here
             }
         }
 

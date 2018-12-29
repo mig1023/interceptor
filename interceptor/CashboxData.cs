@@ -20,14 +20,14 @@ namespace interceptor
                     tableNumber = 6,
                     fieldNumber = 1,
                     rowNumber = 1,
-                    fieldValue = "1800",
+                    fieldValue = "2000",
                     description = "НДС/1/значение",
                 },
                 new CashboxData() {
                     tableNumber = 6,
                     fieldNumber = 2,
                     rowNumber = 1,
-                    fieldValue = "НДС 18%",
+                    fieldValue = "НДС 20%",
                     description = "НДС/1/наименование",
                 },
                 new CashboxData() {

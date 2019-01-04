@@ -488,12 +488,12 @@ namespace interceptor
             );
         }
 
-        public void CheckError(string[] result, Canvas place, string error)
+        public void CheckError(string[] result, Canvas place)
         {
             if (result[0] == "OK")
                 CleanCheck();
             else
-                ShowError(place, error + ": " + result[1]);
+                ShowError(place, "Ошибка кассы: " + result[1]);
         }
 
         private void printCheckMoney_Click(object sender, RoutedEventArgs e)
@@ -504,7 +504,7 @@ namespace interceptor
                 Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money
             ).Split(':');
 
-            CheckError(result, checkPlace, "Ошибка кассы");
+            CheckError(result, checkPlace);
         }
 
         private void printCheckCard_Click(object sender, RoutedEventArgs e)
@@ -513,7 +513,7 @@ namespace interceptor
                 Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
             ).Split(':');
 
-            CheckError(result, checkPlace, "Ошибка кассы");
+            CheckError(result, checkPlace);
         }
 
         private void returnSale_Click(object sender, RoutedEventArgs e)
@@ -522,7 +522,7 @@ namespace interceptor
                 Cashbox.manDocPackForPrinting, returnSale: true, MoneySumm: Cashbox.manDocPackSumm
             ).Split(':');
 
-            CheckError(result, checkPlace, "Ошибка кассы");
+            CheckError(result, checkPlace);
         }
 
         private void password_KeyDown(object sender, KeyEventArgs e)
@@ -740,7 +740,7 @@ namespace interceptor
                 Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money
             ).Split(':');
 
-            CheckError(result, receptionPlace, "Ошибка кассы");
+            CheckError(result, receptionPlace);
 
             if (result[0] == "OK")
                 getAppInfoAndPrintRecepeit(Cashbox.manDocPackSumm.ToString());
@@ -752,7 +752,7 @@ namespace interceptor
                 Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
             ).Split(':');
 
-            CheckError(result, receptionPlace, "Ошибка кассы");
+            CheckError(result, receptionPlace);
 
             if (result[0] == "OK")
                 getAppInfoAndPrintRecepeit(Cashbox.manDocPackSumm.ToString());
@@ -778,7 +778,7 @@ namespace interceptor
                 Cashbox.manDocPackForPrinting, returnSale: true, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
             ).Split(':');
 
-            CheckError(result, checkPlace, "Ошибка кассы");
+            CheckError(result, checkPlace);
         }
 
         private void updateButton_Click(object sender, RoutedEventArgs e)

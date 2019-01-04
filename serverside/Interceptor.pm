@@ -291,7 +291,7 @@ sub get_service_code
 	my $country = '(ITA';
 		
 	my $center_id = {
-		1	=> '00', # MSK
+		1	=> '00',
 		2	=> '01',
 		9	=> '02',
 		8	=> '03',
@@ -315,12 +315,12 @@ sub get_service_code
 		25	=> '25',
 		24	=> '26',
 		26	=> '27',
-		31	=> '91', # VIP
-		32	=> '91', # TP
-		40	=> '92', # VIP MSK K
-		41	=> '92', # MSK PT
-		44	=> '92', # MSK K
-		45	=> '92', # MSK VIP C
+		31	=> '91',
+		32	=> '91',
+		40	=> '92',
+		41	=> '92',
+		44	=> '92',
+		45	=> '92',
 	};
 	
 	my $serv_group = {
@@ -332,7 +332,6 @@ sub get_service_code
 		'print'		=> '503',
 		'photo'		=> '504',
 		'vip'		=> '505',
-
 		'service1' 	=> '506',
 		'service2' 	=> '704',
 		'service3' 	=> '000',
@@ -820,8 +819,7 @@ sub download_receipt
 	my $file_id = $vars->getparam('rid');
 	
 	my $file = $vars->db->selallkeys("
-		SELECT CRC, OriginalName FROM Cashboxes_receipt 
-		WHERE ID = ?", $file_id
+		SELECT CRC, OriginalName FROM Cashboxes_receipt WHERE ID = ?", $file_id
 	)->[0];
    
 	my $file_path = $gconfig->{ tmp_folder } . "cashbox_receipt/" . $file->{ CRC };
@@ -891,7 +889,7 @@ sub cash_box_upload
 	   
 		unlink $up_name;
                
-		print "ERROR|Ошибка передачи файла";
+		print "ERROR|Ошибка загрузки файла";
 	}
 	else {
 		$vars->db->query("
@@ -1163,7 +1161,7 @@ sub cashbox_payment_control
 	
 	for ( @$statuses ) {
 	
-		$all_status_is_ok = 0 if $_->{ PStatus } != 2 or $_->{ Status } != 2;
+		$all_status_is_ok = 0 if $_->{ PStatus } == 1 or $_->{ Status } == 1;
 		
 		push( @$dpacklist_array, $_->{ DID } );
 	}
@@ -1196,7 +1194,7 @@ sub cashbox_payment_control
 	
 	$vars->db->query( "UNLOCK TABLES" );
 	
-	return cash_box_output( $self, "OK|Проблемы решены" );
+	return cash_box_output( $self, "OK|Договор переведён в статус оплаченный" );
 }
 
 sub cash_box_output

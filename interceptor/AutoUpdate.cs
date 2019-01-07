@@ -72,7 +72,7 @@ namespace interceptor
 
             string version = GetLastVersion(versionData);
 
-            if ((version == String.Empty) || (version == MainWindow.CURRENT_VERSION))
+            if ((version == String.Empty) || (version == MainWindow.CURRENT_VERSION_CLEAN))
                 return String.Empty;
             else
                 return versionData;

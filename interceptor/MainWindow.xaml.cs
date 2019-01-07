@@ -34,9 +34,12 @@ namespace interceptor
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
         public Canvas returnFromErrorTo;
 
-        public const string CURRENT_VERSION = "1.e2";
-
         public const bool TEST_VERSION = true;
+
+        public const string CURRENT_VERSION_CLEAN = "1.e2";
+
+        public static string CURRENT_VERSION =
+            CURRENT_VERSION_CLEAN + (TEST_VERSION ? "-test" : String.Empty);
 
         public string updateDir = String.Empty;
 

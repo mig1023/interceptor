@@ -48,7 +48,10 @@ sub send_docpack
 	if ( !$data ) {
 	
 		my $docobj = VCS::Docs::docs->new( 'VCS::Docs::docs', $vars );
+		
 		my $error = $docobj->getDocData( \$data, $docid, 'individuals' );
+		
+		return ( "ERR3", "Ошибка доступа к данным договора" ) unless $error eq '';
 	}	
 	
 	return ( "ERR3", "Договор юрлица не может быть оплачен" ) if $data->{ jurid };
@@ -190,7 +193,7 @@ sub get_date
 	
 	$year += 1900;
 	
-	$mon++;
+	$mon += 1;
 	
 	for ( $sec, $min, $hour, $mday, $mon, $year ) { 
 	
@@ -373,6 +376,7 @@ sub doc_services
 	if ( $data->{ shipping } == 1 ) {
 
 		$dhlsum = $data->{ shipsum };
+		
 		$shcnt = 1;
 	}
 
@@ -382,26 +386,26 @@ sub doc_services
 
 		next if $ak->{ Status } == 7;
 
-		$apcnt++ unless $data->{ direct_docpack } and $ak->{ Status } != 1;
+		$apcnt += 1 unless $data->{ direct_docpack } and $ak->{ Status } != 1;
 		
 		if ( !$data->{ direct_docpack } or $ak->{ direct_concil } ) {
 		
 			if ( $ak->{ Concil } ) {
 			
-				$cntncon++;
+				$cntncon += 1;
 			}
 			else {
 				if ( $ak->{ AgeCatA } ) {
 				
-					$cntage++;
+					$cntage += 1;
 				}
 				else {
 					if ( $ak->{ iNRes } ) {
 					
-						$cntnres++;
+						$cntnres += 1;
 					}
 					else {					
-						$cntres++;
+						$cntres += 1;
 					}
 				}
 			}
@@ -409,12 +413,13 @@ sub doc_services
 
 		if ( ( $data->{ sms_status } == 2 ) && ( $ak->{ MobileNums } ne '' ) ) {
 		
-			$smscnt++;
+			$smscnt += 1;
 		}
 		
 		if ( ( $data->{ shipping } == 2 ) && ( $ak->{ ShipAddress } ne '' ) ) {
 		
-			$shcnt++;
+			$shcnt += 1;
+			
 			$dhlsum += $ak->{ RTShipSum };
 		}
 	}
@@ -816,11 +821,15 @@ sub download_receipt
 	
 	my $gconfig = $vars->getConfig( 'general' );
 	
-	my $file_id = $vars->getparam('rid');
+	my $file_id = $vars->getparam('rid') || undef;
+	
+	return cash_box_output( $self, "Ошибка параметров загрузки акта" ) unless $file_id;
 	
 	my $file = $vars->db->selallkeys("
 		SELECT CRC, OriginalName FROM Cashboxes_receipt WHERE ID = ?", $file_id
 	)->[0];
+	
+	return cash_box_output( $self, "Акт не найден в системе" ) unless $file->{ CRC };
    
 	my $file_path = $gconfig->{ tmp_folder } . "cashbox_receipt/" . $file->{ CRC };
 
@@ -828,9 +837,8 @@ sub download_receipt
 	
 	open my $filefile, '<', $file_path or die;
 	
-	while ( <$filefile> ) {
-		$content .= $_;
-	}
+	$content .= $_ while ( <$filefile> );
+
 	close $filefile;
 	
 	print "HTTP/1.1 200 Ok\n";

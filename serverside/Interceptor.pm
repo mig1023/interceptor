@@ -58,8 +58,6 @@ sub send_docpack
 	
 	$login = $vars->get_session->{'login'} unless $login;
 	
-	my $pass = '';
-	
 	if ( !$callback && !$pass ) {
 	
 		return ( "ERR3", "Неверные настройки данных подключения" ) unless $vars->get_session->{ interceptor };

@@ -21,28 +21,28 @@ namespace interceptor
                     fieldNumber = 1,
                     rowNumber = 1,
                     fieldValue = "2000",
-                    description = "НДС/1/значение",
+                    description = "неверное значение НДС (ожидалось 20%)",
                 },
                 new CashboxData() {
                     tableNumber = 6,
                     fieldNumber = 2,
                     rowNumber = 1,
                     fieldValue = "НДС 20%",
-                    description = "НДС/1/наименование",
+                    description = "неверное наименование поля НДС",
                 },
                 new CashboxData() {
                     tableNumber = 6,
                     fieldNumber = 1,
                     rowNumber = 2,
                     fieldValue = "0",
-                    description = "НДС/2/значение",
+                    description = "неверное значение 'без НДС' (ожидалось 0%)",
                 },
                 new CashboxData() {
                     tableNumber = 6,
                     fieldNumber = 2,
                     rowNumber = 2,
                     fieldValue = "без НДС",
-                    description = "НДС/2/наименование",
+                    description = "неверное наименование поля 'без НДС'",
                 },
 
                 new CashboxData() {
@@ -50,14 +50,14 @@ namespace interceptor
                     fieldNumber = 1,
                     rowNumber = 1,
                     fieldValue = "НАЛИЧНЫМИ",
-                    description = "оплата/1",
+                    description = "неверное наименование поля типов оплаты (наличные)",
                 },
                 new CashboxData() {
                     tableNumber = 5,
                     fieldNumber = 1,
                     rowNumber = 2,
                     fieldValue = "БЕЗНАЛИЧНЫМИ",
-                    description = "оплата/2",
+                    description = "неверное наименование поля типов оплаты (безналичные)",
                 },
 
                 new CashboxData() {
@@ -65,28 +65,28 @@ namespace interceptor
                     fieldNumber = 1,
                     rowNumber = 1,
                     fieldValue = "(услуги сервисные)",
-                    description = "отделы/1",
+                    description = "неверное наименование поля услуг (сервисные)",
                 },
                 new CashboxData() {
                     tableNumber = 7,
                     fieldNumber = 1,
                     rowNumber = 2,
                     fieldValue = "(консульский сбор)",
-                    description = "отделы/2",
+                    description = "неверное наименование поля услуг (консульский)",
                 },
                 new CashboxData() {
                     tableNumber = 7,
                     fieldNumber = 1,
                     rowNumber = 3,
                     fieldValue = "(ресепшен)",
-                    description = "отделы/3",
+                    description = "неверное наименование поля услуг (ресепшен)",
                 },
                 new CashboxData() {
                     tableNumber = 7,
                     fieldNumber = 1,
                     rowNumber = 4,
                     fieldValue = "(страхование)",
-                    description = "отделы/4",
+                    description = "неверное наименование поля услуг (страхование)",
                 },
         };
     }

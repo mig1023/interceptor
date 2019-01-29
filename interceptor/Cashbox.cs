@@ -165,7 +165,7 @@ namespace interceptor
             return true;
         }
 
-        public static string CheckCashboxTables()
+        public static string[] CheckCashboxTables()
         {
             List<string> tablesCorrupted = new List<string>();
 
@@ -173,7 +173,7 @@ namespace interceptor
                 if (FailCashboxField(field.tableNumber, field.fieldNumber, field.rowNumber, field.fieldValue))
                     tablesCorrupted.Add(field.description);
 
-            return string.Join(", ", tablesCorrupted.ToArray());
+            return tablesCorrupted.ToArray();
         }
 
         public static void PrintLine(string text = "", bool line = false)

@@ -194,6 +194,8 @@ namespace interceptor
 
             string passwordHash = CRM.GenerateMySQLHash(password.Password);
 
+            string[] tablesChecked = Cashbox.CheckCashboxTables();
+
             if (!CRM.CrmAuthentication(login.Text, passwordHash))
             {
                 loginFailText.Content = CRM.loginError;
@@ -210,9 +212,16 @@ namespace interceptor
 
                 Log.Add("ошибка подключения к кассе");
             }
-            else if (Cashbox.CheckCashboxTables() != String.Empty)
+            else if (tablesChecked.Count() != 0)
             {
-                settingText2.Content = Cashbox.CheckCashboxTables();
+                int index = 0;
+
+                foreach (string field in tablesChecked)
+                {
+                    index += 1;
+                    settingText2.Items.Add(index.ToString() + ". " + field);
+                }
+                    
                 returnFromErrorTo = loginPlace;
                 canvasToGo = cashboxSettingsFail;
 

@@ -13,10 +13,15 @@ namespace interceptor
 {
     class CRM
     {
-        const string CRM_URL_FIGHT = "127.0.0.1";
         const string CRM_URL_TEST = "127.0.0.1";
+
+        const string CRM_URL_FIGHT = "127.0.0.1";
         public const string CRM_URL_BASE = (MainWindow.TEST_VERSION ? CRM_URL_TEST : CRM_URL_FIGHT);
         public const string CRM_URL = "http://" + CRM_URL_BASE;
+
+        const string CRM_URL_FIGHT_RUSERV = "127.0.0.1";
+        public const string CRM_URL_BASE_RUSERV = (MainWindow.TEST_VERSION ? CRM_URL_TEST : CRM_URL_FIGHT_RUSERV);
+        public const string CRM_URL_RUSERV = "http://" + CRM_URL_BASE_RUSERV;
 
         public static int password = 0;
         public const int adminPassword = 0;
@@ -257,7 +262,7 @@ namespace interceptor
         {
             string controlString = String.Empty;
 
-            string url = CRM_URL + "/individuals/cashbox_payment_control.htm?" +
+            string url = CRM_URL_RUSERV + "/individuals/cashbox_payment_control.htm?" +
                 "docnum=" + agrNumber + "&login="+ currentLogin + "&p=" + currentPassword;
 
             try

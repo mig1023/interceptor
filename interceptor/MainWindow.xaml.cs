@@ -36,7 +36,7 @@ namespace interceptor
 
         public const bool TEST_VERSION = true;
 
-        public const string CURRENT_VERSION_CLEAN = "1.e2";
+        public const string CURRENT_VERSION_CLEAN = "1.e3";
 
         public static string CURRENT_VERSION =
             CURRENT_VERSION_CLEAN + (TEST_VERSION ? "-test" : String.Empty);

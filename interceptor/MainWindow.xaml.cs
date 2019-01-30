@@ -283,6 +283,7 @@ namespace interceptor
         private void returnFromError_Click(object sender, RoutedEventArgs e)
         {
             password.Password = String.Empty;
+            placeholderPass.Visibility = Visibility.Visible;
 
             MoveCanvas(
                 moveCanvas: returnFromErrorTo,
@@ -796,6 +797,32 @@ namespace interceptor
         private void updateButton_Click(object sender, RoutedEventArgs e)
         {
             AutoUpdate.StartUpdater();
+        }
+
+        private void placeholderLogin_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            login.Focus();
+        }
+
+        private void placeholderPass_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            password.Focus();
+        }
+
+        private void login_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (login.Text == String.Empty)
+                placeholderLogin.Visibility = Visibility.Visible;
+            else
+                placeholderLogin.Visibility = Visibility.Hidden;
+        }
+
+        private void password_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (password.Password == String.Empty)
+                placeholderPass.Visibility = Visibility.Visible;
+            else
+                placeholderPass.Visibility = Visibility.Hidden;
         }
     }
 }

@@ -453,7 +453,7 @@
         </Canvas>
 
         <Canvas x:Name="loginPlace" Margin="-3,0,3,0">
-            <Button x:Name="sendLogin" Content="залогиниться" Height="42" Canvas.Left="415" Canvas.Top="210" Width="155" Click="sendLogin_Click">
+            <Button x:Name="sendLogin" Content="залогиниться" Height="42" Canvas.Top="197" Width="295" Click="sendLogin_Click" Canvas.Left="252">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
@@ -461,10 +461,10 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <TextBox x:Name="login" Height="22" Canvas.Left="298" TextWrapping="Wrap" Canvas.Top="130" Width="272" HorizontalAlignment="Left"/>
-            <PasswordBox x:Name="password" Height="22" Canvas.Left="298" Canvas.Top="162" Width="272" KeyDown="password_KeyDown"/>
-            <Label x:Name="labelLogin" Content="логин" Height="27" Canvas.Left="237" Canvas.Top="128" Width="56"/>
-            <Label x:Name="labelPass" Content="пароль" Height="31" Canvas.Left="237" Canvas.Top="160" Width="56"/>
+            <TextBox x:Name="login" Height="27" Canvas.Left="252" TextWrapping="Wrap" Canvas.Top="126" Width="295" HorizontalAlignment="Left" KeyUp="login_KeyUp" FontSize="16"/>
+            <PasswordBox x:Name="password" Height="27" Canvas.Left="252" Canvas.Top="162" Width="295" KeyDown="password_KeyDown" KeyUp="password_KeyUp" FontSize="16"/>
+            <Label x:Name="placeholderLogin" Content="введите vms логин" Height="26" Canvas.Left="254" Canvas.Top="126" Width="117" Foreground="#FFD8D8D8" MouseDown="placeholderLogin_MouseDown"/>
+            <Label x:Name="placeholderPass" Content="введите vms пароль" Height="24" Canvas.Left="255" Canvas.Top="162" Width="123" Foreground="#FFD8D8D8" MouseDown="placeholderPass_MouseDown"/>
         </Canvas>
         <Canvas x:Name="loginFail" Margin="0,397,0,-397" Background="#FFFF4E4E">
             <Button x:Name="backToLoginFromFail" Content="попробовать ещё раз" Height="42" Canvas.Left="59" Canvas.Top="164" Width="211" Click="returnFromError_Click">
@@ -534,7 +534,7 @@
                 </Button.Background>
             </Button>
         </Canvas>
-        <Canvas x:Name="needUpdateRestart" Margin="824,399,-824,-399" Background="#FFFF4E4E">
+        <Canvas x:Name="needUpdateRestart" Margin="-4,399,4,-399" Background="#FFFF4E4E">
             <Label x:Name="updateText" Content="Програме необходимо обновиться. В процессе обновления программа будет перезапущена" Height="80" Canvas.Left="52" Canvas.Top="146" Width="709" FontSize="16"/>
             <Button x:Name="updateButton" Content="обновить и перезапустить" Height="42" Canvas.Left="59" Canvas.Top="184" Width="211" Click="updateButton_Click">
                 <Button.Background>

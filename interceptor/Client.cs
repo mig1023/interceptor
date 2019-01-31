@@ -45,7 +45,8 @@ namespace interceptor
             {
                 Request += Encoding.ASCII.GetString(Buffer, 0, Count);
 
-                if (Request.IndexOf("\r\n\r\n") >= 0) break;
+                if (Request.IndexOf("\r\n\r\n") >= 0)
+                    break;
             }
 
             Request = Uri.UnescapeDataString(Request);
@@ -69,7 +70,7 @@ namespace interceptor
             {
                 MainWindow main = (MainWindow)Application.Current.MainWindow;
                 main.total.Content = "сумма: " + summ;
-                main.totalR.Content = "сумма: " + summ;
+                main.totalR.Content = main.total.Content;
             }));
         }
 
@@ -112,8 +113,8 @@ namespace interceptor
                 if (docPack.RequestOnly == 1)
                 {
                     Cashbox.manDocPackForPrinting = docPack;
-
                     Cashbox.manDocPackSumm = docPack.Total;
+
                     ShowTotal(docPack.Total.ToString());
 
                     return "OK:Callback запрос получен";

@@ -81,7 +81,7 @@ namespace interceptor
         public static string GetLastVersion(string from)
         {
             if (from == String.Empty)
-                return String.Empty;
+                return from;
 
             XmlDocument xmlData = new XmlDocument();
 

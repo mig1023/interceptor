@@ -258,12 +258,12 @@ namespace interceptor
                 Log.Add($"ошибка загрузки акта на сервер: {e.Error}");
         }
 
-        public static void CashboxPaymentControl(string agrNumber)
+        public static void CashboxPaymentControl(string agreement)
         {
             string controlString = String.Empty;
 
             string url = CRM_URL_RUSERV + "/individuals/cashbox_payment_control.htm?" +
-                "docnum=" + agrNumber + "&login="+ currentLogin + "&p=" + currentPassword;
+                "docnum=" + agreement + "&login="+ currentLogin + "&p=" + currentPassword;
 
             try
             {

@@ -140,7 +140,7 @@ namespace interceptor
 
             if ((fieldValue != String.Empty) && (fieldValue != Driver.ValueOfFieldString))
             {
-                Log.AddWithCode("запись поля " + tableNumber + "/" + fieldNumber + "/" + rowNumber + "/" + fieldValue);
+                Log.AddWithCode("запись в поле кассы " + tableNumber + "/" + fieldNumber + "/" + rowNumber + " значения " + fieldValue);
 
                 Driver.ValueOfFieldString = fieldValue;
                 Driver.WriteTable();
@@ -290,7 +290,7 @@ namespace interceptor
                 repeatPrintingTimer.Enabled = false;
                 repeatPrintingTimer.Stop();
 
-                CRM.CashboxPaymentControl(currentDocPack);
+                CRM.CashboxPaymentControl(agreement: currentDocPack);
 
                 Server.ShowActivity(busy: false);
             }

@@ -107,6 +107,8 @@ namespace interceptor
 
                 docPack.DocPackFromXML(request);
 
+                Log.Add("номер договора: " + docPack.AgrNumber);
+
                 if (docPack.RequestOnly == 1)
                 {
                     Cashbox.manDocPackForPrinting = docPack;

@@ -289,7 +289,7 @@ sub get_service_code
 {
 	my ( $self, $serv, $center, $urgance, $ord ) = @_;
 	
-	my $country = '(ITA';
+	my $country = '(' . 'ITA';
 		
 	my $center_id = {
 		1	=> '00',
@@ -347,11 +347,9 @@ sub get_service_code
 	
 	if ( $serv eq 'visa' ) {
 	
-		my $pay_type = 1;
+		my ( $pay_type, $agent ) = ( 1, 1 );
 		
 		my $urgance_code = ( $urgance ? '1' : '0' );
-		
-		my $agent = 1;
 		
 		return $country . $center_id->{ $center } . $pay_type . $urgance_code . $agent . ') ';
 	}
@@ -375,7 +373,7 @@ sub doc_services
 
 		$dhlsum = $data->{ shipsum };
 		
-		$shcnt = 1;
+		$shcnt = $data->{ shipping };
 	}
 
 	my ( $apcnt, $astr, $bankid, $prevbank ) = ( 0, '', '', 0 );
@@ -1030,7 +1028,6 @@ sub cash_box_mandocpack
 		);
 	}
 	else {
-
 		$center_id = $vars->db->sel1("
 			SELECT ID FROM Branches WHERE BName = ?", $param->{ center }
 		);

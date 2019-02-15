@@ -243,7 +243,7 @@ namespace interceptor
                 Driver.Summ1 = MoneySumm ?? doc.Money;
                 Driver.Summ2 = 0;
             }
-            else if (doc.MoneyType == 2)
+            else
             {
                 Driver.Summ2 = MoneySumm ?? doc.Money;
                 Driver.Summ1 = 0;

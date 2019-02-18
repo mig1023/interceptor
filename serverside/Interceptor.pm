@@ -424,11 +424,13 @@ sub doc_services
 		SELECT AgesFree, Ages FROM PriceRate WHERE ID = ?",
 		$data->{ rate }
 	);
-	
-	$data->{ concilPaymentDate } =~ /(\d{2})\.(\d{2})\.(\d{4})/;
 
-	my $concil_payment_date = "$3-$2-$1";
-	
+	my $concil_payment_date = $vars->get_system->now_date();
+
+	$concil_payment_date = "$3-$2-$1" if $data->{ concilPaymentDate } =~ /(\d{2})\.(\d{2})\.(\d{4})/;
+
+	$concil_payment_date = $data->{ concilPaymentDate } if $data->{ concilPaymentDate } =~ /(\d{4})\-(\d{2})\-(\d{2})/;
+
 	my $prices = $vars->admfunc->getPrices( $vars, $data->{ rate }, $data->{ vtype }, $concil_payment_date );
 	
 	my $insurance = $data->{ insurance_manual_service } || '0.00';
@@ -1041,9 +1043,7 @@ sub cash_box_mandocpack
 	
 	$rate_date = "$3-$2-$1" if $param->{ rdate } =~ /(\d{2})\.(\d{2})\.(\d{4})/;
 	
-	my $rate = $vars->admfunc->getRate( $vars, $gconfig->{'base_currency'}, $rate_date, $center_id );
-	
-	$data->{ concilPaymentDate } = $param->{ rdate };
+	$data->{ concilPaymentDate } = $rate_date;
 	
 	$data->{ ipdate } = $vars->get_system->now_date();
 	

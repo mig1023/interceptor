@@ -402,6 +402,8 @@ namespace interceptor
 
             Match ReqMatch = Regex.Match(Service.Content.ToString(), @"^([^\d]+)\s\((\d+)\)");
 
+            Service.FontWeight = FontWeights.Bold;
+
             if (ReqMatch.Success)
             {
                 int servCount = Int32.Parse(ReqMatch.Groups[2].Value);

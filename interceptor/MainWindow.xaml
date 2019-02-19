@@ -91,7 +91,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="concil_urg_r" Content="КС срочный резидент" Height="37" Canvas.Left="203" Canvas.Top="109" Width="179" Tag="checkButtons" Click="addService_Click">
+            <Button x:Name="concil_urg_r" Content="КС срочн.резидент" Height="37" Canvas.Left="203" Canvas.Top="109" Width="179" Tag="checkButtons" Click="addService_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFD2DEFF" Offset="0.5"/>
@@ -107,7 +107,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="concil_n_age" Content="КС нерезидент 6-12 лет" Height="37" Canvas.Left="571" Canvas.Top="109" Width="197" Tag="checkButtons" Click="addService_Click">
+            <Button x:Name="concil_n_age" Content="КС нерез. 6-12 лет" Height="37" Canvas.Left="571" Canvas.Top="109" Width="197" Tag="checkButtons" Click="addService_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFD2DEFF" Offset="0.5"/>
@@ -285,7 +285,7 @@
             <Label x:Name="currency3" Content="Р" Canvas.Left="206" Canvas.Top="185" FontSize="28"/>
             <Label x:Name="insLabel" Content="страховка:" Height="32" Canvas.Left="17" Canvas.Top="197" Width="87" FontSize="16"/>
         </Canvas>
-        <Canvas x:Name="receptionPlace" Margin="807,0,-807,0">
+        <Canvas x:Name="receptionPlace" Margin="807,329,-807,-329">
             <Button x:Name="backToMainFromReception" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">

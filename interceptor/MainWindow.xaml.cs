@@ -403,6 +403,7 @@ namespace interceptor
             Match ReqMatch = Regex.Match(Service.Content.ToString(), @"^([^\d]+)\s\((\d+)\)");
 
             Service.FontWeight = FontWeights.Bold;
+            Service.FontSize = 14;
 
             if (ReqMatch.Success)
             {
@@ -447,7 +448,11 @@ namespace interceptor
             {
                 int bracketIndex = serv.Content.ToString().IndexOf('(');
 
-                if (bracketIndex > 0) serv.Content = serv.Content.ToString().Remove(bracketIndex);
+                if (bracketIndex > 0)
+                    serv.Content = serv.Content.ToString().Remove(bracketIndex);
+
+                serv.FontWeight = FontWeights.Regular;
+                serv.FontSize = 12;
             }
 
             BlockCheckButton(block: false);

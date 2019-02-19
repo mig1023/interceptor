@@ -265,7 +265,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="srv1" Content="консультационные услуги" Height="37" Canvas.Left="571" Canvas.Top="277" Width="197" Tag="checkButtons" Click="addService_Click">
+            <Button x:Name="srv1" Content="консульт.услуги" Height="37" Canvas.Left="571" Canvas.Top="277" Width="197" Tag="checkButtons" Click="addService_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
@@ -285,7 +285,7 @@
             <Label x:Name="currency3" Content="Р" Canvas.Left="206" Canvas.Top="185" FontSize="28"/>
             <Label x:Name="insLabel" Content="страховка:" Height="32" Canvas.Left="17" Canvas.Top="197" Width="87" FontSize="16"/>
         </Canvas>
-        <Canvas x:Name="receptionPlace" Margin="807,329,-807,-329">
+        <Canvas x:Name="receptionPlace" Margin="807,0,-807,0">
             <Button x:Name="backToMainFromReception" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">

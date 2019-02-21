@@ -142,7 +142,6 @@ sub xml_create
 			'<Control>' .
 				'<CRC>' . $md5 . '</CRC>' . 
 				'<Date>' . $currentDate . '</Date>' .
-				
 			'</Control>' .
 		'</toCashbox>';
 
@@ -435,15 +434,7 @@ sub doc_services
 	
 	my $insurance = $data->{ insurance_manual_service } || '0.00';
 	
-	my $shsum = 0;
-	
-	if ( $data->{ newdhl } ) {
-	
-		$shsum = sprintf( "%.2f", $dhlsum );
-	}
-	else {
-		$shsum = sprintf( "%.2f", $prices->{ shipping } * $shcnt );
-	}
+	my $shsum = sprintf( "%.2f", ( $data->{ newdhl } ? $dhlsum : $prices->{ shipping } * $shcnt ) );
 	
 	$smscnt = 1 if $data->{ sms_status } == 1;
 	
@@ -601,7 +592,6 @@ sub doc_services
 			delete $servsums->{ $serv };
 		}
 		else {
-		
 			$ord += 1;
 		
 			$total += $servsums->{ $serv }->{ Price } * $servsums->{ $serv }->{ Quantity };
@@ -983,7 +973,6 @@ sub cash_box_mandocpack
 	my $gconfig = $vars->getConfig('general');
 	
 	my $param = {};
-	my $serv_hash = {};
 	
 	my $data = { direct_docpack => 1 };
 	
@@ -1038,6 +1027,8 @@ sub cash_box_mandocpack
 	return cash_box_output( $self, "ERROR|Данные записи не найдены" ) unless $center_id;
 		
 	$data->{ center } = $center_id;
+	
+	my $serv_hash = {};
 		
 	my $rate_date = $vars->get_system->now_date();
 	
@@ -1053,13 +1044,9 @@ sub cash_box_mandocpack
 		SELECT ID, category FROM VisaTypes WHERE VName = ?", $param->{ vtype }
 	);
 
-	my @serv_line = split( /\|/, $param->{ services } );
-
-	$serv_hash->{ $_ } += 1 for @serv_line;
+	$serv_hash->{ $_ } += 1 for split( /\|/, $param->{ services } );
 	
-	my $urgent_docpack = 0;
-	
-	my $concil_index = 0;
+	my ( $urgent_docpack, $concil_index ) = ( 0, 0 );
 	
 	$data->{ applicants } = [];
 	
@@ -1068,8 +1055,8 @@ sub cash_box_mandocpack
 		if ( /^dhl=(.+)$/ ) {
 
 			$data->{ shipsum } = $1;
-			$data->{ newdhl } = 1;
-			$data->{ shipping } = 1;
+
+			$data->{ $_ } = 1 for ( 'shipping' , 'newdhl' );
 		}
 		
 		$data->{ insurance_manual_service } = $1 if /^insurance=(.+)$/;

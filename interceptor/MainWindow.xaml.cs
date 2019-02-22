@@ -400,10 +400,10 @@ namespace interceptor
             else
                 manDocPack.Add(Service.Name);
 
-            Match ReqMatch = Regex.Match(Service.Content.ToString(), @"^([^\d]+)\s\((\d+)\)");
-
             Service.FontWeight = FontWeights.Bold;
             Service.FontSize = 14;
+
+            Match ReqMatch = Regex.Match(Service.Content.ToString(), @"^([^\d]+)\s\((\d+)\)");
 
             if (ReqMatch.Success)
             {
@@ -422,6 +422,9 @@ namespace interceptor
             Button Service = sender as Button;
 
             manDocPack.Add(Service.Name.TrimEnd('R'));
+
+            Service.FontWeight = FontWeights.Bold;
+            Service.FontSize = 20;
 
             Match ReqMatch = Regex.Match(Service.Content.ToString(), @"^([^\d]+)\s\((\d+)\)");
 
@@ -472,7 +475,11 @@ namespace interceptor
             {
                 int bracketIndex = serv.Content.ToString().IndexOf('(');
 
-                if (bracketIndex > 0) serv.Content = serv.Content.ToString().Remove(bracketIndex);
+                if (bracketIndex > 0)
+                    serv.Content = serv.Content.ToString().Remove(bracketIndex);
+
+                serv.FontWeight = FontWeights.Regular;
+                serv.FontSize = 18;
             }
 
             BlockRCheckButton(block: false);

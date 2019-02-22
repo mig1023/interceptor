@@ -319,7 +319,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="anketasrvR" IsEnabled="False" Content="заполнение анкеты" Height="77" Canvas.Left="180" Canvas.Top="209" Width="242" Click="addRService_Click"  FontSize="18">
+            <Button x:Name="anketasrvR" IsEnabled="False" Content="заполнение анкеты" Height="77" Canvas.Left="180" Canvas.Top="209" Width="262" Click="addRService_Click"  FontSize="18">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF9FFD2" Offset="0.5"/>
@@ -335,7 +335,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="photosrvR" IsEnabled="False" Content="фото" Height="77" Canvas.Left="427" Canvas.Top="209" Width="153" Click="addRService_Click"  FontSize="18">
+            <Button x:Name="photosrvR" IsEnabled="False" Content="фото" Height="77" Canvas.Left="447" Canvas.Top="209" Width="133" Click="addRService_Click"  FontSize="18">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFD2DEFF" Offset="0.5"/>
@@ -343,7 +343,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="xeroxR" IsEnabled="False" Content="ксерокс" Height="77" Canvas.Left="19" Canvas.Top="209" Width="153" Click="addRService_Click"  FontSize="18">
+            <Button x:Name="xeroxR" IsEnabled="False" Content="ксерокс" Height="77" Canvas.Left="19" Canvas.Top="209" Width="156" Click="addRService_Click"  FontSize="18">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFB5FDC2" Offset="0.5"/>

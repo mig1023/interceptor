@@ -509,6 +509,17 @@ namespace interceptor
         {
             decimal money = DocPack.manualParseDecimal(moneyForCheck.Text);
 
+            if (money <= 0)
+            {
+                MessageBoxResult resultMsg = MessageBox.Show(
+                    "Введена нулевая сумма оплаты чека. Продолжить?", "Внимание!",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question
+                );
+
+                if (resultMsg == MessageBoxResult.No)
+                    return;
+            }
+
             string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money
             ).Split(':');

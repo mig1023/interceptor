@@ -468,6 +468,7 @@ namespace interceptor
             moneyForInsurance.Text = "0.00";
             total.Content = String.Empty;
             totalR.Content = String.Empty;
+            returnDate.Text = String.Empty;
         }
 
         private void CleanRCheck()
@@ -520,6 +521,13 @@ namespace interceptor
             if (CheckMoneyFail(money))
                 return;
 
+            if (CheckAnotherDateFail(returnDate.Text))
+            {
+                ShowError(checkPlace, "Нельзя оплачивать даговор, указывая дату оплаты; оставьте это поле пустым");
+                CleanCheck();
+                return;
+            }
+
             string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money
             ).Split(':');
@@ -529,6 +537,13 @@ namespace interceptor
 
         private void printCheckCard_Click(object sender, RoutedEventArgs e)
         {
+            if (CheckAnotherDateFail(returnDate.Text))
+            {
+                ShowError(checkPlace, "Нельзя оплачивать даговор, указывая дату оплаты; оставьте это поле пустым");
+                CleanCheck();
+                return;
+            }
+                
             string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
             ).Split(':');
@@ -807,7 +822,15 @@ namespace interceptor
                 return true;
         }
 
-    private void printRCheckCard_Click(object sender, RoutedEventArgs e)
+        private bool CheckAnotherDateFail(string date)
+        {
+            if (returnDate.Text == String.Empty)
+                return false;
+            else
+                return true;
+        }
+
+        private void printRCheckCard_Click(object sender, RoutedEventArgs e)
         {
             string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm

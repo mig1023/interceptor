@@ -452,7 +452,7 @@ namespace interceptor
                 int bracketIndex = serv.Content.ToString().IndexOf('(');
 
                 if (bracketIndex > 0)
-                    serv.Content = serv.Content.ToString().Remove(bracketIndex);
+                    serv.Content = serv.Content.ToString().Remove(bracketIndex - 1);
 
                 serv.FontWeight = FontWeights.Regular;
                 serv.FontSize = 12;
@@ -476,7 +476,7 @@ namespace interceptor
                 int bracketIndex = serv.Content.ToString().IndexOf('(');
 
                 if (bracketIndex > 0)
-                    serv.Content = serv.Content.ToString().Remove(bracketIndex);
+                    serv.Content = serv.Content.ToString().Remove(bracketIndex - 1);
 
                 serv.FontWeight = FontWeights.Regular;
                 serv.FontSize = 18;

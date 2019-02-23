@@ -329,6 +329,7 @@ namespace interceptor
             moneyForDHL.IsEnabled = (block ? false : true);
             allCenters.IsEnabled = (block ? false : true);
             allVisas.IsEnabled = (block ? false : true);
+            moneyForInsurance.IsEnabled = (block ? false : true);
         }
 
         private void BlockRCheckButton(bool block)

@@ -537,6 +537,12 @@ namespace interceptor
 
         private void returnSale_Click(object sender, RoutedEventArgs e)
         {
+            if (CheckDateFail(returnDate.Text))
+            {
+                CleanCheck();
+                return;
+            }
+
             string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, returnSale: true, MoneySumm: Cashbox.manDocPackSumm
             ).Split(':');
@@ -784,7 +790,23 @@ namespace interceptor
                 return true;
         }
 
-        private void printRCheckCard_Click(object sender, RoutedEventArgs e)
+        private bool CheckDateFail(string date)
+        {
+            if (returnDate.Text != String.Empty)
+                return false;
+
+            MessageBoxResult resultMsg = MessageBox.Show(
+                "Дата договора не введена, будет использована текущая. Продолжить?", "Внимание!",
+                MessageBoxButton.YesNo, MessageBoxImage.Question
+            );
+
+            if (resultMsg == MessageBoxResult.Yes)
+                return false;
+            else
+                return true;
+        }
+
+    private void printRCheckCard_Click(object sender, RoutedEventArgs e)
         {
             string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
@@ -812,6 +834,12 @@ namespace interceptor
 
         private void returnSaleCard_Click(object sender, RoutedEventArgs e)
         {
+            if (CheckDateFail(returnDate.Text))
+            {
+                CleanCheck();
+                return;
+            }
+
             string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, returnSale: true, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
             ).Split(':');

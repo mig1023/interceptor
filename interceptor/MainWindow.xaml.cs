@@ -363,12 +363,7 @@ namespace interceptor
             {
                 Log.Add("некоторые услуги из чека не имеют цены: " + sendingData[1]);
 
-                MessageBoxResult result = MessageBox.Show(
-                    "Услуги не имеют цену по прайслисту выбранного центра:\n" +
-                    sendingData[1] + "." +
-                    "\nТакие услуги не будут отображены в чеке. Продолжить?",
-                    "Внимание!",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBoxes.NullInServices(sendingData[1]);
 
                 if (result == MessageBoxResult.Yes)
                     BlockCheckButton(block: true);
@@ -746,12 +741,7 @@ namespace interceptor
             {
                 Log.Add("некоторые услуги из чека не имеют цены: " + sendingData[1]);
 
-                MessageBoxResult result = MessageBox.Show(
-                    "Услуги не имеют цену по прайслисту выбранного центра: " +
-                    sendingData[1] + "." +
-                    "Такие услуги не будут отображены в чеке. Продолжить?",
-                    "Внимание!",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBoxes.NullInServices(sendingData[1]);
 
                 if (result == MessageBoxResult.Yes)
                     BlockRCheckButton(block: true);
@@ -795,12 +785,7 @@ namespace interceptor
             if (money > 0)
                 return false;
 
-            MessageBoxResult resultMsg = MessageBox.Show(
-                "Введена нулевая сумма оплаты чека. Продолжить?", "Внимание!",
-                MessageBoxButton.YesNo, MessageBoxImage.Question
-            );
-
-            if (resultMsg == MessageBoxResult.Yes)
+            if (MessageBoxes.NullSummCash() == MessageBoxResult.Yes)
                 return false;
             else
                 return true;
@@ -811,12 +796,7 @@ namespace interceptor
             if (returnDate.Text != String.Empty)
                 return false;
 
-            MessageBoxResult resultMsg = MessageBox.Show(
-                "Дата договора не введена, будет использована текущая. Продолжить?", "Внимание!",
-                MessageBoxButton.YesNo, MessageBoxImage.Question
-            );
-
-            if (resultMsg == MessageBoxResult.Yes)
+            if (MessageBoxes.NullReturnDate() == MessageBoxResult.Yes)
                 return false;
             else
                 return true;

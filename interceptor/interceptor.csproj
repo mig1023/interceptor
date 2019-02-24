@@ -76,6 +76,7 @@
     <Compile Include="CRM.cs" />
     <Compile Include="Diagnostic.cs" />
     <Compile Include="DocPack.cs" />
+    <Compile Include="MessageBoxes.cs" />
     <Compile Include="Receipt.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Service.cs" />

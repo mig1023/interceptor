@@ -374,7 +374,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="reportCleaning" Content="отчёт с гашением" Height="48" Canvas.Left="21" Canvas.Top="20" Width="155" Click="reportCleaning_Click">
+            <Button x:Name="reportCleaning" Content="отчёт с гашением" Height="63" Canvas.Left="21" Canvas.Top="20" Width="186" Click="reportCleaning_Click" FontSize="18">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
@@ -382,7 +382,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="repeatDocument" Content="повтор чека" Height="48" Canvas.Left="21" Canvas.Top="103" Width="155" Click="repeatDocument_Click">
+            <Button x:Name="repeatDocument" Content="повтор чека" Height="63" Canvas.Left="21" Canvas.Top="121" Width="242" Click="repeatDocument_Click" FontSize="18">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
@@ -390,7 +390,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="reportWithoutCleaning" Content="отчёт без гашения" Height="48" Canvas.Left="181" Canvas.Top="20" Width="155" Click="reportWithoutCleaning_Click">
+            <Button x:Name="reportWithoutCleaning" Content="отчёт без гашения" Height="63" Canvas.Left="212" Canvas.Top="20" Width="192" Click="reportWithoutCleaning_Click" FontSize="18">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
@@ -398,7 +398,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="reportDepartment" Content="отчёт по отделам" Height="48" Canvas.Left="341" Canvas.Top="20" Width="155" Click="reportDepartment_Click">
+            <Button x:Name="reportDepartment" Content="отчёт по отделам" Height="63" Canvas.Left="409" Canvas.Top="20" Width="180" Click="reportDepartment_Click" FontSize="18">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
@@ -406,7 +406,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="reportTax" Content="отчёт по налогам" Height="48" Canvas.Left="501" Canvas.Top="20" Width="155" Click="reportTax_Click">
+            <Button x:Name="reportTax" Content="отчёт по налогам" Height="63" Canvas.Left="594" Canvas.Top="20" Width="167" Click="reportTax_Click" FontSize="18">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
@@ -414,7 +414,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="continueDocument" Content="продолжить печать" Height="48" Canvas.Left="181" Canvas.Top="103" Width="155" Click="continueDocument_Click">
+            <Button x:Name="continueDocument" Content="продолжить печать" Height="63" Canvas.Left="268" Canvas.Top="121" Width="242" Click="continueDocument_Click" FontSize="18">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
@@ -422,7 +422,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="cancelDocument" Content="аннулировать чек" Height="48" Canvas.Left="341" Canvas.Top="103" Width="155" Click="cancelDocument_Click">
+            <Button x:Name="cancelDocument" Content="аннулировать чек" Height="63" Canvas.Left="515" Canvas.Top="121" Width="246" Click="cancelDocument_Click" FontSize="18">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
@@ -430,7 +430,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="cashIncome" Content="&lt;---- внесение в кассу" Height="37" Canvas.Left="211" Canvas.Top="184" Width="197" Click="cashIncome_Click">
+            <Button x:Name="cashIncome" Content="&lt;---- внесение в кассу" Height="37" Canvas.Left="211" Canvas.Top="226" Width="197" Click="cashIncome_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
@@ -438,9 +438,9 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <TextBox x:Name="moneyForIncome" Height="37" Canvas.Left="25" TextWrapping="Wrap" Text="0.00" Canvas.Top="184" Width="156" FontSize="22"/>
-            <Label x:Name="currencyIncome" Content="Р" Canvas.Left="181" Canvas.Top="176" FontSize="28"/>
-            <Button x:Name="cashOutcome" Content="&lt;---- выплата из кассы" Height="37" Canvas.Left="211" Canvas.Top="229" Width="197" Click="cashOutcome_Click">
+            <TextBox x:Name="moneyForIncome" Height="37" Canvas.Left="25" TextWrapping="Wrap" Text="0.00" Canvas.Top="226" Width="156" FontSize="22"/>
+            <Label x:Name="currencyIncome" Content="Р" Canvas.Left="181" Canvas.Top="218" FontSize="28"/>
+            <Button x:Name="cashOutcome" Content="&lt;---- выплата из кассы" Height="37" Canvas.Left="211" Canvas.Top="271" Width="197" Click="cashOutcome_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
@@ -448,8 +448,8 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <TextBox x:Name="moneyForOutcome" Height="37" Canvas.Left="25" TextWrapping="Wrap" Text="0.00" Canvas.Top="229" Width="156" FontSize="22"/>
-            <Label x:Name="currencyOutcome" Content="Р" Canvas.Left="181" Canvas.Top="221" FontSize="28"/>
+            <TextBox x:Name="moneyForOutcome" Height="37" Canvas.Left="25" TextWrapping="Wrap" Text="0.00" Canvas.Top="271" Width="156" FontSize="22"/>
+            <Label x:Name="currencyOutcome" Content="Р" Canvas.Left="181" Canvas.Top="263" FontSize="28"/>
         </Canvas>
 
         <Canvas x:Name="loginPlace" Margin="-3,0,3,0">

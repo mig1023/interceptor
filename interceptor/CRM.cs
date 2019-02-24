@@ -140,7 +140,7 @@ namespace interceptor
             {
                 Log.AddWeb("(отправка запроса на информацию о записи) " + e.Message);
 
-                return "ERROR";
+                return "ERROR|Ошибка отправки запроса на информацию о записи";
             }
 
             return requestResult;
@@ -174,7 +174,7 @@ namespace interceptor
             {
                 Log.AddWeb("(отправка запроса на чек) " + e.Message);
 
-                return "ERROR";
+                return "ERROR|Ошибка отправки запроса на чек";
             }
 
             return requestResult;

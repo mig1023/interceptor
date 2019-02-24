@@ -103,7 +103,8 @@ namespace interceptor
 
                 docPack.DocPackFromXML(request);
 
-                Log.Add("номер договора: " + docPack.AgrNumber);
+                if (!String.IsNullOrWhiteSpace(docPack.AgrNumber))
+                    Log.Add("номер договора: " + docPack.AgrNumber);
 
                 if (docPack.RequestOnly == 1)
                 {

@@ -126,7 +126,7 @@ namespace interceptor
 
             string fields = "app=" + appNumberClean + "&summ=" + summ;
 
-            string request = fields + "&crc=" + CheckRequest.CreateMD5(fields);
+            string request = fields + "&crc=" + CheckRequest.CreateMD5(fields, notOrd: true);
 
             string url = CRM_URL + "/vcs/cashbox_appinfo.htm?" + request;
 
@@ -160,7 +160,7 @@ namespace interceptor
                 "&money=" + money + "&center=" + center + "&vtype=" + vType + "&rdate=" + returnDate +
                 "&services=" + servicesList + "&callback=" + GetMyIP() + "&r=" + (reception ? "1" : "0");
 
-            string request = fields + "&crc=" + CheckRequest.CreateMD5(fields);
+            string request = fields + "&crc=" + CheckRequest.CreateMD5(fields, notOrd: true);
 
             string url = CRM_URL + "/vcs/cashbox_mandocpack.htm?" + request;
 

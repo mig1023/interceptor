@@ -81,12 +81,17 @@ namespace interceptor
             return MD5_LINE_TMP;
         }
 
-        public static string CreateMD5(string input)
+        public static string CreateMD5(string input, bool notOrd = false)
         {
-            byte[] bytes = Encoding.GetEncoding(1251).GetBytes("SecretCRCPasssword");
+            if (notOrd)
+                input += MainWindow.PROTOCOL_PASS;
+            else
+            {
+                byte[] bytes = Encoding.GetEncoding(1251).GetBytes(MainWindow.PROTOCOL_PASS);
 
-            foreach (byte b in bytes)
-                input += b.ToString() + " ";
+                foreach (byte b in bytes)
+                    input += b.ToString() + " ";
+            }
 
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
             {

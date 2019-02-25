@@ -33,6 +33,8 @@ namespace interceptor
 
         public string updateDir = String.Empty;
 
+        public static string PROTOCOL_PASS = "";
+
         public MainWindow()
         {
             InitializeComponent();

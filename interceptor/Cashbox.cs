@@ -237,14 +237,14 @@ namespace interceptor
 
             if (doc.MoneyType == 1)
             {
-                Log.AddWithCode("тип оплаты: наличными");
+                Log.Add("тип оплаты: наличными");
 
                 Driver.Summ1 = MoneySumm ?? doc.Money;
                 Driver.Summ2 = 0;
             }
             else
             {
-                Log.AddWithCode("тип оплаты: безнал (реальный: " + doc.MoneyType.ToString() + ")");
+                Log.Add("тип оплаты: безнал (реальный: " + doc.MoneyType.ToString() + ")");
 
                 Driver.Summ2 = MoneySumm ?? doc.Money;
                 Driver.Summ1 = 0;

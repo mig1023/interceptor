@@ -31,7 +31,7 @@ namespace interceptor
                 ReqMatch.Groups[5].Value;
         }
 
-        public static void PrintReceipt(string appDataString, DocPack doc)
+        public static string PrintReceipt(string appDataString, DocPack doc)
         {
             string[] appData = appDataString.Split('|');
 
@@ -40,7 +40,7 @@ namespace interceptor
             if (appData[0] != "OK")
             {
                 Log.AddWeb("Ошибка вернувшихся данных записи");
-                return;
+                return "Ошибка вернувшихся данных записи";
             }
 
             int receiptIndex = int.Parse(appData[5]) + 1;
@@ -162,6 +162,8 @@ namespace interceptor
                 print: receptionServices[3].ToString(),
                 photo: receptionServices[4].ToString()
             );
+
+            return String.Empty;
         }
 
         static public void AddTextBox(bool header = false)

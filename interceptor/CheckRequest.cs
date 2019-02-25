@@ -83,6 +83,11 @@ namespace interceptor
 
         public static string CreateMD5(string input)
         {
+            byte[] bytes = Encoding.GetEncoding(1251).GetBytes("SecretCRCPasssword");
+
+            foreach (byte b in bytes)
+                input += b.ToString() + " ";
+
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
             {
                 byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);

@@ -33,7 +33,6 @@ namespace interceptor
 
         public string updateDir = String.Empty;
 
-
         public MainWindow()
         {
             InitializeComponent();
@@ -824,8 +823,11 @@ namespace interceptor
 
         private void getAppInfoAndPrintRecepeit(string summ)
         {
-            Receipt.PrintReceipt(CRM.AppNumberData(appNumber.Text, summ), Cashbox.manDocPackForPrinting);
+            string error = Receipt.PrintReceipt(CRM.AppNumberData(appNumber.Text, summ), Cashbox.manDocPackForPrinting);
             CleanRCheck();
+
+            if (!String.IsNullOrEmpty(error))
+                ShowError(receptionPlace, error);
         }
 
         private void appNumberClean_Click(object sender, RoutedEventArgs e)

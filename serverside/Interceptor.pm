@@ -35,6 +35,41 @@ sub send_connection_signal
 		'</toCashbox>';
 	
 	return send_request( $vars, $request, $interceptor );
+}
+
+sub protocol_pass
+{
+	return '';
+}
+
+sub md5_crc_with_secret_code
+{
+	my ( $bytecode, $not_ord ) = @_;
+	
+	if ( $not_ord ) {
+	
+		$bytecode .= protocol_pass();
+	}
+	else {
+		$bytecode .= ord( $_ ) . " " for split( //, protocol_pass() );
+	}
+
+	return Digest::MD5->new->add( $bytecode )->hexdigest;
+}
+
+sub md5_filecrc_with_secret_code
+{
+	my $file_check = shift;
+	
+	my $md5file = Digest::MD5->new;
+	
+	$md5file->addfile( $file_check );
+	
+	my $bytecode .= ord( $_ ) . " " for split( //, protocol_pass() );
+	
+	$md5file->add( $bytecode );
+	
+	return $md5file->hexdigest;
 }	
 
 sub send_docpack
@@ -133,8 +168,8 @@ sub xml_create
 	Encode::from_to( $md5line, 'utf-8', 'windows-1251' );
 
 	$bytecode .= ord( $_ ) . " " for split( //, $md5line );
-	
-	my $md5 = Digest::MD5->new->add( $bytecode )->hexdigest;
+
+	my $md5 = md5_crc_with_secret_code( $bytecode );
 	
 	$xml =  '<?xml version="1.0" encoding="UTF-8"?>' . 
 		'<toCashbox>' . 
@@ -570,7 +605,8 @@ sub doc_services
 		$servsums->{ $serv }->{ Name } =
 			get_service_code( $self, $serv, $data->{ center }, $data->{ urgent }, $ord ) . $servsums->{ $serv }->{ Name }
 				unless $servsums->{ $serv }->{ WithoutServCode };
-	
+
+
 		$mandocpack_failserv .= ( $mandocpack_failserv ? ', ' : '' ) . $servsums->{ $serv }->{ Name }
 			if $servsums->{ $serv }->{ Quantity }
 				and (
@@ -877,7 +913,7 @@ sub cash_box_upload
 
 	open my $file_check, '<', $up_name;
 	
-	my $md5file = Digest::MD5->new->addfile( $file_check )->hexdigest;
+	my $md5file = md5_filecrc_with_secret_code( $file_check );
 	
 	close $file_check;
 	
@@ -915,7 +951,7 @@ sub cash_box_appinfo
 	
 	my $request_check = "app=" . $param->{ app } . "&summ=" . $param->{ summ };
 		
-	my $md5 = uc( Digest::MD5->new->add( $request_check )->hexdigest );
+	my $md5 = uc( md5_crc_with_secret_code( $request_check, 'not_ord' ) );
 	
 	return cash_box_output( $self, "ERROR|Контрольная сумма запроса неверна" ) unless $md5 eq $param->{ crc };
 	
@@ -983,9 +1019,8 @@ sub cash_box_mandocpack
 		"&moneytype=" . $param->{ moneytype } . "&money=" . $param->{ money } . "&center=" . $param->{ center } .
 		"&vtype=" . $param->{ vtype } . "&rdate=" . $param->{ rdate } . "&services=" . $param->{ services } .
 		"&callback=" . $param->{ callback } . "&r=" . ( $param->{ r } ? '1' : '0' );
-	
-	
-	my $md5 = uc( Digest::MD5->new->add( $request_check )->hexdigest );
+
+	my $md5 = uc( md5_crc_with_secret_code( $request_check, 'not_ord' ) );
 	
 	return cash_box_output( $self, "ERROR|Контрольная сумма запроса неверна" ) unless $md5 eq $param->{ crc };
 	
@@ -1072,9 +1107,9 @@ sub cash_box_mandocpack
 		}
 		
 		if ( /^(concil|concil_urg_r|concil_n|concil_n_age)$/ ) {
-		
+	
 			for my $n ( 0..($serv_hash->{ $_ } - 1) ) {
-			
+		
 				$data->{ applicants }->[ $concil_index + $n ]->{ Concil } = 0 if /^(concil|concil_urg_r)$/;
 				
 				$data->{ applicants }->[ $concil_index + $n ]->{ AgeCatA } = 1 if /^concil_n_age$/;

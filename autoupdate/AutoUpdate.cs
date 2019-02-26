@@ -11,8 +11,22 @@ namespace autoupdate
 {
     class AutoUpdate
     {
+        static string PROTOCOL_PASS = "";
+
         static void Main(string[] args)
         {
+            if ((args.Length > 1) && (args[0].ToLower() == "md5show"))
+            {
+                string[] lines = System.IO.File.ReadAllLines(args[1]);
+
+                string crcCheck = CreateMD5(string.Join(String.Empty, lines));
+
+                Console.WriteLine(args[1].ToString() + " ----> " + crcCheck.ToString());
+                Console.ReadLine();
+
+                Environment.Exit(0);
+            }
+
             string interceptor = args[0].Replace(".exe", String.Empty);
 
             Log("ожидание остановки процесса " + interceptor);
@@ -51,6 +65,32 @@ namespace autoupdate
                 string dateLine = DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss");
 
                 sw.WriteLine(dateLine + " " + line);
+            }
+        }
+
+        public static string CreateMD5(string input, bool notOrd = false)
+        {
+            if (notOrd)
+                input += PROTOCOL_PASS;
+            else
+            {
+                byte[] bytes = Encoding.GetEncoding(1251).GetBytes(PROTOCOL_PASS);
+
+                foreach (byte b in bytes)
+                    input += b.ToString() + " ";
+            }
+
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                StringBuilder sb = new StringBuilder();
+
+                for (int i = 0; i < hashBytes.Length; i++)
+                    sb.Append(hashBytes[i].ToString("X2"));
+
+                return sb.ToString();
             }
         }
     }

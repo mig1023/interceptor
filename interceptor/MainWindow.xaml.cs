@@ -375,14 +375,7 @@ namespace interceptor
             {
                 Log.Add("во время формирования чека произошла ошибка: " + sendingData[1]);
 
-                loginFailText.Content = sendingData[1];
-                returnFromErrorTo = checkPlace;
-
-                MoveCanvas(
-                    moveCanvas: loginFail,
-                    prevCanvas: checkPlace,
-                    direction: moveDirection.vertical
-                );
+                ShowError(checkPlace, sendingData[1]);
             }
         }
 
@@ -570,14 +563,7 @@ namespace interceptor
 
         private void moveToErrorFromReports(string Line)
         {
-            loginFailText.Content = Line;
-            returnFromErrorTo = statusPlace;
-
-            MoveCanvas(
-                moveCanvas: loginFail,
-                prevCanvas: statusPlace,
-                direction: moveDirection.vertical
-            );
+            ShowError(statusPlace, Line);
         }
 
         private void continueDocument_Click(object sender, RoutedEventArgs e)
@@ -753,14 +739,7 @@ namespace interceptor
             {
                 Log.Add("во время формирования чека произошла ошибка: " + sendingData[1]);
 
-                loginFailText.Content = sendingData[1];
-                returnFromErrorTo = receptionPlace;
-
-                MoveCanvas(
-                    moveCanvas: loginFail,
-                    prevCanvas: receptionPlace,
-                    direction: moveDirection.vertical
-                );
+                ShowError(receptionPlace, sendingData[1]);
             }
         }
 

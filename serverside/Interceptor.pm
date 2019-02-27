@@ -467,7 +467,9 @@ sub doc_services
 
 	my $prices = $vars->admfunc->getPrices( $vars, $data->{ rate }, $data->{ vtype }, $concil_payment_date );
 	
-	my $insurance = $data->{ insurance_manual_service } || '0.00';
+	my $insurance_rgs = $data->{ insurance_manual_service_RGS } || '0.00';
+	
+	my $insurance_kl = $data->{ insurance_manual_service_KL } || '0.00';
 	
 	my $shsum = sprintf( "%.2f", ( $data->{ newdhl } ? $dhlsum : $prices->{ shipping } * $shcnt ) );
 	
@@ -547,12 +549,20 @@ sub doc_services
 			VAT		=> 1,
 			Department	=> 1,
 		},
-		insurance => {
-			Name		=> 'Страховка',
-			Quantity	=> ( $data->{ insurance_manual_service } ? 1 : 0 ),
-			Price		=> sprintf( "%.2f", $insurance ),
+		insurance_rgs => {
+			Name		=> 'Страхование',
+			Quantity	=> ( $data->{ insurance_manual_service_RGS } ? 1 : 0 ),
+			Price		=> sprintf( "%.2f", $insurance_rgs ),
 			VAT		=> 0,
 			Department	=> 4,
+			WithoutServCode	=> 1,
+		},
+		insurance_klf => {
+			Name		=> 'Страхование',
+			Quantity	=> ( $data->{ insurance_manual_service_KL } ? 1 : 0 ),
+			Price		=> sprintf( "%.2f", $insurance_kl ),
+			VAT		=> 0,
+			Department	=> 5,
 			WithoutServCode	=> 1,
 		},
 	};
@@ -1021,7 +1031,7 @@ sub cash_box_mandocpack
 		"&callback=" . $param->{ callback } . "&r=" . ( $param->{ r } ? '1' : '0' );
 
 	my $md5 = uc( md5_crc_with_secret_code( $request_check, 'not_ord' ) );
-	
+
 	return cash_box_output( $self, "ERROR|Контрольная сумма запроса неверна" ) unless $md5 eq $param->{ crc };
 	
 	return cash_box_output( $self, "ERROR|Не установлена кассовая интеграция" )
@@ -1094,7 +1104,12 @@ sub cash_box_mandocpack
 			$data->{ $_ } = 1 for ( 'shipping' , 'newdhl' );
 		}
 		
-		$data->{ insurance_manual_service } = $1 if /^insurance=(.+)$/;
+		if ( /^insurance([^=]+?)=(.+)$/ ) {
+
+			my ( $service, $price ) = ( "insurance_manual_service_$1", $2 );
+
+			$data->{ $service } = $price;
+		}
 		
 		if ( /^(service|service_urgent)$/ ) {
 		

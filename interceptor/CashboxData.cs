@@ -81,7 +81,14 @@ namespace interceptor
                     tableNumber = 7,
                     fieldNumber = 1,
                     rowNumber = 4,
-                    fieldValue = "(страхование)",
+                    fieldValue = "(РГС)",
+                    description = "неверное наименование поля услуг (страхование)",
+                },
+                new CashboxData() {
+                    tableNumber = 7,
+                    fieldNumber = 1,
+                    rowNumber = 5,
+                    fieldValue = "(Капитал Лайф)",
                     description = "неверное наименование поля услуг (страхование)",
                 },
         };

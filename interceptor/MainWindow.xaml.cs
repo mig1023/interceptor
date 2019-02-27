@@ -61,7 +61,7 @@ namespace interceptor
                 "printsrv",
                 "photosrv",
                 "xerox",
-                "dhl", "insurance",
+                "dhl", "insuranceRGS", "insuranceKL",
                 "srv1", "srv2", "srv3", "srv4", "srv5", "srv6", "srv7", "srv8", "srv9"
             }) servButtonCleaningList.Add((Button)mainGrid.FindName(buttonName));
 
@@ -330,7 +330,8 @@ namespace interceptor
             moneyForDHL.IsEnabled = (block ? false : true);
             allCenters.IsEnabled = (block ? false : true);
             allVisas.IsEnabled = (block ? false : true);
-            moneyForInsurance.IsEnabled = (block ? false : true);
+            moneyForInsuranceRGS.IsEnabled = (block ? false : true);
+            moneyForInsuranceKL.IsEnabled = (block ? false : true);
         }
 
         private void BlockRCheckButton(bool block)
@@ -386,8 +387,10 @@ namespace interceptor
 
             if (Service.Name == "dhl")
                 manDocPack.Add(Service.Name + "=" + moneyForDHL.Text);
-            else if (Service.Name == "insurance")
-                manDocPack.Add(Service.Name + "=" + moneyForInsurance.Text);
+            else if (Service.Name == "insuranceRGS")
+                manDocPack.Add(Service.Name + "=" + moneyForInsuranceRGS.Text);
+            else if (Service.Name == "insuranceKL")
+                manDocPack.Add(Service.Name + "=" + moneyForInsuranceKL.Text);
             else
                 manDocPack.Add(Service.Name);
 
@@ -463,7 +466,8 @@ namespace interceptor
 
             moneyForDHL.Text = "0.00";
             moneyForCheck.Text = "0.00";
-            moneyForInsurance.Text = "0.00";
+            moneyForInsuranceRGS.Text = "0.00";
+            moneyForInsuranceKL.Text = "0.00";
             total.Content = String.Empty;
             totalR.Content = String.Empty;
             returnDate.Text = String.Empty;

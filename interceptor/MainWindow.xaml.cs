@@ -343,6 +343,7 @@ namespace interceptor
                 serv.IsEnabled = false;
 
             appNumber.IsEnabled = (block ? false : true);
+            appNumberClean.IsEnabled = (block ? false : true);
         }
 
         private void сloseCheck_Click(object sender, RoutedEventArgs e)

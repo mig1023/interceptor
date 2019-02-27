@@ -435,9 +435,9 @@ namespace interceptor
             UpdateVTypes();
         }
 
-        private void CleanCheck()
+        private void ButtonsClean(List<Button> buttons, int fontSize)
         {
-            foreach (Button serv in servButtonCleaningList)
+            foreach (Button serv in buttons)
             {
                 int bracketIndex = serv.Content.ToString().IndexOf('(');
 
@@ -445,8 +445,16 @@ namespace interceptor
                     serv.Content = serv.Content.ToString().Remove(bracketIndex - 1);
 
                 serv.FontWeight = FontWeights.Regular;
-                serv.FontSize = 12;
+                serv.FontSize = fontSize;
             }
+        }
+
+        private void CleanCheck()
+        {
+            ButtonsClean(
+                buttons: servButtonCleaningList,
+                fontSize: 12
+            );
 
             BlockCheckButton(block: false);
 
@@ -462,16 +470,10 @@ namespace interceptor
 
         private void CleanRCheck()
         {
-            foreach (Button serv in receptionButtonCleaningList)
-            {
-                int bracketIndex = serv.Content.ToString().IndexOf('(');
-
-                if (bracketIndex > 0)
-                    serv.Content = serv.Content.ToString().Remove(bracketIndex - 1);
-
-                serv.FontWeight = FontWeights.Regular;
-                serv.FontSize = 18;
-            }
+            ButtonsClean(
+                buttons: receptionButtonCleaningList,
+                fontSize: 18
+            );
 
             BlockRCheckButton(block: false);
 
@@ -507,15 +509,8 @@ namespace interceptor
         {
             decimal money = DocPack.manualParseDecimal(moneyForCheck.Text);
 
-            if (CheckMoneyFail(money))
+            if (CheckMoneyFail(money) || CheckAnotherDateFail(returnDate.Text))
                 return;
-
-            if (CheckAnotherDateFail(returnDate.Text))
-            {
-                ShowError(checkPlace, "Нельзя оплачивать даговор, указывая дату оплаты; оставьте это поле пустым");
-                CleanCheck();
-                return;
-            }
 
             string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money
@@ -527,11 +522,7 @@ namespace interceptor
         private void printCheckCard_Click(object sender, RoutedEventArgs e)
         {
             if (CheckAnotherDateFail(returnDate.Text))
-            {
-                ShowError(checkPlace, "Нельзя оплачивать даговор, указывая дату оплаты; оставьте это поле пустым");
-                CleanCheck();
                 return;
-            }
                 
             string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
@@ -787,7 +778,12 @@ namespace interceptor
             if (returnDate.Text == String.Empty)
                 return false;
             else
+            {
+                ShowError(checkPlace, "Нельзя оплачивать даговор, указывая дату оплаты; оставьте это поле пустым");
+                CleanCheck();
+
                 return true;
+            }
         }
 
         private void printRCheckCard_Click(object sender, RoutedEventArgs e)

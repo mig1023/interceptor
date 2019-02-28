@@ -36,6 +36,8 @@ namespace interceptor
 
         public static string PROTOCOL_PASS = "";
 
+        public enum fieldsErrors { noError, valueError, clickError, emptySummError };
+
         public MainWindow()
         {
             InitializeComponent();
@@ -348,9 +350,8 @@ namespace interceptor
             appNumberClean.IsEnabled = (block ? false : true);
         }
 
-        private int CheckServiceClickOrEmptyFail(string service, TextBox field)
+        private fieldsErrors CheckServiceClickOrEmptyFail(string service, TextBox field)
         {
-            int serviceFail = 0;
             double currentSumm = 0;
             bool fieldClicked = false;
 
@@ -359,85 +360,73 @@ namespace interceptor
             bool parse = Double.TryParse(field.Text, NumberStyles.Any, cultureInfo.NumberFormat, out currentSumm);
 
             if (!parse)
-                return 3;
+                return fieldsErrors.valueError;
 
             foreach (string serv in manDocPack)
                 if (serv.StartsWith(service))
                     fieldClicked = true;
 
             if (fieldClicked && currentSumm == 0)
-                serviceFail = 1;
+                return fieldsErrors.emptySummError;
 
             if (!fieldClicked && currentSumm > 0)
-                serviceFail = 2;
+                return fieldsErrors.clickError;
 
-            return serviceFail;
+            return fieldsErrors.noError;
         }
 
-        private void CheckEmptyServiceFail(string service, string fieldName, TextBox field, string fieldEmptyOld,
-            string fieldNotClickOld, string fieldNotParsedOld, out string fieldEmptyNew, out string fieldNotClickNew,
-            out string fieldNotParsed)
+        private void CheckEmptyServiceFail(string service, string fieldName, TextBox field,
+            string fieldEmptyOld, string fieldClickOld, string fieldParsedOld,
+            out string fieldEmptyNew, out string fieldClickNew, out string fieldParsedNew)
         {
             string tmpFieldEmpty = fieldEmptyOld;
-            string tmpFieldNotClick = fieldNotClickOld;
-            string tmpFieldNotParsed = fieldNotParsedOld;
+            string tmpFieldNotClick = fieldClickOld;
+            string tmpFieldNotParsed = fieldParsedOld;
 
             switch (CheckServiceClickOrEmptyFail(service, field))
             {
-                case 1:
+                case fieldsErrors.emptySummError:
                     tmpFieldEmpty += (String.IsNullOrEmpty(tmpFieldEmpty) ? String.Empty : ", ") + fieldName;
                     break;
-                case 2:
+                case fieldsErrors.clickError:
                     tmpFieldNotClick += (String.IsNullOrEmpty(tmpFieldNotClick) ? String.Empty : ", ") + fieldName;
                     break;
-                case 3:
+                case fieldsErrors.valueError:
                     tmpFieldNotParsed += (String.IsNullOrEmpty(tmpFieldNotParsed) ? String.Empty : ", ") + fieldName;
                     break;
             }
 
             fieldEmptyNew = tmpFieldEmpty;
-            fieldNotClickNew = tmpFieldNotClick;
-            fieldNotParsed = tmpFieldNotParsed;
+            fieldClickNew = tmpFieldNotClick;
+            fieldParsedNew = tmpFieldNotParsed;
         }
 
         private bool CheckEmptyServicesFail()
         {
             string errorField = String.Empty;
-            string errorFieldEmptySumm = String.Empty;
-            string errorFieldClick = String.Empty;
+            string errorEmpty = String.Empty;
+            string errorClick = String.Empty;
 
             CheckEmptyServiceFail("insuranceRGS", "'страховка РГС'", moneyForInsuranceRGS,
-                errorFieldEmptySumm, errorFieldClick, errorField, out errorFieldEmptySumm, out errorFieldClick, out errorField);
+                errorEmpty, errorClick, errorField, out errorEmpty, out errorClick, out errorField);
 
             CheckEmptyServiceFail("insuranceKL", "'страховка Капитал Лайф'", moneyForInsuranceKL,
-                errorFieldEmptySumm, errorFieldClick, errorField, out errorFieldEmptySumm, out errorFieldClick, out errorField);
+                errorEmpty, errorClick, errorField, out errorEmpty, out errorClick, out errorField);
 
-            CheckEmptyServiceFail("dhl", "'доставка'", moneyForDHL, errorFieldEmptySumm,
-                errorFieldClick, errorField, out errorFieldEmptySumm, out errorFieldClick, out errorField);
+            CheckEmptyServiceFail("dhl", "'доставка'", moneyForDHL, errorEmpty,
+                errorClick, errorField, out errorEmpty, out errorClick, out errorField);
 
             if (!String.IsNullOrEmpty(errorField))
-            {
-                MessageBoxResult result = MessageBoxes.ServFieldFail(errorField);
-
-                if (result != MessageBoxResult.Yes)
+                if (MessageBoxes.ServFieldFail(errorField) != MessageBoxResult.Yes)
                     return true;
-            }
 
-            if (!String.IsNullOrEmpty(errorFieldEmptySumm))
-            {
-                MessageBoxResult result = MessageBoxes.ServSummEmpty(errorFieldEmptySumm);
-
-                if (result != MessageBoxResult.Yes)
+            if (!String.IsNullOrEmpty(errorEmpty))
+                if (MessageBoxes.ServSummEmpty(errorEmpty) != MessageBoxResult.Yes)
                     return true;
-            }
 
-            if (!String.IsNullOrEmpty(errorFieldClick))
-            {
-                MessageBoxResult result = MessageBoxes.ServNoClick(errorFieldClick);
-
-                if (result != MessageBoxResult.Yes)
+            if (!String.IsNullOrEmpty(errorClick))
+                if (MessageBoxes.ServNoClick(errorClick) != MessageBoxResult.Yes)
                     return true;
-            }
 
             return false;
         }

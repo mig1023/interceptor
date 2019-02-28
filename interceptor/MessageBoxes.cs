@@ -41,9 +41,11 @@ namespace interceptor
             bool many = (services.IndexOf(',') >= 0 ? true : false);
 
             return MessageBox.Show(
-                "Выбран" + (many ? "ы услуги" : "а услуга") + " " + services +
-                ". Но " + (many ? "суммы оставлены нулевыми" : "сумма оставлена нулевой")  + ". Продолжить?",
-                "Внимание!",
+                (
+                    many ?
+                    "Выбраны услуги " + services + ". Но суммы оставлены нулевыми" :
+                    "Выбрана услуга " + services + ". Но сумма оставлена нулевой"
+                ) + ". Продолжить?", "Внимание!",
                 MessageBoxButton.YesNo, MessageBoxImage.Question
             );
         }
@@ -53,9 +55,11 @@ namespace interceptor
             bool many = (services.IndexOf(',') >= 0 ? true : false);
 
             return MessageBox.Show(
-                "Указанн" + (many ? "ы суммы" : "а сумма") + " для " + services +
-                ". Но " + (many ? "эти услуги не выбраны" : "эта услуга не выбрана") + ". Продолжить?",
-                "Внимание!",
+                (
+                    many ?
+                    "Указаны суммы для " + services + ". Но эти услуги не выбраны" :
+                    "Указана сумма для " + services + ". Но эта услуга не выбрана"
+                ) + ". Продолжить?", "Внимание!",
                 MessageBoxButton.YesNo, MessageBoxImage.Question
             );
         }
@@ -70,8 +74,7 @@ namespace interceptor
                     "В полях " + services + " указаны нечитаемые значения" :
                     "В поле " + services + " указано нечитаемое значение"
                 ) +                
-                ". Продолжить?",
-                "Внимание!",
+                ". Продолжить?", "Внимание!",
                 MessageBoxButton.YesNo, MessageBoxImage.Question
             );
         }

@@ -47,5 +47,33 @@ namespace interceptor
                 MessageBoxButton.YesNo, MessageBoxImage.Question
             );
         }
+
+        static public MessageBoxResult ServNoClick(string services)
+        {
+            bool many = (services.IndexOf(',') >= 0 ? true : false);
+
+            return MessageBox.Show(
+                "Указанн" + (many ? "ы суммы" : "а сумма") + " для " + services +
+                ". Но " + (many ? "эти услуги не выбраны" : "эта услуга не выбрана") + ". Продолжить?",
+                "Внимание!",
+                MessageBoxButton.YesNo, MessageBoxImage.Question
+            );
+        }
+
+        static public MessageBoxResult ServFieldFail(string services)
+        {
+            bool many = (services.IndexOf(',') >= 0 ? true : false);
+
+            return MessageBox.Show(
+                (
+                    many ? 
+                    "В полях " + services + " указаны нечитаемые значения" :
+                    "В поле " + services + " указано нечитаемое значение"
+                ) +                
+                ". Продолжить?",
+                "Внимание!",
+                MessageBoxButton.YesNo, MessageBoxImage.Question
+            );
+        }
     }
 }

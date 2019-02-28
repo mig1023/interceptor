@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Text.RegularExpressions;
 using System.Timers;
+using System.Globalization;
 
 namespace interceptor
 {
@@ -347,28 +348,103 @@ namespace interceptor
             appNumberClean.IsEnabled = (block ? false : true);
         }
 
-        private bool CheckEmptyServiceFail()
+        private int CheckServiceClickOrEmptyFail(string service, TextBox field)
+        {
+            int serviceFail = 0;
+            double currentSumm = 0;
+            bool fieldClicked = false;
+
+            CultureInfo cultureInfo = new CultureInfo("en-US", true);
+
+            bool parse = Double.TryParse(field.Text, NumberStyles.Any, cultureInfo.NumberFormat, out currentSumm);
+
+            if (!parse)
+                return 3;
+
+            foreach (string serv in manDocPack)
+                if (serv.StartsWith(service))
+                    fieldClicked = true;
+
+            if (fieldClicked && currentSumm == 0)
+                serviceFail = 1;
+
+            if (!fieldClicked && currentSumm > 0)
+                serviceFail = 2;
+
+            return serviceFail;
+        }
+
+        private void CheckEmptyServiceFail(string service, string fieldName, TextBox field, string fieldEmptyOld,
+            string fieldNotClickOld, string fieldNotParsedOld, out string fieldEmptyNew, out string fieldNotClickNew,
+            out string fieldNotParsed)
+        {
+            string tmpFieldEmpty = fieldEmptyOld;
+            string tmpFieldNotClick = fieldNotClickOld;
+            string tmpFieldNotParsed = fieldNotParsedOld;
+
+            switch (CheckServiceClickOrEmptyFail(service, field))
+            {
+                case 1:
+                    tmpFieldEmpty += (String.IsNullOrEmpty(tmpFieldEmpty) ? String.Empty : ", ") + fieldName;
+                    break;
+                case 2:
+                    tmpFieldNotClick += (String.IsNullOrEmpty(tmpFieldNotClick) ? String.Empty : ", ") + fieldName;
+                    break;
+                case 3:
+                    tmpFieldNotParsed += (String.IsNullOrEmpty(tmpFieldNotParsed) ? String.Empty : ", ") + fieldName;
+                    break;
+            }
+
+            fieldEmptyNew = tmpFieldEmpty;
+            fieldNotClickNew = tmpFieldNotClick;
+            fieldNotParsed = tmpFieldNotParsed;
+        }
+
+        private bool CheckEmptyServicesFail()
         {
             string errorField = String.Empty;
+            string errorFieldEmptySumm = String.Empty;
+            string errorFieldClick = String.Empty;
 
-            if (manDocPack.IndexOf("insuranceRGS=0.00") >= 0)
-                errorField += "страховка РГС";
-            if (manDocPack.IndexOf("insuranceKL=0.00") >= 0)
-                errorField += (String.IsNullOrEmpty(errorField) ? String.Empty : ", ") + "страховка Капитал Лайф";
-            if (manDocPack.IndexOf("dhl=0.00") >= 0)
-                errorField += (String.IsNullOrEmpty(errorField) ? String.Empty : ", ") + "доставка";
+            CheckEmptyServiceFail("insuranceRGS", "'страховка РГС'", moneyForInsuranceRGS,
+                errorFieldEmptySumm, errorFieldClick, errorField, out errorFieldEmptySumm, out errorFieldClick, out errorField);
 
-            MessageBoxResult result = MessageBoxes.ServSummEmpty(errorField);
+            CheckEmptyServiceFail("insuranceKL", "'страховка Капитал Лайф'", moneyForInsuranceKL,
+                errorFieldEmptySumm, errorFieldClick, errorField, out errorFieldEmptySumm, out errorFieldClick, out errorField);
 
-            if (result == MessageBoxResult.Yes)
-                return false;
-            else
-                return true;
+            CheckEmptyServiceFail("dhl", "'доставка'", moneyForDHL, errorFieldEmptySumm,
+                errorFieldClick, errorField, out errorFieldEmptySumm, out errorFieldClick, out errorField);
+
+            if (!String.IsNullOrEmpty(errorField))
+            {
+                MessageBoxResult result = MessageBoxes.ServFieldFail(errorField);
+
+                if (result != MessageBoxResult.Yes)
+                    return true;
+            }
+
+            if (!String.IsNullOrEmpty(errorFieldEmptySumm))
+            {
+                MessageBoxResult result = MessageBoxes.ServSummEmpty(errorFieldEmptySumm);
+
+                if (result != MessageBoxResult.Yes)
+                    return true;
+            }
+
+            if (!String.IsNullOrEmpty(errorFieldClick))
+            {
+                MessageBoxResult result = MessageBoxes.ServNoClick(errorFieldClick);
+
+                if (result != MessageBoxResult.Yes)
+                    return true;
+            }
+
+            return false;
         }
 
         private void сloseCheck_Click(object sender, RoutedEventArgs e)
         {
-            if (CheckEmptyServiceFail())
+            if (CheckEmptyServicesFail())
                 return;
 
             string sendingSuccess = CRM.SendManDocPack(

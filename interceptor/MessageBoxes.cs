@@ -35,5 +35,17 @@ namespace interceptor
                 MessageBoxButton.YesNo, MessageBoxImage.Question
             );
         }
+
+        static public MessageBoxResult ServSummEmpty(string services)
+        {
+            bool many = (services.IndexOf(',') >= 0 ? true : false);
+
+            return MessageBox.Show(
+                "Выбран" + (many ? "ы услуги" : "а услуга") + " " + services +
+                ". Но " + (many ? "суммы оставлены нулевыми" : "сумма оставлена нулевой")  + ". Продолжить?",
+                "Внимание!",
+                MessageBoxButton.YesNo, MessageBoxImage.Question
+            );
+        }
     }
 }

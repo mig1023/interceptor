@@ -347,8 +347,30 @@ namespace interceptor
             appNumberClean.IsEnabled = (block ? false : true);
         }
 
+        private bool CheckEmptyServiceFail()
+        {
+            string errorField = String.Empty;
+
+            if (manDocPack.IndexOf("insuranceRGS=0.00") >= 0)
+                errorField += "страховка РГС";
+            if (manDocPack.IndexOf("insuranceKL=0.00") >= 0)
+                errorField += (String.IsNullOrEmpty(errorField) ? String.Empty : ", ") + "страховка Капитал Лайф";
+            if (manDocPack.IndexOf("dhl=0.00") >= 0)
+                errorField += (String.IsNullOrEmpty(errorField) ? String.Empty : ", ") + "доставка";
+
+            MessageBoxResult result = MessageBoxes.ServSummEmpty(errorField);
+
+            if (result == MessageBoxResult.Yes)
+                return false;
+            else
+                return true;
+        }
+
         private void сloseCheck_Click(object sender, RoutedEventArgs e)
         {
+            if (CheckEmptyServiceFail())
+                return;
+
             string sendingSuccess = CRM.SendManDocPack(
                 manDocPack, login.Text, CRM.password, 1, moneyForCheck.Text,
                 allCenters.Text, allVisas.Text, returnDate.Text

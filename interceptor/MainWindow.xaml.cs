@@ -453,9 +453,7 @@ namespace interceptor
             {
                 Log.Add("некоторые услуги из чека не имеют цены: " + sendingData[1]);
 
-                MessageBoxResult result = MessageBoxes.NullInServices(sendingData[1]);
-
-                if (result == MessageBoxResult.Yes)
+                if (MessageBoxes.NullInServices(sendingData[1]) == MessageBoxResult.Yes)
                     BlockCheckButton(block: true);
                 else
                     CleanCheck();
@@ -811,9 +809,7 @@ namespace interceptor
             {
                 Log.Add("некоторые услуги из чека не имеют цены: " + sendingData[1]);
 
-                MessageBoxResult result = MessageBoxes.NullInServices(sendingData[1]);
-
-                if (result == MessageBoxResult.Yes)
+                if (MessageBoxes.NullInServices(sendingData[1]) == MessageBoxResult.Yes)
                     BlockRCheckButton(block: true);
                 else
                     CleanRCheck();

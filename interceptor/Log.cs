@@ -37,7 +37,7 @@ namespace interceptor
                     if (freeLine)
                         WriteLine(sw, date: true);
 
-                    WriteLine(sw, line: line, date: true);
+                    WriteLine(sw, line: line, date: true, logtype: logType);
 
                     if (logType == "http")
                         WriteLine(sw);
@@ -79,10 +79,19 @@ namespace interceptor
             }
         }
 
-        public static void WriteLine(StreamWriter sw, string line = "", bool date = false)
+        public static void WriteLine(StreamWriter sw, string line = "", bool date = false, string logtype = "")
         {
             string dateLine = (date ? DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss") : String.Empty);
             sw.WriteLine(dateLine + (line != String.Empty ? " " : String.Empty) + line);
+
+            if ((Application.Current == null) || (String.IsNullOrWhiteSpace(line)) || logtype != "main")
+                return;
+
+            Application.Current.Dispatcher.BeginInvoke(new ThreadStart(delegate
+            {
+                MainWindow main = (MainWindow)Application.Current.MainWindow;
+                main.logBox.Items.Add(dateLine + " " + line);
+            }));
         }
 
         public static void LogDirectory()

@@ -293,7 +293,7 @@
             <TextBox x:Name="moneyForInsuranceKL" Height="37" Canvas.Left="271" TextWrapping="Wrap" Text="0.00" Canvas.Top="193" Width="88" FontSize="22"/>
             <Label x:Name="currency4" Content="Р" Canvas.Left="359" Canvas.Top="185" FontSize="28"/>
         </Canvas>
-        <Canvas x:Name="receptionPlace" Margin="1587,0,-1587,0">
+        <Canvas x:Name="receptionPlace" Margin="796,0,-796,0">
             <Button x:Name="backToMainFromReception" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -485,8 +485,8 @@
             </Button>
             <Label x:Name="loginFailText" Content="Неизвестная ошибка" Height="33" Canvas.Left="52" Canvas.Top="126" Width="709" FontSize="16"/>
         </Canvas>
-        <Canvas x:Name="systemInfoPlace" Margin="2,-393,-2,393">
-            <Button x:Name="backToMainFromInfo" Content="назад" Height="42" Canvas.Left="606" Canvas.Top="321" Width="155" Click="backToMainFromInfo_Click">
+        <Canvas x:Name="systemInfoPlace" Margin="2,-395,-2,395">
+            <Button x:Name="backToMainFromInfo" Content="назад" Height="42" Canvas.Left="608" Canvas.Top="198" Width="155" Click="backToMainFromInfo_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
@@ -516,6 +516,7 @@
             <Label x:Name="status9" Content="" Height="25" Canvas.Left="184" Canvas.Top="180" Width="285"/>
             <Label x:Name="status10" Content="" Height="25" Canvas.Left="184" Canvas.Top="200" Width="285"/>
             <Label x:Name="status11" Content="" Height="25" Canvas.Left="184" Canvas.Top="220" Width="285"/>
+            <ListBox x:Name="logBox" Height="113" Canvas.Left="25" Canvas.Top="250" Width="738"/>
         </Canvas>
         <Canvas x:Name="cashboxSettingsFail" Margin="0,399,0,-399" Background="#FFFF4E4E">
             <Button x:Name="backToLoginFromSettingsFial" Content="вернуться" Height="42" Canvas.Left="59" Canvas.Top="294" Width="211" Click="backToLoginFromSettingsFial_Click">

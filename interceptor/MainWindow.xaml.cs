@@ -132,7 +132,7 @@ namespace interceptor
             MoveCanvas(
                 moveCanvas: checkPlace,
                 prevCanvas: mainPlace,
-                newHeight: 850
+                newHeight: 700
             );
         }
 

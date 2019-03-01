@@ -38,7 +38,7 @@
             <Image x:Name="checkImage" Height="150" Canvas.Left="308" Canvas.Top="89" Width="150" Source="Images\invoice.png" PreviewMouseDown="checkImage_PreviewMouseDown"/>
             <Image x:Name="receptionImage" Height="150" Canvas.Left="548" Canvas.Top="89" Width="150" Source="Images\reception.png" PreviewMouseDown="receptionImage_PreviewMouseDown"/>
         </Canvas>
-        <Canvas x:Name="checkPlace" Margin="796,0,-796,0">
+        <Canvas x:Name="checkPlace" Margin="796,0,-796,-276" Background="White">
             <Button x:Name="backToMainFromCheck" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromCheck_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -47,7 +47,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="closeCheck" Content="подытог" Height="44" Canvas.Left="19" Canvas.Top="321" Width="155" Click="сloseCheck_Click" FontSize="16">
+            <Button x:Name="closeCheck" Content="подытог" Height="44" Canvas.Left="24" Canvas.Top="323" Width="155" Click="сloseCheck_Click" FontSize="16">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="#FFF0F0F0" Offset="0.5"/>
@@ -293,7 +293,7 @@
             <TextBox x:Name="moneyForInsuranceKL" Height="37" Canvas.Left="271" TextWrapping="Wrap" Text="0.00" Canvas.Top="193" Width="88" FontSize="22"/>
             <Label x:Name="currency4" Content="Р" Canvas.Left="359" Canvas.Top="185" FontSize="28"/>
         </Canvas>
-        <Canvas x:Name="receptionPlace" Margin="796,0,-796,0">
+        <Canvas x:Name="receptionPlace" Margin="1571,0,-1571,0">
             <Button x:Name="backToMainFromReception" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -505,17 +505,17 @@
             <Label x:Name="status9_label" Content="состояние" Height="25" Canvas.Left="25" Canvas.Top="180" Width="122"/>
             <Label x:Name="status10_label" Content="текущий пользователь" Height="25" Canvas.Left="25" Canvas.Top="200" Width="141"/>
             <Label x:Name="status11_label" Content="режим кассы" Height="25" Canvas.Left="25" Canvas.Top="220" Width="141"/>
-            <Label x:Name="status1" Content="" Height="25" Canvas.Left="184" Canvas.Top="20" Width="285"/>
-            <Label x:Name="status2" Content="" Height="25" Canvas.Left="184" Canvas.Top="40" Width="285"/>
-            <Label x:Name="status3" Content="" Height="25" Canvas.Left="184" Canvas.Top="60" Width="285"/>
-            <Label x:Name="status4" Content="" Height="25" Canvas.Left="184" Canvas.Top="80" Width="285"/>
-            <Label x:Name="status5" Content="" Height="25" Canvas.Left="184" Canvas.Top="100" Width="285"/>
-            <Label x:Name="status6" Content="" Height="25" Canvas.Left="184" Canvas.Top="120" Width="285"/>
-            <Label x:Name="status7" Content="" Height="25" Canvas.Left="184" Canvas.Top="140" Width="285"/>
-            <Label x:Name="status8" Content="" Height="25" Canvas.Left="184" Canvas.Top="160" Width="285"/>
-            <Label x:Name="status9" Content="" Height="25" Canvas.Left="184" Canvas.Top="180" Width="285"/>
-            <Label x:Name="status10" Content="" Height="25" Canvas.Left="184" Canvas.Top="200" Width="285"/>
-            <Label x:Name="status11" Content="" Height="25" Canvas.Left="184" Canvas.Top="220" Width="285"/>
+            <Label x:Name="status1" Content="" Height="25" Canvas.Left="184" Canvas.Top="20" Width="579"/>
+            <Label x:Name="status2" Content="" Height="25" Canvas.Left="184" Canvas.Top="45" Width="579"/>
+            <Label x:Name="status3" Content="" Height="25" Canvas.Left="184" Canvas.Top="60" Width="579"/>
+            <Label x:Name="status4" Content="" Height="25" Canvas.Left="184" Canvas.Top="80" Width="579"/>
+            <Label x:Name="status5" Content="" Height="25" Canvas.Left="184" Canvas.Top="100" Width="579"/>
+            <Label x:Name="status6" Content="" Height="25" Canvas.Left="184" Canvas.Top="120" Width="579"/>
+            <Label x:Name="status7" Content="" Height="25" Canvas.Left="184" Canvas.Top="140" Width="579"/>
+            <Label x:Name="status8" Content="" Height="25" Canvas.Left="184" Canvas.Top="160" Width="579"/>
+            <Label x:Name="status9" Content="" Height="25" Canvas.Left="184" Canvas.Top="180" Width="419"/>
+            <Label x:Name="status10" Content="" Height="25" Canvas.Left="184" Canvas.Top="200" Width="419"/>
+            <Label x:Name="status11" Content="" Height="25" Canvas.Left="184" Canvas.Top="220" Width="419"/>
             <ListBox x:Name="logBox" Height="113" Canvas.Left="25" Canvas.Top="250" Width="738"/>
         </Canvas>
         <Canvas x:Name="cashboxSettingsFail" Margin="0,399,0,-399" Background="#FFFF4E4E">

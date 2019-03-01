@@ -75,8 +75,28 @@ namespace interceptor
             login.Focus();
         }
 
-        public void MoveCanvas(Canvas moveCanvas, Canvas prevCanvas, moveDirection direction = moveDirection.horizontal)
+        private void WindowResize(object Sender, EventArgs e, int newHeight)
         {
+            Application.Current.MainWindow.Height = newHeight;
+
+            foreach (string canvasName in new[] { "needUpdateRestart", "cashboxSettingsFail", "loginFail" })
+            {
+                Canvas canvas = ((Canvas)mainGrid.FindName(canvasName));
+                canvas.Margin = new Thickness(0, newHeight, 0, 0);
+            }
+
+            if (loginPlace.Visibility != Visibility.Hidden)
+                loginPlace.Visibility = Visibility.Hidden;
+        }
+
+        public void MoveCanvas(Canvas moveCanvas, Canvas prevCanvas, moveDirection direction = moveDirection.horizontal,
+            int? newHeight = null)
+        {
+            double currentHeight = Application.Current.MainWindow.Height;
+
+            if ((newHeight != null) && (currentHeight > newHeight))
+                 WindowResize(null, null, (int)newHeight);
+
             double left = (direction == moveDirection.horizontal ? 0 : moveCanvas.Margin.Left);
             double top = (direction == moveDirection.vertical ? 0 : moveCanvas.Margin.Top);
 
@@ -97,6 +117,9 @@ namespace interceptor
 
             move.To = new Thickness(left, top, prevCanvas.Margin.Right, prevCanvas.Margin.Bottom );
 
+            if ((newHeight != null) && (currentHeight < newHeight))
+                move.Completed += new EventHandler((sender, e) => WindowResize(sender, e, (int)newHeight));
+
             prevCanvas.BeginAnimation(MarginProperty, move);
         }
 
@@ -108,7 +131,8 @@ namespace interceptor
 
             MoveCanvas(
                 moveCanvas: checkPlace,
-                prevCanvas: mainPlace
+                prevCanvas: mainPlace,
+                newHeight: 850
             );
         }
 
@@ -155,7 +179,8 @@ namespace interceptor
         {
             MoveCanvas(
                 moveCanvas: mainPlace,
-                prevCanvas: checkPlace
+                prevCanvas: checkPlace,
+                newHeight: 420
             );
             
             Server.ShowActivity(busy: false);

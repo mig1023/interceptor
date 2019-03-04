@@ -240,7 +240,7 @@ namespace interceptor
                     index += 1;
                     settingText2.Items.Add(index.ToString() + ". " + field);
                 }
-                    
+
                 returnFromErrorTo = loginPlace;
                 canvasToGo = cashboxSettingsFail;
 
@@ -507,7 +507,7 @@ namespace interceptor
             Service.FontWeight = FontWeights.Bold;
             Service.FontSize = 14;
 
-            Match ReqMatch = Regex.Match(Service.Content.ToString(), @"^([^\d]+)\s\((\d+)\)");
+            Match ReqMatch = Regex.Match(Service.Content.ToString(), @"^([^\(]+)\s\((\d+)\)$");
 
             if (ReqMatch.Success)
             {

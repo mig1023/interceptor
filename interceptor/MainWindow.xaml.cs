@@ -87,6 +87,11 @@ namespace interceptor
             }
         }
 
+        private void HidePrevCanvas(object Sender, EventArgs e, Canvas prevCanvas)
+        {
+            prevCanvas.Visibility = Visibility.Visible;
+        }
+
         public void MoveCanvas(Canvas moveCanvas, Canvas prevCanvas, moveDirection direction = moveDirection.horizontal,
             int? newHeight = null)
         {
@@ -116,6 +121,8 @@ namespace interceptor
             move.From = prevCanvas.Margin;
 
             move.To = new Thickness(left, top, prevCanvas.Margin.Right, prevCanvas.Margin.Bottom );
+
+            move.Completed += new EventHandler((sender, e) => HidePrevCanvas(sender, e, prevCanvas));
 
             if ((newHeight != null) && (currentHeight < newHeight))
                 move.Completed += new EventHandler((sender, e) => WindowResize(sender, e, (int)newHeight));

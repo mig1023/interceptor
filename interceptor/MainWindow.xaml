@@ -57,7 +57,7 @@
             <Button x:Name="insuranceRGS" Content="&lt;---- страхование РГС" Height="37" Canvas.Left="471" Canvas.Top="459" Width="296" Tag="checkButtons" Click="addService_Click"/>
             <TextBox x:Name="moneyForInsuranceRGS" Height="37" Canvas.Left="335" TextWrapping="Wrap" Text="0.00" Canvas.Top="461" Width="104" FontSize="22"/>
             <Label x:Name="currency3" Content="Р" Canvas.Left="440" Canvas.Top="453" FontSize="28"/>
-            <Button x:Name="insuranceKL" Content="&lt;---- страхование Капитал Лайф" Height="37" Canvas.Left="471" Canvas.Top="504" Width="298" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="insuranceKL" Content="&lt;---- страхование Капитал Лайф" Height="37" Canvas.Left="471" Canvas.Top="504" Width="296" Tag="checkButtons" Click="addService_Click"/>
             <TextBox x:Name="moneyForInsuranceKL" Height="37" Canvas.Left="335" TextWrapping="Wrap" Text="0.00" Canvas.Top="504" Width="104" FontSize="22"/>
             <Label x:Name="currency4" Content="Р" Canvas.Left="440" Canvas.Top="496" FontSize="28"/>
         </Canvas>

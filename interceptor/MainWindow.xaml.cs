@@ -79,20 +79,20 @@ namespace interceptor
         {
             Application.Current.MainWindow.Height = newHeight;
 
-            foreach (string canvasName in new[] { "needUpdateRestart", "cashboxSettingsFail", "loginFail" })
+            foreach (string canvasName in new[] { "needUpdateRestart", "cashboxSettingsFail", "loginFail", "loginPlace" })
             {
                 Canvas canvas = ((Canvas)mainGrid.FindName(canvasName));
                 canvas.Margin = new Thickness(0, newHeight, 0, 0);
+                canvas.Visibility = Visibility.Hidden;
             }
-
-            if (loginPlace.Visibility != Visibility.Hidden)
-                loginPlace.Visibility = Visibility.Hidden;
         }
 
         public void MoveCanvas(Canvas moveCanvas, Canvas prevCanvas, moveDirection direction = moveDirection.horizontal,
             int? newHeight = null)
         {
             double currentHeight = Application.Current.MainWindow.Height;
+
+            moveCanvas.Visibility = Visibility.Visible;
 
             if ((newHeight != null) && (currentHeight > newHeight))
                  WindowResize(null, null, (int)newHeight);

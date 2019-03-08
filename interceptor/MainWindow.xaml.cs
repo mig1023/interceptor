@@ -83,13 +83,12 @@ namespace interceptor
             {
                 Canvas canvas = ((Canvas)mainGrid.FindName(canvasName));
                 canvas.Margin = new Thickness(0, newHeight, 0, 0);
-                canvas.Visibility = Visibility.Hidden;
             }
         }
 
         private void HidePrevCanvas(object Sender, EventArgs e, Canvas prevCanvas)
         {
-            prevCanvas.Visibility = Visibility.Visible;
+            prevCanvas.Visibility = Visibility.Hidden;
         }
 
         public void MoveCanvas(Canvas moveCanvas, Canvas prevCanvas, moveDirection direction = moveDirection.horizontal,

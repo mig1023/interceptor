@@ -102,7 +102,7 @@
             <Label x:Name="placeholderLogin" Content="введите vms логин" Height="26" Canvas.Left="254" Canvas.Top="126" Width="117" Foreground="#FFD8D8D8" MouseDown="placeholderLogin_MouseDown"/>
             <Label x:Name="placeholderPass" Content="введите vms пароль" Height="24" Canvas.Left="255" Canvas.Top="162" Width="123" Foreground="#FFD8D8D8" MouseDown="placeholderPass_MouseDown"/>
         </Canvas>
-        <Canvas x:Name="loginFail" Margin="0,397,0,-397" Background="#FFFF4E4E">
+        <Canvas x:Name="loginFail" Margin="0,397,0,-397" Background="#FFFF4E4E" Visibility="Hidden">
             <Button x:Name="backToLoginFromFail" Content="попробовать ещё раз" Height="42" Canvas.Left="59" Canvas.Top="164" Width="211" Click="returnFromError_Click"/>
             <Label x:Name="loginFailText" Content="Неизвестная ошибка" Height="33" Canvas.Left="52" Canvas.Top="126" Width="709" FontSize="16"/>
         </Canvas>
@@ -132,7 +132,7 @@
             <Label x:Name="status11" Content="" Height="25" Canvas.Left="184" Canvas.Top="220" Width="419"/>
             <ListBox x:Name="logBox" Height="113" Canvas.Left="25" Canvas.Top="250" Width="738"/>
         </Canvas>
-        <Canvas x:Name="cashboxSettingsFail" Margin="0,399,0,-399" Background="#FFFF4E4E">
+        <Canvas x:Name="cashboxSettingsFail" Margin="0,399,0,-399" Background="#FFFF4E4E" Visibility="Hidden">
             <Button x:Name="backToLoginFromSettingsFial" Content="вернуться" Height="42" Canvas.Left="59" Canvas.Top="294" Width="211" Click="backToLoginFromSettingsFial_Click"/>
             <Label x:Name="settingText1" Content="В настройках кассы обнаружены проблемы следующих полей:" Height="33" Canvas.Left="52" Canvas.Top="34" Width="480" FontSize="16"/>
             <ListBox x:Name="settingText2" Height="46" Canvas.Left="59" Canvas.Top="68" Width="674" Background="#FFFF7272"/>
@@ -143,7 +143,7 @@
             <Label x:Name="settingText7" Content="к системным администраторам" Height="33" Canvas.Left="52" Canvas.Top="194" Width="681" FontSize="16"/>
             <Button x:Name="reportAndRessetting" Content="закрыть смену, распечатать отчёт и перенастроить" Height="42" Canvas.Left="59" Canvas.Top="240" Width="346" Click="reportAndRessetting_Click"/>
         </Canvas>
-        <Canvas x:Name="needUpdateRestart" Margin="-4,399,4,-399" Background="#FFFF4E4E">
+        <Canvas x:Name="needUpdateRestart" Margin="-4,399,4,-399" Background="#FFFF4E4E" Visibility="Hidden">
             <Label x:Name="updateText" Content="Програме необходимо обновиться. В процессе обновления программа будет перезапущена" Height="80" Canvas.Left="52" Canvas.Top="146" Width="709" FontSize="16"/>
             <Button x:Name="updateButton" Content="обновить и перезапустить" Height="42" Canvas.Left="59" Canvas.Top="184" Width="211" Click="updateButton_Click"/>
         </Canvas>

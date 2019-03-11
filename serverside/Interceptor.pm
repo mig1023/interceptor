@@ -683,7 +683,9 @@ sub concil_add_price
 sub cash_box_output_error_check
 # //////////////////////////////////////////////////
 {
-	my ( $self, $code, $desc ) = @_;
+	my ( $self, $code, $desc, $docid ) = @_;
+	
+	my $vars = $self->{'VCS::Vars'};
 
 	if ( $code ne 'OK' ) {
 	
@@ -692,6 +694,11 @@ sub cash_box_output_error_check
 		$err_type = "(ошибка кассовой программы)" if $code =~ /^ERR1$/;
 		$err_type = "(ошибка кассы)" if $code =~ /^ERR2$/;
 		$err_type = "(ошибка настроек)" if $code =~ /^ERR(3|4)$/;
+		
+		$vars->db->query("
+			INSERT INTO Cashboxes_errors (CashboxID, Login, DocPackID, ErrorDate, Error) VALUES (?, ?, ?, now(), ?)", {},
+			$vars->get_session->{ interceptor }, $vars->get_session->{'login'}, $docid, "$err_type $desc"
+		);
 	
 		return cash_box_output( $self, "ERROR|$err_type $desc" );
 	}
@@ -718,7 +725,7 @@ sub cash_box_ship_return
 	
 	my ( $code, $desc, undef ) = send_docpack( $self, $docid, $ptype, $summ, undef, undef, undef, undef, undef, 'sh_return' );
 	
-	cash_box_output_error_check( $self, $code, $desc );
+	cash_box_output_error_check( $self, $code, $desc, $docid );
 }
 
 sub cash_box
@@ -747,7 +754,7 @@ sub cash_box
 	
 	my ( $code, $desc, undef ) = send_docpack( $self, $param->{ docid }, $param->{ ptype }, $param->{ summ } );
 	
-	cash_box_output_error_check( $self, $code, $desc );
+	cash_box_output_error_check( $self, $code, $desc, $param->{ docid } );
 }
 
 sub cash_box_auth

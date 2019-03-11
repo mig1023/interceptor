@@ -680,6 +680,40 @@ sub concil_add_price
 	return $concil_price;
 }
 
+sub cashbox_error
+# //////////////////////////////////////////////////
+{
+	my ( $self, $task, $id, $template, $slist, $authip, $clientip ) = @_;
+
+	my $vars = $self->{'VCS::Vars'};
+	
+	my $param = {};
+	
+	$param->{ $_ } = ( $vars->getparam( $_ ) || 0 ) for ( 'login', 'error', 'ip' );
+	
+	my ( $cashbox_id, $cashbox_name ) = $vars->db->sel1("
+		SELECT ID, Name FROM Cashboxes_interceptors WHERE InterceptorIP = ?", $param->{ ip }
+	);
+	
+	if ( !$cashbox_id ) {
+	
+		my $error = "ошибочный запрос с IP = " . $param->{ ip } . " ($clientip) с текстом: " .  $param->{ error };
+	
+		$vars->db->query("
+			INSERT INTO Cashboxes_errors (CashboxID, Login, DocPackID, ErrorDate, Error) VALUES (?, ?, ?, now(), ?)", {},
+			0, $param->{ login }, 0, $error
+		);
+	}
+	else {
+		$vars->db->query("
+			INSERT INTO Cashboxes_errors (CashboxID, Login, DocPackID, ErrorDate, Error) VALUES (?, ?, ?, now(), ?)", {},
+			$cashbox_id, $param->{ login }, 0, $param->{ error }
+		);
+	}
+		
+	return cash_box_output( $self, "OK|Информация получена" );
+}
+
 sub cash_box_output_error_check
 # //////////////////////////////////////////////////
 {

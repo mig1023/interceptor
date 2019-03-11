@@ -111,6 +111,27 @@ namespace interceptor
             return vtypeString.Split('|');
         }
 
+        public static void SendError(string error)
+        {
+            string requestResult = String.Empty;
+
+            string fields =
+                "login=" + currentLogin + "&error=" + error + "&ip=" + GetMyIP();
+
+            string url = CRM_URL + "/vcs/cashbox_error.htm?" + fields;
+
+            Log.Add(url, logType: "http");
+
+            try
+            {
+                requestResult = GetHtml(url);
+            }
+            catch (WebException e)
+            {
+                Log.AddWeb("(отправка информации об ошибке) " + e.Message);
+            }
+        }
+
         public static string GetMyIP()
         {
             IPAddress ip = Dns.GetHostByName(Dns.GetHostName()).AddressList[0];

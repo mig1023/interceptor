@@ -616,6 +616,8 @@ namespace interceptor
                 prevCanvas: from,
                 direction: moveDirection.vertical
             );
+
+            CRM.SendError(error);
         }
 
         public void CheckError(string[] result, Canvas place)

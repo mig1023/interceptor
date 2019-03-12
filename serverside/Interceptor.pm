@@ -689,25 +689,36 @@ sub cashbox_error
 	
 	my $param = {};
 	
-	$param->{ $_ } = ( $vars->getparam( $_ ) || 0 ) for ( 'login', 'error', 'ip' );
+	$param->{ $_ } = ( $vars->getparam( $_ ) || 0 ) for ( 'login', 'error', 'ip', 'agr' );
+	
+	$param->{ agr } =~ s/[^\d]+//g;
 	
 	my ( $cashbox_id, $cashbox_name ) = $vars->db->sel1("
 		SELECT ID, Name FROM Cashboxes_interceptors WHERE InterceptorIP = ?", $param->{ ip }
 	);
+	
+	my $docpack_id = 0;
+	
+	if ( $param->{ agr } ) {
+	
+		$docpack_id = $vars->db->sel1("
+			SELECT ID FROM DocPack WHERE AgreementNo = ?", $param->{ agr }
+		) || 0;
+	}
 	
 	if ( !$cashbox_id ) {
 	
 		my $error = "ошибочный запрос с IP = " . $param->{ ip } . " ($clientip) с текстом: " .  $param->{ error };
 	
 		$vars->db->query("
-			INSERT INTO Cashboxes_errors (CashboxID, Login, DocPackID, ErrorDate, Error) VALUES (?, ?, ?, now(), ?)", {},
-			0, $param->{ login }, 0, $error
+			INSERT INTO Cashboxes_errors (CashboxID, Login, DocPackID, ErrorDate, Error) VALUES (null, ?, null, now(), ?)", {},
+			$param->{ login }, $error
 		);
 	}
 	else {
 		$vars->db->query("
-			INSERT INTO Cashboxes_errors (CashboxID, Login, DocPackID, ErrorDate, Error) VALUES (?, ?, ?, now(), ?)", {},
-			$cashbox_id, $param->{ login }, 0, $param->{ error }
+			INSERT INTO Cashboxes_errors (Cashbox, CashboxID, Login, DocPackID, ErrorDate, Error) VALUES (?, ?, ?, ?, now(), ?)", {},
+			$cashbox_name, $cashbox_id, $param->{ login }, $docpack_id, $param->{ error }
 		);
 	}
 		

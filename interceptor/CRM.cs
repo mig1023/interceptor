@@ -111,12 +111,12 @@ namespace interceptor
             return vtypeString.Split('|');
         }
 
-        public static void SendError(string error)
+        public static void SendError(string error, string agrNumber = "")
         {
             string requestResult = String.Empty;
 
             string fields =
-                "login=" + currentLogin + "&error=" + error + "&ip=" + GetMyIP();
+                "login=" + currentLogin + "&error=" + error + "&ip=" + GetMyIP() + "&agr=" + agrNumber;
 
             string url = CRM_URL + "/vcs/cashbox_error.htm?" + fields;
 

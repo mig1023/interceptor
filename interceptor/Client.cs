@@ -71,9 +71,13 @@ namespace interceptor
 
         public static string ResponsePrepare(string request)
         {
-            if (!CheckRequest.CheckLoginInRequest(request))
+            string err = String.Empty;
+
+            if (!CheckRequest.CheckLoginInRequest(request, out err))
             {
                 Log.Add("конфликт логинов запроса и программы, возвращаем ошибку");
+
+                CRM.SendError("Конфликт логинов " + err);
 
                 return "ERR3:Кассовая программа запущена другим пользователем";
             }
@@ -91,13 +95,15 @@ namespace interceptor
 
             if (!CheckRequest.CheckXml(request))
             {
-                Log.Add("md5 ошибочен, возвращаем ошибку данных");
+                Log.Add("CRC ошибочна, возвращаем ошибку данных");
+
+                CRM.SendError("CRC ошибка");
 
                 return "ERR1:Ошибка переданных данных";
             }
             else
             {
-                Log.Add("md5 запроса корректен, логин соответствует");
+                Log.Add("CRC запроса корректна, логин соответствует");
 
                 DocPack docPack = new DocPack();
 

@@ -16,9 +16,11 @@ namespace interceptor
             return ReqMatch.Success;
         }
 
-        public static bool CheckLoginInRequest(string from)
+        public static bool CheckLoginInRequest(string from, out string logins)
         {
-            if (from == String.Empty)
+            logins = String.Empty;
+
+            if (String.IsNullOrEmpty(from))
                 return false;
 
             XmlDocument request = new XmlDocument();
@@ -27,6 +29,8 @@ namespace interceptor
 
             XmlNode senderCashierNode = request.SelectSingleNode("toCashbox/Info/Cashier");
             string senderCashier = senderCashierNode.InnerText;
+
+            logins = senderCashier + " <=> " + CRM.currentLogin;
 
             return senderCashier == CRM.currentLogin;
         }

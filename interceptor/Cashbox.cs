@@ -275,7 +275,12 @@ namespace interceptor
             if (checkClosingResult == 0)
                 return "OK:" + Driver.Change;
             else
+            {
+                CRM.SendError(checkClosingErrorText, doc.AgrNumber);
+
                 return "ERR2:" + checkClosingErrorText;
+            }
+                
         }
 
         public static void RepeatPrint(object obj, ElapsedEventArgs e)

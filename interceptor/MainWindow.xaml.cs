@@ -606,7 +606,7 @@ namespace interceptor
             appNumber.Text = String.Empty;
         }
 
-        private void ShowError(Canvas from, string error)
+        private void ShowError(Canvas from, string error, string agrNumber = "")
         {
             loginFailText.Content = error;
             returnFromErrorTo = from;
@@ -617,7 +617,7 @@ namespace interceptor
                 direction: moveDirection.vertical
             );
 
-            CRM.SendError(error);
+            CRM.SendError(error, agrNumber);
         }
 
         public void CheckError(string[] result, Canvas place)
@@ -625,7 +625,7 @@ namespace interceptor
             if (result[0] == "OK")
                 CleanCheck();
             else
-                ShowError(place, "Ошибка кассы: " + result[1]);
+                ShowError(place, "Ошибка кассы: " + result[1], Cashbox.manDocPackForPrinting.AgrNumber);
         }
 
         private void printCheckMoney_Click(object sender, RoutedEventArgs e)

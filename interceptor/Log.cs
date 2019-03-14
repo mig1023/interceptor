@@ -82,7 +82,7 @@ namespace interceptor
         public static void WriteLine(StreamWriter sw, string line = "", bool date = false, string logtype = "")
         {
             string dateLine = (date ? DateTime.Now.ToString("yyyy-MMM-dd HH:mm:ss") : String.Empty);
-            sw.WriteLine(dateLine + (line != String.Empty ? " " : String.Empty) + line);
+            sw.WriteLine(dateLine + (!String.IsNullOrEmpty(line) ? " " : String.Empty) + line);
 
             if ((Application.Current == null) || (String.IsNullOrWhiteSpace(line)) || logtype != "main")
                 return;

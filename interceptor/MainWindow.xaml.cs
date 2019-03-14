@@ -263,11 +263,11 @@ namespace interceptor
                     reportAndRessetting.Content = "перенастроить таблицы настроек";
                 }
             }
-            else if (updateData != String.Empty)
+            else if (!String.IsNullOrEmpty(updateData))
             {
                 updateDir = AutoUpdate.Update(updateData);
 
-                if (updateDir != String.Empty)
+                if (!String.IsNullOrEmpty(updateDir))
                 {
                     updateText.Content = "Програме необходимо обновиться. В процессе обновления программа будет перезапущена";
                     needUpdateRestart.Background = (Brush)new BrushConverter().ConvertFromString("#28CC51");
@@ -885,7 +885,7 @@ namespace interceptor
 
         private bool CheckDateFail(string date)
         {
-            if (returnDate.Text != String.Empty)
+            if (!String.IsNullOrEmpty(returnDate.Text))
                 return false;
 
             if (MessageBoxes.NullReturnDate() == MessageBoxResult.Yes)
@@ -896,7 +896,7 @@ namespace interceptor
 
         private bool CheckAnotherDateFail(string date)
         {
-            if (returnDate.Text == String.Empty)
+            if (String.IsNullOrEmpty(returnDate.Text))
                 return false;
             else
             {
@@ -968,7 +968,7 @@ namespace interceptor
 
         private void login_KeyUp(object sender, KeyEventArgs e)
         {
-            if (login.Text == String.Empty)
+            if (String.IsNullOrEmpty(login.Text))
                 placeholderLogin.Visibility = Visibility.Visible;
             else
                 placeholderLogin.Visibility = Visibility.Hidden;
@@ -976,7 +976,7 @@ namespace interceptor
 
         private void password_KeyUp(object sender, KeyEventArgs e)
         {
-            if (password.Password == String.Empty)
+            if (String.IsNullOrEmpty(password.Password))
                 placeholderPass.Visibility = Visibility.Visible;
             else
                 placeholderPass.Visibility = Visibility.Hidden;

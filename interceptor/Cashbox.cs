@@ -134,14 +134,15 @@ namespace interceptor
             Driver.GetFieldStruct();
             Driver.ReadTable();
 
-            if ((fieldValue != String.Empty) && (fieldValue != Driver.ValueOfFieldString))
+            if (!String.IsNullOrEmpty(fieldValue) && (fieldValue != Driver.ValueOfFieldString))
             {
                 Log.AddWithCode("запись в поле кассы " + tableNumber + "/" + fieldNumber + "/" + rowNumber + " значения " + fieldValue);
 
                 Driver.ValueOfFieldString = fieldValue;
                 Driver.WriteTable();
 
-                if (Driver.ResultCode != 0) return String.Empty;
+                if (Driver.ResultCode != 0)
+                    return String.Empty;
             }
                 
             return Driver.ValueOfFieldString;
@@ -155,7 +156,7 @@ namespace interceptor
         public static bool resettingCashbox()
         {
             foreach (CashboxData field in CashboxData.data)
-                if (TableField(field.tableNumber, field.fieldNumber, field.rowNumber, field.fieldValue) == String.Empty)
+                if (String.IsNullOrEmpty(TableField(field.tableNumber, field.fieldNumber, field.rowNumber, field.fieldValue)))
                     return false;
 
             return true;
@@ -176,7 +177,7 @@ namespace interceptor
         {
             Driver.Password = currentDrvPassword;
 
-            if (text != String.Empty)
+            if (!String.IsNullOrEmpty(text))
             {
                 Driver.StringForPrinting = text;
                 Driver.PrintString();

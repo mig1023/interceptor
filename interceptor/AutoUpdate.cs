@@ -62,13 +62,12 @@ namespace interceptor
             catch (WebException e)
             {
                 Log.AddWeb(e.Message, "update");
-
                 return String.Empty;
             }
 
             string version = GetLastVersion(versionData);
 
-            if ((version == String.Empty) || (version == MainWindow.CURRENT_VERSION_CLEAN))
+            if (String.IsNullOrEmpty(version) || (version == MainWindow.CURRENT_VERSION_CLEAN))
                 return String.Empty;
             else
                 return versionData;
@@ -76,7 +75,7 @@ namespace interceptor
 
         public static string GetLastVersion(string from)
         {
-            if (from == String.Empty)
+            if (String.IsNullOrEmpty(from))
                 return from;
 
             XmlDocument xmlData = new XmlDocument();

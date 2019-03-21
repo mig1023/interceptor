@@ -263,7 +263,7 @@ namespace interceptor
                     reportAndRessetting.Content = "перенастроить таблицы настроек";
                 }
             }
-            else if (!String.IsNullOrEmpty(updateData))
+            else if (!String.IsNullOrEmpty(updateData) && !TEST_VERSION)
             {
                 updateDir = AutoUpdate.Update(updateData);
 

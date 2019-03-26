@@ -70,8 +70,10 @@ namespace interceptor
 
         private void WindowResize(object Sender, EventArgs e, int newHeight)
         {
+            Application.Current.MainWindow.Height = newHeight;
+
             foreach (Canvas canvas in new List<Canvas> () { needUpdateRestart, cashboxSettingsFail, loginFail, loginPlace })
-                canvas.Margin = new Thickness(0, Application.Current.MainWindow.Height, 0, 0);
+                canvas.Margin = new Thickness(0, newHeight, 0, 0);
         }
 
         private void HidePrevCanvas(object Sender, EventArgs e, Canvas prevCanvas)

@@ -339,20 +339,20 @@ namespace interceptor
 
         private void BlockCheckButton(bool block)
         {
-            moneyForCheck.IsEnabled = (block ? true : false);
-            returnDate.IsEnabled = (block ? false : true);
+            moneyForCheck.IsEnabled = block;
+            returnDate.IsEnabled = !block;
 
             foreach (Button button in new List<Button>() { printCheckMoney, printCheckCard, returnSale, returnSaleCard })
-                button.IsEnabled = (block ? true : false);
+                button.IsEnabled = block;
 
             foreach (Button serv in servButtonCleaningList)
-                serv.IsEnabled = (block ? false : true);
+                serv.IsEnabled = !block;
 
             foreach (ComboBox combobox in new List<ComboBox>() { allVisas, allCenters, allVisas, allCenters })
-                combobox.IsEnabled = (block ? false : true);
+                combobox.IsEnabled = !block;
 
             foreach (TextBox textbox in new List<TextBox>() { moneyForDHL, moneyForInsuranceRGS, moneyForInsuranceKL  })
-                textbox.IsEnabled = (block ? false : true);
+                textbox.IsEnabled = !block;
         }
 
         private void BlockRCheckButton(bool block)

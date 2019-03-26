@@ -54,36 +54,24 @@ namespace interceptor
             ThreadPool.SetMaxThreads(MaxThreadsCount, MaxThreadsCount);
             ThreadPool.SetMinThreads(2, 2);
 
-            foreach (string buttonName in new[] {
-                "closeCheck",
-                "service", "service_urgent",
-                "vipsrv",
-                "concil", "concil_urg_r", "concil_n", "concil_n_age",
-                "sms_status",
-                "anketasrv",
-                "printsrv",
-                "photosrv",
-                "xerox",
-                "dhl", "insuranceRGS", "insuranceKL",
-                "srv1", "srv2", "srv3", "srv4", "srv5", "srv6", "srv7", "srv8", "srv9"
-            }) servButtonCleaningList.Add((Button)mainGrid.FindName(buttonName));
+            foreach (Button button in new List<Button> {
+                closeCheck, service, service_urgent, vipsrv, concil, concil_urg_r,
+                concil_n, concil_n_age, sms_status, anketasrv, printsrv, photosrv,
+                xerox, dhl, insuranceRGS, insuranceKL, srv1, srv2, srv3, srv4, srv5,
+                srv6, srv7, srv8, srv9
+            })
+                servButtonCleaningList.Add(button);
 
-            foreach (string buttonName in new[] {
-                "anketasrvR", "printsrvR", "photosrvR", "xeroxR"
-            }) receptionButtonCleaningList.Add((Button)mainGrid.FindName(buttonName));
+            foreach (Button button in new List<Button> { anketasrvR, printsrvR, photosrvR, xeroxR })
+                receptionButtonCleaningList.Add(button);
 
             login.Focus();
         }
 
         private void WindowResize(object Sender, EventArgs e, int newHeight)
         {
-            Application.Current.MainWindow.Height = newHeight;
-
-            foreach (string canvasName in new[] { "needUpdateRestart", "cashboxSettingsFail", "loginFail", "loginPlace" })
-            {
-                Canvas canvas = ((Canvas)mainGrid.FindName(canvasName));
-                canvas.Margin = new Thickness(0, newHeight, 0, 0);
-            }
+            foreach (Canvas canvas in new List<Canvas> () { needUpdateRestart, cashboxSettingsFail, loginFail, loginPlace })
+                canvas.Margin = new Thickness(0, Application.Current.MainWindow.Height, 0, 0);
         }
 
         private void HidePrevCanvas(object Sender, EventArgs e, Canvas prevCanvas)
@@ -350,35 +338,32 @@ namespace interceptor
         private void BlockCheckButton(bool block)
         {
             moneyForCheck.IsEnabled = (block ? true : false);
-            printCheckMoney.IsEnabled = (block ? true : false);
-            printCheckCard.IsEnabled = (block ? true : false);
-            returnSale.IsEnabled = (block ? true : false);
-            returnSaleCard.IsEnabled = (block ? true : false);
+            returnDate.IsEnabled = (block ? false : true);
+
+            foreach (Button button in new List<Button>() { printCheckMoney, printCheckCard, returnSale, returnSaleCard })
+                button.IsEnabled = (block ? true : false);
 
             foreach (Button serv in servButtonCleaningList)
                 serv.IsEnabled = (block ? false : true);
 
-            allCenters.IsEnabled = (block ? false : true);
-            allVisas.IsEnabled = (block ? false : true);
-            returnDate.IsEnabled = (block ? false : true);
-            moneyForDHL.IsEnabled = (block ? false : true);
-            allCenters.IsEnabled = (block ? false : true);
-            allVisas.IsEnabled = (block ? false : true);
-            moneyForInsuranceRGS.IsEnabled = (block ? false : true);
-            moneyForInsuranceKL.IsEnabled = (block ? false : true);
+            foreach (ComboBox combobox in new List<ComboBox>() { allVisas, allCenters, allVisas, allCenters })
+                combobox.IsEnabled = (block ? false : true);
+
+            foreach (TextBox textbox in new List<TextBox>() { moneyForDHL, moneyForInsuranceRGS, moneyForInsuranceKL  })
+                textbox.IsEnabled = (block ? false : true);
         }
 
         private void BlockRCheckButton(bool block)
         {
             moneyForRCheck.IsEnabled = (block ? true : false);
-            printRCheckMoney.IsEnabled = (block ? true : false);
-            printRCheckCard.IsEnabled = (block ? true : false);
+            appNumber.IsEnabled = (block ? false : true);
+            appNumberClean.IsEnabled = (block ? false : true);
+
+            foreach (Button button in new List<Button>() { printRCheckMoney, printRCheckCard })
+                button.IsEnabled = (block ? true : false);
 
             foreach (Button serv in receptionButtonCleaningList)
                 serv.IsEnabled = false;
-
-            appNumber.IsEnabled = (block ? false : true);
-            appNumberClean.IsEnabled = (block ? false : true);
         }
 
         private fieldsErrors CheckServiceClickOrEmptyFail(string service, TextBox field)
@@ -806,19 +791,11 @@ namespace interceptor
             string appNumberClean = Regex.Replace(appNumber.Text, @"[^0-9]", String.Empty);
 
             if ((appNumberClean.Length == 15) || (appNumberClean.Length == 9))
-            {
-                anketasrvR.IsEnabled = true;
-                printsrvR.IsEnabled = true;
-                photosrvR.IsEnabled = true;
-                xeroxR.IsEnabled = true;
-            }
+                foreach(Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR })
+                    button.IsEnabled = true;
             else
-            {
-                anketasrvR.IsEnabled = false;
-                printsrvR.IsEnabled = false;
-                photosrvR.IsEnabled = false;
-                xeroxR.IsEnabled = false;
-            }
+                foreach (Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR })
+                    button.IsEnabled = false;
         }
 
         private void closeRCheck_Click(object sender, RoutedEventArgs e)

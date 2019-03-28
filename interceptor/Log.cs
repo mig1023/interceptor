@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Xml.Serialization;
 
 namespace interceptor
@@ -90,7 +92,18 @@ namespace interceptor
             Application.Current.Dispatcher.BeginInvoke(new ThreadStart(delegate
             {
                 MainWindow main = (MainWindow)Application.Current.MainWindow;
+
+                string[] logLines = new string[main.logBox.Items.Count];
+
+                for (int a = 0; a < main.logBox.Items.Count; a += 1)
+                    logLines[a] = main.logBox.Items[a].ToString();
+
+                main.logBox.Items.Clear();
+
                 main.logBox.Items.Add(dateLine + " " + line);
+
+                for (int b = 0; b < logLines.Count(); b += 1)
+                    main.logBox.Items.Add(logLines[b]);
             }));
         }
 

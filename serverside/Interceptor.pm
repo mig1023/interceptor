@@ -819,7 +819,7 @@ sub cash_box_auth
 		SELECT Login, UserName, UserLName, UserSName
 		FROM Users
 		WHERE Login = ? AND Pass = ? AND
-		(RoleID = 8 OR RoleID = 5 OR RoleID = 2)
+		(RoleID = 8 OR RoleID = 5 OR RoleID = 2 OR RoleID = 23 OR RoleID = 39)
 		AND Locked = 0",
 		$param->{ login }, $param->{ p }
 	);

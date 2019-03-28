@@ -11,8 +11,6 @@ namespace autoupdate
 {
     class AutoUpdate
     {
-        static string PROTOCOL_PASS = "";
-
         static void Main(string[] args)
         {
             if ((args.Length > 1) && (args[0].ToLower() == "md5show"))
@@ -70,16 +68,6 @@ namespace autoupdate
 
         public static string CreateMD5(string input, bool notOrd = false)
         {
-            if (notOrd)
-                input += PROTOCOL_PASS;
-            else
-            {
-                byte[] bytes = Encoding.GetEncoding(1251).GetBytes(PROTOCOL_PASS);
-
-                foreach (byte b in bytes)
-                    input += b.ToString() + " ";
-            }
-
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
             {
                 byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);

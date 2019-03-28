@@ -34,7 +34,7 @@ namespace interceptor
 
                 string[] lines = System.IO.File.ReadAllLines(UPDATE_DIR + name);
 
-                string crcCheck = CheckRequest.CreateMD5(string.Join(String.Empty, lines));
+                string crcCheck = CheckRequest.CreateMD5(string.Join(String.Empty, lines), withOutPass: false);
 
                 if (crcCheck != node["CRC"].InnerText)
                     return String.Empty;

@@ -47,6 +47,8 @@ namespace interceptor
             if (TEST_VERSION)
                 this.Title += " <--- test";
 
+            versionLabel.Content = "версия " + CURRENT_VERSION;
+
             Log.Add("ПЕРЕХВАТЧИК ЗАПУЩЕН", freeLine: true);
             Log.Add("версия ---> " + CURRENT_VERSION, freeLineAfter: true);
 
@@ -219,6 +221,29 @@ namespace interceptor
 
                 Log.Add("ошибка входа с логином " + login.Text);
             }
+            else if (!String.IsNullOrEmpty(updateData) && !TEST_VERSION)
+            {
+                updateDir = AutoUpdate.Update(updateData);
+
+                if (!String.IsNullOrEmpty(updateDir))
+                {
+                    updateText.Content = "Програме необходимо обновиться. В процессе обновления программа будет перезапущена";
+                    needUpdateRestart.Background = (Brush)new BrushConverter().ConvertFromString("#28CC51");
+
+                    Log.Add("необходимо обновление с перезапуском", "update");
+                }
+                else
+                {
+                    updateText.Content = "В процессе обновления программы произошла ошибка загрузки необходимых данных!\nПожалуйста, обратитесь к системным администраторам";
+                    updateButton.Visibility = Visibility.Hidden;
+                    needUpdateRestart.Background = (Brush)new BrushConverter().ConvertFromString("#FFFF4E4E");
+
+                    Log.Add("ошибка обновления: контрольные суммы файлов не совпали", "update");
+                }
+
+                returnFromErrorTo = loginPlace;
+                canvasToGo = needUpdateRestart;
+            }
             else if (Diagnostics.FailCashbox())
             {
                 loginFailText.Content = "Ошибка подключения к кассе. Проверьте подключение и перезапустите приложение";
@@ -252,30 +277,7 @@ namespace interceptor
                     settingText5.Visibility = Visibility.Hidden;
                     reportAndRessetting.Content = "перенастроить таблицы настроек";
                 }
-            }
-            else if (!String.IsNullOrEmpty(updateData) && !TEST_VERSION)
-            {
-                updateDir = AutoUpdate.Update(updateData);
-
-                if (!String.IsNullOrEmpty(updateDir))
-                {
-                    updateText.Content = "Програме необходимо обновиться. В процессе обновления программа будет перезапущена";
-                    needUpdateRestart.Background = (Brush)new BrushConverter().ConvertFromString("#28CC51");
-
-                    Log.Add("необходимо обновление с перезапуском", "update");
-                }
-                else
-                {
-                    updateText.Content = "В процессе обновления программы произошла ошибка загрузки необходимых данных!\nПожалуйста, обратитесь к системным администраторам";
-                    updateButton.Visibility = Visibility.Hidden;
-                    needUpdateRestart.Background = (Brush)new BrushConverter().ConvertFromString("#FFFF4E4E");
-
-                    Log.Add("ошибка обновления: контрольные суммы файлов не совпали", "update");
-                }
-
-                returnFromErrorTo = loginPlace;
-                canvasToGo = needUpdateRestart;
-            }
+            }    
             else
             {
                 Server.StartServer();

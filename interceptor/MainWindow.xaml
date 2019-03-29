@@ -96,6 +96,7 @@
         </Canvas>
 
         <Canvas x:Name="loginPlace" Margin="-3,0,3,0">
+            <Label x:Name="versionLabel" Content="версия 1.e4" Height="22" Canvas.Left="252" FontSize="9" Padding="0"  Canvas.Top="242" Width="295" HorizontalContentAlignment="Right"/>
             <Button x:Name="sendLogin" Content="залогиниться" Height="42" Canvas.Top="197" Width="295" Click="sendLogin_Click" Canvas.Left="252"/>
             <TextBox x:Name="login" Height="27" Canvas.Left="252" TextWrapping="Wrap" Canvas.Top="126" Width="295" HorizontalAlignment="Left" KeyUp="login_KeyUp" FontSize="16"/>
             <PasswordBox x:Name="password" Height="27" Canvas.Left="252" Canvas.Top="162" Width="295" KeyDown="password_KeyDown" KeyUp="password_KeyUp" FontSize="16"/>

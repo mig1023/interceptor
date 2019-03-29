@@ -219,7 +219,7 @@ namespace interceptor
 
                 Driver.Department = service.Department;
 
-                Driver.Tax1 = service.VAT;
+                Driver.Tax1 = ( service.VAT == 1 ? 1 : 2 );
                 Driver.Tax2 = 0;
                 Driver.Tax3 = 0;
                 Driver.Tax4 = 0;

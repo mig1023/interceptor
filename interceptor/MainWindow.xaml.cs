@@ -612,7 +612,12 @@ namespace interceptor
         public void CheckError(string[] result, Canvas place)
         {
             if (result[0] == "OK")
+            {
                 CleanCheck();
+                MessageBoxResult msg = MessageBox.Show(
+                  "Сдача: " + result[1], "Оплата", MessageBoxButton.OK, MessageBoxImage.Information
+               );
+            }
             else
                 ShowError(place, "Ошибка кассы: " + result[1], Cashbox.manDocPackForPrinting.AgrNumber);
         }

@@ -1142,9 +1142,11 @@ sub cash_box_mandocpack
 	( $data->{ vtype }, $data->{ vcat } ) = $vars->db->sel1("
 		SELECT ID, category FROM VisaTypes WHERE VName = ?", $param->{ vtype }
 	);
+	
+	$param->{ services } =~ s/,/./g;
 
 	$serv_hash->{ $_ } += 1 for split( /\|/, $param->{ services } );
-	
+
 	my ( $urgent_docpack, $concil_index ) = ( 0, 0 );
 	
 	$data->{ applicants } = [];

@@ -117,10 +117,19 @@ sub send_docpack
 
 	my $resp = send_request( $vars, $request, undef, $callback );
 	
-	$vars->db->query("
-		UPDATE Cashboxes_interceptors SET LastUse = now(), LastResponse = ? WHERE ID = ?", {},
-		$resp, $vars->get_session->{ interceptor }
-	);
+	if ( $vars->get_session->{ interceptor } ) {
+	
+		$vars->db->query("
+			UPDATE Cashboxes_interceptors SET LastUse = now(), LastResponse = ? WHERE ID = ?", {},
+			$resp, $vars->get_session->{ interceptor }
+		);
+	}
+	else {
+		$vars->db->query("
+			UPDATE Cashboxes_interceptors SET LastUse = now(), LastResponse = ? WHERE InterceptorIP = ?", {},
+			$resp, $callback
+		);
+	}
 	
 	my ( $code, $desc ) = split( /:/, $resp );
 	
@@ -837,8 +846,8 @@ sub cash_box_auth
 	return cash_box_output( $self, "ERROR|IP-адрес не найден в БД или не установлен кассовый пароль" ) unless $pass;
 	
 	$vars->db->query("
-		UPDATE Cashboxes_interceptors SET LastVersion = ? WHERE InterceptorIP = ?", {},
-		$param->{ v }, $param->{ ip }
+		UPDATE Cashboxes_interceptors SET LastVersion = ?, LastUser = ?, LastUse = now() WHERE InterceptorIP = ?", {},
+		$param->{ v }, $login, $param->{ ip }
 	);
 	
 	return cash_box_output( $self, "OK|$pass|$surname $name $secname" );

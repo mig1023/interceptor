@@ -122,7 +122,9 @@ sub send_docpack
 		$resp, $vars->get_session->{ interceptor }
 	);
 	
-	return split( /:/, $resp ), $services_fail;
+	my ( $code, $desc ) = split( /:/, $resp );
+	
+	return $code, $desc, $services_fail;
 }
 
 sub xml_create
@@ -608,10 +610,10 @@ sub doc_services
 		$servsums->{ $_ } = $serv_hash->{ $_ };
 	}
 
-	my ( $total, $mandocpack_failserv, $ord ) = ( 0, '', 1 );
-
-	for my $serv ( keys %$servsums ) {
+	my ( $total, $mandocpack_failserv, $ord ) = ( 0, undef, 1 );
 	
+	for my $serv ( keys %$servsums ) {
+
 		$servsums->{ $serv }->{ Name } =
 			get_service_code( $self, $serv, $data->{ center }, $data->{ urgent }, $ord ) . $servsums->{ $serv }->{ Name }
 				unless $servsums->{ $serv }->{ WithoutServCode };
@@ -1200,7 +1202,7 @@ sub cash_box_mandocpack
 	
 	my ( undef, undef, $mandocpack_failserv ) = send_docpack( $self, undef, $param->{ moneytype }, $param->{ money }, $data,
 		$param->{ login }, $param->{ pass }, $param->{ callback }, $param->{ r } );
-		
+
 	return cash_box_output( $self, "WARNING|$mandocpack_failserv" ) if $mandocpack_failserv;
 
 	return cash_box_output( $self, "OK|Запрос получен" );

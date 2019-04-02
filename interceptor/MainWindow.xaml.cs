@@ -35,6 +35,7 @@ namespace interceptor
         public string updateDir = String.Empty;
 
         public static string PROTOCOL_PASS = "";
+        public static int PROTOCOL_PORT = 80;
 
         public enum fieldsErrors { noError, valueError, clickError, emptySummError };
 
@@ -139,7 +140,7 @@ namespace interceptor
             string port, speed, status, version, model;
 
             status1.Content = CURRENT_VERSION;
-            status2.Content = CRM.GetMyIP();
+            status2.Content = CRM.GetMyIP() + " ( порт " + PROTOCOL_PORT + " )";
             status3.Content = CRM.CRM_URL_BASE;
 
             Cashbox.GetStatusData(out port, out speed, out status, out version, out model);

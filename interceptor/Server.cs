@@ -57,7 +57,7 @@ namespace interceptor
         {
             Log.Add("сервер запущен");
 
-            new Server(80);
+            new Server(MainWindow.PROTOCOL_PORT);
         }
 
         ~Server()

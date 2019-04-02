@@ -8,6 +8,9 @@ use Digest::MD5  qw(md5_hex);
 use Data::Dumper;
 use Encode qw(decode encode);
 
+sub protocol_pass { return ''; };
+
+sub protocol_port { return 80; };
 
 sub new
 # //////////////////////////////////////////////////
@@ -37,10 +40,6 @@ sub send_connection_signal
 	return send_request( $vars, $request, $interceptor );
 }
 
-sub protocol_pass
-{
-	return '';
-}
 
 sub md5_crc_with_secret_code
 {
@@ -201,6 +200,8 @@ sub send_request
 	
 	my $serv;
 	
+	my $port = protocol_port();
+	
 	if ( !$callback ) {
 	
 		$interceptor = $vars->get_session->{ interceptor } unless $interceptor;
@@ -220,7 +221,7 @@ sub send_request
 	
 	$ua->agent( 'Mozilla/4.0 (compatible; MSIE 6.0; X11; Linux i686; en) Opera 7.60' );
 
-	my $request = HTTP::Request->new( GET => 'http://'.$serv.'/?message='.$line.';' );
+	my $request = HTTP::Request->new( GET => 'http://'."$serv:$port".'/?message='.$line.';' );
 
 	my $response = $ua->request( $request );
 

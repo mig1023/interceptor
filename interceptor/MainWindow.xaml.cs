@@ -268,6 +268,8 @@ namespace interceptor
 
                 Log.Add("ошибка настроек кассы");
 
+                Cashbox.TablesBackup();
+
                 if (Cashbox.CurrentMode() != 4)
                 {
                     settingText5.Visibility = Visibility.Visible;

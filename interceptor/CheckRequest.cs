@@ -30,7 +30,7 @@ namespace interceptor
             XmlNode senderCashierNode = request.SelectSingleNode("toCashbox/Info/Cashier");
             string senderCashier = senderCashierNode.InnerText;
 
-            logins = senderCashier + " <=> " + CRM.currentLogin;
+            logins = senderCashier + " (запрос) <=> " + CRM.currentLogin + " (перехватчик)";
 
             return senderCashier == CRM.currentLogin;
         }

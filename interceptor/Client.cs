@@ -75,11 +75,13 @@ namespace interceptor
 
             if (!CheckRequest.CheckLoginInRequest(request, out err))
             {
-                Log.Add("конфликт логинов запроса и программы, возвращаем ошибку");
+                Log.Add("конфликт логинов: " + err);
 
-                CRM.SendError("Конфликт логинов " + err);
+                CRM.SendError("Конфликт логинов: " + err);
 
-                return "ERR3:Кассовая программа запущена другим пользователем";
+                Server.ShowActivity(busy: false);
+
+                return "ERR3:Кассовая программа запущена пользователем " + CRM.currentLogin;
             }
 
             if (CheckRequest.CheckConnection(request))

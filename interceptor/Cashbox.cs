@@ -129,7 +129,7 @@ namespace interceptor
         {
             Driver.Password = CRM.adminPassword;
 
-            for(int table = 1; table < 25; table += 1)
+            for (int table = 1; table < 25; table += 1)
             {
                 Driver.TableNumber = table;
                 Driver.GetTableStruct();
@@ -137,10 +137,9 @@ namespace interceptor
                 int rowMax = Driver.RowNumber;
                 int fieldMax = Driver.FieldNumber;
 
-                Log.Add("*******ТАБЛИЦА: " + Driver.TableName + " сторбцов " + Driver.FieldNumber + " строк " + Driver.RowNumber);
+                Log.Add("//////////// ТАБЛИЦА: " + Driver.TableName, "tables-backup");
 
                 for (int row = 1; row <= rowMax; row += 1)
-                {
                     for (int field = 1; field <= fieldMax; field += 1)
                     {
                         Driver.TableNumber = table;
@@ -150,15 +149,9 @@ namespace interceptor
                         Driver.GetFieldStruct();
                         Driver.ReadTable();
 
-                        if (Driver.ValueOfFieldInteger != 0)
-                            Log.Add(table + " " + row + " " + field + " (число) " + Driver.ValueOfFieldInteger);
-                        else
-                            Log.Add(table + " " + row + " " + field + " (строка) " + Driver.ValueOfFieldString);
+                        Log.Add(table + " " + row + " " + field + " " + Driver.ValueOfFieldString, "tables-backup");
                     }
-                }
-
             }
-
 
             return true;
         }

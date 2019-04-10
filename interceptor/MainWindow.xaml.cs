@@ -268,8 +268,6 @@ namespace interceptor
 
                 Log.Add("ошибка настроек кассы");
 
-                Cashbox.TablesBackup();
-
                 if (Cashbox.CurrentMode() != 4)
                 {
                     settingText5.Visibility = Visibility.Visible;
@@ -738,6 +736,8 @@ namespace interceptor
         {
             if (Cashbox.CurrentMode() != 4)
                 Cashbox.ReportCleaning();
+
+            Cashbox.TablesBackup();
 
             restoringSettingsCashbox.Elapsed += new ElapsedEventHandler(RestoreSetting);
             restoringSettingsCashbox.Enabled = true;

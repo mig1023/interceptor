@@ -167,7 +167,7 @@ namespace interceptor
 
             if (!String.IsNullOrEmpty(fieldValue) && (fieldValue != Driver.ValueOfFieldString))
             {
-                Log.AddWithCode("запись в поле кассы " + tableNumber + "/" + fieldNumber + "/" + rowNumber + " значения " + fieldValue);
+                Log.AddWithCode("запись в поле кассы " + tableNumber + " " + fieldNumber + " " + rowNumber + " значения " + fieldValue);
 
                 Driver.ValueOfFieldString = fieldValue;
                 Driver.WriteTable();

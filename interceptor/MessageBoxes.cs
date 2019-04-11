@@ -85,5 +85,12 @@ namespace interceptor
                 "Перенастройка кассы может несколько минут!\nОперация начнётся после нажатия на кнопку OK", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning
             );
         }
+
+        static public void ChangeMessage(string change)
+        {
+            MessageBoxResult msg = MessageBox.Show(
+              "Сдача: " + change, "Оплата", MessageBoxButton.OK, MessageBoxImage.Information
+            );
+        }
     }
 }

@@ -615,9 +615,7 @@ namespace interceptor
             if (result[0] == "OK")
             {
                 CleanCheck();
-                MessageBoxResult msg = MessageBox.Show(
-                  "Сдача: " + result[1], "Оплата", MessageBoxButton.OK, MessageBoxImage.Information
-               );
+                MessageBoxes.ChangeMessage(result[1]);
             }
             else
                 ShowError(place, "Ошибка кассы: " + result[1], Cashbox.manDocPackForPrinting.AgrNumber);

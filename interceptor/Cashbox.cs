@@ -12,6 +12,7 @@ namespace interceptor
         public static System.Timers.Timer repeatPrintingTimer = new System.Timers.Timer(5000);
         static int currentDrvPassword = 0;
         static string currentDocPack = String.Empty;
+        static int timeout = 159; // 1500ms
 
         public static DocPack manDocPackForPrinting;
         public static decimal manDocPackSumm;
@@ -36,6 +37,7 @@ namespace interceptor
         public static bool RepeatDocument()
         {
             Driver.Password = CRM.password;
+            Driver.Timeout = timeout;
             Driver.RepeatDocument();
 
             Log.AddWithCode("распечатка повтора");
@@ -46,6 +48,7 @@ namespace interceptor
         public static bool ContinueDocument()
         {
             Driver.Password = CRM.password;
+            Driver.Timeout = timeout;
             Driver.ContinuePrint();
 
             Log.AddWithCode("продолжение печати");
@@ -56,6 +59,7 @@ namespace interceptor
         public static bool ReportCleaning()
         {
             Driver.Password = CRM.adminPassword;
+            Driver.Timeout = timeout;
             Driver.PrintReportWithCleaning();
 
             Log.AddWithCode("отчёт с гашением");
@@ -66,6 +70,7 @@ namespace interceptor
         public static bool ReportWithoutCleaning()
         {
             Driver.Password = CRM.adminPassword;
+            Driver.Timeout = timeout;
             Driver.PrintReportWithoutCleaning();
 
             Log.AddWithCode("отчёт без гашения");
@@ -76,6 +81,7 @@ namespace interceptor
         public static bool ReportDepartment()
         {
             Driver.Password = CRM.adminPassword;
+            Driver.Timeout = timeout;
             Driver.PrintDepartmentReport();
 
             Log.AddWithCode("отчёт по отделам");
@@ -86,6 +92,7 @@ namespace interceptor
         public static bool ReportTax()
         {
             Driver.Password = CRM.adminPassword;
+            Driver.Timeout = timeout;
             Driver.PrintTaxReport();
 
             Log.AddWithCode("отчёт по налогам");
@@ -96,6 +103,7 @@ namespace interceptor
         public static bool CancelDocument()
         {
             Driver.Password = CRM.password;
+            Driver.Timeout = timeout;
             Driver.CancelCheck();
 
             Log.AddWithCode("отмена чека по кнопке");
@@ -106,6 +114,7 @@ namespace interceptor
         public static bool CashIncome(string summ)
         {
             Driver.Password = CRM.password;
+            Driver.Timeout = timeout;
             Driver.Summ1 = DocPack.manualParseDecimal(summ);
             Driver.CashIncome();
 
@@ -117,6 +126,7 @@ namespace interceptor
         public static bool CashOutcome(string summ)
         {
             Driver.Password = CRM.password;
+            Driver.Timeout = timeout;
             Driver.Summ1 = DocPack.manualParseDecimal(summ);
             Driver.CashOutcome();
 
@@ -128,6 +138,7 @@ namespace interceptor
         public static bool TablesBackup()
         {
             Driver.Password = CRM.adminPassword;
+            Driver.Timeout = timeout;
 
             for (int table = 1; table < 25; table += 1)
             {
@@ -164,6 +175,7 @@ namespace interceptor
 
             Driver.GetFieldStruct();
             Driver.ReadTable();
+            Driver.Timeout = timeout;
 
             if (!String.IsNullOrEmpty(fieldValue) && (fieldValue != Driver.ValueOfFieldString))
             {
@@ -207,6 +219,7 @@ namespace interceptor
         public static void PrintLine(string text = "", bool line = false)
         {
             Driver.Password = currentDrvPassword;
+            Driver.Timeout = timeout;
 
             if (!String.IsNullOrEmpty(text))
             {
@@ -236,6 +249,7 @@ namespace interceptor
 
             Driver.Password = currentDrvPassword;
             Driver.CheckType = (returnSale ? 2 : 0);
+            Driver.Timeout = timeout;
             Driver.OpenCheck();
 
             PrintLine("Кассир: " + CRM.cashier, line: true);
@@ -243,6 +257,7 @@ namespace interceptor
             foreach (Service service in doc.Services)
             {
                 Driver.Password = currentDrvPassword;
+                Driver.Timeout = timeout;
 
                 Driver.Quantity = service.Quantity;
                 Driver.Price = service.Price;
@@ -265,7 +280,7 @@ namespace interceptor
 
             Driver.Password = currentDrvPassword;
             Driver.StringForPrinting = String.Empty;
-
+            Driver.Timeout = timeout;
 
             if (doc.MoneyType == 1)
             {
@@ -292,6 +307,7 @@ namespace interceptor
             if (checkClosingResult != 0)
             {
                 Driver.Password = currentDrvPassword;
+                Driver.Timeout = timeout;
                 Driver.CancelCheck();
 
                 Log.AddWithCode("отмена чека");
@@ -318,6 +334,7 @@ namespace interceptor
         public static void RepeatPrint(object obj, ElapsedEventArgs e)
         {
             Driver.Password = currentDrvPassword;
+            Driver.Timeout = timeout;
             Driver.RepeatDocument();
 
             int printSuccess = GetResultCode();
@@ -346,6 +363,7 @@ namespace interceptor
 
         public static int CurrentMode()
         {
+            Driver.Timeout = timeout;
             Driver.GetECRStatus();
 
             return Driver.ECRMode;
@@ -353,6 +371,7 @@ namespace interceptor
 
         public static string CurrentModeDescription()
         {
+            Driver.Timeout = timeout;
             Driver.GetECRStatus();
 
             return Driver.ECRModeDescription;
@@ -363,6 +382,7 @@ namespace interceptor
         {
             string[] baudeRate = new string[] { "2400", "4800", "9600", "19200", "38400", "57600", "115200" };
 
+            Driver.Timeout = timeout;
             Driver.GetECRStatus();
 
             int portIndex = Driver.PortNumber + 1;

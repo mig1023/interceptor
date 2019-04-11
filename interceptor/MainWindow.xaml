@@ -115,7 +115,7 @@
             <Label x:Name="status4_label" Content="порт кассы" Height="25" Canvas.Left="25" Canvas.Top="80" Width="122"/>
             <Label x:Name="status5_label" Content="скорость кассы" Height="25" Canvas.Left="25" Canvas.Top="100" Width="122"/>
             <Label x:Name="status6_label" Content="тип кассы" Height="25" Canvas.Left="25" Canvas.Top="120" Width="122"/>
-            <Label x:Name="status7_label" Content="версия прогр.кассы" Height="25" Canvas.Left="25" Canvas.Top="140" Width="122"/>
+            <Label x:Name="status7_label" Content="версия прошивки кассы" Height="25" Canvas.Left="25" Canvas.Top="140" Width="149"/>
             <Label x:Name="status8_label" Content="запуск" Height="25" Canvas.Left="25" Canvas.Top="160" Width="122"/>
             <Label x:Name="status9_label" Content="состояние" Height="25" Canvas.Left="25" Canvas.Top="180" Width="122"/>
             <Label x:Name="status10_label" Content="текущий пользователь" Height="25" Canvas.Left="25" Canvas.Top="200" Width="141"/>

@@ -784,6 +784,14 @@ namespace interceptor
             appNumber.Focus();
         }
 
+        private void money_Click(object sender, RoutedEventArgs e)
+        {
+            MoveCanvas(
+                moveCanvas: moneyPlace,
+                prevCanvas: mainPlace
+            );
+        }
+
         private void backToMainFromReception_Click(object sender, RoutedEventArgs e)
         {
             MoveCanvas(
@@ -969,6 +977,14 @@ namespace interceptor
                 placeholderPass.Visibility = Visibility.Visible;
             else
                 placeholderPass.Visibility = Visibility.Hidden;
+        }
+
+        private void backToMainFromMoneyPlace_Click(object sender, RoutedEventArgs e)
+        {
+            MoveCanvas(
+                moveCanvas: mainPlace,
+                prevCanvas: moneyPlace
+            );
         }
     }
 }

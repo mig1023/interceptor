@@ -17,7 +17,7 @@
             <Image x:Name="statusImage" Height="150" Canvas.Left="44" Canvas.Top="89" Width="150" Source="Images\reports.png" PreviewMouseDown="statusImage_PreviewMouseDown"/>
             <Image x:Name="checkImage" Height="150" Canvas.Left="219" Canvas.Top="89" Width="150" Source="Images\invoice.png" PreviewMouseDown="checkImage_PreviewMouseDown"/>
             <Image x:Name="receptionImage" Height="150" Canvas.Left="429" Canvas.Top="89" Width="150" Source="Images\reception.png" PreviewMouseDown="receptionImage_PreviewMouseDown"/>
-            <Image x:Name="moneyImage" Height="150" Canvas.Left="601" Canvas.Top="89" Width="150" Source="Images\money.png"/>
+            <Image x:Name="moneyImage" Height="150" Canvas.Left="601" Canvas.Top="89" Width="150" Source="Images\money.png" PreviewMouseDown="moneyImage_PreviewMouseDown" />
         </Canvas>
         <Canvas x:Name="checkPlace" Margin="796,0,-796,-330" Background="White">
             <Button x:Name="backToMainFromCheck" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromCheck_Click"/>
@@ -99,26 +99,39 @@
 
         <Canvas x:Name="moneyPlace" Margin="2370,0,-2370,0">
             <Button x:Name="backToMainFromMoneyPlace" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromMoneyPlace_Click"/>
-            <TextBox x:Name="moneySum" Height="38" Canvas.Left="317" TextWrapping="Wrap" Text="0.00" Canvas.Top="206" Width="104" FontSize="24"/>
-            <Label x:Name="currency5" Content="Р" Canvas.Left="421" Canvas.Top="200" FontSize="28"/>
-            <ComboBox x:Name="section" Height="34" Canvas.Left="317" Canvas.Top="102" Width="388" FontSize="22">
+            <ComboBox x:Name="section" Height="38" Canvas.Left="310" Canvas.Top="119" Width="388" IsReadOnly="True" IsEditable="True" FontSize="24" SelectionChanged="section_SelectionChanged">
                 <ComboBoxItem Name="section1">услуги сервисные</ComboBoxItem>
                 <ComboBoxItem Name="section2">консульский сбор</ComboBoxItem>
                 <ComboBoxItem Name="section3">ресепшен</ComboBoxItem>
-                <ComboBoxItem Name="section4">РГС</ComboBoxItem>
-                <ComboBoxItem Name="section5">Капитал-Лайф</ComboBoxItem>
+                <ComboBoxItem Name="section4">ргс</ComboBoxItem>
+                <ComboBoxItem Name="section5">капитал-лайф</ComboBoxItem>
             </ComboBox>
-            <Label x:Name="sectionText" Content="название отдела" Canvas.Left="126" Canvas.Top="102" FontSize="22"/>
-            <TextBox x:Name="nameMoney" Height="38" Canvas.Left="317" TextWrapping="Wrap" Text="Сервисный сбор" Canvas.Top="151" Width="263" FontSize="24" KeyUp="appNumber_KeyUp"/>
-            <Label x:Name="nameMoneyText" Content="название услуги" Canvas.Left="126" Canvas.Top="151" FontSize="22"/>
-            <Label x:Name="moneySumText" Content="название услуги" Canvas.Left="126" Canvas.Top="206" FontSize="22"/>
-            <TextBox x:Name="moneyForCheck_Copy" IsEnabled="False" Height="40" Canvas.Left="224" TextWrapping="Wrap" Text="0.00" Canvas.Top="279" Width="117" FontSize="22"/>
-            <Button x:Name="printCheckMoney_Copy" Content="наличными" IsEnabled="False" Height="44" Canvas.Left="365" Canvas.Top="277" Width="105" Click="printCheckMoney_Click"/>
-            <Button x:Name="printCheckCard_Copy" Content="картой" IsEnabled="False" Height="44" Canvas.Left="475" Canvas.Top="277" Width="105" Click="printCheckCard_Click"/>
-            <Label x:Name="currency1_Copy" Content="Р" Canvas.Left="340" Canvas.Top="273" FontSize="28"/>
-            <Button x:Name="returnSale_Copy" Content="возврат наличными" IsEnabled="False" Height="20" Canvas.Left="585" Canvas.Top="277" Width="120" Click="returnSale_Click" FontSize="11"/>
-            <Button x:Name="returnSaleCard_Copy" Content="возврат на карту" IsEnabled="False" Height="20" Canvas.Left="585" Canvas.Top="301" Width="120" FontSize="11" Click="returnSaleCard_Click"/>
-            <Button x:Name="nameMoneyList" Content="список услуг" Height="38" Canvas.Left="585" Canvas.Top="151" Width="120"/>
+            <ComboBox x:Name="stringForPrinting" Height="38" Canvas.Left="310" Text="aaaa" Canvas.Top="170" Width="388" FontSize="24" IsEditable="True" SelectionChanged="stringForPrinting_SelectionChanged" KeyUp="stringForPrinting_KeyUp">
+                <ComboBoxItem Name="string1">Услуги по доставке документов на дом</ComboBoxItem>
+                <ComboBoxItem Name="string2">Услуги по оповещению (СМС сообщение)</ComboBoxItem>
+                <ComboBoxItem Name="string3">Услуги по переводу документов</ComboBoxItem>
+                <ComboBoxItem Name="string4">Услуги по копированию документов</ComboBoxItem>
+                <ComboBoxItem Name="string5">Услуги по оформлению документов</ComboBoxItem>
+                <ComboBoxItem Name="string6">Услуги по заполнению и распечатке анкеты</ComboBoxItem>
+                <ComboBoxItem Name="string7">Услуги по распечатке документов</ComboBoxItem>
+                <ComboBoxItem Name="string8">Услуги фотосъемке и изготовлению фото</ComboBoxItem>
+                <ComboBoxItem Name="string9">Услуги по ВИП обслуживанию</ComboBoxItem>
+                <ComboBoxItem Name="string10">Страхование</ComboBoxItem>
+                <ComboBoxItem Name="string11">Консульский сбор C01</ComboBoxItem>
+                <ComboBoxItem Name="string12">Консульский сбор C02</ComboBoxItem>
+                <ComboBoxItem Name="string13">Консульский сбор C03</ComboBoxItem>
+                <ComboBoxItem Name="string14">Консульский сбор D04</ComboBoxItem>
+                <ComboBoxItem Name="string15">Консульский сбор D05</ComboBoxItem>
+            </ComboBox>
+            <Label x:Name="sectionText" Content="название отдела" Canvas.Left="119" Canvas.Top="121" FontSize="18"/>
+            <Label x:Name="nameMoneyText" Content="название услуги" Canvas.Left="119" Canvas.Top="174" FontSize="18"/>
+            <Label x:Name="moneySumText" Content="сумма" Canvas.Left="119" Canvas.Top="230" FontSize="18"/>
+            <TextBox x:Name="moneyForDirectPayment" IsEnabled="False" Height="40" Canvas.Left="217" TextWrapping="Wrap" Text="0.00" Canvas.Top="232" Width="117" FontSize="22" KeyUp="moneyForDirectPayment_KeyUp"/>
+            <Button x:Name="printMoneyDirectPayment" Content="наличными" IsEnabled="False" Height="44" Canvas.Left="358" Canvas.Top="230" Width="105" Click="printCheckMoney_Click"/>
+            <Button x:Name="printCardDirectPayment" Content="картой" IsEnabled="False" Height="44" Canvas.Left="468" Canvas.Top="230" Width="105" Click="printCheckCard_Click"/>
+            <Label x:Name="currency5" Content="Р" Canvas.Left="333" Canvas.Top="226" FontSize="28"/>
+            <Button x:Name="returnSaleDirectPayment" Content="возврат наличными" IsEnabled="False" Height="20" Canvas.Left="578" Canvas.Top="230" Width="120" Click="returnSale_Click" FontSize="11"/>
+            <Button x:Name="returnSaleCardPayment" Content="возврат на карту" IsEnabled="False" Height="20" Canvas.Left="578" Canvas.Top="254" Width="120" FontSize="11" Click="returnSaleCard_Click"/>
         </Canvas>
 
         <Canvas x:Name="loginPlace" Margin="-3,0,3,0">

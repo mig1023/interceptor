@@ -278,7 +278,7 @@ namespace interceptor
                     settingText5.Visibility = Visibility.Hidden;
                     reportAndRessetting.Content = "перенастроить таблицы настроек";
                 }
-            }    
+            }
             else
             {
                 Server.StartServer();
@@ -715,6 +715,11 @@ namespace interceptor
             reception_Click(null, null);
         }
 
+        private void moneyImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            money_Click(null, null);
+        }
+
         private void cancelDocument_Click(object sender, RoutedEventArgs e)
         {
             if (!Cashbox.CancelDocument())
@@ -985,6 +990,52 @@ namespace interceptor
                 moveCanvas: mainPlace,
                 prevCanvas: moneyPlace
             );
+        }
+
+        private void paymentPrepared()
+        {
+            if ((section.SelectedItem != null) && (stringForPrinting.Text != String.Empty))
+                moneyForDirectPayment.IsEnabled = true;
+            else
+                moneyForDirectPayment.IsEnabled = false;
+        }
+
+        private void section_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            paymentPrepared();
+        }
+
+        private void stringForPrinting_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            paymentPrepared();
+        }
+
+        private void stringForPrinting_KeyUp(object sender, KeyEventArgs e)
+        {
+            paymentPrepared();
+        }
+
+        private void moneyForDirectPayment_KeyUp(object sender, KeyEventArgs e)
+        {
+
+            Match OnlyZero = Regex.Match(moneyForDirectPayment.Text, @"^0*(\.|,)0*$");
+
+            Match OnlyNumbers = Regex.Match(moneyForDirectPayment.Text, @"^[0-9\.,]+$");
+
+            if ((moneyForDirectPayment.Text != String.Empty) && !OnlyZero.Success && OnlyNumbers.Success)
+            {
+                printMoneyDirectPayment.IsEnabled = true;
+                printCardDirectPayment.IsEnabled = true;
+                returnSaleDirectPayment.IsEnabled = true;
+                returnSaleCardPayment.IsEnabled = true;
+            }
+            else
+            {
+                printMoneyDirectPayment.IsEnabled = false;
+                printCardDirectPayment.IsEnabled = false;
+                returnSaleDirectPayment.IsEnabled = false;
+                returnSaleCardPayment.IsEnabled = false;
+            }
         }
     }
 }

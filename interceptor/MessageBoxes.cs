@@ -35,7 +35,7 @@ namespace interceptor
         static public MessageBoxResult NullInServices(string services)
         {
             return MessageBoxWithLog(
-                "Услуги не имеют цену по прайслисту выбранного центра: " + services.TrimEnd() +
+                "Услуги не имеют цены по прайслисту выбранного центра: " + services.TrimEnd() +
                 ". Такие услуги не будут отображены в чеке. Продолжить?"
             );
         }

@@ -7,12 +7,12 @@ namespace interceptor
 {
     class Cashbox
     {
-        static DrvFR Driver;
+        public static DrvFR Driver;
 
         public static System.Timers.Timer repeatPrintingTimer = new System.Timers.Timer(5000);
         static int currentDrvPassword = 0;
         static string currentDocPack = String.Empty;
-        static int timeout = 159; // 1500ms
+        public static int timeout = 159; // 1500ms
 
         public static DocPack manDocPackForPrinting;
         public static decimal manDocPackSumm;

@@ -71,6 +71,7 @@
     <Compile Include="AutoUpdate.cs" />
     <Compile Include="Cashbox.cs" />
     <Compile Include="CashboxData.cs" />
+    <Compile Include="CashboxDirect.cs" />
     <Compile Include="CheckRequest.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="CRM.cs" />

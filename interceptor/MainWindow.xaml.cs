@@ -1037,5 +1037,30 @@ namespace interceptor
                 returnSaleCardPayment.IsEnabled = false;
             }
         }
+
+        private void printMoneyDirectPayment_Click(object sender, RoutedEventArgs e)
+        {
+            ComboBoxItem selectedItem = (ComboBoxItem)section.SelectedItem;
+            string department_string = selectedItem.Tag.ToString();
+            int department = int.Parse(department_string);
+
+            decimal price = DocPack.manualParseDecimal(priceForDirectPayment.Text);
+            decimal summ = DocPack.manualParseDecimal(moneyForDirectPayment.Text);
+
+            string printing = stringForPrinting.Text;
+            bool vat = vatDirectPayment.IsChecked ?? true;
+
+            string[] result = CashboxDirect.DirectPayment(
+                price, summ, printing, department, 1, false, vat
+            ).Split(':');
+
+            if (result[0] == "OK")
+            {
+                CleanCheck();
+                MessageBoxes.ChangeMessage(result[1]);
+            }
+            else
+                ShowError(moneyPlace, "Ошибка кассы: " + result[1]);
+        }
     }
 }

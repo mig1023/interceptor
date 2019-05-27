@@ -64,6 +64,8 @@ namespace interceptor
 
             password = Int32.Parse(authData[1]);
 
+            CashboxDirect.currentDirectPassword = password;
+
             cashier = authData[2];
 
             Log.Add("успешный вход: " + login + "/" + authData[1] + "(" + authData[2] + ")");

@@ -75,7 +75,7 @@ sub send_docpack
 # //////////////////////////////////////////////////
 {
 
-	my ( $self, $docid, $ptype, $summ, $data, $login, $pass, $callback, $r, $sh_return ) = @_;
+	my ( $self, $docid, $ptype, $summ, $data, $login, $pass, $callback, $r, $sh_return, $sms, $email ) = @_;
 
 	my $vars = $self->{ 'VCS::Vars' };
 	
@@ -109,6 +109,10 @@ sub send_docpack
 	}
 	
 	return ( "ERR3", "Неверный кассовый пароль в настройках" ) unless $pass;
+	
+	$data->{ email } = ( $email ? $email : '' );
+	
+	$data->{ sms_mobile } = ( $sms ? $sms : '' );
 	
 	my ( $services, $services_fail ) = doc_services( $self, $data, $ptype, $summ, $login, $pass, $callback, $r, $sh_return );
 
@@ -502,7 +506,7 @@ sub doc_services
 			ReturnShipping	=> ( $sh_return ? 1 : 0 ),
 		},
 		sms => {
-			Name		=> ' Услуги по оповещению (СМС сообщение)',
+			Name		=> 'Услуги по оповещению (СМС сообщение)',
 			Quantity	=> $smscnt,
 			Price		=> sprintf( "%.2f", $prices->{ sms } ),
 			VAT		=> 1,
@@ -664,6 +668,8 @@ sub doc_services
 		Total => $total,
 		Money => $summ,
 		RequestOnly => ( $callback ? '1' : '0' ),
+		EMail => $data->{ email },
+		Mobile => $data->{ sms_mobile },
 	};
 
 	return { services => $servsums, info => $info }, $mandocpack_failserv;
@@ -794,12 +800,15 @@ sub cash_box
 	
 	my $param = {};
 	
-	$param->{ $_ } = ( $vars->getparam( $_ ) || 0 ) for ( 'docid', 'ptype', 'summ' );
+	$param->{ $_ } = ( $vars->getparam( $_ ) || 0 )
+		for ( 'docid', 'ptype', 'summ', 'sms', 'email', 'need_sms', 'need_email' );
 	
-	$param->{ $_ } =~ s/[^0-9]//g for ( 'docid', 'ptype' );
+	$param->{ $_ } =~ s/[^0-9]//g for ( 'docid', 'ptype', 'sms', 'need_sms', 'need_email' );
+	
+	$param->{ email } =~ s/A-Za-z0-9\@\-\_\.]//g;
 	
 	$param->{ summ } =~ s/,/./g if $param->{ summ } =~ /,/;
-	
+warn Dumper($param);	
 	return cash_box_output( $self, "ERROR|Недопустимые символы в поле суммы" )
 		if $param->{ summ } =~ /[^0-9\.]/;
 	
@@ -807,9 +816,16 @@ sub cash_box
 		if !$param->{ docid } or ( $param->{ ptype } != 1 and $param->{ ptype } != 2 );
 	
 	return cash_box_output( $self, "ERROR|Не введена сумма оплаты" )
-		if !$param->{ summ } and $param->{ ptype } == 1;	
+		if !$param->{ summ } and $param->{ ptype } == 1;
+
+	return cash_box_output( $self, "ERROR|Не указан номер для SMS" )
+		if !$param->{ sms } and $param->{ need_sms };
+		
+	return cash_box_output( $self, "ERROR|Не указан адрес электронной почты" )
+		if !$param->{ email } and $param->{ need_email };	
 	
-	my ( $code, $desc, undef ) = send_docpack( $self, $param->{ docid }, $param->{ ptype }, $param->{ summ } );
+	my ( $code, $desc, undef ) = send_docpack( $self, $param->{ docid }, $param->{ ptype }, $param->{ summ },
+		undef, undef, undef, undef, undef, undef, $param->{ sms }, $param->{ email } );
 	
 	cash_box_output_error_check( $self, $code, $desc, $param->{ docid } );
 }

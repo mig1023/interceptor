@@ -92,5 +92,12 @@ namespace interceptor
               "Сдача: " + change, "Оплата", MessageBoxButton.OK, MessageBoxImage.Information
             );
         }
+
+        static public void CanceledDocument()
+        {
+            MessageBoxResult msg = MessageBox.Show(
+                "Открытый чек успешно анулирован", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning
+            );
+        }
     }
 }

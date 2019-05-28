@@ -50,7 +50,7 @@ namespace interceptor
 
             versionLabel.Content = "версия " + CURRENT_VERSION;
 
-            Log.Add("ПЕРЕХВАТЧИК ЗАПУЩЕН", freeLine: true);
+            Log.Add("ИНТЕРСЕРАПТОР ЗАПУЩЕН", freeLine: true);
             Log.Add("версия ---> " + CURRENT_VERSION, freeLineAfter: true);
 
             int MaxThreadsCount = Environment.ProcessorCount * 4;
@@ -748,7 +748,9 @@ namespace interceptor
 
         private void cancelDocument_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.CancelDocument())
+            if (Cashbox.CancelDocument())
+                MessageBoxes.CanceledDocument();
+            else
                 moveToErrorFromReports(Cashbox.GetResultLine());
         }
 

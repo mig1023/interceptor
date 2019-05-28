@@ -1038,7 +1038,7 @@ namespace interceptor
             }
         }
 
-        private void printMoneyDirectPayment_Click(object sender, RoutedEventArgs e)
+        private void directPayment(int moneyType, bool returnSale)
         {
             ComboBoxItem selectedItem = (ComboBoxItem)section.SelectedItem;
             string department_string = selectedItem.Tag.ToString();
@@ -1051,7 +1051,13 @@ namespace interceptor
             bool vat = vatDirectPayment.IsChecked ?? true;
 
             string[] result = CashboxDirect.DirectPayment(
-                price, summ, printing, department, 1, false, vat
+                moneyPrice: price,
+                moneySumm: summ,
+                forPrinting: printing,
+                department: department,
+                moneyType: moneyType,
+                returnSale: returnSale,
+                VAT: vat
             ).Split(':');
 
             if (result[0] == "OK")
@@ -1061,6 +1067,26 @@ namespace interceptor
             }
             else
                 ShowError(moneyPlace, "Ошибка кассы: " + result[1]);
+        }
+
+        private void printMoneyDirectPayment_Click(object sender, RoutedEventArgs e)
+        {
+            directPayment(moneyType: 1, returnSale: false);
+        }
+
+        private void printCardDirectPayment_Click(object sender, RoutedEventArgs e)
+        {
+            directPayment(moneyType: 2, returnSale: false);
+        }
+
+        private void returnSaleDirectPayment_Click(object sender, RoutedEventArgs e)
+        {
+            directPayment(moneyType: 1, returnSale: true);
+        }
+
+        private void returnCardDirectPayment_Click(object sender, RoutedEventArgs e)
+        {
+            directPayment(moneyType: 2, returnSale: true);
         }
     }
 }

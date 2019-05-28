@@ -262,6 +262,19 @@ namespace interceptor
 
             Driver.OpenCheck();
 
+            string sendingCheck = String.Empty;
+
+            if (!String.IsNullOrEmpty(doc.Mobile))
+                sendingCheck = doc.Mobile;
+            else if (!String.IsNullOrEmpty(doc.Email))
+                sendingCheck = doc.Email;
+
+            if (!String.IsNullOrEmpty(sendingCheck))
+            {
+                Driver.CustomerEmail = sendingCheck;
+                Driver.FNSendCustomerEmail();
+            }
+
             PrintLine("Кассир: " + CRM.cashier, line: true);
 
             foreach (Service service in doc.Services)

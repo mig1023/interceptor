@@ -129,11 +129,11 @@
             <Label x:Name="moneySumText" Content="сумма" Canvas.Left="119" Canvas.Top="276" FontSize="18"/>
             <TextBox x:Name="moneyForDirectPayment" IsEnabled="False" Height="40" Canvas.Left="217" TextWrapping="Wrap" Text="0.00" Canvas.Top="278" Width="117" FontSize="22" KeyUp="moneyForDirectPayment_KeyUp"/>
             <Button x:Name="printMoneyDirectPayment" Content="наличными" IsEnabled="False" Height="44" Canvas.Left="358" Canvas.Top="276" Width="105" Click="printMoneyDirectPayment_Click"/>
-            <Button x:Name="printCardDirectPayment" Content="картой" IsEnabled="False" Height="44" Canvas.Left="468" Canvas.Top="276" Width="105" Click="printCheckCard_Click"/>
+            <Button x:Name="printCardDirectPayment" Content="картой" IsEnabled="False" Height="44" Canvas.Left="468" Canvas.Top="276" Width="105" Click="printCardDirectPayment_Click"/>
             <Label x:Name="currency5" Content="Р" Canvas.Left="333" Canvas.Top="272" FontSize="28"/>
             <Label x:Name="currency6" Content="Р" Canvas.Left="457" Canvas.Top="215" FontSize="28"/>
-            <Button x:Name="returnSaleDirectPayment" Content="возврат наличными" IsEnabled="False" Height="20" Canvas.Left="578" Canvas.Top="276" Width="120" Click="returnSale_Click" FontSize="11"/>
-            <Button x:Name="returnSaleCardPayment" Content="возврат на карту" IsEnabled="False" Height="20" Canvas.Left="578" Canvas.Top="300" Width="120" FontSize="11" Click="returnSaleCard_Click"/>
+            <Button x:Name="returnSaleDirectPayment" Content="возврат наличными" IsEnabled="False" Height="20" Canvas.Left="578" Canvas.Top="276" Width="120" FontSize="11" Click="returnSaleDirectPayment_Click"/>
+            <Button x:Name="returnSaleCardPayment" Content="возврат на карту" IsEnabled="False" Height="20" Canvas.Left="578" Canvas.Top="300" Width="120" FontSize="11" Click="returnCardDirectPayment_Click"/>
             <CheckBox x:Name="vatDirectPayment" Content=" НДС 20%" Height="31" Canvas.Left="574" Canvas.Top="224" Width="136" FontSize="24" IsChecked="True"/>
             <TextBox x:Name="priceForDirectPayment" Height="40" Canvas.Left="310" TextWrapping="Wrap" Text="0.00" Canvas.Top="223" Width="147" FontSize="22" KeyUp="moneyForDirectPayment_KeyUp"/>
         </Canvas>

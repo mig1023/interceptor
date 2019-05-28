@@ -45,25 +45,31 @@ namespace interceptor
             Driver.Password = currentDirectPassword;
             Driver.OpenCheck();
 
-                Driver.Password = currentDirectPassword;
-                PrintLine("Кассир: " + CRM.cashier, line: true);
-                Driver.Timeout = timeout;
+            if ((moneyType == 2) || returnSale)
+                moneySumm = moneyPrice;
 
-                Driver.Quantity = 1;
-                Driver.Price = moneyPrice ?? 0;
-                Driver.StringForPrinting = forPrinting;
+            Driver.CustomerEmail = "mail@test.com";
+            Driver.FNSendCustomerEmail();
 
-                Driver.Department = department;
+            Driver.Password = currentDirectPassword;
+            PrintLine("Кассир: " + CRM.cashier, line: true);
+            Driver.Timeout = timeout;
 
-                Driver.Tax1 = (VAT ? 1 : 0);
-                Driver.Tax2 = 0;
-                Driver.Tax3 = 0;
-                Driver.Tax4 = 0;
+            Driver.Quantity = 1;
+            Driver.Price = moneyPrice ?? 0;
+            Driver.StringForPrinting = forPrinting;
 
-                if (returnSale)
-                    Driver.ReturnSale();
-                else
-                    Driver.Sale();
+            Driver.Department = department;
+
+            Driver.Tax1 = (VAT ? 1 : 0);
+            Driver.Tax2 = 0;
+            Driver.Tax3 = 0;
+            Driver.Tax4 = 0;
+
+            if (returnSale)
+                Driver.ReturnSale();
+            else
+                Driver.Sale();
 
             PrintLine(line: true);
             PrepareDriver(currentDirectPassword);
@@ -83,12 +89,15 @@ namespace interceptor
                 Driver.Summ1 = 0;
             }
 
+            Driver.StringForPrinting = String.Empty;
             Driver.CloseCheck();
 
             int checkClosingResult = Driver.ResultCode;
             string checkClosingErrorText = Driver.ResultCodeDescription;
 
             Log.AddWithCode("распечатка чека");
+
+
 
             if (checkClosingResult != 0)
             {

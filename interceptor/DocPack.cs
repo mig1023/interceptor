@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 
@@ -18,6 +19,9 @@ namespace interceptor
         public decimal Money;
 
         public int RequestOnly;
+
+        public string Email = String.Empty;
+        public string Mobile = String.Empty;
 
         public DocPack()
         {
@@ -79,6 +83,12 @@ namespace interceptor
             }
 
             this.RequestOnly = int.Parse(info["RequestOnly"].InnerText);
+
+            if (info["EMail"] != null)
+                this.Email = info["EMail"].InnerText;
+
+            if (info["Mobile"] != null)
+                this.Mobile = info["Mobile"].InnerText;
 
             Log.AddDocPack(this);
         }

@@ -246,7 +246,7 @@ namespace interceptor
         } 
 
         public static string PrintDocPack(DocPack doc, int MoneyType = -1,
-            bool returnSale = false, decimal? MoneySumm = null)
+            bool returnSale = false, decimal? MoneySumm = null, string sendingAddress = "")
         {
             currentDrvPassword = doc.CashierPass;
             currentDocPack = doc.AgrNumber;
@@ -264,7 +264,9 @@ namespace interceptor
 
             string sendingCheck = String.Empty;
 
-            if (!String.IsNullOrEmpty(doc.Mobile))
+            if (!String.IsNullOrEmpty(sendingAddress))
+                sendingCheck = sendingAddress;
+            else if (!String.IsNullOrEmpty(doc.Mobile))
                 sendingCheck = doc.Mobile;
             else if (!String.IsNullOrEmpty(doc.Email))
                 sendingCheck = doc.Email;

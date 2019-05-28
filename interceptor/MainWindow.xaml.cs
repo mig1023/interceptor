@@ -343,6 +343,7 @@ namespace interceptor
         private void BlockCheckButton(bool block)
         {
             moneyForCheck.IsEnabled = block;
+            printSending.IsEnabled = !block;
             returnDate.IsEnabled = !block;
 
             foreach (Button button in new List<Button>() { printCheckMoney, printCheckCard, returnSale, returnSaleCard })
@@ -557,6 +558,8 @@ namespace interceptor
                 serv.FontWeight = FontWeights.Regular;
                 serv.FontSize = fontSize;
             }
+
+            printSending.Text = String.Empty;
         }
 
         private void CleanCheck()
@@ -625,11 +628,13 @@ namespace interceptor
         {
             decimal money = DocPack.manualParseDecimal(moneyForCheck.Text);
 
+            string sending = printSending.Text;
+
             if (CheckMoneyFail(money) || CheckAnotherDateFail(returnDate.Text))
                 return;
 
             string[] result = Cashbox.PrintDocPack(
-                Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money
+                Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money, sendingAddress: sending
             ).Split(':');
 
             CheckError(result, checkPlace);
@@ -639,9 +644,11 @@ namespace interceptor
         {
             if (CheckAnotherDateFail(returnDate.Text))
                 return;
-                
+
+            string sending = printSending.Text;
+
             string[] result = Cashbox.PrintDocPack(
-                Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
+                Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm, sendingAddress: sending
             ).Split(':');
 
             CheckError(result, checkPlace);
@@ -655,8 +662,27 @@ namespace interceptor
                 return;
             }
 
+            string sending = printSending.Text;
+
             string[] result = Cashbox.PrintDocPack(
-                Cashbox.manDocPackForPrinting, returnSale: true, MoneySumm: Cashbox.manDocPackSumm
+                Cashbox.manDocPackForPrinting, returnSale: true, MoneySumm: Cashbox.manDocPackSumm, sendingAddress: sending
+            ).Split(':');
+
+            CheckError(result, checkPlace);
+        }
+
+        private void returnSaleCard_Click(object sender, RoutedEventArgs e)
+        {
+            if (CheckDateFail(returnDate.Text))
+            {
+                CleanCheck();
+                return;
+            }
+
+            string sending = printSending.Text;
+
+            string[] result = Cashbox.PrintDocPack(
+                Cashbox.manDocPackForPrinting, returnSale: true, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm, sendingAddress: sending
             ).Split(':');
 
             CheckError(result, checkPlace);
@@ -938,21 +964,6 @@ namespace interceptor
             appNumber.Focus();
         }
 
-        private void returnSaleCard_Click(object sender, RoutedEventArgs e)
-        {
-            if (CheckDateFail(returnDate.Text))
-            {
-                CleanCheck();
-                return;
-            }
-
-            string[] result = Cashbox.PrintDocPack(
-                Cashbox.manDocPackForPrinting, returnSale: true, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
-            ).Split(':');
-
-            CheckError(result, checkPlace);
-        }
-
         private void updateButton_Click(object sender, RoutedEventArgs e)
         {
             AutoUpdate.StartUpdater();
@@ -1047,6 +1058,8 @@ namespace interceptor
             decimal price = DocPack.manualParseDecimal(priceForDirectPayment.Text);
             decimal summ = DocPack.manualParseDecimal(moneyForDirectPayment.Text);
 
+            string sendingSMSorEMAIL = directPaymentSending.Text;
+
             string printing = stringForPrinting.Text;
             bool vat = vatDirectPayment.IsChecked ?? true;
 
@@ -1054,6 +1067,7 @@ namespace interceptor
                 moneyPrice: price,
                 moneySumm: summ,
                 forPrinting: printing,
+                sending: sendingSMSorEMAIL,
                 department: department,
                 moneyType: moneyType,
                 returnSale: returnSale,

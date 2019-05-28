@@ -39,7 +39,7 @@ namespace interceptor
         }
 
         public static string DirectPayment(decimal? moneyPrice, decimal? moneySumm, string forPrinting,
-            int department, int moneyType, bool returnSale, bool VAT)
+            string sending, int department, int moneyType, bool returnSale, bool VAT)
         {
             Driver.CheckType = (returnSale ? 2 : 0);
             Driver.Password = currentDirectPassword;
@@ -48,8 +48,12 @@ namespace interceptor
             if ((moneyType == 2) || returnSale)
                 moneySumm = moneyPrice;
 
-            Driver.CustomerEmail = "mail@test.com";
-            Driver.FNSendCustomerEmail();
+            if (!String.IsNullOrEmpty(sending))
+            {
+                Driver.Password = currentDirectPassword;
+                Driver.CustomerEmail = sending;
+                Driver.FNSendCustomerEmail();
+            }
 
             Driver.Password = currentDirectPassword;
             PrintLine("Кассир: " + CRM.cashier, line: true);

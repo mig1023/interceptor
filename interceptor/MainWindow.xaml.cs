@@ -996,22 +996,33 @@ namespace interceptor
 
         private void withPlaceholder_KeyUp(object sender, KeyEventArgs e)
         {
-            Control senderTextbox = (Control)sender;
+            Control senderbox = (Control)sender;
 
-            string ralatedPlaceholderName = senderTextbox.Tag.ToString();
+            string ralatedPlaceholderName = senderbox.Tag.ToString();
 
             Label ralatedPlaceholder = (Label)FindName(ralatedPlaceholderName);
 
             string senderText;
 
-            if (senderTextbox is PasswordBox)
+            if (senderbox is PasswordBox)
             {
-                PasswordBox pass = (PasswordBox)senderTextbox;
+                PasswordBox pass = (PasswordBox)senderbox;
                 senderText = pass.Password;
+            }
+            else if (senderbox is ComboBox)
+            {
+                ComboBox box = (ComboBox)senderbox;
+                senderText = box.Text;
+
+                if (box.SelectedIndex > -1)
+                {
+                    ralatedPlaceholder.Visibility = Visibility.Hidden;
+                    return;
+                }
             }
             else
             {
-                TextBox text = (TextBox)senderTextbox;
+                TextBox text = (TextBox)senderbox;
                 senderText = text.Text;
             }
 
@@ -1031,39 +1042,50 @@ namespace interceptor
 
         private void paymentPrepared()
         {
-            if ((section.SelectedItem != null) && (stringForPrinting.Text != String.Empty))
-                moneyForDirectPayment.IsEnabled = true;
+            Match OnlyZero = Regex.Match(priceForDirectPayment.Text, @"^0*(\.|,)0*$");
+
+            Match OnlyNumbers = Regex.Match(priceForDirectPayment.Text, @"^[0-9\.,]+$");
+
+            bool price = !(String.IsNullOrEmpty(priceForDirectPayment.Text)) && !OnlyZero.Success && OnlyNumbers.Success;
+
+            if ((section.SelectedItem != null) && (stringForPrinting.Text != String.Empty) && price)
+                foreach (Control direct in new List<Control> {
+                    moneyForDirectPayment, printCardDirectPayment, returnSaleDirectPayment, returnSaleCardPayment
+                })
+                    direct.IsEnabled = true;
             else
-                moneyForDirectPayment.IsEnabled = false;
+                foreach (Control direct in new List<Control> {
+                    moneyForDirectPayment, printCardDirectPayment, returnSaleDirectPayment, returnSaleCardPayment
+                })
+                    direct.IsEnabled = false;
         }
 
         private void directSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             paymentPrepared();
+
+            withPlaceholder_KeyUp(sender, null);
         }
 
         private void stringForPrinting_KeyUp(object sender, KeyEventArgs e)
         {
             paymentPrepared();
+
+            withPlaceholder_KeyUp(sender, null);
         }
 
         private void moneyForDirectPayment_KeyUp(object sender, KeyEventArgs e)
         {
+            withPlaceholder_KeyUp(sender, null);
 
             Match OnlyZero = Regex.Match(moneyForDirectPayment.Text, @"^0*(\.|,)0*$");
 
             Match OnlyNumbers = Regex.Match(moneyForDirectPayment.Text, @"^[0-9\.,]+$");
 
             if ((moneyForDirectPayment.Text != String.Empty) && !OnlyZero.Success && OnlyNumbers.Success)
-                foreach(Button direct in new List<Button> { printMoneyDirectPayment,
-                    printCardDirectPayment, returnSaleDirectPayment, returnSaleCardPayment
-                })
-                    direct.IsEnabled = true;
+                printMoneyDirectPayment.IsEnabled = true;
             else
-                foreach (Button direct in new List<Button> { printMoneyDirectPayment,
-                    printCardDirectPayment, returnSaleDirectPayment, returnSaleCardPayment
-                })
-                    direct.IsEnabled = false;
+                printMoneyDirectPayment.IsEnabled = false;
         }
 
         private void directPayment(int moneyType, bool returnSale)

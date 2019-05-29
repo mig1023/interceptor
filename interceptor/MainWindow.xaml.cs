@@ -575,20 +575,19 @@ namespace interceptor
 
             manDocPack.Clear();
 
-            moneyForDHL.Text = String.Empty;
-            placeholderDHL.Visibility = Visibility.Visible;
-            moneyForCheck.Text = String.Empty;
-            placeholderMoneyForCheck.Visibility = Visibility.Visible;
-            moneyForInsuranceRGS.Text = String.Empty;
-            placeholderRGS.Visibility = Visibility.Visible;
-            moneyForInsuranceKL.Text = String.Empty;
-            placeholderKL.Visibility = Visibility.Visible;
-            total.Content = String.Empty;
-            totalR.Content = String.Empty;
-            returnDate.Text = String.Empty;
+            foreach (TextBox text in new List<TextBox> { moneyForDHL, moneyForCheck, moneyForInsuranceRGS, moneyForInsuranceKL })
+                text.Text = String.Empty;
 
+            foreach (Label label in new List<Label> {
+                    placeholderDHL, placeholderMoneyForCheck, placeholderRGS, placeholderKL, placeholderPrintSending
+            })
+                label.Visibility = Visibility.Visible;
+
+            foreach(Label label in new List<Label> { total, totalR })
+                label.Content = String.Empty;
+
+            returnDate.Text = String.Empty;
             stringForPrinting.Text = String.Empty;
-            placeholderPrintSending.Visibility = Visibility.Visible;
         }
 
         private void CleanRCheck()
@@ -602,7 +601,7 @@ namespace interceptor
 
             manDocPack.Clear();
 
-            moneyForRCheck.Text = "0.00";
+            moneyForRCheck.Text = String.Empty;
             total.Content = String.Empty;
             totalR.Content = String.Empty;
             appNumber.Text = String.Empty;
@@ -858,6 +857,11 @@ namespace interceptor
             else
                 foreach (Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR })
                     button.IsEnabled = false;
+
+            if (String.IsNullOrEmpty(appNumber.Text))
+                placeholderAppNum.Visibility = Visibility.Visible;
+            else
+                placeholderAppNum.Visibility = Visibility.Hidden;
         }
 
         private void closeRCheck_Click(object sender, RoutedEventArgs e)
@@ -980,95 +984,41 @@ namespace interceptor
             AutoUpdate.StartUpdater();
         }
 
-        private void placeholderLogin_MouseDown(object sender, MouseButtonEventArgs e)
+        private void placeholder_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            login.Focus();
+            Label senderLabel = (Label)sender;
+
+            string ralatedTextboxName = senderLabel.Tag.ToString();
+
+            Control ralatedTextbox = (Control)FindName(ralatedTextboxName);
+            ralatedTextbox.Focus();
         }
 
-        private void placeholderPass_MouseDown(object sender, MouseButtonEventArgs e)
+        private void withPlaceholder_KeyUp(object sender, KeyEventArgs e)
         {
-            password.Focus();
-        }
+            Control senderTextbox = (Control)sender;
 
-        private void placeholderRGS_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            moneyForInsuranceRGS.Focus();
-        }
+            string ralatedPlaceholderName = senderTextbox.Tag.ToString();
 
-        private void placeholderKL_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            moneyForInsuranceKL.Focus();
-        }
+            Label ralatedPlaceholder = (Label)FindName(ralatedPlaceholderName);
 
-        private void placeholderDHL_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            moneyForDHL.Focus();
-        }
+            string senderText;
 
-        private void placeholderPrintSending_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            printSending.Focus();
-        }
-
-        private void placeholderMoneyForCheck_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            moneyForCheck.Focus();
-        }
-
-        private void login_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (String.IsNullOrEmpty(login.Text))
-                placeholderLogin.Visibility = Visibility.Visible;
+            if (senderTextbox is PasswordBox)
+            {
+                PasswordBox pass = (PasswordBox)senderTextbox;
+                senderText = pass.Password;
+            }
             else
-                placeholderLogin.Visibility = Visibility.Hidden;
-        }
+            {
+                TextBox text = (TextBox)senderTextbox;
+                senderText = text.Text;
+            }
 
-        private void password_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (String.IsNullOrEmpty(password.Password))
-                placeholderPass.Visibility = Visibility.Visible;
+            if (String.IsNullOrEmpty(senderText))
+                ralatedPlaceholder.Visibility = Visibility.Visible;
             else
-                placeholderPass.Visibility = Visibility.Hidden;
-        }
-
-        private void moneyForInsuranceRGS_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (String.IsNullOrEmpty(moneyForInsuranceRGS.Text))
-                placeholderRGS.Visibility = Visibility.Visible;
-            else
-                placeholderRGS.Visibility = Visibility.Hidden;
-        }
-
-        private void moneyForInsuranceKL_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (String.IsNullOrEmpty(moneyForInsuranceKL.Text))
-                placeholderKL.Visibility = Visibility.Visible;
-            else
-                placeholderKL.Visibility = Visibility.Hidden;
-        }
-
-        private void moneyForDHL_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (String.IsNullOrEmpty(moneyForDHL.Text))
-                placeholderDHL.Visibility = Visibility.Visible;
-            else
-                placeholderDHL.Visibility = Visibility.Hidden;
-        }
-
-        private void printSending_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (String.IsNullOrEmpty(printSending.Text))
-                placeholderPrintSending.Visibility = Visibility.Visible;
-            else
-                placeholderPrintSending.Visibility = Visibility.Hidden;
-        }
-
-        private void moneyForCheck_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (String.IsNullOrEmpty(moneyForCheck.Text))
-                placeholderMoneyForCheck.Visibility = Visibility.Visible;
-            else
-                placeholderMoneyForCheck.Visibility = Visibility.Hidden;
+                ralatedPlaceholder.Visibility = Visibility.Hidden;
         }
 
         private void backToMainFromMoneyPlace_Click(object sender, RoutedEventArgs e)
@@ -1087,12 +1037,7 @@ namespace interceptor
                 moneyForDirectPayment.IsEnabled = false;
         }
 
-        private void section_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            paymentPrepared();
-        }
-
-        private void stringForPrinting_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void directSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             paymentPrepared();
         }
@@ -1110,19 +1055,15 @@ namespace interceptor
             Match OnlyNumbers = Regex.Match(moneyForDirectPayment.Text, @"^[0-9\.,]+$");
 
             if ((moneyForDirectPayment.Text != String.Empty) && !OnlyZero.Success && OnlyNumbers.Success)
-            {
-                printMoneyDirectPayment.IsEnabled = true;
-                printCardDirectPayment.IsEnabled = true;
-                returnSaleDirectPayment.IsEnabled = true;
-                returnSaleCardPayment.IsEnabled = true;
-            }
+                foreach(Button direct in new List<Button> { printMoneyDirectPayment,
+                    printCardDirectPayment, returnSaleDirectPayment, returnSaleCardPayment
+                })
+                    direct.IsEnabled = true;
             else
-            {
-                printMoneyDirectPayment.IsEnabled = false;
-                printCardDirectPayment.IsEnabled = false;
-                returnSaleDirectPayment.IsEnabled = false;
-                returnSaleCardPayment.IsEnabled = false;
-            }
+                foreach (Button direct in new List<Button> { printMoneyDirectPayment,
+                    printCardDirectPayment, returnSaleDirectPayment, returnSaleCardPayment
+                })
+                    direct.IsEnabled = false;
         }
 
         private void directPayment(int moneyType, bool returnSale)

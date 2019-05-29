@@ -50,7 +50,7 @@ namespace interceptor
 
             versionLabel.Content = "версия " + CURRENT_VERSION;
 
-            Log.Add("ИНТЕРСЕРАПТОР ЗАПУЩЕН", freeLine: true);
+            Log.Add("ИНТЕРЦЕРАПТОР ЗАПУЩЕН", freeLine: true);
             Log.Add("версия ---> " + CURRENT_VERSION, freeLineAfter: true);
 
             int MaxThreadsCount = Environment.ProcessorCount * 4;
@@ -381,7 +381,9 @@ namespace interceptor
 
             bool parse = Double.TryParse(field.Text, NumberStyles.Any, cultureInfo.NumberFormat, out currentSumm);
 
-            if (!parse)
+            bool zero = String.IsNullOrEmpty(field.Text);
+
+            if (!parse && !zero)
                 return fieldsErrors.valueError;
 
             foreach (string serv in manDocPack)
@@ -573,13 +575,20 @@ namespace interceptor
 
             manDocPack.Clear();
 
-            moneyForDHL.Text = "0.00";
-            moneyForCheck.Text = "0.00";
-            moneyForInsuranceRGS.Text = "0.00";
-            moneyForInsuranceKL.Text = "0.00";
+            moneyForDHL.Text = String.Empty;
+            placeholderDHL.Visibility = Visibility.Visible;
+            moneyForCheck.Text = String.Empty;
+            placeholderMoneyForCheck.Visibility = Visibility.Visible;
+            moneyForInsuranceRGS.Text = String.Empty;
+            placeholderRGS.Visibility = Visibility.Visible;
+            moneyForInsuranceKL.Text = String.Empty;
+            placeholderKL.Visibility = Visibility.Visible;
             total.Content = String.Empty;
             totalR.Content = String.Empty;
             returnDate.Text = String.Empty;
+
+            stringForPrinting.Text = String.Empty;
+            placeholderPrintSending.Visibility = Visibility.Visible;
         }
 
         private void CleanRCheck()
@@ -981,6 +990,31 @@ namespace interceptor
             password.Focus();
         }
 
+        private void placeholderRGS_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            moneyForInsuranceRGS.Focus();
+        }
+
+        private void placeholderKL_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            moneyForInsuranceKL.Focus();
+        }
+
+        private void placeholderDHL_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            moneyForDHL.Focus();
+        }
+
+        private void placeholderPrintSending_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            printSending.Focus();
+        }
+
+        private void placeholderMoneyForCheck_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            moneyForCheck.Focus();
+        }
+
         private void login_KeyUp(object sender, KeyEventArgs e)
         {
             if (String.IsNullOrEmpty(login.Text))
@@ -995,6 +1029,46 @@ namespace interceptor
                 placeholderPass.Visibility = Visibility.Visible;
             else
                 placeholderPass.Visibility = Visibility.Hidden;
+        }
+
+        private void moneyForInsuranceRGS_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (String.IsNullOrEmpty(moneyForInsuranceRGS.Text))
+                placeholderRGS.Visibility = Visibility.Visible;
+            else
+                placeholderRGS.Visibility = Visibility.Hidden;
+        }
+
+        private void moneyForInsuranceKL_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (String.IsNullOrEmpty(moneyForInsuranceKL.Text))
+                placeholderKL.Visibility = Visibility.Visible;
+            else
+                placeholderKL.Visibility = Visibility.Hidden;
+        }
+
+        private void moneyForDHL_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (String.IsNullOrEmpty(moneyForDHL.Text))
+                placeholderDHL.Visibility = Visibility.Visible;
+            else
+                placeholderDHL.Visibility = Visibility.Hidden;
+        }
+
+        private void printSending_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (String.IsNullOrEmpty(printSending.Text))
+                placeholderPrintSending.Visibility = Visibility.Visible;
+            else
+                placeholderPrintSending.Visibility = Visibility.Hidden;
+        }
+
+        private void moneyForCheck_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (String.IsNullOrEmpty(moneyForCheck.Text))
+                placeholderMoneyForCheck.Visibility = Visibility.Visible;
+            else
+                placeholderMoneyForCheck.Visibility = Visibility.Hidden;
         }
 
         private void backToMainFromMoneyPlace_Click(object sender, RoutedEventArgs e)
@@ -1104,5 +1178,7 @@ namespace interceptor
         {
             directPayment(moneyType: 2, returnSale: true);
         }
+
+
     }
 }

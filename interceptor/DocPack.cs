@@ -30,7 +30,12 @@ namespace interceptor
 
         public static decimal manualParseDecimal(string line)
         {
-            double decimalTemporary = double.Parse(line, CultureInfo.InvariantCulture); 
+            double decimalTemporary = 0;
+
+            if (line == String.Empty)
+                decimalTemporary = 0;
+            else
+                Double.TryParse(line, NumberStyles.Any, CultureInfo.InvariantCulture, out decimalTemporary);
 
             return (decimal)decimalTemporary;
         }

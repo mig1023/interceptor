@@ -357,6 +357,11 @@ namespace interceptor
 
             foreach (TextBox textbox in new List<TextBox>() { moneyForDHL, moneyForInsuranceRGS, moneyForInsuranceKL  })
                 textbox.IsEnabled = !block;
+
+            foreach (Button button in new List<Button>() {
+                printMoneyDirectPayment, printCardDirectPayment, returnSaleDirectPayment, returnSaleCardPayment,
+            })
+                button.IsEnabled = block;
         }
 
         private void BlockRCheckButton(bool block)
@@ -575,11 +580,14 @@ namespace interceptor
 
             manDocPack.Clear();
 
-            foreach (TextBox text in new List<TextBox> { moneyForDHL, moneyForCheck, moneyForInsuranceRGS, moneyForInsuranceKL })
+            foreach (TextBox text in new List<TextBox> { moneyForDHL, moneyForCheck, moneyForInsuranceRGS,
+                moneyForInsuranceKL, directPaymentSending, priceForDirectPayment
+            })
                 text.Text = String.Empty;
 
             foreach (Label label in new List<Label> {
-                    placeholderDHL, placeholderMoneyForCheck, placeholderRGS, placeholderKL, placeholderPrintSending
+                    placeholderDHL, placeholderMoneyForCheck, placeholderRGS, placeholderKL, placeholderPrintSending,
+                    placeholderSection, placeholderStringForPrinting, placeholderForDirectPayment, placeholderDirectMoney
             })
                 label.Visibility = Visibility.Visible;
 
@@ -587,11 +595,9 @@ namespace interceptor
                 label.Content = String.Empty;
 
             returnDate.Text = String.Empty;
-            stringForPrinting.Text = String.Empty;
-        }
 
-        private void CleanRCheck()
-        {
+            // CleanRCheck
+
             ButtonsClean(
                 buttons: receptionButtonCleaningList,
                 fontSize: 18
@@ -605,6 +611,13 @@ namespace interceptor
             total.Content = String.Empty;
             totalR.Content = String.Empty;
             appNumber.Text = String.Empty;
+
+            // Direct
+
+            stringForPrinting.Text = String.Empty;
+            section.Text = String.Empty;
+            vatDirectPayment.IsChecked = true;
+            moneyForDirectPayment.Text = String.Empty;
         }
 
         private void ShowError(Canvas from, string error, string agrNumber = "")
@@ -717,12 +730,22 @@ namespace interceptor
         {
             if (!Cashbox.CashIncome(moneyForIncome.Text))
                 moveToErrorFromReports(Cashbox.GetResultLine());
+            else
+            {
+                moneyForIncome.Text = String.Empty;
+                placeholderMoneyForIncome.Visibility = Visibility.Visible;
+            }
         }
 
         private void cashOutcome_Click(object sender, RoutedEventArgs e)
         {
             if (!Cashbox.CashOutcome(moneyForOutcome.Text))
                 moveToErrorFromReports(Cashbox.GetResultLine());
+            else
+            {
+                moneyForOutcome.Text = String.Empty;
+                placeholderMoneyForOutcome.Visibility = Visibility.Visible;
+            }
         }
 
         private void backToMainFromInfo_Click(object sender, RoutedEventArgs e)
@@ -843,7 +866,7 @@ namespace interceptor
             Server.ShowActivity(busy: false);
             Cashbox.manDocPackForPrinting = null;
 
-            CleanRCheck();
+            CleanCheck();
         }
 
         private void appNumber_KeyUp(object sender, KeyEventArgs e)
@@ -888,7 +911,7 @@ namespace interceptor
                 if (MessageBoxes.NullInServices(sendingData[1]) == MessageBoxResult.Yes)
                     BlockRCheckButton(block: true);
                 else
-                    CleanRCheck();
+                    CleanCheck();
             }
             else
             {
@@ -965,7 +988,7 @@ namespace interceptor
         private void getAppInfoAndPrintRecepeit(string summ)
         {
             string error = Receipt.PrintReceipt(CRM.AppNumberData(appNumber.Text, summ), Cashbox.manDocPackForPrinting);
-            CleanRCheck();
+            CleanCheck();
 
             if (!String.IsNullOrEmpty(error))
                 ShowError(receptionPlace, error);
@@ -974,7 +997,7 @@ namespace interceptor
         private void appNumberClean_Click(object sender, RoutedEventArgs e)
         {
             appNumber.Text = String.Empty;
-            CleanRCheck();
+            CleanCheck();
             appNumber_KeyUp(null, null);
             appNumber.Focus();
         }
@@ -1042,7 +1065,7 @@ namespace interceptor
 
         private void paymentPrepared()
         {
-            Match OnlyZero = Regex.Match(priceForDirectPayment.Text, @"^0*(\.|,)0*$");
+            Match OnlyZero = Regex.Match(priceForDirectPayment.Text, @"^0*(\.|,)?0*$");
 
             Match OnlyNumbers = Regex.Match(priceForDirectPayment.Text, @"^[0-9\.,]+$");
 
@@ -1103,14 +1126,8 @@ namespace interceptor
             bool vat = vatDirectPayment.IsChecked ?? true;
 
             string[] result = CashboxDirect.DirectPayment(
-                moneyPrice: price,
-                moneySumm: summ,
-                forPrinting: printing,
-                sending: sendingSMSorEMAIL,
-                department: department,
-                moneyType: moneyType,
-                returnSale: returnSale,
-                VAT: vat
+                moneyPrice: price, moneySumm: summ, forPrinting: printing, sending: sendingSMSorEMAIL,
+                department: department, moneyType: moneyType, returnSale: returnSale, VAT: vat
             ).Split(':');
 
             if (result[0] == "OK")
@@ -1124,6 +1141,11 @@ namespace interceptor
 
         private void printMoneyDirectPayment_Click(object sender, RoutedEventArgs e)
         {
+            decimal summ = DocPack.manualParseDecimal(moneyForDirectPayment.Text);
+
+            if (CheckMoneyFail(summ))
+                return;
+
             directPayment(moneyType: 1, returnSale: false);
         }
 

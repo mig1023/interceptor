@@ -239,7 +239,7 @@ namespace interceptor
 
             if (line)
             {
-                Driver.StringForPrinting = "------------------------------------";
+                Driver.StringForPrinting = new String('-', 36);
                 Driver.PrintString();
             }
             

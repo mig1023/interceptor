@@ -41,6 +41,9 @@ namespace interceptor
         public static string DirectPayment(decimal? moneyPrice, decimal? moneySumm, string forPrinting,
             string sending, int department, int moneyType, bool returnSale, bool VAT)
         {
+            Log.Add("прямая печать чека (" + (returnSale ? "возврат" : "оплата") + ")" );
+            Log.Add("услуга '" + forPrinting + "', цена " + moneyPrice.ToString() + ", сумма " + moneySumm.ToString());
+
             Driver.CheckType = (returnSale ? 2 : 0);
             Driver.Password = currentDirectPassword;
             Driver.OpenCheck();
@@ -53,6 +56,8 @@ namespace interceptor
                 Driver.Password = currentDirectPassword;
                 Driver.CustomerEmail = sending;
                 Driver.FNSendCustomerEmail();
+
+                Log.Add("отправка СМС/email на адрес: " + sending);
             }
 
             Driver.Password = currentDirectPassword;

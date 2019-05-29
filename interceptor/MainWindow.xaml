@@ -100,11 +100,13 @@
             <Button x:Name="continueDocument" Content="продолжить печать" Height="63" Canvas.Left="268" Canvas.Top="121" Width="242" Click="continueDocument_Click" FontSize="18"/>
             <Button x:Name="cancelDocument" Content="аннулировать чек" Height="63" Canvas.Left="515" Canvas.Top="121" Width="246" Click="cancelDocument_Click" FontSize="18"/>
             <Button x:Name="cashIncome" Content="&lt;---- внесение в кассу" Height="37" Canvas.Left="211" Canvas.Top="226" Width="197" Click="cashIncome_Click"/>
-            <TextBox x:Name="moneyForIncome" Height="37" Canvas.Left="25" Text="0.00" Canvas.Top="226" Width="156" FontSize="22"/>
+            <TextBox x:Name="moneyForIncome" Height="37" Canvas.Left="25" Canvas.Top="226" Width="156" FontSize="22" Tag="placeholderMoneyForIncome" KeyUp="withPlaceholder_KeyUp"/>
             <Label x:Name="currencyIncome" Content="Р" Canvas.Left="181" Canvas.Top="218" FontSize="28"/>
             <Button x:Name="cashOutcome" Content="&lt;---- выплата из кассы" Height="37" Canvas.Left="211" Canvas.Top="271" Width="197" Click="cashOutcome_Click"/>
-            <TextBox x:Name="moneyForOutcome" Height="37" Canvas.Left="25" Text="0.00" Canvas.Top="271" Width="156" FontSize="22"/>
+            <TextBox x:Name="moneyForOutcome" Height="37" Canvas.Left="25" Canvas.Top="271" Width="156" FontSize="22" Tag="placeholderMoneyForOutcome" KeyUp="withPlaceholder_KeyUp"/>
             <Label x:Name="currencyOutcome" Content="Р" Canvas.Left="181" Canvas.Top="263" FontSize="28"/>
+            <Label x:Name="placeholderMoneyForIncome" Content="0.00" Height="36" Canvas.Left="25" Canvas.Top="224" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForIncome" MouseDown="placeholder_MouseDown"/>
+            <Label x:Name="placeholderMoneyForOutcome" Content="0.00" Height="36" Canvas.Left="25" Canvas.Top="269" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForOutcome" MouseDown="placeholder_MouseDown"/>
         </Canvas>
 
         <Canvas x:Name="moneyPlace" Margin="2370,0,-2370,0">

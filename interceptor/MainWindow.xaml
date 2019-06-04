@@ -148,12 +148,12 @@
             <Button x:Name="returnSaleCardPayment" Content="возврат на карту" IsEnabled="False" Height="20" Canvas.Left="578" Canvas.Top="319" Width="120" FontSize="11" Click="returnCardDirectPayment_Click"/>
             <CheckBox x:Name="vatDirectPayment" Content=" НДС 20%" Height="31" Canvas.Left="574" Canvas.Top="183" Width="136" FontSize="24" IsChecked="True"/>
             <TextBox x:Name="priceForDirectPayment" Height="40" Canvas.Left="310" Canvas.Top="182" Width="147" FontSize="22" Tag="placeholderForDirectPayment" KeyUp="stringForPrinting_KeyUp"/>
-            <TextBox x:Name="directPaymentSending" Height="40" Canvas.Left="310" Canvas.Top="239" Width="388" FontSize="22" Tag="placeholderPaymentSending"/>
+            <TextBox x:Name="directPaymentSending" Height="40" Canvas.Left="310" Canvas.Top="239" Width="388" FontSize="22" Tag="placeholderPaymentSending" KeyUp="withPlaceholder_KeyUp"/>
             <Label x:Name="directPaymentSendingText" Content="телефон или email" Canvas.Left="119" Canvas.Top="234" FontSize="18"/>
             <Label x:Name="directPaymentSendingText2" Content="для электронного чека" Canvas.Left="119" Canvas.Top="252" FontSize="14"/>
             <Label x:Name="placeholderSection" Content="-- выберите отдел --" Height="36" Canvas.Left="310" Canvas.Top="78" Width="222" FontSize="22" Foreground="#FFD8D8D8" Tag="section" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderStringForPrinting" Content="Консульский сбор C01" Height="36" Canvas.Left="310" Canvas.Top="130" Width="281" FontSize="22" Foreground="#FFD8D8D8" Tag="stringForPrinting" MouseDown="placeholder_MouseDown"/>
-            <Label x:Name="placeholderForDirectPayment" Content="0.00" Height="36" Canvas.Left="310" Canvas.Top="183" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="priceForDirectPayment" MouseDown="placeholder_MouseDown"/>
+            <Label x:Name="placeholderForDirectPayment" Content="0.00" Height="36" Canvas.Left="310" Canvas.Top="181" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="priceForDirectPayment" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderPaymentSending" Content="mail@example.com" Height="36" Canvas.Left="310" Canvas.Top="239" Width="198" FontSize="22" Foreground="#FFD8D8D8" Tag="directPaymentSending" MouseDown="placeholder_MouseDown" />
             <Label x:Name="placeholderDirectMoney" Content="0.00" Height="36" Canvas.Left="195" Canvas.Top="295" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForDirectPayment" MouseDown="placeholder_MouseDown"/>
         </Canvas>

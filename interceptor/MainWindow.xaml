@@ -71,7 +71,7 @@
             <Label x:Name="placeholderPrintSending" Content="mail@example.com" Height="36" Canvas.Left="25" Canvas.Top="516" Width="198" FontSize="22" Foreground="#FFD8D8D8" Tag="printSending" MouseDown="placeholder_MouseDown" />
             <Label x:Name="placeholderMoneyForCheck" Content="0.00" Height="36" Canvas.Left="286" Canvas.Top="607" Width="49" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForCheck" MouseDown="placeholder_MouseDown"/>
         </Canvas>
-        <Canvas x:Name="receptionPlace" Margin="1571,0,-1571,0">
+        <Canvas x:Name="receptionPlace" Margin="799,0,-799,0">
             <Button x:Name="backToMainFromReception" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click"/>
             <Button x:Name="closeRCheck" Content="подытог" Height="42" Canvas.Left="19" Canvas.Top="323" Width="155" Click="closeRCheck_Click"  FontSize="16"/>
             <TextBox x:Name="moneyForRCheck" IsEnabled="False" Height="40" Canvas.Left="287" TextWrapping="Wrap" Canvas.Top="323" Width="117" FontSize="22" Tag="placeholderMoneyForRCheck" KeyUp="withPlaceholder_KeyUp"/>
@@ -109,16 +109,16 @@
             <Label x:Name="placeholderMoneyForOutcome" Content="0.00" Height="36" Canvas.Left="25" Canvas.Top="269" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForOutcome" MouseDown="placeholder_MouseDown"/>
         </Canvas>
 
-        <Canvas x:Name="moneyPlace" Margin="2370,0,-2370,0">
+        <Canvas x:Name="moneyPlace" Margin="799,0,-799,0">
             <Button x:Name="backToMainFromMoneyPlace" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromMoneyPlace_Click"/>
-            <ComboBox x:Name="section" Height="38" Canvas.Left="310" Canvas.Top="78" Width="388" IsReadOnly="True" IsEditable="True" FontSize="24" Tag="placeholderSection" SelectionChanged="directSelectionChanged">
+            <ComboBox x:Name="section" Height="38" Canvas.Left="230" Canvas.Top="87" Width="506" IsReadOnly="True" IsEditable="True" FontSize="24" Tag="placeholderSection" SelectionChanged="directSelectionChanged">
                 <ComboBoxItem Name="section1" Tag="1">услуги сервисные</ComboBoxItem>
                 <ComboBoxItem Name="section2" Tag="2">консульский сбор</ComboBoxItem>
                 <ComboBoxItem Name="section3" Tag="3">ресепшен</ComboBoxItem>
                 <ComboBoxItem Name="section4" Tag="4">ргс</ComboBoxItem>
                 <ComboBoxItem Name="section5" Tag="5">капитал-лайф</ComboBoxItem>
             </ComboBox>
-            <ComboBox x:Name="stringForPrinting" Height="38" Canvas.Left="310" Text="" Canvas.Top="130" Width="388" FontSize="24" IsEditable="True" Tag="placeholderStringForPrinting" SelectionChanged="directSelectionChanged" KeyUp="stringForPrinting_KeyUp">
+            <ComboBox x:Name="stringForPrinting" Height="38" Canvas.Left="230" Text="" Canvas.Top="139" Width="506" FontSize="24" IsEditable="True" Tag="placeholderStringForPrinting" SelectionChanged="directSelectionChanged" KeyUp="stringForPrinting_KeyUp">
                 <ComboBoxItem Name="string1">Услуги по доставке документов на дом</ComboBoxItem>
                 <ComboBoxItem Name="string2">Услуги по оповещению (СМС сообщение)</ComboBoxItem>
                 <ComboBoxItem Name="string3">Услуги по переводу документов</ComboBoxItem>
@@ -135,27 +135,31 @@
                 <ComboBoxItem Name="string14">Консульский сбор D04</ComboBoxItem>
                 <ComboBoxItem Name="string15">Консульский сбор D05</ComboBoxItem>
             </ComboBox>
-            <Label x:Name="sectionText" Content="название отдела" Canvas.Left="119" Canvas.Top="80" FontSize="18"/>
-            <Label x:Name="nameMoneyText" Content="название услуги" Canvas.Left="119" Canvas.Top="134" FontSize="18"/>
-            <Label x:Name="pricePaymentText" Content="цена услуги" Canvas.Left="119" Canvas.Top="184" FontSize="18"/>
-            <Label x:Name="moneySumText" Content="сумма" Canvas.Left="119" Canvas.Top="299" FontSize="18"/>
-            <TextBox x:Name="moneyForDirectPayment" IsEnabled="False" Height="40" Canvas.Left="195" Canvas.Top="297" Width="139" FontSize="22" Tag="placeholderDirectMoney" KeyUp="moneyForDirectPayment_KeyUp"/>
-            <Button x:Name="printMoneyDirectPayment" Content="наличными" IsEnabled="False" Height="44" Canvas.Left="358" Canvas.Top="295" Width="105" Click="printMoneyDirectPayment_Click"/>
-            <Button x:Name="printCardDirectPayment" Content="картой" IsEnabled="False" Height="44" Canvas.Left="468" Canvas.Top="295" Width="105" Click="printCardDirectPayment_Click"/>
-            <Label x:Name="currency5" Content="Р" Canvas.Left="333" Canvas.Top="291" FontSize="28"/>
-            <Label x:Name="currency6" Content="Р" Canvas.Left="457" Canvas.Top="174" FontSize="28"/>
-            <Button x:Name="returnSaleDirectPayment" Content="возврат наличными" IsEnabled="False" Height="20" Canvas.Left="578" Canvas.Top="295" Width="120" FontSize="11" Click="returnSaleDirectPayment_Click"/>
-            <Button x:Name="returnSaleCardPayment" Content="возврат на карту" IsEnabled="False" Height="20" Canvas.Left="578" Canvas.Top="319" Width="120" FontSize="11" Click="returnCardDirectPayment_Click"/>
-            <CheckBox x:Name="vatDirectPayment" Content=" НДС 20%" Height="31" Canvas.Left="574" Canvas.Top="183" Width="136" FontSize="24" IsChecked="True"/>
-            <TextBox x:Name="priceForDirectPayment" Height="40" Canvas.Left="310" Canvas.Top="182" Width="147" FontSize="22" Tag="placeholderForDirectPayment" KeyUp="stringForPrinting_KeyUp"/>
-            <TextBox x:Name="directPaymentSending" Height="40" Canvas.Left="310" Canvas.Top="239" Width="388" FontSize="22" Tag="placeholderPaymentSending" KeyUp="withPlaceholder_KeyUp"/>
-            <Label x:Name="directPaymentSendingText" Content="телефон или email" Canvas.Left="119" Canvas.Top="234" FontSize="18"/>
-            <Label x:Name="directPaymentSendingText2" Content="для электронного чека" Canvas.Left="119" Canvas.Top="252" FontSize="14"/>
-            <Label x:Name="placeholderSection" Content="-- выберите отдел --" Height="36" Canvas.Left="310" Canvas.Top="78" Width="222" FontSize="22" Foreground="#FFD8D8D8" Tag="section" MouseDown="placeholder_MouseDown"/>
-            <Label x:Name="placeholderStringForPrinting" Content="Консульский сбор C01" Height="36" Canvas.Left="310" Canvas.Top="130" Width="281" FontSize="22" Foreground="#FFD8D8D8" Tag="stringForPrinting" MouseDown="placeholder_MouseDown"/>
-            <Label x:Name="placeholderForDirectPayment" Content="0.00" Height="36" Canvas.Left="310" Canvas.Top="181" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="priceForDirectPayment" MouseDown="placeholder_MouseDown"/>
-            <Label x:Name="placeholderPaymentSending" Content="mail@example.com" Height="36" Canvas.Left="310" Canvas.Top="239" Width="198" FontSize="22" Foreground="#FFD8D8D8" Tag="directPaymentSending" MouseDown="placeholder_MouseDown" />
-            <Label x:Name="placeholderDirectMoney" Content="0.00" Height="36" Canvas.Left="195" Canvas.Top="295" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForDirectPayment" MouseDown="placeholder_MouseDown"/>
+            <Label x:Name="sectionText" Content="название отдела" Canvas.Left="39" Canvas.Top="89" FontSize="18"/>
+            <Label x:Name="nameMoneyText" Content="название услуги" Canvas.Left="39" Canvas.Top="143" FontSize="18"/>
+            <Label x:Name="pricePaymentText" Content="цена услуги" Canvas.Left="39" Canvas.Top="193" FontSize="18"/>
+            <Label x:Name="moneySumText" Content="сумма" Canvas.Left="39" Canvas.Top="308" FontSize="18"/>
+            <TextBox x:Name="moneyForDirectPayment" IsEnabled="False" Height="40" Canvas.Left="115" Canvas.Top="306" Width="139" FontSize="22" Tag="placeholderDirectMoney" KeyUp="moneyForDirectPayment_KeyUp"/>
+            <Button x:Name="printMoneyDirectPayment" Content="наличными" IsEnabled="False" Height="44" Canvas.Left="278" Canvas.Top="304" Width="162" Click="printMoneyDirectPayment_Click"/>
+            <Button x:Name="printCardDirectPayment" Content="картой" IsEnabled="False" Height="44" Canvas.Left="445" Canvas.Top="304" Width="162" Click="printCardDirectPayment_Click"/>
+            <Label x:Name="currency5" Content="Р" Canvas.Left="253" Canvas.Top="300" FontSize="28"/>
+            <Label x:Name="currency6" Content="Р" Canvas.Left="377" Canvas.Top="185" FontSize="28"/>
+            <Button x:Name="returnSaleDirectPayment" Content="возврат наличными" IsEnabled="False" Height="20" Canvas.Left="612" Canvas.Top="304" Width="124" FontSize="11" Click="returnSaleDirectPayment_Click"/>
+            <Button x:Name="returnSaleCardPayment" Content="возврат на карту" IsEnabled="False" Height="20" Canvas.Left="612" Canvas.Top="328" Width="124" FontSize="11" Click="returnCardDirectPayment_Click"/>
+            <CheckBox x:Name="vatDirectPayment" Content=" НДС 20%" Height="20" Canvas.Left="431" Canvas.Top="191" Width="94" FontSize="14" IsChecked="True">
+                <CheckBox.LayoutTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2" />
+                </CheckBox.LayoutTransform>
+            </CheckBox>
+            <TextBox x:Name="priceForDirectPayment" Height="40" Canvas.Left="230" Canvas.Top="191" Width="147" FontSize="22" Tag="placeholderForDirectPayment" KeyUp="stringForPrinting_KeyUp"/>
+            <TextBox x:Name="directPaymentSending" Height="40" Canvas.Left="230" Canvas.Top="248" Width="506" FontSize="22" Tag="placeholderPaymentSending" KeyUp="withPlaceholder_KeyUp"/>
+            <Label x:Name="directPaymentSendingText" Content="телефон или email" Canvas.Left="39" Canvas.Top="243" FontSize="18"/>
+            <Label x:Name="directPaymentSendingText2" Content="для электронного чека" Canvas.Left="39" Canvas.Top="261" FontSize="14"/>
+            <Label x:Name="placeholderSection" Content="-- выберите отдел --" Height="36" Canvas.Left="230" Canvas.Top="87" Width="222" FontSize="22" Foreground="#FFD8D8D8" Tag="section" MouseDown="placeholder_MouseDown"/>
+            <Label x:Name="placeholderStringForPrinting" Content="Консульский сбор C01" Height="36" Canvas.Left="230" Canvas.Top="139" Width="281" FontSize="22" Foreground="#FFD8D8D8" Tag="stringForPrinting" MouseDown="placeholder_MouseDown"/>
+            <Label x:Name="placeholderForDirectPayment" Content="0.00" Height="36" Canvas.Left="230" Canvas.Top="190" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="priceForDirectPayment" MouseDown="placeholder_MouseDown"/>
+            <Label x:Name="placeholderPaymentSending" Content="mail@example.com" Height="36" Canvas.Left="230" Canvas.Top="248" Width="198" FontSize="22" Foreground="#FFD8D8D8" Tag="directPaymentSending" MouseDown="placeholder_MouseDown" />
+            <Label x:Name="placeholderDirectMoney" Content="0.00" Height="36" Canvas.Left="115" Canvas.Top="304" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForDirectPayment" MouseDown="placeholder_MouseDown"/>
         </Canvas>
 
         <Canvas x:Name="loginPlace" Margin="-3,0,3,0">
@@ -170,7 +174,7 @@
             <Button x:Name="backToLoginFromFail" Content="попробовать ещё раз" Height="42" Canvas.Left="59" Canvas.Top="164" Width="211" Click="returnFromError_Click"/>
             <Label x:Name="loginFailText" Content="Неизвестная ошибка" Height="33" Canvas.Left="52" Canvas.Top="126" Width="709" FontSize="16"/>
         </Canvas>
-        <Canvas x:Name="systemInfoPlace" Margin="2,-784,-2,784">
+        <Canvas x:Name="systemInfoPlace" Margin="2,-412,-2,412">
             <Button x:Name="backToMainFromInfo" Content="назад" Height="42" Canvas.Left="608" Canvas.Top="198" Width="155" Click="backToMainFromInfo_Click"/>
             <Label x:Name="statusl_label" Content="версия приложения" Height="25" Canvas.Left="25" Canvas.Top="20" Width="122"/>
             <Label x:Name="status2_label" Content="адрес приложения" Height="25" Canvas.Left="25" Canvas.Top="40" Width="122"/>

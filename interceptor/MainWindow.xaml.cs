@@ -1061,6 +1061,10 @@ namespace interceptor
                 moveCanvas: mainPlace,
                 prevCanvas: moneyPlace
             );
+
+            Server.ShowActivity(busy: false);
+
+            CleanCheck();
         }
 
         private void paymentPrepared()

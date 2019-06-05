@@ -27,6 +27,11 @@ namespace interceptor
 
             request.LoadXml(from);
 
+            XmlNode senderIsRegionNode = request.SelectSingleNode("toCashbox/Info/Region");
+
+            if (senderIsRegionNode.InnerText == "true")
+                return true;
+
             XmlNode senderCashierNode = request.SelectSingleNode("toCashbox/Info/Cashier");
             string senderCashier = senderCashierNode.InnerText;
 

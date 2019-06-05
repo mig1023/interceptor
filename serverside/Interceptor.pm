@@ -34,14 +34,25 @@ sub send_connection_signal
 	my $request = '<?xml version="1.0" encoding="UTF-8"?>' . 
 		'<toCashbox>' . 
 			'<CheckConnection>MakeBeep</CheckConnection>' .
-			'<Info><Cashier>' . $vars->get_session->{'login'} . '</Cashier></Info>' .
+			'<Info>'.
+				'<Cashier>' . $vars->get_session->{'login'} . '</Cashier>' .
+				'<Region>' . $self->get_region_status() . '</Region>' .
+			'</Info>' .
 		'</toCashbox>';
 	
 	return send_request( $vars, $request, $interceptor );
 }
 
+sub get_region_status
+# //////////////////////////////////////////////////
+{
+	my ( $self ) = @_;
+
+	return "false";
+}
 
 sub md5_crc_with_secret_code
+# //////////////////////////////////////////////////
 {
 	my ( $bytecode, $not_ord ) = @_;
 	
@@ -57,6 +68,7 @@ sub md5_crc_with_secret_code
 }
 
 sub md5_filecrc_with_secret_code
+# //////////////////////////////////////////////////
 {
 	my $file_check = shift;
 	
@@ -663,6 +675,7 @@ sub doc_services
 	my $info = {
 		AgrNumber => $data->{ docnum },
 		Cashier => $login,
+		Region => $self->get_region_status(),
 		CashierPass => $pass,
 		MoneyType => $ptype,
 		Total => $total,

@@ -50,7 +50,7 @@ namespace interceptor
 
             versionLabel.Content = "версия " + CURRENT_VERSION;
 
-            Log.Add("ИНТЕРЦЕРАПТОР ЗАПУЩЕН", freeLine: true);
+            Log.Add("ПЕРЕХВАТЧИК ЗАПУЩЕН", freeLine: true);
             Log.Add("версия ---> " + CURRENT_VERSION, freeLineAfter: true);
 
             int MaxThreadsCount = Environment.ProcessorCount * 4;

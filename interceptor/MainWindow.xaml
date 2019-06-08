@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:interceptor"
         mc:Ignorable="d"
-        Title="interceraptor" Height="420" Width="800" ResizeMode="CanMinimize" Icon="Images\icon.png">
+        Title="interceptor" Height="420" Width="800" ResizeMode="CanMinimize" Icon="Images\icon.png">
     <Grid x:Name="mainGrid">
         <Canvas x:Name="mainPlace" Margin="2,-400,-2,400">
             <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="382" Canvas.Top="304" MouseDown="switchOn_MouseDown"/>

@@ -36,7 +36,7 @@ sub send_connection_signal
 			'<CheckConnection>MakeBeep</CheckConnection>' .
 			'<Info>'.
 				'<Cashier>' . $vars->get_session->{'login'} . '</Cashier>' .
-				'<Region>' . $self->get_region_status() . '</Region>' .
+				'<Region>' . get_region_status() . '</Region>' .
 			'</Info>' .
 		'</toCashbox>';
 	

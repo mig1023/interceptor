@@ -34,21 +34,10 @@ sub send_connection_signal
 	my $request = '<?xml version="1.0" encoding="UTF-8"?>' . 
 		'<toCashbox>' . 
 			'<CheckConnection>MakeBeep</CheckConnection>' .
-			'<Info>'.
-				'<Cashier>' . $vars->get_session->{'login'} . '</Cashier>' .
-				'<Region>' . get_region_status() . '</Region>' .
-			'</Info>' .
+			'<Info><Cashier>' . $vars->get_session->{'login'} . '</Cashier></Info>' .
 		'</toCashbox>';
 
 	return send_request( $vars, $request, $interceptor );
-}
-
-sub get_region_status
-# //////////////////////////////////////////////////
-{
-	my ( $self ) = @_;
-
-	return "false";
 }
 
 sub md5_crc_with_secret_code
@@ -86,10 +75,17 @@ sub md5_filecrc_with_secret_code
 sub send_docpack
 # //////////////////////////////////////////////////
 {
-
-	my ( $self, $docid, $ptype, $summ, $data, $login, $pass, $callback, $r, $sh_return, $sms, $email ) = @_;
+	my ( $self, $docid, $ptype, $summ, $data, $login, $pass, $callback, $r, $sh_return,
+		$sms, $email, $region ) = @_;
 
 	my $vars = $self->{ 'VCS::Vars' };
+	
+	my $interceptor = $vars->get_session->{ interceptor };
+	
+	my $region_interceptor = undef;
+	
+	$region_interceptor = $region->{ interceptor }
+		if ( ref( $region ) eq 'HASH' and $region->{ type } eq 'region_cashbox' );	
 	
 	if ( !$data ) {
 	
@@ -106,10 +102,12 @@ sub send_docpack
 	
 	if ( !$callback && !$pass ) {
 	
-		return ( "ERR3", "Неверные настройки данных подключения" ) unless $vars->get_session->{ interceptor };
+		return ( "ERR3", "Неверные настройки данных подключения" )
+			unless $interceptor or $region_interceptor;
 		
 		$pass = $vars->db->sel1("
-			SELECT CashPassword FROM Cashboxes_interceptors WHERE ID = ?", $vars->get_session->{ interceptor }
+			SELECT CashPassword FROM Cashboxes_interceptors WHERE ID = ?",
+			( $region_interceptor ? $region_interceptor : $interceptor )
 		);
 		
 	}
@@ -126,11 +124,11 @@ sub send_docpack
 	
 	$data->{ sms_mobile } = ( $sms ? $sms : '' );
 	
-	my ( $services, $services_fail ) = doc_services( $self, $data, $ptype, $summ, $login, $pass, $callback, $r, $sh_return );
+	my ( $services, $services_fail ) = doc_services( $self, $data, $ptype, $summ, $login, $pass, $callback, $r, $sh_return, $region_interceptor );
 
 	my $request = xml_create( $services->{ services }, $services->{ info } );
 
-	my $resp = send_request( $vars, $request, undef, $callback );
+	my $resp = send_request( $vars, $request, $region_interceptor, $callback );
 	
 	if ( $vars->get_session->{ interceptor } ) {
 	
@@ -424,7 +422,7 @@ sub get_service_code
 sub doc_services
 # //////////////////////////////////////////////////
 {
-	my ( $self, $data, $ptype, $summ, $login, $pass, $callback, $reception, $sh_return ) = @_;
+	my ( $self, $data, $ptype, $summ, $login, $pass, $callback, $reception, $sh_return, $region_cashbox ) = @_;
 
 	my $vars = $self->{'VCS::Vars'};
 
@@ -675,7 +673,7 @@ sub doc_services
 	my $info = {
 		AgrNumber => $data->{ docnum },
 		Cashier => $login,
-		Region => get_region_status(),
+		Region => ( $region_cashbox ? "true" : "false" ),
 		CashierPass => $pass,
 		MoneyType => $ptype,
 		Total => $total,
@@ -848,8 +846,13 @@ sub cash_box_region
 {
 	my ( $self, $data, $docid ) = @_;
 	
+	my $region = {
+		type => 'region_cashbox',
+		interceptor => 21,
+	};
+	
 	my ( $code, $desc, undef ) = send_docpack( $self, $docid, 2, '3500',
-		$data, undef, undef, undef, undef, undef, 'sms', 'email' );
+		$data, undef, undef, undef, undef, undef, 'sms', 'email', $region );
 	
 	return ( $code, $desc );
 }

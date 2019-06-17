@@ -39,7 +39,7 @@ sub send_connection_signal
 				'<Region>' . get_region_status() . '</Region>' .
 			'</Info>' .
 		'</toCashbox>';
-	
+
 	return send_request( $vars, $request, $interceptor );
 }
 
@@ -675,7 +675,7 @@ sub doc_services
 	my $info = {
 		AgrNumber => $data->{ docnum },
 		Cashier => $login,
-		Region => $self->get_region_status(),
+		Region => get_region_status(),
 		CashierPass => $pass,
 		MoneyType => $ptype,
 		Total => $total,
@@ -821,7 +821,7 @@ sub cash_box
 	$param->{ email } =~ s/A-Za-z0-9\@\-\_\.]//g;
 	
 	$param->{ summ } =~ s/,/./g if $param->{ summ } =~ /,/;
-warn Dumper($param);	
+	
 	return cash_box_output( $self, "ERROR|Недопустимые символы в поле суммы" )
 		if $param->{ summ } =~ /[^0-9\.]/;
 	
@@ -841,6 +841,17 @@ warn Dumper($param);
 		undef, undef, undef, undef, undef, undef, $param->{ sms }, $param->{ email } );
 	
 	cash_box_output_error_check( $self, $code, $desc, $param->{ docid } );
+}
+
+sub cash_box_region
+# //////////////////////////////////////////////////
+{
+	my ( $self, $data, $docid ) = @_;
+	
+	my ( $code, $desc, undef ) = send_docpack( $self, $docid, 2, '3500',
+		$data, undef, undef, undef, undef, undef, 'sms', 'email' );
+	
+	return ( $code, $desc );
 }
 
 sub cash_box_auth

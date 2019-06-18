@@ -844,15 +844,17 @@ sub cash_box
 sub cash_box_region
 # //////////////////////////////////////////////////
 {
-	my ( $self, $data, $docid ) = @_;
+	my ( $self, $data, $docid, $region_id, $email ) = @_;
 	
 	my $region = {
 		type => 'region_cashbox',
-		interceptor => 21,
+		interceptor => ( $region_id == 1 ? 21 : 22 ),
 	};
 	
-	my ( $code, $desc, undef ) = send_docpack( $self, $docid, 2, '3500',
-		$data, undef, undef, undef, undef, undef, 'sms', 'email', $region );
+	my ( $code, $desc, undef ) = send_docpack(
+		$self, $docid, 2, undef, $data, undef, undef,
+		undef, undef, undef, undef, $email, $region
+	);
 	
 	return ( $code, $desc );
 }

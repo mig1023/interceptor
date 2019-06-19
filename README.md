@@ -1,3 +1,3 @@
 # interceptor
 
-CRM integration system <--> cash register ( Shtrih-M / ATOL )
+Cash register <--> СRM integration system ( Shtrih-M / ATOL )

@@ -279,6 +279,9 @@ namespace interceptor
 
             PrintLine("Кассир: " + CRM.cashier, line: true);
 
+            if (doc.Region)
+                PrintLine("Договор: " + doc.AgrNumber, line: true);
+
             foreach (Service service in doc.Services)
             {
                 Driver.Password = currentDrvPassword;

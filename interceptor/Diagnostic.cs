@@ -4,18 +4,18 @@
     {
         public static bool FailCashbox()
         {
-            Cashbox.CheckConnection();
+            MainWindow.Cashbox.CheckConnection();
 
             Log.AddWithCode("проверка связи с кассой");
 
-            return ( Cashbox.GetResultCode() != 0 ? true : false );
+            return (MainWindow.Cashbox.GetResultCode() != 0 ? true : false );
         }
 
         public static string MakeBeepTest()
         {
-            Cashbox.MakeBeep();
+            MainWindow.Cashbox.MakeBeep();
 
-            return (Cashbox.GetResultCode() == 0 ? "OK" : "ERR2:Касса не отвечает");
+            return (MainWindow.Cashbox.GetResultCode() == 0 ? "OK" : "ERR2:Касса не отвечает");
         }
     }
 }

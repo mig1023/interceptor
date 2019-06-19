@@ -9,8 +9,8 @@ namespace interceptor
 {
     class CashboxDirect
     {
-        static DrvFR Driver = Cashbox.Driver;
-        static int timeout = Cashbox.timeout;
+        static DrvFR Driver = CashboxShtrih.Driver;
+        static int timeout = CashboxShtrih.timeout;
 
         public static int currentDirectPassword = 0;
 
@@ -32,7 +32,7 @@ namespace interceptor
 
             if (line)
             {
-                Driver.StringForPrinting = "------------------------------------";
+                Driver.StringForPrinting = new String('-', 36);
                 Driver.PrintString();
             }
 
@@ -106,8 +106,6 @@ namespace interceptor
 
             Log.AddWithCode("распечатка чека");
 
-
-
             if (checkClosingResult != 0)
             {
                 PrepareDriver(currentDirectPassword);
@@ -120,8 +118,8 @@ namespace interceptor
             }
             else if (!MainWindow.TEST_VERSION)
             {
-                Cashbox.repeatPrintingTimer.Enabled = true;
-                Cashbox.repeatPrintingTimer.Start();
+                CashboxShtrih.repeatPrintingTimer.Enabled = true;
+                CashboxShtrih.repeatPrintingTimer.Start();
             }
 
             if (checkClosingResult == 0)

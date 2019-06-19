@@ -5,7 +5,7 @@ using System.Timers;
 
 namespace interceptor
 {
-    class Cashbox
+    class CashboxShtrih : ICashbox
     {
         public static DrvFR Driver;
 
@@ -14,22 +14,22 @@ namespace interceptor
         static string currentDocPack = String.Empty;
         public static int timeout = 159; // 1500ms
 
-        public static DocPack manDocPackForPrinting;
-        public static decimal manDocPackSumm;
+        public DocPack manDocPackForPrinting { get; set; }
+        public decimal manDocPackSumm { get; set; }
 
-        static Cashbox()
+        static CashboxShtrih()
         {
             Driver = new DrvFR();
             Driver.FindDevice();
             repeatPrintingTimer.Elapsed += new ElapsedEventHandler(RepeatPrint);
         }
 
-        public static void MakeBeep()
+        public void MakeBeep()
         {
             Driver.Beep();
         }
 
-        public static void CheckConnection()
+        public void CheckConnection()
         {
             Driver.CheckConnection();
         }
@@ -46,7 +46,7 @@ namespace interceptor
             Driver.Timeout = timeout;
         }
 
-        public static bool RepeatDocument()
+        public bool RepeatDocument()
         {
             PrepareDriver();
 
@@ -57,7 +57,7 @@ namespace interceptor
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool ContinueDocument()
+        public bool ContinueDocument()
         {
             PrepareDriver();
 
@@ -68,7 +68,7 @@ namespace interceptor
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool ReportCleaning()
+        public bool ReportCleaning()
         {
             PrepareDriver(admin: true);
 
@@ -79,7 +79,7 @@ namespace interceptor
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool ReportWithoutCleaning()
+        public bool ReportWithoutCleaning()
         {
             PrepareDriver(admin: true);
 
@@ -90,7 +90,7 @@ namespace interceptor
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool ReportDepartment()
+        public bool ReportDepartment()
         {
             PrepareDriver(admin: true);
 
@@ -101,7 +101,7 @@ namespace interceptor
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool ReportTax()
+        public bool ReportTax()
         {
             PrepareDriver(admin: true);
 
@@ -112,7 +112,7 @@ namespace interceptor
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool CancelDocument()
+        public bool CancelDocument()
         {
             PrepareDriver();
 
@@ -123,7 +123,7 @@ namespace interceptor
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool CashIncome(string summ)
+        public bool CashIncome(string summ)
         {
             PrepareDriver();
 
@@ -135,7 +135,7 @@ namespace interceptor
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool CashOutcome(string summ)
+        public bool CashOutcome(string summ)
         {
             PrepareDriver();
 
@@ -147,7 +147,7 @@ namespace interceptor
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public static bool TablesBackup()
+        public bool TablesBackup()
         {
             PrepareDriver(admin: true);
 
@@ -207,7 +207,7 @@ namespace interceptor
             return (TableField(tableNumber, fieldNumber, rowNumber) != fieldValue);
         }
 
-        public static bool resettingCashbox()
+        public bool resettingCashbox()
         {
             foreach (CashboxData field in CashboxData.data)
                 if (String.IsNullOrEmpty(TableField(field.tableNumber, field.fieldNumber, field.rowNumber, field.fieldValue)))
@@ -216,7 +216,7 @@ namespace interceptor
             return true;
         }
 
-        public static string[] CheckCashboxTables()
+        public string[] CheckCashboxTables()
         {
             List<string> tablesCorrupted = new List<string>();
 
@@ -245,7 +245,7 @@ namespace interceptor
             
         } 
 
-        public static string PrintDocPack(DocPack doc, int MoneyType = -1,
+        public string PrintDocPack(DocPack doc, int MoneyType = -1,
             bool returnSale = false, decimal? MoneySumm = null, string sendingAddress = "")
         {
             currentDrvPassword = doc.CashierPass;
@@ -365,7 +365,7 @@ namespace interceptor
 
             Driver.RepeatDocument();
 
-            int printSuccess = GetResultCode();
+            int printSuccess = GetResultCodeInner();
 
             Log.AddWithCode("распечатка повтора");
 
@@ -379,17 +379,22 @@ namespace interceptor
             }
         }
 
-        public static int GetResultCode()
+        public static int GetResultCodeInner()
         {
             return Driver.ResultCode;
         }
 
-        public static string GetResultLine()
+        public int GetResultCode()
+        {
+            return Driver.ResultCode;
+        }
+
+        public string GetResultLine()
         {
             return Driver.ResultCodeDescription;
         }
 
-        public static int CurrentMode()
+        public int CurrentMode()
         {
             Driver.Timeout = timeout;
             Driver.GetECRStatus();
@@ -397,7 +402,7 @@ namespace interceptor
             return Driver.ECRMode;
         }
 
-        public static string CurrentModeDescription()
+        public string CurrentModeDescription()
         {
             Driver.Timeout = timeout;
             Driver.GetECRStatus();
@@ -405,7 +410,7 @@ namespace interceptor
             return Driver.ECRModeDescription;
         }
 
-        public static void GetStatusData(out string port, out string speed, out string status,
+        public void GetStatusData(out string port, out string speed, out string status,
             out string version, out string model)
         {
             string[] baudeRate = new string[] { "2400", "4800", "9600", "19200", "38400", "57600", "115200" };

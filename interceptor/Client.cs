@@ -116,15 +116,15 @@ namespace interceptor
 
                 if (docPack.RequestOnly == 1)
                 {
-                    Cashbox.manDocPackForPrinting = docPack;
-                    Cashbox.manDocPackSumm = docPack.Total;
+                    MainWindow.Cashbox.manDocPackForPrinting = docPack;
+                    MainWindow.Cashbox.manDocPackSumm = docPack.Total;
 
                     ShowTotal(docPack.Total.ToString());
 
                     return "OK:Callback запрос получен";
                 } 
                 else
-                    return Cashbox.PrintDocPack(docPack);
+                    return MainWindow.Cashbox.PrintDocPack(docPack);
             }
                 
         }

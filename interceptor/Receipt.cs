@@ -109,7 +109,7 @@ namespace interceptor
                 }
 
                 AddText();
-                AddText("ИТОГО : " + Cashbox.manDocPackSumm + " руб 00 коп", x: 450, y: CurrentY(), noNewLine: true);
+                AddText("ИТОГО : " + MainWindow.Cashbox.manDocPackSumm + " руб 00 коп", x: 450, y: CurrentY(), noNewLine: true);
 
                 AddText("Услуги оказаны в полном объеме и в срок.");
                 AddText("Услуги оплачены Заказчиком в сумме: " + appData[3].ToLower());

@@ -44,6 +44,9 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Atol.Drivers10.Fptr">
+      <HintPath>obj\Debug\Atol.Drivers10.Fptr.dll</HintPath>
+    </Reference>
     <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
       <Private>True</Private>
@@ -69,7 +72,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AutoUpdate.cs" />
-    <Compile Include="Cashbox.cs" />
+    <Compile Include="CashboxShtrih.cs" />
+    <Compile Include="CashboxAtol.cs" />
     <Compile Include="CashboxData.cs" />
     <Compile Include="CashboxDirect.cs" />
     <Compile Include="CheckRequest.cs" />
@@ -77,6 +81,7 @@
     <Compile Include="CRM.cs" />
     <Compile Include="Diagnostic.cs" />
     <Compile Include="DocPack.cs" />
+    <Compile Include="ICashbox.cs" />
     <Compile Include="MessageBoxes.cs" />
     <Compile Include="Receipt.cs" />
     <Compile Include="Server.cs" />

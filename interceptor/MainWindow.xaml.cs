@@ -19,6 +19,8 @@ namespace interceptor
     {
         public static MainWindow Instance { get; private set; }
 
+        public static ICashbox Cashbox = new CashboxShtrih();
+
         List<string> manDocPack = new List<string>();
         List<Button> servButtonCleaningList = new List<Button>();
         List<Button> receptionButtonCleaningList = new List<Button>();
@@ -34,7 +36,7 @@ namespace interceptor
 
         public string updateDir = String.Empty;
 
-        public static string PROTOCOL_PASS = "";
+        public static string PROTOCOL_PASS = "vms_protocol_password_2019";
         public static int PROTOCOL_PORT = 80;
 
         public enum fieldsErrors { noError, valueError, clickError, emptySummError };

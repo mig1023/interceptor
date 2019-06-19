@@ -15,7 +15,7 @@ namespace interceptor
         public static void AddWithCode(string line, string logType = "main",
             bool freeLine = false, bool freeLineAfter = false)
         {
-            Add(line + ": " + Cashbox.GetResultLine() + " [" + Cashbox.GetResultCode() + "]",
+            Add(line + ": " + MainWindow.Cashbox.GetResultLine() + " [" + MainWindow.Cashbox.GetResultCode() + "]",
                 logType, freeLine, freeLineAfter);
         }
 
@@ -122,7 +122,7 @@ namespace interceptor
             {
                 MainWindow main = (MainWindow)Application.Current.MainWindow;
                 main.status9.Content = line;
-                main.status11.Content = Cashbox.CurrentModeDescription().ToLower();
+                main.status11.Content = MainWindow.Cashbox.CurrentModeDescription().ToLower();
             }));
         }
     }

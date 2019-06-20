@@ -5,7 +5,7 @@ using System.Timers;
 
 namespace interceptor
 {
-    class CashboxShtrih : ICashbox
+    class ShtrihM : ICashbox
     {
         public static DrvFR Driver;
 
@@ -17,7 +17,7 @@ namespace interceptor
         public DocPack manDocPackForPrinting { get; set; }
         public decimal manDocPackSumm { get; set; }
 
-        static CashboxShtrih()
+        static ShtrihM()
         {
             Driver = new DrvFR();
             Driver.FindDevice();
@@ -209,7 +209,7 @@ namespace interceptor
 
         public bool resettingCashbox()
         {
-            foreach (CashboxData field in CashboxData.data)
+            foreach (ShtrihMData field in ShtrihMData.data)
                 if (String.IsNullOrEmpty(TableField(field.tableNumber, field.fieldNumber, field.rowNumber, field.fieldValue)))
                     return false;
 
@@ -220,7 +220,7 @@ namespace interceptor
         {
             List<string> tablesCorrupted = new List<string>();
 
-            foreach (CashboxData field in CashboxData.data)
+            foreach (ShtrihMData field in ShtrihMData.data)
                 if (FailCashboxField(field.tableNumber, field.fieldNumber, field.rowNumber, field.fieldValue))
                     tablesCorrupted.Add(field.description);
 

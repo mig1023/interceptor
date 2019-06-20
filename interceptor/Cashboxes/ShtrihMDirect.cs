@@ -7,10 +7,10 @@ using DrvFRLib;
 
 namespace interceptor
 {
-    class CashboxDirect
+    class ShtrihMDirect
     {
-        static DrvFR Driver = CashboxShtrih.Driver;
-        static int timeout = CashboxShtrih.timeout;
+        static DrvFR Driver = ShtrihM.Driver;
+        static int timeout = ShtrihM.timeout;
 
         public static int currentDirectPassword = 0;
 
@@ -118,8 +118,8 @@ namespace interceptor
             }
             else if (!MainWindow.TEST_VERSION)
             {
-                CashboxShtrih.repeatPrintingTimer.Enabled = true;
-                CashboxShtrih.repeatPrintingTimer.Start();
+                ShtrihM.repeatPrintingTimer.Enabled = true;
+                ShtrihM.repeatPrintingTimer.Start();
             }
 
             if (checkClosingResult == 0)

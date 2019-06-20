@@ -72,10 +72,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AutoUpdate.cs" />
-    <Compile Include="CashboxShtrih.cs" />
-    <Compile Include="CashboxAtol.cs" />
-    <Compile Include="CashboxData.cs" />
-    <Compile Include="CashboxDirect.cs" />
+    <Compile Include="Cashboxes\ShtrihM.cs" />
+    <Compile Include="Cashboxes\Atol.cs" />
+    <Compile Include="Cashboxes\ShtrihMData.cs" />
+    <Compile Include="Cashboxes\ShtrihMDirect.cs" />
     <Compile Include="CheckRequest.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="CRM.cs" />

@@ -7,7 +7,7 @@ using Atol.Drivers10.Fptr;
 
 namespace interceptor
 {
-    class CashboxAtol
+    class Atol
     {
         IFptr fptr = new Fptr();
 

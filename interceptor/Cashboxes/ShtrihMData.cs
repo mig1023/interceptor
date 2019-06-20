@@ -2,7 +2,7 @@
 
 namespace interceptor
 {
-    class CashboxData
+    class ShtrihMData
     {
         public int tableNumber;
         public int fieldNumber;
@@ -10,30 +10,30 @@ namespace interceptor
         public string fieldValue;
         public string description;
 
-        public static List<CashboxData> data = new List<CashboxData>() {
+        public static List<ShtrihMData> data = new List<ShtrihMData>() {
 
-                new CashboxData() {
+                new ShtrihMData() {
                     tableNumber = 6,
                     fieldNumber = 1,
                     rowNumber = 1,
                     fieldValue = "2000",
                     description = "неверное значение НДС (ожидалось 20%)",
                 },
-                new CashboxData() {
+                new ShtrihMData() {
                     tableNumber = 6,
                     fieldNumber = 2,
                     rowNumber = 1,
                     fieldValue = "НДС 20%",
                     description = "неверное наименование поля НДС",
                 },
-                new CashboxData() {
+                new ShtrihMData() {
                     tableNumber = 6,
                     fieldNumber = 1,
                     rowNumber = 2,
                     fieldValue = "0",
                     description = "неверное значение 'без НДС' (ожидалось 0%)",
                 },
-                new CashboxData() {
+                new ShtrihMData() {
                     tableNumber = 6,
                     fieldNumber = 2,
                     rowNumber = 2,
@@ -41,14 +41,14 @@ namespace interceptor
                     description = "неверное наименование поля 'без НДС'",
                 },
 
-                new CashboxData() {
+                new ShtrihMData() {
                     tableNumber = 5,
                     fieldNumber = 1,
                     rowNumber = 1,
                     fieldValue = "НАЛИЧНЫМИ",
                     description = "неверное наименование поля типов оплаты (наличные)",
                 },
-                new CashboxData() {
+                new ShtrihMData() {
                     tableNumber = 5,
                     fieldNumber = 1,
                     rowNumber = 2,
@@ -56,35 +56,35 @@ namespace interceptor
                     description = "неверное наименование поля типов оплаты (безналичные)",
                 },
 
-                new CashboxData() {
+                new ShtrihMData() {
                     tableNumber = 7,
                     fieldNumber = 1,
                     rowNumber = 1,
                     fieldValue = "(услуги сервисные)",
                     description = "неверное наименование поля услуг (сервисные)",
                 },
-                new CashboxData() {
+                new ShtrihMData() {
                     tableNumber = 7,
                     fieldNumber = 1,
                     rowNumber = 2,
                     fieldValue = "(консульский сбор)",
                     description = "неверное наименование поля услуг (консульский)",
                 },
-                new CashboxData() {
+                new ShtrihMData() {
                     tableNumber = 7,
                     fieldNumber = 1,
                     rowNumber = 3,
                     fieldValue = "(ресепшен)",
                     description = "неверное наименование поля услуг (ресепшен)",
                 },
-                new CashboxData() {
+                new ShtrihMData() {
                     tableNumber = 7,
                     fieldNumber = 1,
                     rowNumber = 4,
                     fieldValue = "(РГС)",
                     description = "неверное наименование поля услуг (страхование-РГС)",
                 },
-                new CashboxData() {
+                new ShtrihMData() {
                     tableNumber = 7,
                     fieldNumber = 1,
                     rowNumber = 5,

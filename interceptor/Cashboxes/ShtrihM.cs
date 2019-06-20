@@ -347,6 +347,8 @@ namespace interceptor
                 repeatPrintingTimer.Enabled = true;
                 repeatPrintingTimer.Start();
             }
+            else
+                Server.ShowActivity(busy: false);
 
             if (checkClosingResult == 0)
                 return "OK:" + Driver.Change;

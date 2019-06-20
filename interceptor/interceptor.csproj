@@ -74,8 +74,7 @@
     <Compile Include="AutoUpdate.cs" />
     <Compile Include="Cashboxes\ShtrihM.cs" />
     <Compile Include="Cashboxes\Atol.cs" />
-    <Compile Include="Cashboxes\ShtrihMData.cs" />
-    <Compile Include="Cashboxes\ShtrihMDirect.cs" />
+    <Compile Include="Cashboxes\Settings.cs" />
     <Compile Include="CheckRequest.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="CRM.cs" />

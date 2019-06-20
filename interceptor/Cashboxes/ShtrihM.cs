@@ -11,6 +11,7 @@ namespace interceptor
 
         public static System.Timers.Timer repeatPrintingTimer = new System.Timers.Timer(5000);
         static int currentDrvPassword = 0;
+        public static int currentDirectPassword = 0;
         static string currentDocPack = String.Empty;
         public static int timeout = 159; // 1500ms
 
@@ -209,7 +210,7 @@ namespace interceptor
 
         public bool resettingCashbox()
         {
-            foreach (ShtrihMData field in ShtrihMData.data)
+            foreach (Settings field in Settings.data)
                 if (String.IsNullOrEmpty(TableField(field.tableNumber, field.fieldNumber, field.rowNumber, field.fieldValue)))
                     return false;
 
@@ -220,7 +221,7 @@ namespace interceptor
         {
             List<string> tablesCorrupted = new List<string>();
 
-            foreach (ShtrihMData field in ShtrihMData.data)
+            foreach (Settings field in Settings.data)
                 if (FailCashboxField(field.tableNumber, field.fieldNumber, field.rowNumber, field.fieldValue))
                     tablesCorrupted.Add(field.description);
 
@@ -429,6 +430,100 @@ namespace interceptor
 
             Driver.GetDeviceMetrics();
             model = Driver.UDescription;
+        }
+
+        public static string DirectPayment(decimal? moneyPrice, decimal? moneySumm, string forPrinting,
+            string sending, int department, int moneyType, bool returnSale, bool VAT)
+        {
+            Log.Add("прямая печать чека (" + (returnSale ? "возврат" : "оплата") + ")");
+            Log.Add("услуга '" + forPrinting + "', цена " + moneyPrice.ToString() + ", сумма " + moneySumm.ToString());
+
+            Driver.CheckType = (returnSale ? 2 : 0);
+            Driver.Password = currentDirectPassword;
+            Driver.OpenCheck();
+
+            if ((moneyType == 2) || returnSale)
+                moneySumm = moneyPrice;
+
+            if (!String.IsNullOrEmpty(sending))
+            {
+                Driver.Password = currentDirectPassword;
+                Driver.CustomerEmail = sending;
+                Driver.FNSendCustomerEmail();
+
+                Log.Add("отправка СМС/email на адрес: " + sending);
+            }
+
+            Driver.Password = currentDirectPassword;
+            PrintLine("Кассир: " + CRM.cashier, line: true);
+            Driver.Timeout = timeout;
+
+            Driver.Quantity = 1;
+            Driver.Price = moneyPrice ?? 0;
+            Driver.StringForPrinting = forPrinting;
+
+            Driver.Department = department;
+
+            Driver.Tax1 = (VAT ? 1 : 0);
+            Driver.Tax2 = 0;
+            Driver.Tax3 = 0;
+            Driver.Tax4 = 0;
+
+            if (returnSale)
+                Driver.ReturnSale();
+            else
+                Driver.Sale();
+
+            PrintLine(line: true);
+            PrepareDriver(currentDirectPassword);
+
+            if (moneyType == 1)
+            {
+                Log.Add("тип оплаты: наличными");
+
+                Driver.Summ1 = moneySumm ?? 0;
+                Driver.Summ2 = 0;
+            }
+            else
+            {
+                Log.Add("тип оплаты: безнал");
+
+                Driver.Summ2 = moneySumm ?? 0;
+                Driver.Summ1 = 0;
+            }
+
+            Driver.StringForPrinting = String.Empty;
+            Driver.CloseCheck();
+
+            int checkClosingResult = Driver.ResultCode;
+            string checkClosingErrorText = Driver.ResultCodeDescription;
+
+            Log.AddWithCode("распечатка чека");
+
+            if (checkClosingResult != 0)
+            {
+                PrepareDriver(currentDirectPassword);
+
+                Driver.CancelCheck();
+
+                Log.AddWithCode("отмена чека");
+
+                Server.ShowActivity(busy: false);
+            }
+            else if (!MainWindow.TEST_VERSION)
+            {
+                repeatPrintingTimer.Enabled = true;
+                repeatPrintingTimer.Start();
+            }
+
+            if (checkClosingResult == 0)
+                return "OK:" + Driver.Change;
+            else
+            {
+                CRM.SendError(checkClosingErrorText);
+
+                return "ERR2:" + checkClosingErrorText;
+            }
         }
     }
 }

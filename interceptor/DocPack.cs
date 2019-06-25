@@ -11,7 +11,9 @@ namespace interceptor
         public List<Service> Services = new List<Service>();
 
         public string AgrNumber;
+        public string BankID;
         public string Cashier;
+        public bool Region;
         public int CashierPass;
 
         public int MoneyType;
@@ -72,11 +74,15 @@ namespace interceptor
             XmlNode info = request.SelectSingleNode("toCashbox/Info");
 
             this.AgrNumber = info["AgrNumber"].InnerText;
+            this.BankID = info["MainBankID"].InnerText;
             this.Cashier = info["Cashier"].InnerText;
             this.CashierPass = int.Parse(info["CashierPass"].InnerText);
             this.MoneyType = int.Parse(info["MoneyType"].InnerText);
             this.Total = manualParseDecimal(info["Total"].InnerText);
             this.Money = manualParseDecimal(info["Money"].InnerText);
+
+            string regionNode = info["Region"].InnerText;
+            this.Region = (regionNode == "true" ? true : false);
 
             if ( (this.MoneyType == 2) && (this.Total != this.Money))
             {

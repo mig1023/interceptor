@@ -11,10 +11,10 @@ namespace interceptor
         DocPack manDocPackForPrinting { get; set; }
         decimal manDocPackSumm { get; set; }
 
-        void MakeBeep();
-        void CheckConnection();
-        bool RepeatDocument();
-        bool ContinueDocument();
+        void MakeBeep(); // ok
+        void CheckConnection(); // ok
+        bool RepeatDocument(); // tmp
+        bool ContinueDocument(); // tmp
         bool ReportCleaning();
         bool ReportWithoutCleaning();
         bool ReportDepartment();

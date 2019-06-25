@@ -20,6 +20,7 @@ namespace interceptor
         public static MainWindow Instance { get; private set; }
 
         public static ICashbox Cashbox = new ShtrihM();
+        //public static ICashbox Cashbox = new Atol();
 
         List<string> manDocPack = new List<string>();
         List<Button> servButtonCleaningList = new List<Button>();

@@ -484,6 +484,16 @@ sub doc_services
 		SELECT AgesFree, Ages FROM PriceRate WHERE ID = ?",
 		$data->{ rate }
 	);
+	
+	my $main_bankid = '';
+	
+	my $all_bankid = $vars->db->selallkeys("
+		SELECT PackID, BankID FROM DocPackInfo WHERE PackID=?",
+		$data->{ docid }
+	);
+
+	$main_bankid .= $_->{ BankID } . ',' for ( @$all_bankid );
+	$main_bankid =~ s/,$//;
 
 	my $concil_payment_date = $vars->get_system->now_date();
 
@@ -672,6 +682,7 @@ sub doc_services
 
 	my $info = {
 		AgrNumber => $data->{ docnum },
+		MainBankID => $main_bankid,
 		Cashier => $login,
 		Region => ( $region_cashbox ? "true" : "false" ),
 		CashierPass => $pass,

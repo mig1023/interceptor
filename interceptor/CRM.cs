@@ -299,7 +299,7 @@ namespace interceptor
             string controlString = String.Empty;
 
             string url = CRM_URL_RUSERV + "/individuals/cashbox_payment_control.htm?" +
-                "docnum=" + agreement + "&login="+ currentLogin + "&p=" + currentPassword;
+                "docnum=" + agreement + "&login="+ currentLogin + "&p=" + currentPassword + "&ip=" + GetMyIP();
 
             try
             {

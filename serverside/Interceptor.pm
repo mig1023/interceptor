@@ -494,6 +494,8 @@ sub doc_services
 
 	$main_bankid .= $_->{ BankID } . ',' for ( @$all_bankid );
 	$main_bankid =~ s/,$//;
+	
+	$main_bankid = '' if $main_bankid =~ /^[^\d,]+$/;
 
 	my $concil_payment_date = $vars->get_system->now_date();
 
@@ -896,8 +898,8 @@ sub cash_box_auth
 	
 	return cash_box_output( $self, "ERROR|Неверные данные IP-адреса" ) unless $param->{ ip } =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
 		
-	my $pass = $vars->db->sel1("
-		SELECT CashPassword FROM Cashboxes_interceptors WHERE InterceptorIP = ?", $param->{ ip }
+	my ( $pass, $cashbox_type ) = $vars->db->sel1("
+		SELECT CashPassword, CashboxType FROM Cashboxes_interceptors WHERE InterceptorIP = ?", $param->{ ip }
 	);
 	
 	return cash_box_output( $self, "ERROR|IP-адрес не найден в БД или не установлен кассовый пароль" ) unless $pass;
@@ -907,7 +909,7 @@ sub cash_box_auth
 		$param->{ v }, $login, $param->{ ip }
 	);
 	
-	return cash_box_output( $self, "OK|$pass|$surname $name $secname" );
+	return cash_box_output( $self, "OK|$pass|$surname $name $secname|$cashbox_type" );
 }
 
 sub cash_box_centers
@@ -1299,7 +1301,7 @@ sub cashbox_payment_control
 	
 	my $param = {};
 	
-	$param->{ $_ } = ( $vars->getparam( $_ ) || '' ) for ( 'login', 'p', 'docnum' );
+	$param->{ $_ } = ( $vars->getparam( $_ ) || '' ) for ( 'login', 'p', 'docnum', 'ip' );
 	
 	return cash_box_output( $self, "ERROR|Ошибка параметров" )
 		if !$param->{ login } or !$param->{ p } or !$param->{ docnum };
@@ -1341,7 +1343,12 @@ sub cashbox_payment_control
 
 	return cash_box_output( $self, "ERROR|Неверный логин или пароль" ) unless $login;
 	
-	$vars->db->query( "LOCK TABLES DocPack WRITE, DocPackList WRITE" );
+	my ( $cashbox_id, $cashbox_name ) = $vars->db->sel1("
+		SELECT ID, Name FROM Cashboxes_interceptors WHERE InterceptorIP = ?",
+		$param->{ ip }
+	);
+	
+	$vars->db->query( "LOCK TABLES DocPack WRITE, DocPackList WRITE, Cashboxes_errors WRITE" );
 	
 	$vars->db->query("
 		UPDATE DocPack SET PStatus = 2 WHERE ID = ? AND PStatus = 1", {},
@@ -1352,6 +1359,11 @@ sub cashbox_payment_control
 
 	$vars->db->query("
 		UPDATE DocPackList SET Status = 2, SDate = now() WHERE ID IN ('$dpacklist') AND Status = 1"
+	);
+	
+	$vars->db->query("
+		INSERT INTO Cashboxes_errors (Cashbox, CashboxID, Login, DocPackID, ErrorDate, Error) VALUES (?, ?, ?, ?, now(), ?)", {},
+		$cashbox_name, $cashbox_id, $param->{ login }, $statuses->[0]->{ ID }, 'Сработал добиватель оплаты'
 	);
 	
 	$vars->db->query( "UNLOCK TABLES" );

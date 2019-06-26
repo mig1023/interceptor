@@ -10,7 +10,7 @@ namespace interceptor
 {
     class Atol : ICashbox
     {
-        static IFptr atolDriver = new Fptr();
+        public static IFptr atolDriver = new Fptr();
 
         static int currentDrvPassword = 0;
         static string currentDocPack = String.Empty;
@@ -36,9 +36,7 @@ namespace interceptor
 
         public static void PrepareDriver(bool admin = false)
         {
-            // таймаут
-            atolDriver.setParam(1021, "Кассир Иванов И.");
-            atolDriver.setParam(1203, "123456789047");
+            atolDriver.setParam(1021, "Кассир " + currentDrvPassword);
             atolDriver.operatorLogin();
         }
 
@@ -46,59 +44,68 @@ namespace interceptor
         {
             PrepareDriver();
 
-            // повтор чека
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_REPORT_TYPE, Constants.LIBFPTR_RT_LAST_DOCUMENT);
+
+            int resultCode = atolDriver.report();
 
             Log.AddWithCode("распечатка повтора");
 
-            return (atolDriver.printText() < 0 ? false : true);
+            return (resultCode < 0 ? false : true);
         }
 
         public bool ContinueDocument()
         {
             PrepareDriver();
 
-            // продолжение печати
+            int resultCode = atolDriver.continuePrint();
 
             Log.AddWithCode("продолжение печати");
 
-            return (atolDriver.printText() < 0 ? false : true);
+            return (resultCode < 0 ? false : true);
         }
-
-        //////////////////////////////////////////////
 
         public bool ReportCleaning()
         {
-            // отчёт с гашением
-            return true;
+            PrepareDriver();
+
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_REPORT_TYPE, Constants.LIBFPTR_RT_CLOSE_SHIFT);
+            int resultCode = atolDriver.report();
+
+            return (resultCode < 0 ? false : true);
         }
 
         public bool ReportWithoutCleaning()
         {
-            // отчёт без гаешния
-            return true;
+            PrepareDriver();
+
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_REPORT_TYPE, Constants.LIBFPTR_RT_X);
+            int resultCode = atolDriver.report();
+
+            return (resultCode < 0 ? false : true);
         }
 
         public bool ReportDepartment()
         {
-            // отчёт по отделам
-            return true;
+            PrepareDriver();
+
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_REPORT_TYPE, Constants.LIBFPTR_RT_COMMODITIES_BY_DEPARTMENTS);
+            int resultCode = atolDriver.report();
+
+            return (resultCode < 0 ? false : true);
         }
 
         public bool ReportTax()
         {
-            // отчёт по налогам
-            return true;
+            return false;
         }
 
         public bool CancelDocument()
         {
             PrepareDriver();
 
-            atolDriver.cancelReceipt();
-
             Log.AddWithCode("отмена чека по кнопке");
 
-            return (atolDriver.printText() < 0 ? false : true);
+            return (atolDriver.cancelReceipt() < 0 ? false : true);
         }
 
         public bool CashIncome(string summ)
@@ -157,7 +164,7 @@ namespace interceptor
 
         public static void PrintLine(string text = "", bool line = false)
         {
-            PrepareDriver(false); // !!!
+            PrepareDriver();
 
             if (!String.IsNullOrEmpty(text))
             {
@@ -219,19 +226,17 @@ namespace interceptor
             {
                 PrepareDriver();
 
-                //отдел
-                //Driver.Department = service.Department;
+                if (service.VAT == 1)
+                    atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, Constants.LIBFPTR_TAX_VAT20);
+                else
+                    atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, Constants.LIBFPTR_TAX_VAT0);
 
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_DEPARTMENT, service.Department);
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_COMMODITY_NAME, service.Name);
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_PRICE, (int)service.Price);
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_QUANTITY, service.Quantity);
-                atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, Constants.LIBFPTR_TAX_VAT10);
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_COMMODITY_PIECE, 1);
                 atolDriver.registration();
-
-                //Driver.Tax1 = service.VAT;
-                //Driver.Tax2 = 0;
-                //Driver.Tax3 = 0;
-                //Driver.Tax4 = 0;
 
                 //if (returnSale)
                 //    Driver.ReturnSale();
@@ -260,6 +265,10 @@ namespace interceptor
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_PAYMENT_TYPE, Constants.LIBFPTR_PT_ELECTRONICALLY);
             }
             atolDriver.payment();
+
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_RECEIPT_STATE);
+            atolDriver.queryData();
+            double change = atolDriver.getParamDouble(Constants.LIBFPTR_PARAM_CHANGE);
 
             atolDriver.closeReceipt();
 
@@ -290,31 +299,25 @@ namespace interceptor
             Server.ShowActivity(busy: false);
 
             if (!MainWindow.TEST_VERSION && !doc.Region)
-            {
-                // повтор
-            }
+                RepeatPrint(null, null);
 
-            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_RECEIPT_STATE);
-            atolDriver.queryData();
-
-            return "OK:" + atolDriver.getParamDouble(Constants.LIBFPTR_PARAM_CHANGE); ;
+            return "OK:" + change.ToString();
         }
 
         public static void RepeatPrint(object obj, ElapsedEventArgs e)
         {
-            // повторная печать документа
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_REPORT_TYPE, Constants.LIBFPTR_RT_LAST_DOCUMENT);
+            atolDriver.report();
         }
 
         public int GetResultCode()
         {
-            // код ошибки
-            return 0;
+            return atolDriver.errorCode();
         }
 
         public string GetResultLine()
         {
-            // текст ошибки
-            return "error";
+            return atolDriver.errorDescription();
         }
 
         public int CurrentMode()

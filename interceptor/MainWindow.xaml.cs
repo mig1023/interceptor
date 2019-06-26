@@ -19,7 +19,8 @@ namespace interceptor
     {
         public static MainWindow Instance { get; private set; }
 
-        public static ICashbox Cashbox = new ShtrihM();
+        public static ICashbox Cashbox = null;
+        //public static ICashbox Cashbox = new ShtrihM();
         //public static ICashbox Cashbox = new Atol();
 
         List<string> manDocPack = new List<string>();
@@ -215,7 +216,7 @@ namespace interceptor
 
             string passwordHash = CRM.GenerateMySQLHash(password.Password);
 
-            string[] tablesChecked = Cashbox.CheckCashboxTables();
+            //string[] tablesChecked = Cashbox.CheckCashboxTables();
 
             if (!CRM.CrmAuthentication(login.Text, passwordHash))
             {
@@ -256,11 +257,11 @@ namespace interceptor
 
                 Log.Add("ошибка подключения к кассе");
             }
-            else if (tablesChecked.Count() != 0)
+            else if (Cashbox.CheckCashboxTables().Count() != 0)
             {
                 int index = 0;
 
-                foreach (string field in tablesChecked)
+                foreach (string field in Cashbox.CheckCashboxTables())
                 {
                     index += 1;
                     settingText2.Items.Add(index.ToString() + ". " + field);
@@ -298,7 +299,8 @@ namespace interceptor
                 direction: moveDirection.vertical
             );
 
-            UpdateStatuses();
+            if (Cashbox != null)
+                UpdateStatuses();
         }
 
         private void returnFromError_Click(object sender, RoutedEventArgs e)

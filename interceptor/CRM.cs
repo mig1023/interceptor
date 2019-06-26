@@ -43,7 +43,6 @@ namespace interceptor
             catch (WebException e)
             {
                 loginError = "Ошибка доступа к серверу";
-
                 Log.AddWeb(e.Message);
 
                 return false;
@@ -56,7 +55,6 @@ namespace interceptor
             if (authData[0] != "OK" || !Int32.TryParse(authData[1], out result))
             {
                 loginError = authData[1];
-
                 Log.Add(loginError);
 
                 return false;
@@ -69,6 +67,23 @@ namespace interceptor
             cashier = authData[2];
 
             Log.Add("успешный вход: " + login + "/" + authData[1] + "(" + authData[2] + ")");
+
+            if (authData[3] == "ShtrihM")
+            {
+                MainWindow.Cashbox = new ShtrihM();
+                Log.Add("тип кассы: Штрих-М");
+            }
+            else if (authData[3] == "Atol")
+            {
+                MainWindow.Cashbox = new Atol();
+                Log.Add("тип кассы: Атол");
+            }
+            else
+            {
+                Log.Add("тип кассы НЕ не распознан");
+
+                return false;
+            }
 
             return true;
         }

@@ -122,7 +122,9 @@ namespace interceptor
             {
                 MainWindow main = (MainWindow)Application.Current.MainWindow;
                 main.status9.Content = line;
-                main.status11.Content = MainWindow.Cashbox.CurrentModeDescription().ToLower();
+
+                if (MainWindow.Cashbox != null)
+                    main.status11.Content = MainWindow.Cashbox.CurrentModeDescription().ToLower();
             }));
         }
     }

@@ -34,7 +34,8 @@ sub send_connection_signal
 	my $request = '<?xml version="1.0" encoding="UTF-8"?>' . 
 		'<toCashbox>' . 
 			'<CheckConnection>MakeBeep</CheckConnection>' .
-			'<Info><Cashier>' . $vars->get_session->{'login'} . '</Cashier></Info>' .
+			'<Info><Cashier>' . $vars->get_session->{'login'} . '</Cashier>' .
+			'<Region>false</Region></Info>' .
 		'</toCashbox>';
 
 	return send_request( $vars, $request, $interceptor );
@@ -654,7 +655,6 @@ sub doc_services
 			get_service_code( $self, $serv, $data->{ center }, $data->{ urgent }, $ord ) . $servsums->{ $serv }->{ Name }
 				unless $servsums->{ $serv }->{ WithoutServCode };
 
-
 		$mandocpack_failserv .= ( $mandocpack_failserv ? ', ' : '' ) . $servsums->{ $serv }->{ Name }
 			if $servsums->{ $serv }->{ Quantity }
 				and (
@@ -670,6 +670,8 @@ sub doc_services
 				$servsums->{ $serv }->{ Price } eq '0.00' or !$servsums->{ $serv }->{ Price }
 			) or (
 				$sh_return && !$servsums->{ $serv }->{ Shipping }
+			) or (
+				( $serv eq 'shipping' ) and $data->{ reject }
 			)
 		) {
 		

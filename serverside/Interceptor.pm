@@ -671,7 +671,7 @@ sub doc_services
 			) or (
 				$sh_return && !$servsums->{ $serv }->{ Shipping }
 			) or (
-				( $serv eq 'shipping' ) and $data->{ reject }
+				( $serv eq 'shipping' ) and $data->{ reject } and $region_cashbox
 			)
 		) {
 		

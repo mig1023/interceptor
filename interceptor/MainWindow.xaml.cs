@@ -20,8 +20,6 @@ namespace interceptor
         public static MainWindow Instance { get; private set; }
 
         public static ICashbox Cashbox = null;
-        //public static ICashbox Cashbox = new ShtrihM();
-        //public static ICashbox Cashbox = new Atol();
 
         List<string> manDocPack = new List<string>();
         List<Button> servButtonCleaningList = new List<Button>();
@@ -31,7 +29,7 @@ namespace interceptor
 
         public const bool TEST_VERSION = true;
 
-        public const string CURRENT_VERSION_CLEAN = "1.e4";
+        public const string CURRENT_VERSION_CLEAN = "2.0";
 
         public static string CURRENT_VERSION =
             CURRENT_VERSION_CLEAN + (TEST_VERSION ? "-test" : String.Empty);
@@ -215,8 +213,6 @@ namespace interceptor
             string updateData = AutoUpdate.NeedUpdating();
 
             string passwordHash = CRM.GenerateMySQLHash(password.Password);
-
-            //string[] tablesChecked = Cashbox.CheckCashboxTables();
 
             if (!CRM.CrmAuthentication(login.Text, passwordHash))
             {

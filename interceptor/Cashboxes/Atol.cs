@@ -96,6 +96,7 @@ namespace interceptor
 
         public bool ReportTax()
         {
+            // отчёт по налогам
             return false;
         }
 
@@ -217,8 +218,8 @@ namespace interceptor
 
             if (doc.Region)
             {
-                PrintLine("Договор: " + doc.AgrNumber);
-                PrintLine("BankID : " + doc.BankID, line: true);
+                PrintLine("Договор:" + doc.AgrNumber);
+                PrintLine("BankID:" + doc.BankID, line: true);
             }
 
 

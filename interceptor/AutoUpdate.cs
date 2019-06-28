@@ -28,7 +28,14 @@ namespace interceptor
             {
                 string name = node["Name"].InnerText;
 
-                webClient.DownloadFile(URL_UPDATE + name, UPDATE_DIR + name);
+                try
+                {
+                    webClient.DownloadFile(URL_UPDATE + name, UPDATE_DIR + name);
+                }
+                catch (WebException e)
+                {
+                    return String.Empty;
+                }
 
                 Log.Add("скачан файл: " + name, "update");
 

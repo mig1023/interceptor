@@ -230,7 +230,7 @@ namespace interceptor
                 if (service.VAT == 1)
                     atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, Constants.LIBFPTR_TAX_VAT20);
                 else
-                    atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, Constants.LIBFPTR_TAX_VAT0);
+                    atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, Constants.LIBFPTR_TAX_NO);
 
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_DEPARTMENT, service.Department);
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_COMMODITY_NAME, service.Name);

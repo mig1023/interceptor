@@ -214,13 +214,13 @@ sub send_request
 	my ( $vars, $line, $interceptor, $callback ) = @_;
 	
 	my $serv;
-	
+
 	my $port = protocol_port();
 	
 	if ( !$callback ) {
 	
 		$interceptor = $vars->get_session->{ interceptor } unless $interceptor;
-		
+
 		$serv = $vars->db->sel1("
 			SELECT InterceptorIP FROM Cashboxes_interceptors WHERE ID = ?",
 			$interceptor
@@ -231,7 +231,7 @@ sub send_request
 	}
 	
 	return "ERR4:Не установлена кассовая интеграция" unless $serv =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
-	
+
 	my $ua = LWP::UserAgent->new;
 	
 	$ua->agent( 'Mozilla/4.0 (compatible; MSIE 6.0; X11; Linux i686; en) Opera 7.60' );
@@ -1321,7 +1321,7 @@ sub cashbox_payment_control
 	$param->{ docnum } =~ s/[^\d]+//g;	
 
 	my $statuses = $vars->db->selallkeys("	
-		SELECT DocPack.ID, DocPackList.ID as DID, PStatus, Status
+		SELECT DocPack.ID, DocPackList.ID as DID, PStatus, Status, DocPackInfo.BankID, DocPackList.PassNum
 		FROM DocPack
 		JOIN DocPackInfo ON DocPack.ID = DocPackInfo.PackID
 		JOIN DocPackList ON DocPackInfo.ID = DocPackList.PackInfoID
@@ -1355,12 +1355,13 @@ sub cashbox_payment_control
 
 	return cash_box_output( $self, "ERROR|Неверный логин или пароль" ) unless $login;
 	
-	my ( $cashbox_id, $cashbox_name ) = $vars->db->sel1("
-		SELECT ID, Name FROM Cashboxes_interceptors WHERE InterceptorIP = ?",
+	my ( $cashbox_id, $cashbox_name, $cashbox_report_name ) = $vars->db->sel1("
+		SELECT ID, Name, ReportName FROM Cashboxes_interceptors WHERE InterceptorIP = ?",
 		$param->{ ip }
 	);
 	
-	$vars->db->query( "LOCK TABLES DocPack WRITE, DocPackList WRITE, Cashboxes_errors WRITE" );
+	$vars->db->query( "LOCK TABLES DocPack WRITE, DocPackList WRITE,
+		Cashboxes_errors WRITE, DocCashbox WRITE, DocHistory WRITE" );
 	
 	$vars->db->query("
 		UPDATE DocPack SET PStatus = 2 WHERE ID = ? AND PStatus = 1", {},
@@ -1373,8 +1374,41 @@ sub cashbox_payment_control
 		UPDATE DocPackList SET Status = 2, SDate = now() WHERE ID IN ('$dpacklist') AND Status = 1"
 	);
 	
+	# ////////////////////////////////
+	
+	my $cashbox_already = $vars->db->sel1("
+		SELECT ID FROM DocCashbox WHERE DocPackID = ?",
+		$statuses->[0]->{ ID }
+	);
+	
 	$vars->db->query("
-		INSERT INTO Cashboxes_errors (Cashbox, CashboxID, Login, DocPackID, ErrorDate, Error) VALUES (?, ?, ?, ?, now(), ?)", {},
+		INSERT INTO DocCashbox (DocPackID, PayDate, Login, Cashbox)
+		VALUES (?, now(), ?, ?)", {},
+		$statuses->[0]->{ ID }, $param->{ login }, $cashbox_report_name
+	) unless $cashbox_already;
+	
+	my $dochistory_already = $vars->db->sel1("
+		SELECT PassNum FROM DocHistory WHERE DocID = ?",
+		$statuses->[0]->{ ID }
+	);
+	
+	if ( !$dochistory_already ) {
+	
+		for ( @$statuses ) {
+		
+			$vars->db->query("
+				INSERT INTO DocHistroy (DocID, PassNum, Login, HDate, StatusID, BankID, ActTime, AddInfo, ODuration, FPStatus)
+				VALUES (?, ?, ?, now(), 2, ?, 0, '', 0, 0)", {},
+				$_->{ ID }, $_->{ PassNum }, $param->{ login }, $param->{ BankID }
+			);
+		}
+	}
+	
+	# ////////////////////////////////
+	
+	$vars->db->query("
+		INSERT INTO Cashboxes_errors (Cashbox, CashboxID, Login, DocPackID, ErrorDate, Error)
+		VALUES (?, ?, ?, ?, now(), ?)", {},
 		$cashbox_name, $cashbox_id, $param->{ login }, $statuses->[0]->{ ID }, 'Сработал добиватель оплаты'
 	);
 	

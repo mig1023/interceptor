@@ -232,6 +232,16 @@ sub send_request
 	
 	return "ERR4:Не установлена кассовая интеграция" unless $serv =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
 
+	# ////// tmp
+	
+	if ( $serv eq '127.0.0.1' ) {
+	
+		$serv = '127.0.0.1';
+		$port = '80';
+	}
+	
+	# //////
+
 	my $ua = LWP::UserAgent->new;
 	
 	$ua->agent( 'Mozilla/4.0 (compatible; MSIE 6.0; X11; Linux i686; en) Opera 7.60' );

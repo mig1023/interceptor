@@ -233,7 +233,7 @@ sub send_request
 	return "ERR4:Не установлена кассовая интеграция" unless $serv =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
 
 	# ////// tmp
-	
+
 	if ( $serv eq '127.0.0.1' ) {
 	
 		$serv = '127.0.0.1';
@@ -911,7 +911,7 @@ sub cash_box_auth
 		SELECT Login, UserName, UserLName, UserSName
 		FROM Users
 		WHERE Login = ? AND Pass = ? AND
-		(RoleID = 8 OR RoleID = 5 OR RoleID = 2 OR RoleID = 23 OR RoleID = 6 OR RoleID = 39)
+		(RoleID = 8 OR RoleID = 5 OR RoleID = 2 OR RoleID = 23 OR RoleID = 20 OR RoleID = 6 OR RoleID = 39)
 		AND Locked = 0",
 		$param->{ login }, $param->{ p }
 	);
@@ -1338,7 +1338,7 @@ sub cashbox_payment_control
 		WHERE DocPack.AgreementNo = ?",
 		$param->{ docnum }
 	);
-	
+
 	return cash_box_output( $self, "ERROR|Договор не найден по номеру" ) unless $statuses->[0]->{ ID };
 
 	my $all_status_is_ok = 1;
@@ -1398,18 +1398,18 @@ sub cashbox_payment_control
 	) unless $cashbox_already;
 	
 	my $dochistory_already = $vars->db->sel1("
-		SELECT PassNum FROM DocHistory WHERE DocID = ?",
+		SELECT PassNum FROM DocHistory WHERE DocID = ? AND StatusID = 2",
 		$statuses->[0]->{ ID }
 	);
 	
 	if ( !$dochistory_already ) {
 	
 		for ( @$statuses ) {
-		
+	
 			$vars->db->query("
-				INSERT INTO DocHistroy (DocID, PassNum, Login, HDate, StatusID, BankID, ActTime, AddInfo, ODuration, FPStatus)
+				INSERT INTO DocHistory (DocID, PassNum, Login, HDate, StatusID, BankID, ActTime, AddInfo, ODuration, FPStatus)
 				VALUES (?, ?, ?, now(), 2, ?, 0, '', 0, 0)", {},
-				$_->{ ID }, $_->{ PassNum }, $param->{ login }, $param->{ BankID }
+				$_->{ ID }, $_->{ PassNum }, $param->{ login }, $_->{ BankID }
 			);
 		}
 	}

@@ -98,7 +98,7 @@ namespace interceptor
 
                 AddRow("", "", "", "", "Цена", "Сумма", header: true, aligment: 1);
                 AddRow("    " + "п/п", "Наименование работы(услуги)", "Ед.изм.", "Кол-во", "(с учетом", "(с учетом", withBox: false, header: true, aligment: 1);
-                AddRow("", "", "", "", "НДС 18%), руб", "НДС 18%), руб", withBox: false, header: true, aligment: 1);
+                AddRow("", "", "", "", "НДС 20%), руб", "НДС 20%), руб", withBox: false, header: true, aligment: 1);
 
                 foreach (Service service in doc.Services)
                 {
@@ -113,7 +113,7 @@ namespace interceptor
 
                 AddText("Услуги оказаны в полном объеме и в срок.");
                 AddText("Услуги оплачены Заказчиком в сумме: " + appData[3].ToLower());
-                AddText("в т.ч. НДС 18% " + appData[4].ToLower());
+                AddText("в т.ч. НДС 20% " + appData[4].ToLower());
                 AddText("Стороны друг к другу претензий не имеют.");
 
                 AddText();

@@ -195,8 +195,6 @@ namespace interceptor
 
             PrepareDriver();
 
-            //Driver.CheckType = (returnSale ? 2 : 0);
-
             atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, Constants.LIBFPTR_RT_SELL);
             atolDriver.openReceipt();
 
@@ -239,17 +237,10 @@ namespace interceptor
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_COMMODITY_PIECE, 1);
                 atolDriver.registration();
 
-                //if (returnSale)
-                //    Driver.ReturnSale();
-                //else
-                //    Driver.Sale();
-
                 PrintLine(line: true);
             }
 
             PrepareDriver();
-
-            //Driver.StringForPrinting = String.Empty;
 
             atolDriver.setParam(Constants.LIBFPTR_PARAM_PAYMENT_SUM, (float)(MoneySumm ?? doc.Money));
 

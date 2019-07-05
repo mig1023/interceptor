@@ -323,27 +323,38 @@ namespace interceptor
 
         public int CurrentMode()
         {
-            // текущий режим
-            return 0;
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_STATUS);
+            atolDriver.queryData();
+            return (int)atolDriver.getParamInt(Constants.LIBFPTR_PARAM_MODE);
         }
 
         public string CurrentModeDescription()
         {
-            // описание
-            return "CurrentModeDescription";
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_STATUS);
+            atolDriver.queryData();
+            return atolDriver.getParamInt(Constants.LIBFPTR_PARAM_MODE).ToString();
         }
 
         public void GetStatusData(out string port, out string speed, out string status,
             out string version, out string model)
         {
-            string[] baudeRate = new string[] { "2400", "4800", "9600", "19200", "38400", "57600", "115200" };
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_UNIT_VERSION);
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_UNIT_TYPE, Constants.LIBFPTR_UT_FIRMWARE);
+            atolDriver.queryData();
+            version = atolDriver.getParamString(Constants.LIBFPTR_PARAM_UNIT_VERSION);
 
-            port = "test";
-            speed = baudeRate[6];
-            status = "test";
-            version = "test";
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_STATUS);
+            atolDriver.queryData();
+            model = atolDriver.getParamString(Constants.LIBFPTR_PARAM_MODEL_NAME);
 
-            model = "test";
+            speed = "";
+
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_STATUS);
+            atolDriver.queryData();
+            status = atolDriver.getParamInt(Constants.LIBFPTR_PARAM_MODE).ToString();
+
+            port = "";
+            
         }
     }
 }

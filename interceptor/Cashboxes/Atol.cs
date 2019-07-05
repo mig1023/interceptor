@@ -234,7 +234,7 @@ namespace interceptor
 
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_DEPARTMENT, service.Department);
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_COMMODITY_NAME, service.Name);
-                atolDriver.setParam(Constants.LIBFPTR_PARAM_PRICE, (int)service.Price);
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_PRICE, (float)service.Price);
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_QUANTITY, service.Quantity);
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_COMMODITY_PIECE, 1);
                 atolDriver.registration();
@@ -251,7 +251,7 @@ namespace interceptor
 
             //Driver.StringForPrinting = String.Empty;
 
-            atolDriver.setParam(Constants.LIBFPTR_PARAM_PAYMENT_SUM, (uint)(MoneySumm ?? doc.Money));
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_PAYMENT_SUM, (float)(MoneySumm ?? doc.Money));
 
             if (doc.MoneyType == 1)
             {

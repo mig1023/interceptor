@@ -233,12 +233,12 @@ sub send_request
 	return "ERR4:Не установлена кассовая интеграция" unless $serv =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
 
 	my $proxy = $vars->db->sel1("
-		SELECT ProxyIP FROM Cashboxes_interceptors WHERE ID = ?",
-		$interceptor
+		SELECT ProxyIP FROM Cashboxes_interceptors WHERE InterceptorIP = ?",
+		$serv
 	) || undef;
-	
+
 	( $serv, $port ) = split( /:/, $proxy ) if $proxy;
-	
+
 	my $ua = LWP::UserAgent->new;
 	
 	$ua->agent( 'Mozilla/4.0 (compatible; MSIE 6.0; X11; Linux i686; en) Opera 7.60' );

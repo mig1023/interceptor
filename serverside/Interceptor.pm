@@ -1394,21 +1394,22 @@ sub cashbox_payment_control
 		$statuses->[0]->{ ID }, $param->{ login }, $cashbox_report_name
 	) unless $cashbox_already;
 	
-	my $dochistory_already = $vars->db->sel1("
+	my $dochistory_already_arr = $vars->db->selallkeys("
 		SELECT PassNum FROM DocHistory WHERE DocID = ? AND StatusID = 2",
 		$statuses->[0]->{ ID }
 	);
-	
-	if ( !$dochistory_already ) {
-	
-		for ( @$statuses ) {
-	
-			$vars->db->query("
-				INSERT INTO DocHistory (DocID, PassNum, Login, HDate, StatusID, BankID, ActTime, AddInfo, ODuration, FPStatus)
-				VALUES (?, ?, ?, now(), 2, ?, 0, '', 0, 0)", {},
-				$_->{ ID }, $_->{ PassNum }, $param->{ login }, $_->{ BankID }
-			);
-		}
+
+	my %dochistory_already = map { $_->{ PassNum } => 1 } @$dochistory_already_arr;
+
+	for ( @$statuses ) {
+
+		next if exists $dochistory_already{ $_->{ PassNum } };
+
+		$vars->db->query("
+			INSERT INTO DocHistory (DocID, PassNum, Login, HDate, StatusID, BankID, ActTime, AddInfo, ODuration, FPStatus)
+			VALUES (?, ?, ?, now(), 2, ?, 0, '', 0, 0)", {},
+			$_->{ ID }, $_->{ PassNum }, $param->{ login }, $_->{ BankID }
+		);
 	}
 	
 	# ////////////////////////////////

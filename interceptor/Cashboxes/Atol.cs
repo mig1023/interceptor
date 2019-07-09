@@ -326,19 +326,19 @@ namespace interceptor
             return atolDriver.getParamInt(Constants.LIBFPTR_PARAM_MODE).ToString();
         }
 
-        public void GetStatusData(out string status, out string version, out string model)
+        public void GetStatusData(out string port, out string speed, out string status,
+            out string version, out string model)
         {
             atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_UNIT_VERSION);
             atolDriver.setParam(Constants.LIBFPTR_PARAM_UNIT_TYPE, Constants.LIBFPTR_UT_FIRMWARE);
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_STATUS);
+
             atolDriver.queryData();
+
             version = atolDriver.getParamString(Constants.LIBFPTR_PARAM_UNIT_VERSION);
-
-            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_STATUS);
-            atolDriver.queryData();
             model = atolDriver.getParamString(Constants.LIBFPTR_PARAM_MODEL_NAME);
-
-            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_STATUS);
-            atolDriver.queryData();
+            speed = atolDriver.getSingleSetting(Constants.LIBFPTR_SETTING_BAUDRATE);
+            port = "com" + atolDriver.getSingleSetting(Constants.LIBFPTR_SETTING_COM_FILE);
             status = atolDriver.getParamInt(Constants.LIBFPTR_PARAM_MODE).ToString();
         }
     }

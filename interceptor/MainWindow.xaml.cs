@@ -139,14 +139,16 @@ namespace interceptor
 
         private void UpdateStatuses()
         {
-            string status, version, model;
+            string port, speed, status, version, model;
 
             status1.Content = CURRENT_VERSION;
             status2.Content = CRM.GetMyIP() + " ( порт " + PROTOCOL_PORT + " )";
             status3.Content = CRM.CRM_URL_BASE;
 
-            Cashbox.GetStatusData(out status, out version, out model);
+            Cashbox.GetStatusData(out port, out speed, out status, out version, out model);
 
+            status4.Content = port;
+            status5.Content = speed;
             status6.Content = model;
             status7.Content = version;
             status8.Content = status.ToLower();

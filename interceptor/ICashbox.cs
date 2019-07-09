@@ -31,6 +31,7 @@ namespace interceptor
         int GetResultCode();
         int CurrentMode();
         string CurrentModeDescription();
-        void GetStatusData(out string status, out string version, out string model);
+        void GetStatusData(out string port, out string speed, 
+            out string status, out string version, out string model);
     }
 }

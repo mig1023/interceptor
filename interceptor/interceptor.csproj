@@ -75,15 +75,15 @@
     <Compile Include="Cashboxes\ShtrihM.cs" />
     <Compile Include="Cashboxes\Atol.cs" />
     <Compile Include="Cashboxes\Settings.cs" />
-    <Compile Include="CheckRequest.cs" />
-    <Compile Include="Client.cs" />
+    <Compile Include="Server\CheckRequest.cs" />
+    <Compile Include="Server\Client.cs" />
     <Compile Include="CRM.cs" />
     <Compile Include="Diagnostic.cs" />
     <Compile Include="DocPack.cs" />
-    <Compile Include="ICashbox.cs" />
+    <Compile Include="Cashboxes\ICashbox.cs" />
     <Compile Include="MessageBoxes.cs" />
     <Compile Include="Receipt.cs" />
-    <Compile Include="Server.cs" />
+    <Compile Include="Server\Server.cs" />
     <Compile Include="Service.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

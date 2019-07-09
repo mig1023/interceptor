@@ -326,8 +326,7 @@ namespace interceptor
             return atolDriver.getParamInt(Constants.LIBFPTR_PARAM_MODE).ToString();
         }
 
-        public void GetStatusData(out string port, out string speed, out string status,
-            out string version, out string model)
+        public void GetStatusData(out string status, out string version, out string model)
         {
             atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_UNIT_VERSION);
             atolDriver.setParam(Constants.LIBFPTR_PARAM_UNIT_TYPE, Constants.LIBFPTR_UT_FIRMWARE);
@@ -338,14 +337,9 @@ namespace interceptor
             atolDriver.queryData();
             model = atolDriver.getParamString(Constants.LIBFPTR_PARAM_MODEL_NAME);
 
-            speed = "";
-
             atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_STATUS);
             atolDriver.queryData();
             status = atolDriver.getParamInt(Constants.LIBFPTR_PARAM_MODE).ToString();
-
-            port = "";
-            
         }
     }
 }

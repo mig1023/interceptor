@@ -36,7 +36,7 @@ namespace interceptor
 
         public string updateDir = String.Empty;
 
-        public static string PROTOCOL_PASS = "vms_protocol_password_2019";
+        public static string PROTOCOL_PASS = "";
         public static int PROTOCOL_PORT = 80;
 
         public enum fieldsErrors { noError, valueError, clickError, emptySummError };
@@ -139,16 +139,14 @@ namespace interceptor
 
         private void UpdateStatuses()
         {
-            string port, speed, status, version, model;
+            string status, version, model;
 
             status1.Content = CURRENT_VERSION;
             status2.Content = CRM.GetMyIP() + " ( порт " + PROTOCOL_PORT + " )";
             status3.Content = CRM.CRM_URL_BASE;
 
-            Cashbox.GetStatusData(out port, out speed, out status, out version, out model);
+            Cashbox.GetStatusData(out status, out version, out model);
 
-            status4.Content = port;
-            status5.Content = speed;
             status6.Content = model;
             status7.Content = version;
             status8.Content = status.ToLower();

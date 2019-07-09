@@ -11,10 +11,10 @@ namespace interceptor
         DocPack manDocPackForPrinting { get; set; }
         decimal manDocPackSumm { get; set; }
 
-        void MakeBeep(); // ok
-        void CheckConnection(); // ok
-        bool RepeatDocument(); // tmp
-        bool ContinueDocument(); // tmp
+        void MakeBeep();
+        void CheckConnection();
+        bool RepeatDocument();
+        bool ContinueDocument();
         bool ReportCleaning();
         bool ReportWithoutCleaning();
         bool ReportDepartment();
@@ -31,7 +31,6 @@ namespace interceptor
         int GetResultCode();
         int CurrentMode();
         string CurrentModeDescription();
-        void GetStatusData(out string port, out string speed, out string status,
-            out string version, out string model);
+        void GetStatusData(out string status, out string version, out string model);
     }
 }

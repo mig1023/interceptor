@@ -417,8 +417,7 @@ namespace interceptor
             return Driver.ECRModeDescription;
         }
 
-        public void GetStatusData(out string port, out string speed, out string status,
-            out string version, out string model)
+        public void GetStatusData(out string status, out string version, out string model)
         {
             string[] baudeRate = new string[] { "2400", "4800", "9600", "19200", "38400", "57600", "115200" };
 

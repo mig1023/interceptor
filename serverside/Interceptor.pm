@@ -908,7 +908,7 @@ sub cash_box_auth
 		SELECT Login, UserName, UserLName, UserSName
 		FROM Users
 		WHERE Login = ? AND Pass = ? AND
-		(RoleID = 8 OR RoleID = 5 OR RoleID = 2 OR RoleID = 23 OR RoleID = 20 OR RoleID = 6 OR RoleID = 39)
+		(RoleID = 8 OR RoleID = 5 OR RoleID = 2 OR RoleID = 23 OR RoleID = 20 OR RoleID = 27 OR RoleID = 6 OR RoleID = 39)
 		AND Locked = 0",
 		$param->{ login }, $param->{ p }
 	);
@@ -1355,7 +1355,7 @@ sub cashbox_payment_control
 		SELECT Login, UserName, UserLName, UserSName
 		FROM Users
 		WHERE Login = ? AND Pass = ? AND
-		(RoleID = 8 OR RoleID = 5 OR RoleID = 2 OR RoleID = 23 OR RoleID = 20 OR RoleID = 6 OR RoleID = 39)
+		(RoleID = 8 OR RoleID = 5 OR RoleID = 2 OR RoleID = 23 OR RoleID = 20 OR RoleID = 27 OR RoleID = 6 OR RoleID = 39)
 		AND Locked = 0",
 		$param->{ login }, $param->{ p }
 	);

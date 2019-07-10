@@ -904,15 +904,13 @@ sub cash_box_auth
 
 	return cash_box_output( $self, "ERROR|Укажите данные для авторизации" ) if !$param->{ login } or !$param->{ p };
 	
-	my ( $login, $name, $surname, $secname ) = $vars->db->sel1("
-		SELECT Login, UserName, UserLName, UserSName
+	my ( $login, $name, $surname, $secname, $role_id ) = $vars->db->sel1("
+		SELECT Login, UserName, UserLName, UserSName, RoleID
 		FROM Users
-		WHERE Login = ? AND Pass = ? AND
-		(RoleID = 8 OR RoleID = 5 OR RoleID = 2 OR RoleID = 23 OR RoleID = 20 OR RoleID = 27 OR RoleID = 6 OR RoleID = 39)
-		AND Locked = 0",
+		WHERE Login = ? AND Pass = ? AND Locked = 0",
 		$param->{ login }, $param->{ p }
 	);
-
+	
 	return cash_box_output( $self, "ERROR|Неудачная авторизация в VMS" ) unless $login;
 	
 	return cash_box_output( $self, "ERROR|Неверные данные IP-адреса" ) unless $param->{ ip } =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
@@ -922,6 +920,15 @@ sub cash_box_auth
 	);
 	
 	return cash_box_output( $self, "ERROR|IP-адрес не найден в БД или не установлен кассовый пароль" ) unless $pass;
+	
+	my $access_cashbox = $vars->db->sel1("
+		SELECT Rights FROM AccessActionRoles 
+		JOIN AccessActions ON AccessActions.ID = AccessActionRoles.AccessActionID
+		WHERE RoleID = ? AND AccessActions.Name = ?",
+		$role_id, 'interceptor_access'
+	);
+	
+	return cash_box_output( $self, "ERROR|Недостаточно прав для доступа" ) unless $access_cashbox =~ /(full|write|read)/;
 	
 	$vars->db->query("
 		UPDATE Cashboxes_interceptors SET LastVersion = ?, LastUser = ?, LastUse = now() WHERE InterceptorIP = ?", {},
@@ -1351,16 +1358,23 @@ sub cashbox_payment_control
 	
 	return cash_box_output( $self, "OK|Договор был оплачен" ) if $all_status_is_ok;	
 	
-	my ( $login, $name, $surname, $secname ) = $vars->db->sel1("
-		SELECT Login, UserName, UserLName, UserSName
+	my ( $login, $role_id ) = $vars->db->sel1("
+		SELECT Login, RoleID
 		FROM Users
-		WHERE Login = ? AND Pass = ? AND
-		(RoleID = 8 OR RoleID = 5 OR RoleID = 2 OR RoleID = 23 OR RoleID = 20 OR RoleID = 27 OR RoleID = 6 OR RoleID = 39)
-		AND Locked = 0",
+		WHERE Login = ? AND Pass = ? AND Locked = 0",
 		$param->{ login }, $param->{ p }
 	);
 
 	return cash_box_output( $self, "ERROR|Неверный логин или пароль" ) unless $login;
+	
+	my $access_cashbox = $vars->db->sel1("
+		SELECT Rights FROM AccessActionRoles 
+		JOIN AccessActions ON AccessActions.ID = AccessActionRoles.AccessActionID
+		WHERE RoleID = ? AND AccessActions.Name = ?",
+		$role_id, 'interceptor_access'
+	);
+	
+	return cash_box_output( $self, "ERROR|Недостаточно прав для доступа" ) unless $access_cashbox =~ /(full|write|read)/;
 	
 	my ( $cashbox_id, $cashbox_name, $cashbox_report_name ) = $vars->db->sel1("
 		SELECT ID, Name, ReportName FROM Cashboxes_interceptors WHERE InterceptorIP = ?",
@@ -1380,8 +1394,6 @@ sub cashbox_payment_control
 	$vars->db->query("
 		UPDATE DocPackList SET Status = 2, SDate = now() WHERE ID IN ('$dpacklist') AND Status = 1"
 	);
-	
-	# ////////////////////////////////
 	
 	my $cashbox_already = $vars->db->sel1("
 		SELECT ID FROM DocCashbox WHERE DocPackID = ?",
@@ -1411,8 +1423,6 @@ sub cashbox_payment_control
 			$_->{ ID }, $_->{ PassNum }, $param->{ login }, $_->{ BankID }
 		);
 	}
-	
-	# ////////////////////////////////
 	
 	$vars->db->query("
 		INSERT INTO Cashboxes_errors (Cashbox, CashboxID, Login, DocPackID, ErrorDate, Error)

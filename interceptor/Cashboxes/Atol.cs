@@ -34,7 +34,7 @@ namespace interceptor
             atolDriver.isOpened();
         }
 
-        public static void PrepareDriver(bool admin = false)
+        public static void PrepareDriver()
         {
             atolDriver.setParam(1021, "Кассир " + currentDrvPassword);
             atolDriver.operatorLogin();
@@ -96,7 +96,6 @@ namespace interceptor
 
         public bool ReportTax()
         {
-            // отчёт по налогам
             return false;
         }
 
@@ -135,37 +134,31 @@ namespace interceptor
 
         public bool TablesBackup()
         {
-            // резервное копирование таблиц
             return true;
         }
 
         static string TableField(int tableNumber, int fieldNumber, int rowNumber, string fieldValue = "")
         {
-            // резервное копирование таблиц
             return String.Empty;
         }
 
         public static bool FailCashboxField(int tableNumber, int fieldNumber, int rowNumber, string fieldValue)
         {
-            // проверка поля
             return false;
         }
 
         public bool resettingCashbox()
         {
-            // проверка полей
             return true;
         }
 
         public string[] CheckCashboxTables()
         {
-            // проверка таблиц
             return new string[0];
         }
 
         public static void PrintLine(string text = "", bool line = false)
         {
-            PrepareDriver();
 
             if (!String.IsNullOrEmpty(text))
             {

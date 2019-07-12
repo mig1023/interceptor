@@ -183,12 +183,13 @@ namespace interceptor
             if (MoneyType != -1)
                 doc.MoneyType = MoneyType;
 
-            if (doc.Services.Count > 0 && doc.Services[0].ReturnShipping == 1)
-                returnSale = true;
-
             PrepareDriver();
 
-            atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, Constants.LIBFPTR_RT_SELL);
+            if (returnSale)
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, Constants.LIBFPTR_RT_SELL_RETURN);
+            else
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, Constants.LIBFPTR_RT_SELL);
+
             atolDriver.openReceipt();
 
             string sendingCheck = String.Empty;

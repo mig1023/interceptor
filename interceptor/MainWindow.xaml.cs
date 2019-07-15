@@ -924,6 +924,8 @@ namespace interceptor
 
         private void printRCheckMoney_Click(object sender, RoutedEventArgs e)
         {
+            Receipt.currentAppNumber = appNumber.Text;
+
             decimal money = DocPack.manualParseDecimal(moneyForRCheck.Text);
 
             if (CheckMoneyFail(money))
@@ -976,6 +978,8 @@ namespace interceptor
 
         private void printRCheckCard_Click(object sender, RoutedEventArgs e)
         {
+            Receipt.currentAppNumber = appNumber.Text;
+
             string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
             ).Split(':');
@@ -988,8 +992,11 @@ namespace interceptor
 
         private void getAppInfoAndPrintRecepeit(string summ)
         {
-            string error = Receipt.PrintReceipt(CRM.AppNumberData(appNumber.Text, summ), Cashbox.manDocPackForPrinting);
+            string error = Receipt.PrintReceipt(CRM.AppNumberData(Receipt.currentAppNumber, summ), Cashbox.manDocPackForPrinting);
+
             CleanCheck();
+            appNumber_KeyUp(null, null);
+            appNumber.Focus();
 
             if (!String.IsNullOrEmpty(error))
                 ShowError(receptionPlace, error);
@@ -998,6 +1005,7 @@ namespace interceptor
         private void appNumberClean_Click(object sender, RoutedEventArgs e)
         {
             appNumber.Text = String.Empty;
+
             CleanCheck();
             appNumber_KeyUp(null, null);
             appNumber.Focus();
@@ -1054,6 +1062,9 @@ namespace interceptor
                 ralatedPlaceholder.Visibility = Visibility.Visible;
             else
                 ralatedPlaceholder.Visibility = Visibility.Hidden;
+
+            if (senderbox.Name == "appNumber")
+                appNumber_KeyUp(null, null);
         }
 
         private void backToMainFromMoneyPlace_Click(object sender, RoutedEventArgs e)

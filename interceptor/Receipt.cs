@@ -19,6 +19,8 @@ namespace interceptor
 
         const string RECEIPT_DIR = "receipts";
 
+        public static string currentAppNumber = String.Empty;
+
         static Document document;
         static PdfContentByte cb;
 

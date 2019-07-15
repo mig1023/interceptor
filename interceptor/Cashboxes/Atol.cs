@@ -185,10 +185,8 @@ namespace interceptor
 
             PrepareDriver();
 
-            if (returnSale)
-                atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, Constants.LIBFPTR_RT_SELL_RETURN);
-            else
-                atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, Constants.LIBFPTR_RT_SELL);
+            int SELL_OR_RETURN = (returnSale ? Constants.LIBFPTR_RT_SELL_RETURN : Constants.LIBFPTR_RT_SELL);
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, SELL_OR_RETURN);
 
             atolDriver.openReceipt();
 
@@ -202,9 +200,7 @@ namespace interceptor
                 sendingCheck = doc.Email;
 
             if (!String.IsNullOrEmpty(sendingCheck))
-            {
                 atolDriver.setParam(1008, sendingCheck);
-            }
 
             PrintLine("Кассир: " + CRM.cashier, line: true);
 
@@ -214,15 +210,12 @@ namespace interceptor
                 PrintLine("BankID:" + doc.BankID, line: true);
             }
 
-
             foreach (Service service in doc.Services)
             {
                 PrepareDriver();
 
-                if (service.VAT == 1)
-                    atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, Constants.LIBFPTR_TAX_VAT20);
-                else
-                    atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, Constants.LIBFPTR_TAX_NO);
+                int VAT = (service.VAT == 1 ? Constants.LIBFPTR_TAX_VAT20 : Constants.LIBFPTR_TAX_NO);
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, VAT);
 
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_DEPARTMENT, service.Department);
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_COMMODITY_NAME, service.Name);
@@ -262,14 +255,14 @@ namespace interceptor
 
             while (atolDriver.checkDocumentClosed() < 0)
             {
-                Log.AddWithCode("отмена чека:" + atolDriver.errorDescription());
+                Log.AddWithCode("отмена чека");
                 return "ERR2:Не удалось проверить:" + atolDriver.errorDescription();
             }
 
             if (!atolDriver.getParamBool(Constants.LIBFPTR_PARAM_DOCUMENT_CLOSED))
             {
                 atolDriver.cancelReceipt();
-                Log.AddWithCode("отмена чека:" + atolDriver.errorDescription());
+                Log.AddWithCode("отмена чека");
                 return "ERR2:Документ не закрылся:" + atolDriver.errorDescription();
             }
 
@@ -277,7 +270,7 @@ namespace interceptor
             {
                 while (atolDriver.continuePrint() < 0)
                 {
-                    Log.AddWithCode("отмена чека:" + atolDriver.errorDescription());
+                    Log.AddWithCode("отмена чека");
                     return "ERR2:Не удалось допечатать:" + atolDriver.errorDescription();
                 }
             }

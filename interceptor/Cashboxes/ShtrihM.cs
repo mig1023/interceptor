@@ -436,7 +436,7 @@ namespace interceptor
             model = Driver.UDescription;
         }
 
-        public static string DirectPayment(decimal? moneyPrice, decimal? moneySumm, string forPrinting,
+        public string DirectPayment(decimal? moneyPrice, decimal? moneySumm, string forPrinting,
             string sending, int department, int moneyType, bool returnSale, bool VAT)
         {
             Log.Add("прямая печать чека (" + (returnSale ? "возврат" : "оплата") + ")");

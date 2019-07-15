@@ -13,6 +13,7 @@ namespace interceptor
         public static IFptr atolDriver = new Fptr();
 
         static int currentDrvPassword = 0;
+        static int currentDirectPassword = 0;
         static string currentDocPack = String.Empty;
 
         public DocPack manDocPackForPrinting { get; set; }
@@ -200,7 +201,10 @@ namespace interceptor
                 sendingCheck = doc.Email;
 
             if (!String.IsNullOrEmpty(sendingCheck))
+            {
+                Log.Add("отправка СМС/email на адрес: " + sendingCheck);
                 atolDriver.setParam(1008, sendingCheck);
+            }
 
             PrintLine("Кассир: " + CRM.cashier, line: true);
 
@@ -327,6 +331,103 @@ namespace interceptor
             speed = atolDriver.getSingleSetting(Constants.LIBFPTR_SETTING_BAUDRATE);
             port = "com" + atolDriver.getSingleSetting(Constants.LIBFPTR_SETTING_COM_FILE);
             status = atolDriver.getParamInt(Constants.LIBFPTR_PARAM_MODE).ToString();
+        }
+
+        public string DirectPayment(decimal? moneyPrice, decimal? moneySumm, string forPrinting,
+            string sending, int department, int moneyType, bool returnSale, bool VAT)
+        {
+            Log.Add("прямая печать чека (" + (returnSale ? "возврат" : "оплата") + ")");
+            Log.Add("услуга '" + forPrinting + "', цена " + moneyPrice.ToString() + ", сумма " + moneySumm.ToString());
+
+            currentDrvPassword = currentDirectPassword;
+
+            if ((moneyType == 2) || returnSale)
+                moneySumm = moneyPrice;
+
+            PrepareDriver();
+
+            int SELL_OR_RETURN = (returnSale ? Constants.LIBFPTR_RT_SELL_RETURN : Constants.LIBFPTR_RT_SELL);
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, SELL_OR_RETURN);
+
+            atolDriver.openReceipt();
+
+            string sendingCheck = String.Empty;
+
+            if (!String.IsNullOrEmpty(sending))
+            {
+                Log.Add("отправка СМС/email на адрес: " + sending);
+                atolDriver.setParam(1008, sending);
+            }
+
+            PrintLine("Кассир: " + CRM.cashier, line: true);
+
+            PrepareDriver();
+
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_QUANTITY, 1);
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_PRICE, (float)(moneyPrice ?? 0));
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_COMMODITY_NAME, forPrinting);
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_DEPARTMENT, department);
+
+            int directVAT = (VAT ? Constants.LIBFPTR_TAX_VAT20 : Constants.LIBFPTR_TAX_NO);
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, directVAT);
+
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_COMMODITY_PIECE, 1);
+            atolDriver.registration();
+
+            PrepareDriver();
+
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_PAYMENT_SUM, (float)moneySumm);
+
+            if (moneyType == 1)
+            {
+                Log.Add("тип оплаты: наличными");
+
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_PAYMENT_TYPE, Constants.LIBFPTR_PT_CASH);
+            }
+            else
+            {
+                Log.Add("тип оплаты: безнал");
+
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_PAYMENT_TYPE, Constants.LIBFPTR_PT_ELECTRONICALLY);
+            }
+            atolDriver.payment();
+
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_RECEIPT_STATE);
+            atolDriver.queryData();
+            double change = atolDriver.getParamDouble(Constants.LIBFPTR_PARAM_CHANGE);
+
+            atolDriver.closeReceipt();
+
+            Log.AddWithCode("распечатка чека");
+
+            while (atolDriver.checkDocumentClosed() < 0)
+            {
+                Log.AddWithCode("отмена чека");
+                return "ERR2:Не удалось проверить:" + atolDriver.errorDescription();
+            }
+
+            if (!atolDriver.getParamBool(Constants.LIBFPTR_PARAM_DOCUMENT_CLOSED))
+            {
+                atolDriver.cancelReceipt();
+                Log.AddWithCode("отмена чека");
+                return "ERR2:Документ не закрылся:" + atolDriver.errorDescription();
+            }
+
+            if (!atolDriver.getParamBool(Constants.LIBFPTR_PARAM_DOCUMENT_PRINTED))
+            {
+                while (atolDriver.continuePrint() < 0)
+                {
+                    Log.AddWithCode("отмена чека");
+                    return "ERR2:Не удалось допечатать:" + atolDriver.errorDescription();
+                }
+            }
+
+            Server.ShowActivity(busy: false);
+
+            if (!MainWindow.TEST_VERSION)
+                RepeatPrint(null, null);
+
+            return "OK:" + change.ToString();
         }
     }
 }

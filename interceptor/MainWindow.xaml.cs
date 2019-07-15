@@ -1130,7 +1130,7 @@ namespace interceptor
             string printing = stringForPrinting.Text;
             bool vat = vatDirectPayment.IsChecked ?? true;
 
-            string[] result = ShtrihM.DirectPayment(
+            string[] result = Cashbox.DirectPayment(
                 moneyPrice: price, moneySumm: summ, forPrinting: printing, sending: sendingSMSorEMAIL,
                 department: department, moneyType: moneyType, returnSale: returnSale, VAT: vat
             ).Split(':');

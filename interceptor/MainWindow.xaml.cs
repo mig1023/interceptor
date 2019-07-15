@@ -969,7 +969,7 @@ namespace interceptor
                 return false;
             else
             {
-                ShowError(checkPlace, "Нельзя оплачивать даговор, указывая дату оплаты; оставьте это поле пустым");
+                ShowError(checkPlace, "Нельзя оплачивать договор, указывая дату оплаты; оставьте это поле пустым");
                 CleanCheck();
 
                 return true;

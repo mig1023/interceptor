@@ -522,7 +522,7 @@ sub doc_services
 	$concil_payment_date = $data->{ concilPaymentDate } if $data->{ concilPaymentDate } =~ /(\d{4})\-(\d{2})\-(\d{2})/;
 
 	my $prices = $vars->admfunc->getPrices( $vars, $data->{ rate }, $data->{ vtype }, $concil_payment_date );
-	
+
 	my $insurance_rgs = $data->{ insurance_manual_service_RGS } || '0.00';
 	
 	my $insurance_kl = $data->{ insurance_manual_service_KL } || '0.00';
@@ -591,7 +591,7 @@ sub doc_services
 			ReceptionID	=> 3,
 		},
 		photo => {
-			Name		=> 'Услуги фотосъемке и изготовлению фото',
+			Name		=> 'Услуги фотосъемки и изготовления фото',
 			Quantity	=> $data->{ photosrv },
 			Price		=> sprintf( "%.2f", $prices->{ photosrv } ),
 			VAT		=> 1,

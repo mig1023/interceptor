@@ -30,8 +30,8 @@ namespace interceptor
         string GetResultLine();
         int GetResultCode();
         int CurrentMode();
-        string CurrentModeDescription();
-        void GetStatusData(out string port, out string speed, 
-            out string status, out string version, out string model);
+        void GetStatusData(out string port, out string speed, out string version, out string model);
+       string DirectPayment(decimal? moneyPrice, decimal? moneySumm, string forPrinting,
+            string sending, int department, int moneyType, bool returnSale, bool VAT);
     }
 }

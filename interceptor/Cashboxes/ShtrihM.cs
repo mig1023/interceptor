@@ -409,16 +409,7 @@ namespace interceptor
             return Driver.ECRMode;
         }
 
-        public string CurrentModeDescription()
-        {
-            Driver.Timeout = timeout;
-            Driver.GetECRStatus();
-
-            return Driver.ECRModeDescription;
-        }
-
-        public void GetStatusData(out string port, out string speed, out string status,
-            out string version, out string model)
+        public void GetStatusData(out string port, out string speed, out string version, out string model)
         {
             string[] baudeRate = new string[] { "2400", "4800", "9600", "19200", "38400", "57600", "115200" };
 
@@ -429,7 +420,6 @@ namespace interceptor
 
             port = "com" + portIndex.ToString();
             speed = baudeRate[Driver.BaudRate];
-            status = Driver.ResultCodeDescription;
             version = Driver.ECRSoftVersion;
 
             Driver.GetDeviceMetrics();

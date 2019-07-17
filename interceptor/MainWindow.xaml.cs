@@ -29,7 +29,7 @@ namespace interceptor
 
         public const bool TEST_VERSION = true;
 
-        public const string CURRENT_VERSION_CLEAN = "2.0";
+        public const string CURRENT_VERSION_CLEAN = "2.5";
 
         public static string CURRENT_VERSION =
             CURRENT_VERSION_CLEAN + (TEST_VERSION ? "-test" : String.Empty);
@@ -145,13 +145,12 @@ namespace interceptor
             status2.Content = CRM.GetMyIP() + " ( порт " + PROTOCOL_PORT + " )";
             status3.Content = CRM.CRM_URL_BASE;
 
-            Cashbox.GetStatusData(out port, out speed, out status, out version, out model);
+            Cashbox.GetStatusData(out port, out speed, out version, out model);
 
             status4.Content = port;
             status5.Content = speed;
             status6.Content = model;
             status7.Content = version;
-            status8.Content = status.ToLower();
         }
 
         private void UpdateCenters()

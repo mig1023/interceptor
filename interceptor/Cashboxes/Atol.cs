@@ -166,7 +166,6 @@ namespace interceptor
             {
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_TEXT, text);
                 atolDriver.printText();
-
             }
 
             if (line)
@@ -187,7 +186,7 @@ namespace interceptor
 
             PrepareDriver();
 
-            int SELL_OR_RETURN = (returnSale ? Constants.LIBFPTR_RT_SELL_RETURN : Constants.LIBFPTR_RT_SELL);
+            double SELL_OR_RETURN = (returnSale ? Constants.LIBFPTR_RT_SELL_RETURN : Constants.LIBFPTR_RT_SELL);
             atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, SELL_OR_RETURN);
 
             atolDriver.openReceipt();
@@ -221,7 +220,7 @@ namespace interceptor
             {
                 PrepareDriver();
 
-                int VAT = (service.VAT == 1 ? Constants.LIBFPTR_TAX_VAT20 : Constants.LIBFPTR_TAX_NO);
+                double VAT = (service.VAT == 1 ? Constants.LIBFPTR_TAX_VAT20 : Constants.LIBFPTR_TAX_NO);
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, VAT);
 
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_DEPARTMENT, service.Department);
@@ -259,17 +258,17 @@ namespace interceptor
 
             atolDriver.closeReceipt();
 
-            //Log.AddWithCode("распечатка чека");
+            Log.AddWithCode("распечатка чека");
 
             while (atolDriver.checkDocumentClosed() < 0)
             {
-                //Log.AddWithCode("проверка статуса чека");
+                Log.AddWithCode("проверка статуса чека");
                 return "ERR2:Не удалось проверить:" + atolDriver.errorDescription();
             }
 
             if (!atolDriver.getParamBool(Constants.LIBFPTR_PARAM_DOCUMENT_CLOSED))
             {
-                //Log.AddWithCode("документ не закрылся");
+                Log.AddWithCode("документ не закрылся");
                 atolDriver.cancelReceipt();
                 Log.AddWithCode("отмена чека");
                 return "ERR2:Документ не закрылся:" + atolDriver.errorDescription();
@@ -310,16 +309,12 @@ namespace interceptor
 
         public int CurrentMode()
         {
-            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_STATUS);
-            atolDriver.queryData();
-            return (int)atolDriver.getParamInt(Constants.LIBFPTR_PARAM_MODE);
+            return 0;
         }
 
         public string CurrentModeDescription()
         {
-            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_STATUS);
-            atolDriver.queryData();
-            return atolDriver.getParamInt(Constants.LIBFPTR_PARAM_MODE).ToString();
+            return "CurrentModeDescription";
         }
 
         public void GetStatusData(out string port, out string speed, out string status,

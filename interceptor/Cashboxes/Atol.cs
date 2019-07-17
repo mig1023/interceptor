@@ -160,6 +160,7 @@ namespace interceptor
 
         public static void PrintLine(string text = "", bool line = false)
         {
+            PrepareDriver();
 
             if (!String.IsNullOrEmpty(text))
             {
@@ -191,6 +192,8 @@ namespace interceptor
 
             atolDriver.openReceipt();
 
+            Log.AddWithCode("открытие чека");
+
             string sendingCheck = String.Empty;
 
             if (!String.IsNullOrEmpty(sendingAddress))
@@ -200,11 +203,11 @@ namespace interceptor
             else if (!String.IsNullOrEmpty(doc.Email))
                 sendingCheck = doc.Email;
 
-            if (!String.IsNullOrEmpty(sendingCheck))
-            {
-                Log.Add("отправка СМС/email на адрес: " + sendingCheck);
-                atolDriver.setParam(1008, sendingCheck);
-            }
+            //if (!String.IsNullOrEmpty(sendingCheck))
+            //{
+            //    Log.Add("отправка СМС/email на адрес: " + sendingCheck);
+            //    atolDriver.setParam(1008, sendingCheck);
+            //}
 
             PrintLine("Кассир: " + CRM.cashier, line: true);
 
@@ -251,20 +254,22 @@ namespace interceptor
 
             atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_RECEIPT_STATE);
             atolDriver.queryData();
+
             double change = atolDriver.getParamDouble(Constants.LIBFPTR_PARAM_CHANGE);
 
             atolDriver.closeReceipt();
 
-            Log.AddWithCode("распечатка чека");
+            //Log.AddWithCode("распечатка чека");
 
             while (atolDriver.checkDocumentClosed() < 0)
             {
-                Log.AddWithCode("отмена чека");
+                //Log.AddWithCode("проверка статуса чека");
                 return "ERR2:Не удалось проверить:" + atolDriver.errorDescription();
             }
 
             if (!atolDriver.getParamBool(Constants.LIBFPTR_PARAM_DOCUMENT_CLOSED))
             {
+                //Log.AddWithCode("документ не закрылся");
                 atolDriver.cancelReceipt();
                 Log.AddWithCode("отмена чека");
                 return "ERR2:Документ не закрылся:" + atolDriver.errorDescription();
@@ -274,7 +279,7 @@ namespace interceptor
             {
                 while (atolDriver.continuePrint() < 0)
                 {
-                    Log.AddWithCode("отмена чека");
+                    Log.AddWithCode("чек не удалось допечатать");
                     return "ERR2:Не удалось допечатать:" + atolDriver.errorDescription();
                 }
             }

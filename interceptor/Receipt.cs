@@ -94,7 +94,7 @@ namespace interceptor
                 AddText();
 
                 AddText("Заявитель: " + appData[1] + " (номер записи " + AppNumber(appData[2]) + ")");
-                AddText("Исполнитель: ООО \"Виза Менеджмент Сервиc\"");
+                AddText("Исполнитель: ");
 
                 AddText("Оказаны следующие виды работ:");
 

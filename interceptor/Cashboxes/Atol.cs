@@ -202,11 +202,11 @@ namespace interceptor
             else if (!String.IsNullOrEmpty(doc.Email))
                 sendingCheck = doc.Email;
 
-            //if (!String.IsNullOrEmpty(sendingCheck))
-            //{
-            //    Log.Add("отправка СМС/email на адрес: " + sendingCheck);
-            //    atolDriver.setParam(1008, sendingCheck);
-            //}
+            if (!String.IsNullOrEmpty(sendingCheck))
+            {
+                Log.Add("отправка СМС/email на адрес: " + sendingCheck);
+                atolDriver.setParam(1008, sendingCheck);
+            }
 
             PrintLine("Кассир: " + CRM.cashier, line: true);
 
@@ -225,7 +225,7 @@ namespace interceptor
 
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_DEPARTMENT, service.Department);
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_COMMODITY_NAME, service.Name);
-                atolDriver.setParam(Constants.LIBFPTR_PARAM_PRICE, (float)service.Price);
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_PRICE, (double)service.Price);
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_QUANTITY, service.Quantity);
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_COMMODITY_PIECE, 1);
                 atolDriver.registration();
@@ -235,7 +235,7 @@ namespace interceptor
 
             PrepareDriver();
 
-            atolDriver.setParam(Constants.LIBFPTR_PARAM_PAYMENT_SUM, (float)(MoneySumm ?? doc.Money));
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_PAYMENT_SUM, (double)(MoneySumm ?? doc.Money));
 
             if (doc.MoneyType == 1)
             {

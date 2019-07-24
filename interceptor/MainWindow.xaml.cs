@@ -165,7 +165,7 @@ namespace interceptor
 
         private void UpdateStatuses()
         {
-            string port, speed, status, version, model;
+            string port, speed, version, model;
 
             status1.Content = CURRENT_VERSION;
             status2.Content = CRM.GetMyIP() + " ( порт " + PROTOCOL_PORT + " )";

@@ -34,8 +34,9 @@
             <Button x:Name="concil_n_age" Content="КС нерезидент 6-12 лет" Height="51" Canvas.Left="278" Canvas.Top="235" Width="246" Tag="checkButtons" Click="addService_Click" Background="#FFA5BDFF"/>
             <Button x:Name="sms_status" Content="смс" Height="51" Canvas.Left="19" Canvas.Top="291" Width="254" Tag="checkButtons" Click="addService_Click"/>
             <Button x:Name="srv4" Content="вип комфорт" Height="51" Canvas.Left="278" Canvas.Top="402" Width="246" Tag="checkButtons" Click="addService_Click" Background="#FFF7FFA5"/>
-            <Button x:Name="anketasrv" Content="заполнение анкеты" Height="51" Canvas.Left="19" Canvas.Top="347" Width="254" Tag="checkButtons" Click="addService_Click"/>
-            <Button x:Name="printsrv" Content="распечатка документов" Height="51" Canvas.Left="19" Canvas.Top="403" Width="254" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="anketasrv" Content="заполнение анкеты" Height="51" Canvas.Left="19" Canvas.Top="402" Width="254" Tag="checkButtons" Click="addService_Click" Background="#66CCFF"/>
+            <Button x:Name="printsrv" Content="распечатка документов" Height="51" Canvas.Left="19" Canvas.Top="346" Width="254" Tag="checkButtons" Click="addService_Click"/>
+            <Button x:Name="ankprint" Content="распечатка анкеты" Height="51" Canvas.Left="19" Canvas.Top="459" Width="254" Tag="checkButtons" Click="addService_Click" Background="#66CCFF"/>
             <Button x:Name="photosrv" Content="фото" Height="51" Canvas.Left="19" Canvas.Top="235" Width="254" Tag="checkButtons" Click="addService_Click"/>
             <Button x:Name="xerox" Content="ксерокс" Height="51" Canvas.Left="19" Canvas.Top="179" Width="254" Tag="checkButtons" Click="addService_Click"/>
             <Button x:Name="dhl" Content="&lt;---- доставка DHL" Height="36" Canvas.Left="471" Canvas.Top="547" Width="296" Tag="checkButtons" Click="addService_Click"/>
@@ -62,13 +63,13 @@
             <Button x:Name="insuranceKL" Content="&lt;---- страхование Капитал Лайф" Height="37" Canvas.Left="471" Canvas.Top="504" Width="296" Tag="checkButtons" Click="addService_Click"/>
             <TextBox x:Name="moneyForInsuranceKL" Height="37" Canvas.Left="335" Canvas.Top="504" Width="104" FontSize="22" Tag="placeholderKL" KeyUp="withPlaceholder_KeyUp"/>
             <Label x:Name="currency4" Content="Р" Canvas.Left="440" Canvas.Top="496" FontSize="28"/>
-            <TextBox x:Name="printSending" Height="40" Canvas.Left="25" Canvas.Top="518" Width="220" FontSize="22" Tag="placeholderPrintSending" KeyUp="withPlaceholder_KeyUp"/>
-            <Label x:Name="printSendingText" Content="телефон или email" Canvas.Left="19" Canvas.Top="472" FontSize="18"/>
-            <Label x:Name="printSendingText2" Content="для электронного чека" Canvas.Left="19" Canvas.Top="490" FontSize="14"/>
+            <TextBox x:Name="printSending" Height="40" Canvas.Left="20" Canvas.Top="556" Width="220" FontSize="22" Tag="placeholderPrintSending" KeyUp="withPlaceholder_KeyUp"/>
+            <Label x:Name="printSendingText" Content="телефон или email" Canvas.Left="14" Canvas.Top="510" FontSize="18"/>
+            <Label x:Name="printSendingText2" Content="для электронного чека" Canvas.Left="14" Canvas.Top="528" FontSize="14"/>
             <Label x:Name="placeholderRGS" Content="0.00" Height="36" Canvas.Left="335" Canvas.Top="459" Width="49" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForInsuranceRGS" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderKL" Content="0.00" Height="36" Canvas.Left="335" Canvas.Top="502" Width="49" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForInsuranceKL" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderDHL" Content="0.00" Height="36" Canvas.Left="335" Canvas.Top="545" Width="49" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForDHL" MouseDown="placeholder_MouseDown"/>
-            <Label x:Name="placeholderPrintSending" Content="mail@example.com" Height="36" Canvas.Left="25" Canvas.Top="516" Width="198" FontSize="22" Foreground="#FFD8D8D8" Tag="printSending" MouseDown="placeholder_MouseDown" />
+            <Label x:Name="placeholderPrintSending" Content="mail@example.com" Height="36" Canvas.Left="20" Canvas.Top="554" Width="198" FontSize="22" Foreground="#FFD8D8D8" Tag="printSending" MouseDown="placeholder_MouseDown" />
             <Label x:Name="placeholderMoneyForCheck" Content="0.00" Height="36" Canvas.Left="286" Canvas.Top="607" Width="49" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForCheck" MouseDown="placeholder_MouseDown"/>
         </Canvas>
         <Canvas x:Name="receptionPlace" Margin="799,0,-799,0">

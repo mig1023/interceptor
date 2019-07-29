@@ -582,6 +582,14 @@ sub doc_services
 			Department	=> $special_department,
 			ReceptionID	=> 2,
 		},
+		ankprint => {
+			Name		=> 'Услуги по распечатке анкеты' . ( $reception ? '' : ' заявителя' ),
+			Quantity	=> $data->{ ankprint },
+			Price		=> sprintf( "%.2f", $prices->{ ankprint } ),
+			VAT		=> 1,
+			Department	=> $special_department,
+			ReceptionID	=> 2,
+		},
 		print => {
 			Name		=> 'Услуги по распечатке документов',
 			Quantity	=> $data->{ printsrv },
@@ -1289,7 +1297,7 @@ sub cash_box_mandocpack
 			$urgent_docpack += ( $_ eq 'concil_urg_r' ? 1 : 0 );
 		}
 
-		$data->{ $_ } = $serv_hash->{ $_ } if /^(vipsrv|sms_status|anketasrv|transum|printsrv|photosrv|xerox)$/;
+		$data->{ $_ } = $serv_hash->{ $_ } if /^(vipsrv|sms_status|anketasrv|ankprint|transum|printsrv|photosrv|xerox)$/;
 		
 		$data->{ $_ } = $serv_hash->{ $_ } if /^(srv1|srv2|srv3|srv4|srv5|srv6|srv7|srv8|srv9)$/;
 	}

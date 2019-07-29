@@ -27,7 +27,7 @@ namespace interceptor
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
         public Canvas returnFromErrorTo;
 
-        public const bool TEST_VERSION = false;
+        public const bool TEST_VERSION = true;
 
         public const string CURRENT_VERSION_CLEAN = "2.5";
 
@@ -86,8 +86,9 @@ namespace interceptor
             ThreadPool.SetMinThreads(2, 2);
 
             foreach (Button button in new List<Button> {
-                closeCheck, service, service_urgent, vipsrv, concil, concil_urg_r,
-                concil_n, concil_n_age, sms_status, anketasrv, printsrv, ankprint,
+                closeCheck, service, service_urgent, vipsrv,
+                concil, concil_urg_r, concil_n, concil_n_age,
+                sms_status, anketasrv, printsrv, ankprint,
                 photosrv, xerox, dhl, insuranceRGS, insuranceKL,
                 srv1, srv2, srv3, srv4, srv5, srv6, srv7, srv8, srv9
             })
@@ -159,7 +160,7 @@ namespace interceptor
             MoveCanvas(
                 moveCanvas: checkPlace,
                 prevCanvas: mainPlace,
-                newHeight: 700
+                newHeight: 670
             );
         }
 

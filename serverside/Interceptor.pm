@@ -408,6 +408,7 @@ sub get_service_code
 		'tran'		=> '000',
 		'xerox'		=> '400',
 		'ank'		=> '502',
+		'ankprint'	=> '520',
 		'print'		=> '503',
 		'photo'		=> '504',
 		'vip'		=> '505',
@@ -583,7 +584,7 @@ sub doc_services
 			ReceptionID	=> 2,
 		},
 		ankprint => {
-			Name		=> 'Услуги по распечатке анкеты' . ( $reception ? '' : ' заявителя' ),
+			Name		=> 'Услуги по распечатке анкеты заявителя',
 			Quantity	=> $data->{ ankprint },
 			Price		=> sprintf( "%.2f", $prices->{ ankprint } ),
 			VAT		=> 1,

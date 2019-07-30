@@ -228,9 +228,12 @@ namespace interceptor
             return tablesCorrupted.ToArray();
         }
 
-        public static void PrintLine(string text = "", bool line = false)
+        public static void PrintLine(string text = "", bool line = false, int password = 0)
         {
-            PrepareDriver(currentDrvPassword);
+            if (password == 0)
+                password = currentDrvPassword;
+
+            PrepareDriver(password);
 
             if (!String.IsNullOrEmpty(text))
             {
@@ -441,15 +444,15 @@ namespace interceptor
 
             if (!String.IsNullOrEmpty(sending))
             {
-                Driver.Password = currentDirectPassword;
+                PrepareDriver(currentDirectPassword);
                 Driver.CustomerEmail = sending;
                 Driver.FNSendCustomerEmail();
 
                 Log.Add("отправка СМС/email на адрес: " + sending);
             }
 
-            Driver.Password = currentDirectPassword;
-            PrintLine("Кассир: " + CRM.cashier, line: true);
+            PrepareDriver(currentDirectPassword);
+            PrintLine("Кассир: " + CRM.cashier, line: true, password: currentDirectPassword);
             Driver.Timeout = timeout;
 
             Driver.Quantity = 1;
@@ -468,7 +471,7 @@ namespace interceptor
             else
                 Driver.Sale();
 
-            PrintLine(line: true);
+            PrintLine(line: true, password: currentDirectPassword);
             PrepareDriver(currentDirectPassword);
 
             if (moneyType == 1)
@@ -486,6 +489,7 @@ namespace interceptor
                 Driver.Summ1 = 0;
             }
 
+            PrepareDriver(currentDirectPassword);
             Driver.StringForPrinting = String.Empty;
             Driver.CloseCheck();
 

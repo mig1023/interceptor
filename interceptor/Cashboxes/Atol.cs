@@ -12,8 +12,8 @@ namespace interceptor
     {
         public static IFptr atolDriver = new Fptr();
 
+        public static int currentDirectPassword = 0;
         static int currentDrvPassword = 0;
-        static int currentDirectPassword = 0;
         static string currentDocPack = String.Empty;
 
         public DocPack manDocPackForPrinting { get; set; }

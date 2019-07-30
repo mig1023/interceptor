@@ -63,6 +63,7 @@ namespace interceptor
             password = Int32.Parse(authData[1]);
 
             ShtrihM.currentDirectPassword = password;
+            Atol.currentDirectPassword = password;
 
             cashier = authData[2];
 

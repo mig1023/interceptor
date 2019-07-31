@@ -422,6 +422,7 @@ sub get_service_code
 		'service8' 	=> '514',
 		'service9' 	=> '515',
 		'service10' 	=> '000',
+		'service11' 	=> '520',
 	};
 	
 	if ( $serv eq 'visa' ) {
@@ -1300,7 +1301,7 @@ sub cash_box_mandocpack
 
 		$data->{ $_ } = $serv_hash->{ $_ } if /^(vipsrv|sms_status|anketasrv|ankprint|transum|printsrv|photosrv|xerox)$/;
 		
-		$data->{ $_ } = $serv_hash->{ $_ } if /^(srv1|srv2|srv3|srv4|srv5|srv6|srv7|srv8|srv9)$/;
+		$data->{ $_ } = $serv_hash->{ $_ } if /^(srv1|srv2|srv3|srv4|srv5|srv6|srv7|srv8|srv9|srv11)$/;
 	}
 
 	$data->{ urgent } = ( $urgent_docpack ? 1 : 0 );

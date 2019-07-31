@@ -801,9 +801,8 @@ namespace interceptor
             if (Cashbox.CurrentMode() != 4)
                 Cashbox.ReportCleaning();
 
-            MessageBoxes.WaitingForResetting();
-
-            Cashbox.TablesBackup();
+            // MessageBoxes.WaitingForResetting();
+            // Cashbox.TablesBackup();
 
             restoringSettingsCashbox.Elapsed += new ElapsedEventHandler(RestoreSetting);
             restoringSettingsCashbox.Enabled = true;

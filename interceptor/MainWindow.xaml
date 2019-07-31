@@ -36,7 +36,7 @@
             <Button x:Name="srv4" Content="вип комфорт" Height="41" Canvas.Left="278" Canvas.Top="343" Width="246" Tag="checkButtons" Click="addService_Click" Background="#FFF7FFA5"/>
             <Button x:Name="anketasrv" Content="заполнение анкеты" Height="41" Canvas.Left="19" Canvas.Top="343" Width="254" Tag="checkButtons" Click="addService_Click" Background="#66CCFF"/>
             <Button x:Name="printsrv" Content="распечатка документов" Height="41" Canvas.Left="19" Canvas.Top="297" Width="254" Tag="checkButtons" Click="addService_Click"/>
-            <Button x:Name="ankprint" Content="распечатка анкеты" Height="41" Canvas.Left="19" Canvas.Top="389" Width="254" Tag="checkButtons" Click="addService_Click" Background="#66CCFF"/>
+            <Button x:Name="srv11" Content="распечатка анкеты" Height="41" Canvas.Left="19" Canvas.Top="389" Width="254" Tag="checkButtons" Click="addService_Click" Background="#66CCFF"/>
             <Button x:Name="photosrv" Content="фото" Height="41" Canvas.Left="19" Canvas.Top="205" Width="254" Tag="checkButtons" Click="addService_Click"/>
             <Button x:Name="xerox" Content="ксерокс" Height="41" Canvas.Left="19" Canvas.Top="159" Width="254" Tag="checkButtons" Click="addService_Click"/>
             <Button x:Name="dhl" Content="&lt;---- доставка DHL" Height="36" Canvas.Left="471" Canvas.Top="505" Width="296" Tag="checkButtons" Click="addService_Click"/>

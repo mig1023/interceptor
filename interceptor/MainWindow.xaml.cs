@@ -88,9 +88,9 @@ namespace interceptor
             foreach (Button button in new List<Button> {
                 closeCheck, service, service_urgent, vipsrv,
                 concil, concil_urg_r, concil_n, concil_n_age,
-                sms_status, anketasrv, printsrv, ankprint,
+                sms_status, anketasrv, printsrv,
                 photosrv, xerox, dhl, insuranceRGS, insuranceKL,
-                srv1, srv2, srv3, srv4, srv5, srv6, srv7, srv8, srv9
+                srv1, srv2, srv3, srv4, srv5, srv6, srv7, srv8, srv9, srv11
             })
                 servButtonCleaningList.Add(button);
 

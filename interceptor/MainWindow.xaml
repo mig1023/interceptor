@@ -11,7 +11,9 @@
             <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="382" Canvas.Top="304" MouseDown="switchOn_MouseDown"/>
             <Canvas x:Name="activity" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="401" Canvas.Top="304"  MouseDown="switchOn_MouseDown"/>
             <Button x:Name="check" Content="чек вручную" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Click="check_Click" Canvas.Left="207" Canvas.Top="304"/>
-            <Button x:Name="status" Content="отчёты и повторы" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Click="status_Click" Canvas.Left="32" Canvas.Top="304"/>
+            <Button x:Name="status"  HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Click="status_Click" Canvas.Left="32" Canvas.Top="304">
+                <TextBlock TextAlignment="Center">отчёты, повторы,<LineBreak/>настройки</TextBlock>
+            </Button>
             <Button x:Name="reception" Content="ресепшен" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Canvas.Left="420" Canvas.Top="304" Click="reception_Click"/>
             <Button x:Name="money" Content="прямая оплата" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Canvas.Left="595" Canvas.Top="304" Click="money_Click"/>
             <Image x:Name="statusImage" Height="150" Canvas.Left="44" Canvas.Top="89" Width="150" Source="Images\reports.png" PreviewMouseDown="statusImage_PreviewMouseDown"/>
@@ -108,6 +110,8 @@
             <Label x:Name="currencyOutcome" Content="Р" Canvas.Left="181" Canvas.Top="263" FontSize="28"/>
             <Label x:Name="placeholderMoneyForIncome" Content="0.00" Height="36" Canvas.Left="25" Canvas.Top="224" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForIncome" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderMoneyForOutcome" Content="0.00" Height="36" Canvas.Left="25" Canvas.Top="269" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForOutcome" MouseDown="placeholder_MouseDown"/>
+            <CheckBox x:Name="setBlockCard" Content=" заблокировать безналичную оплату" Height="17" Canvas.Left="453" Tag="cardBlock" Canvas.Top="225" Width="308" Checked="settingsChange" Unchecked="settingsChange"/>
+            <CheckBox x:Name="setBlockMoney" Content=" заблокировать оплату наличными" Height="17" Canvas.Left="453" Tag="moneyBlock" Canvas.Top="245" Width="308" Checked="settingsChange" Unchecked="settingsChange"/>
         </Canvas>
 
         <Canvas x:Name="moneyPlace" Margin="799,0,-799,0">

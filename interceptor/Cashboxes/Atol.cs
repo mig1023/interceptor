@@ -328,12 +328,21 @@ namespace interceptor
                 }
             }
 
+            string fdForRegion = String.Empty;
+
+            if (doc.Region)
+            {
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_FN_DATA_TYPE, Constants.LIBFPTR_FNDT_LAST_RECEIPT);
+                atolDriver.fnQueryData();
+                fdForRegion = ":" + atolDriver.getParamInt(Constants.LIBFPTR_PARAM_DOCUMENT_NUMBER).ToString();
+            }
+
             Server.ShowActivity(busy: false);
 
             if (!MainWindow.TEST_VERSION && !doc.Region)
                 RepeatPrint(null, null);
 
-            return "OK:" + change.ToString();
+            return "OK:" + change.ToString() + fdForRegion;
         }
 
         public static void RepeatPrint(object obj, ElapsedEventArgs e)

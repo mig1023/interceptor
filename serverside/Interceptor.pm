@@ -886,15 +886,32 @@ sub cashbox_fd
 	return cash_box_output( $self, "ERR|0" ) unless $first;
 	
 	my $docpacks = $vars->db->selallkeys("
-		SELECT FD, DocPack.AgreementNo
+		SELECT FD, DocPack.AgreementNo, Comment
 		FROM Cashboxes_regions
 		JOIN DocPack ON Cashboxes_regions.DocPackID = DocPack.ID
 		WHERE Cashboxes_regions.FD >= ?",
 		$first
 	);
 	
+	for ( @$docpacks ) {
+	
+		if ( $_->{ Comment } ) {
+		
+			my @reprint = split( '-', $_->{ Comment } );
+			
+			if ( $reprint[0] eq 'REPRINT' ) {
+			
+				my ( $fd, $print ) = $vars->db->sel1("
+					SELECT FD, Print FROM Cashboxes_regions WHERE ID = ?", $reprint[1]
+				);
+				
+				$_->{ Reprint } = "$fd $print";
+			}
+		}
+	}
+	
 	my $response = "OK|";
-	$response .= $_->{ FD } . ':' . $_->{ AgreementNo } . '|' for @$docpacks;
+	$response .= $_->{ FD } . ':' . $_->{ AgreementNo } . ':' . $_->{ Reprint }  . '|' for @$docpacks;
 	$response .= s/\|$//;
 	
 	return cash_box_output( $self, $response );

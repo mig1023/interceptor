@@ -874,6 +874,32 @@ sub cash_box
 	cash_box_output_error_check( $self, $code, $desc, $param->{ docid } );
 }
 
+sub cashbox_fd
+# //////////////////////////////////////////////////
+{
+	my ( $self, $task, $id, $template, $slist, $authip, $clientip ) = @_;
+	
+	my $vars = $self->{'VCS::Vars'};
+
+	my $first = $vars->getparam( 'first' ) || 0;
+	
+	return cash_box_output( $self, "ERR|0" ) unless $first;
+	
+	my $docpacks = $vars->db->selallkeys("
+		SELECT FD, DocPack.AgreementNo
+		FROM Cashboxes_regions
+		JOIN DocPack ON Cashboxes_regions.DocPackID = DocPack.ID
+		WHERE Cashboxes_regions.FD >= ?",
+		$first
+	);
+	
+	my $response = "OK|";
+	$response .= $_->{ FD } . ':' . $_->{ AgreementNo } . '|' for @$docpacks;
+	$response .= s/\|$//;
+	
+	return cash_box_output( $self, $response );
+}
+
 sub cash_box_region
 # //////////////////////////////////////////////////
 {

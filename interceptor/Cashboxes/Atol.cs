@@ -97,6 +97,8 @@ namespace interceptor
 
         public bool ReportRegion()
         {
+            Dictionary<uint, string> agreements = new Dictionary<uint, string>();
+
             atolDriver.setParam(Constants.LIBFPTR_PARAM_FN_DATA_TYPE, Constants.LIBFPTR_FNDT_LAST_DOCUMENT);
             atolDriver.fnQueryData();
             uint lastDoc = atolDriver.getParamInt(Constants.LIBFPTR_PARAM_DOCUMENT_NUMBER);
@@ -106,6 +108,22 @@ namespace interceptor
             uint docsInLine = atolDriver.getParamInt(Constants.LIBFPTR_PARAM_RECEIPT_NUMBER);
 
             uint firstDoc = lastDoc - docsInLine + 1;
+
+            string[] FDData = CRM.GetFDData(firstDoc);
+
+            if (FDData.Length <= 0 || FDData[0] == "ERR")
+                return false;
+            else
+            {
+                for (int i = 1; i < FDData.Length; i++)
+                {
+                    if (String.IsNullOrEmpty(FDData[i]))
+                        continue;
+
+                    string[] fd = FDData[i].Split(':');
+                    agreements.Add(uint.Parse(fd[0]), fd[1]);
+                }
+            }
 
             PrintLine(line: true);
             PrintLine("ОТЧЁТ до ЗАКРЫТИЯ СМЕНЫ");
@@ -126,6 +144,7 @@ namespace interceptor
 
                 PrintLine(line: true);
                 PrintLine("документ ФД: " + documentNumber.ToString());
+                PrintLine("договор: " + (agreements.ContainsKey(documentNumber) ? agreements[documentNumber] : "не найден"));
                 PrintLine("тип: " + (type == 1 ? "приход" : (type == 2 ? "возврат" : "ИНОЕ")));
                 PrintLine("дата: " + dateTime.ToString());
                 PrintLine("ФП: " + fiscalSign.ToString());

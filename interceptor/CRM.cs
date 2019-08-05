@@ -129,6 +129,26 @@ namespace interceptor
             return vtypeString.Split('|');
         }
 
+        public static string[] GetFDData(uint startFD)
+        {
+            string FDData = String.Empty;
+
+            string url = CRM_URL + "/vcs/cashbox_fd.htm?first=" + startFD.ToString();
+
+            try
+            {
+                FDData = GetHtml(url);
+            }
+            catch (WebException e)
+            {
+                Log.AddWeb("(запрос данных) " + e.Message);
+
+                return null;
+            }
+
+            return FDData.Split('|');
+        }
+
         public static void SendError(string error, string agrNumber = "")
         {
             string requestResult = String.Empty;

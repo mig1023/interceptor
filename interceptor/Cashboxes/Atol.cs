@@ -95,6 +95,51 @@ namespace interceptor
             return (resultCode < 0 ? false : true);
         }
 
+        public bool ReportRegion()
+        {
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_FN_DATA_TYPE, Constants.LIBFPTR_FNDT_LAST_DOCUMENT);
+            atolDriver.fnQueryData();
+            uint lastDoc = atolDriver.getParamInt(Constants.LIBFPTR_PARAM_DOCUMENT_NUMBER);
+
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_FN_DATA_TYPE, Constants.LIBFPTR_FNDT_SHIFT);
+            atolDriver.fnQueryData();
+            uint docsInLine = atolDriver.getParamInt(Constants.LIBFPTR_PARAM_RECEIPT_NUMBER);
+
+            uint firstDoc = lastDoc - docsInLine + 1;
+
+            PrintLine(line: true);
+            PrintLine("ОТЧЁТ до ЗАКРЫТИЯ СМЕНЫ");
+
+            for (uint i = firstDoc; i <= lastDoc; i++)
+            {
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_FN_DATA_TYPE, Constants.LIBFPTR_FNDT_DOCUMENT_BY_NUMBER);
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_DOCUMENT_NUMBER, i);
+                atolDriver.fnQueryData();
+
+                uint documentType = atolDriver.getParamInt(Constants.LIBFPTR_PARAM_FN_DOCUMENT_TYPE);
+                uint documentNumber = atolDriver.getParamInt(Constants.LIBFPTR_PARAM_DOCUMENT_NUMBER);
+                DateTime dateTime = atolDriver.getParamDateTime(Constants.LIBFPTR_PARAM_DATE_TIME);
+                String fiscalSign = atolDriver.getParamString(Constants.LIBFPTR_PARAM_FISCAL_SIGN);
+
+                double sum = atolDriver.getParamDouble(1020);
+                uint type = atolDriver.getParamInt(1054);
+
+                PrintLine(line: true);
+                PrintLine("документ ФД: " + documentNumber.ToString());
+                PrintLine("тип: " + (type == 1 ? "приход" : (type == 2 ? "возврат" : "ИНОЕ")));
+                PrintLine("дата: " + dateTime.ToString());
+                PrintLine("ФП: " + fiscalSign.ToString());
+                PrintLine("сумма чека: " + (type == 2 ? "-" : "") + sum.ToString());
+            }
+
+            PrintLine(line: true);
+            for (int i = 0; i < 10; i++)
+                PrintLine(" ");
+            atolDriver.cut();
+
+            return true;
+        }
+
         public bool ReportTax()
         {
             return false;

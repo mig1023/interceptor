@@ -145,9 +145,9 @@ sub send_docpack
 		);
 	}
 	
-	my ( $code, $desc ) = split( /:/, $resp );
+	my ( $code, $desc, $fd ) = split( /:/, $resp );
 	
-	return $code, $desc, $services_fail;
+	return $code, $desc, $services_fail, $fd;
 }
 
 sub xml_create
@@ -408,7 +408,6 @@ sub get_service_code
 		'tran'		=> '000',
 		'xerox'		=> '400',
 		'ank'		=> '502',
-		'ankprint'	=> '520',
 		'print'		=> '503',
 		'photo'		=> '504',
 		'vip'		=> '505',
@@ -580,14 +579,6 @@ sub doc_services
 			Name		=> 'Услуги по заполнению и распечатке анкеты' . ( $reception ? '' : ' заявителя' ),
 			Quantity	=> $data->{ anketasrv },
 			Price		=> sprintf( "%.2f", $prices->{ anketasrv } ),
-			VAT		=> 1,
-			Department	=> $special_department,
-			ReceptionID	=> 2,
-		},
-		ankprint => {
-			Name		=> 'Услуги по распечатке анкеты заявителя',
-			Quantity	=> $data->{ ankprint },
-			Price		=> sprintf( "%.2f", $prices->{ ankprint } ),
 			VAT		=> 1,
 			Department	=> $special_department,
 			ReceptionID	=> 2,
@@ -893,12 +884,12 @@ sub cash_box_region
 		interceptor => ( $region_id == 1 ? 21 : 22 ),
 	};
 	
-	my ( $code, $desc, undef ) = send_docpack(
+	my ( $code, $desc, undef, $fd ) = send_docpack(
 		$self, $docid, 2, undef, $data, undef, undef,
 		undef, undef, undef, undef, $email, $region
 	);
 	
-	return ( $code, $desc );
+	return ( $code, $desc, $fd );
 }
 
 sub cash_box_auth
@@ -1299,7 +1290,7 @@ sub cash_box_mandocpack
 			$urgent_docpack += ( $_ eq 'concil_urg_r' ? 1 : 0 );
 		}
 
-		$data->{ $_ } = $serv_hash->{ $_ } if /^(vipsrv|sms_status|anketasrv|ankprint|transum|printsrv|photosrv|xerox)$/;
+		$data->{ $_ } = $serv_hash->{ $_ } if /^(vipsrv|sms_status|anketasrv|transum|printsrv|photosrv|xerox)$/;
 		
 		$data->{ $_ } = $serv_hash->{ $_ } if /^(srv1|srv2|srv3|srv4|srv5|srv6|srv7|srv8|srv9|srv11)$/;
 	}

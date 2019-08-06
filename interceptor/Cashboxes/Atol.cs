@@ -95,7 +95,7 @@ namespace interceptor
             return (resultCode < 0 ? false : true);
         }
 
-        public bool ReportRegion()
+        public bool ReportRegion(string reportType)
         {
             Dictionary<uint, string> agreements = new Dictionary<uint, string>();
 
@@ -109,7 +109,7 @@ namespace interceptor
 
             uint firstDoc = lastDoc - docsInLine + 1;
 
-            string[] FDData = CRM.GetFDData(firstDoc);
+            string[] FDData = CRM.GetFDData(firstDoc, reportType);
 
             if (FDData.Length <= 0 || FDData[0] == "ERR")
                 return false;

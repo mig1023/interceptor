@@ -19,6 +19,7 @@ namespace interceptor
         bool ReportWithoutCleaning();
         bool ReportDepartment();
         bool ReportTax();
+        bool ReportRegion(string type);
         bool CancelDocument();
         bool CashIncome(string summ);
         bool CashOutcome(string summ);

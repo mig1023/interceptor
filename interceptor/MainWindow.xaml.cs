@@ -1182,7 +1182,9 @@ namespace interceptor
 
         private void regionReport_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.ReportRegion())
+            Button reportButton = sender as Button;
+
+            if (!Cashbox.ReportRegion(reportButton.Tag.ToString()))
                 moveToErrorFromReports(Cashbox.GetResultLine());
         }
     }

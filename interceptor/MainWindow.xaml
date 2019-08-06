@@ -110,7 +110,8 @@
             <Label x:Name="currencyOutcome" Content="Р" Canvas.Left="181" Canvas.Top="263" FontSize="28"/>
             <Label x:Name="placeholderMoneyForIncome" Content="0.00" Height="36" Canvas.Left="25" Canvas.Top="224" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForIncome" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderMoneyForOutcome" Content="0.00" Height="36" Canvas.Left="25" Canvas.Top="269" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForOutcome" MouseDown="placeholder_MouseDown"/>
-            <Button x:Name="regionReport" Content="отчёт по чекам до закрытия смены" Height="63" Canvas.Left="422" Canvas.Top="226" Width="339" FontSize="18" Click="regionReport_Click"/>
+            <Button x:Name="regionReportMsk" Content="отчёт для кассы регионов (мск)" Height="37" Canvas.Left="422" Canvas.Top="226" Width="339" Tag="1" FontSize="18" Click="regionReport_Click"/>
+            <Button x:Name="regionReportSpb" Content="отчёт для кассы регионов (спб)" Height="37" Canvas.Left="422" Canvas.Top="271" Width="339" Tag="2" FontSize="18" Click="regionReport_Click"/>
         </Canvas>
 
         <Canvas x:Name="moneyPlace" Margin="799,0,-799,0">

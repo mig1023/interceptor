@@ -113,6 +113,11 @@ namespace interceptor
             return (Driver.ResultCode == 0 ? true : false);
         }
 
+        public bool ReportRegion(string type)
+        {
+            return false;
+        }
+
         public bool CancelDocument()
         {
             PrepareDriver();

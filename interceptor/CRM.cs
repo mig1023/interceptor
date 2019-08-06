@@ -129,11 +129,11 @@ namespace interceptor
             return vtypeString.Split('|');
         }
 
-        public static string[] GetFDData(uint startFD)
+        public static string[] GetFDData(uint startFD, string type)
         {
             string FDData = String.Empty;
 
-            string url = CRM_URL + "/vcs/cashbox_fd.htm?first=" + startFD.ToString();
+            string url = CRM_URL + "/vcs/cashbox_fd.htm?first=" + startFD.ToString() + "&type=" + type;
 
             try
             {

@@ -110,8 +110,7 @@
             <Label x:Name="currencyOutcome" Content="Р" Canvas.Left="181" Canvas.Top="263" FontSize="28"/>
             <Label x:Name="placeholderMoneyForIncome" Content="0.00" Height="36" Canvas.Left="25" Canvas.Top="224" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForIncome" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderMoneyForOutcome" Content="0.00" Height="36" Canvas.Left="25" Canvas.Top="269" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForOutcome" MouseDown="placeholder_MouseDown"/>
-            <CheckBox x:Name="setBlockCard" Content=" заблокировать безналичную оплату" Height="17" Canvas.Left="453" Tag="cardBlock" Canvas.Top="225" Width="308" Checked="settingsChange" Unchecked="settingsChange"/>
-            <CheckBox x:Name="setBlockMoney" Content=" заблокировать оплату наличными" Height="17" Canvas.Left="453" Tag="moneyBlock" Canvas.Top="245" Width="308" Checked="settingsChange" Unchecked="settingsChange"/>
+            <Button x:Name="regionReport" Content="отчёт по чекам до закрытия смены" Height="63" Canvas.Left="422" Canvas.Top="226" Width="339" FontSize="18" Click="regionReport_Click"/>
         </Canvas>
 
         <Canvas x:Name="moneyPlace" Margin="799,0,-799,0">
@@ -171,7 +170,7 @@
         </Canvas>
 
         <Canvas x:Name="loginPlace" Margin="-3,0,3,0">
-            <Label x:Name="versionLabel" Content="версия 1.e4" Height="22" Canvas.Left="252" FontSize="9" Padding="0"  Canvas.Top="242" Width="295" HorizontalContentAlignment="Right"/>
+            <Label x:Name="versionLabel" Content="версия" Height="22" Canvas.Left="252" FontSize="9" Padding="0"  Canvas.Top="242" Width="295" HorizontalContentAlignment="Right"/>
             <Button x:Name="sendLogin" Content="залогиниться" Height="42" Canvas.Top="197" Width="295" Click="sendLogin_Click" Canvas.Left="252"/>
             <TextBox x:Name="login" Height="27" Canvas.Left="252" Canvas.Top="126" Width="295" HorizontalAlignment="Left" Tag="placeholderLogin" KeyUp="withPlaceholder_KeyUp" FontSize="16"/>
             <PasswordBox x:Name="password" Height="27" Canvas.Left="252" Canvas.Top="162" Width="295" KeyDown="password_KeyDown" Tag="placeholderPass" KeyUp="withPlaceholder_KeyUp" FontSize="16"/>

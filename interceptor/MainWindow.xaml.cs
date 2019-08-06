@@ -1180,9 +1180,10 @@ namespace interceptor
             directPayment(moneyType: 2, returnSale: true);
         }
 
-        private void settingsChange(object sender, RoutedEventArgs e)
+        private void regionReport_Click(object sender, RoutedEventArgs e)
         {
-            CheckBox setting = sender as CheckBox;
+            if (!Cashbox.ReportRegion())
+                moveToErrorFromReports(Cashbox.GetResultLine());
         }
     }
 }

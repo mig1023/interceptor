@@ -98,7 +98,6 @@ namespace interceptor
         public bool ReportRegion()
         {
             Dictionary<uint, string> agreements = new Dictionary<uint, string>();
-            Dictionary<uint, string> rePrint = new Dictionary<uint, string>();
 
             atolDriver.setParam(Constants.LIBFPTR_PARAM_FN_DATA_TYPE, Constants.LIBFPTR_FNDT_LAST_DOCUMENT);
             atolDriver.fnQueryData();
@@ -123,9 +122,6 @@ namespace interceptor
 
                     string[] fd = FDData[i].Split(':');
                     agreements.Add(uint.Parse(fd[0]), fd[1]);
-
-                    if (fd.Length > 2)
-                        rePrint.Add(uint.Parse(fd[0]), fd[2]);
                 }
             }
 
@@ -153,9 +149,6 @@ namespace interceptor
                 PrintLine("дата: " + dateTime.ToString());
                 PrintLine("ФП: " + fiscalSign.ToString());
                 PrintLine("сумма чека: " + (type == 2 ? "-" : "") + sum.ToString());
-
-                if (rePrint.ContainsKey(documentNumber))
-                    PrintLine("перепечатан: " + rePrint[documentNumber]);
             }
 
             PrintLine(line: true);

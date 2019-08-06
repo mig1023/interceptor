@@ -882,15 +882,16 @@ sub cashbox_fd
 	my $vars = $self->{'VCS::Vars'};
 
 	my $first = $vars->getparam( 'first' ) || 0;
-	
-	return cash_box_output( $self, "ERR|0" ) unless $first;
+	my $type = $vars->getparam( 'type' ) || 0;
+
+	return cash_box_output( $self, "ERR|0" ) unless $first and $type;
 	
 	my $docpacks = $vars->db->selallkeys("
 		SELECT FD, DocPack.AgreementNo, Comment
 		FROM Cashboxes_regions
 		JOIN DocPack ON Cashboxes_regions.DocPackID = DocPack.ID
-		WHERE Cashboxes_regions.FD >= ?",
-		$first
+		WHERE Cashboxes_regions.FD >= ? AND RegionType = ?",
+		$first, $type
 	);
 	
 	my $response = "OK|";

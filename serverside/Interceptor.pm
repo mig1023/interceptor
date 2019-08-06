@@ -536,6 +536,8 @@ sub doc_services
 	
 	my $special_department = ( $reception ? 3 : 1 );
 	
+	my $general_service = ( $data->{ center } == 32 ? 'Консультационные услуги по оформлению документов' : 'Услуги по оформлению документов' );
+	
 	my $servsums = {
 		shipping => {
 			Name		=> 'Услуги по доставке документов на дом',
@@ -569,7 +571,7 @@ sub doc_services
 			ReceptionID	=> 1,
 		},
 		visa => {
-			Name		=> 'Услуги по оформлению документов',
+			Name		=> $general_service,
 			Quantity	=> $apcnt,
 			Price		=> sprintf( "%.2f", $vprice ),
 			VAT		=> 1,

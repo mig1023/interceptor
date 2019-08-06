@@ -893,25 +893,8 @@ sub cashbox_fd
 		$first
 	);
 	
-	for ( @$docpacks ) {
-	
-		if ( $_->{ Comment } ) {
-		
-			my @reprint = split( '-', $_->{ Comment } );
-			
-			if ( $reprint[0] eq 'REPRINT' ) {
-			
-				my ( $fd, $print ) = $vars->db->sel1("
-					SELECT FD, Print FROM Cashboxes_regions WHERE ID = ?", $reprint[1]
-				);
-				
-				$_->{ Reprint } = "$fd $print";
-			}
-		}
-	}
-	
 	my $response = "OK|";
-	$response .= $_->{ FD } . ':' . $_->{ AgreementNo } . ':' . $_->{ Reprint }  . '|' for @$docpacks;
+	$response .= $_->{ FD } . ':' . $_->{ AgreementNo } . '|' for @$docpacks;
 	$response .= s/\|$//;
 	
 	return cash_box_output( $self, $response );

@@ -89,7 +89,7 @@ namespace interceptor
         {
             PrepareDriver();
 
-            atolDriver.setParam(Constants.LIBFPTR_PARAM_REPORT_TYPE, Constants.LIBFPTR_RT_COMMODITIES_BY_DEPARTMENTS);
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_REPORT_TYPE, Constants.LIBFPTR_RT_DEPARTMENTS);
             int resultCode = atolDriver.report();
 
             return (resultCode < 0 ? false : true);

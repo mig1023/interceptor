@@ -424,17 +424,21 @@ sub get_service_code
 		'service11' 	=> '520',
 	};
 	
+	my $base = $country . $center_id->{ $center };
+	
 	if ( $serv eq 'visa' ) {
 	
 		my ( $pay_type, $agent ) = ( 1, 1 );
 		
 		my $urgance_code = ( $urgance ? '1' : '0' );
 		
-		return $country . $center_id->{ $center } . $pay_type . $urgance_code . $agent . ') ';
+		return $base . $serv_group->{ service1 } . ') ' if $center == 32;
+		
+		return $base . $pay_type . $urgance_code . $agent . ') ';
 	}
 	else {
 	
-		return $country . $center_id->{ $center } . $serv_group->{ $serv } . ') ';
+		return $base . $serv_group->{ $serv } . ') ';
 	}
 }
 
@@ -536,7 +540,7 @@ sub doc_services
 	
 	my $special_department = ( $reception ? 3 : 1 );
 	
-	my $general_service = ( $data->{ center } == 32 ? 'Консультационные услуги по оформлению документов' : 'Услуги по оформлению документов' );
+	my $general_service = ( $data->{ center } == 32 ? 'Консультационные услуги' : 'Услуги по оформлению документов' );
 	
 	my $servsums = {
 		shipping => {

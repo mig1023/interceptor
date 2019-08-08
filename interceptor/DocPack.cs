@@ -34,6 +34,8 @@ namespace interceptor
         {
             double decimalTemporary = 0;
 
+            line = line.Replace(",", ".");
+
             if (line == String.Empty)
                 decimalTemporary = 0;
             else

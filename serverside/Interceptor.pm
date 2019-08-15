@@ -534,7 +534,13 @@ sub doc_services
 	
 	my $shsum = sprintf( "%.2f", ( $data->{ newdhl } ? $dhlsum : $prices->{ shipping } * $shcnt ) );
 	
-	$smscnt = 1 if $data->{ sms_status } == 1;
+	if ( $callback ) {
+	
+		$smscnt = $data->{ sms_status };
+	}
+	else {
+		$smscnt = 1 if $data->{ sms_status } == 1;
+	}
 	
 	my $vprice = ( $data->{ urgent } ? $prices->{ 'urgent' } : $prices->{ 'visa' } );
 	

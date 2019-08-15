@@ -15,6 +15,7 @@ namespace interceptor
         public static int currentDirectPassword = 0;
         static int currentDrvPassword = 0;
         static string currentDocPack = String.Empty;
+        private bool cancelOpenReceipt = false;
 
         public DocPack manDocPackForPrinting { get; set; }
         public decimal manDocPackSumm { get; set; }
@@ -245,6 +246,17 @@ namespace interceptor
             currentDrvPassword = doc.CashierPass;
             currentDocPack = doc.AgrNumber;
 
+            if (cancelOpenReceipt)
+            {
+                cancelOpenReceipt = false;
+
+                if (!atolDriver.getParamBool(Constants.LIBFPTR_PARAM_DOCUMENT_CLOSED))
+                {
+                    atolDriver.cancelReceipt();
+                    Log.AddWithCode("поздняя отмена документа");
+                }
+            }
+
             if (MoneyType != -1)
                 doc.MoneyType = MoneyType;
 
@@ -332,9 +344,13 @@ namespace interceptor
 
             if (!atolDriver.getParamBool(Constants.LIBFPTR_PARAM_DOCUMENT_CLOSED))
             {
-                Log.AddWithCode("документ не закрылся");
+                Log.Add("документ не закрылся");
                 atolDriver.cancelReceipt();
                 Log.AddWithCode("отмена чека");
+
+                if (atolDriver.errorCode() != 0)
+                    cancelOpenReceipt = true;
+
                 return "ERR2:Документ не закрылся:" + atolDriver.errorDescription();
             }
 

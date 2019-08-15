@@ -212,7 +212,7 @@ namespace interceptor
 
             string servicesList = String.Join("|", manDocPack.ToArray());
 
-            Log.Add("запрос на чек: " + servicesList);
+            Log.Add("запрос на чек: " + servicesList, freeLine: true);
 
             string fields =
                 "login=" + login + "&pass=" + password.ToString() + "&moneytype=" + moneyType.ToString() +

@@ -497,34 +497,60 @@ namespace interceptor
             }
         }
 
-        private void addService_Click(object sender, RoutedEventArgs e)
+        private void addService_Click(object sender, MouseButtonEventArgs e)
         {
             Button Service = sender as Button;
 
-            if (Service.Name == "dhl")
-                manDocPack.Add(Service.Name + "=" + moneyForDHL.Text);
-            else if (Service.Name == "insuranceRGS")
-                manDocPack.Add(Service.Name + "=" + moneyForInsuranceRGS.Text);
-            else if (Service.Name == "insuranceKL")
-                manDocPack.Add(Service.Name + "=" + moneyForInsuranceKL.Text);
-            else
-                manDocPack.Add(Service.Name);
+            //if (Service.Name == "dhl")
+            //    manDocPack.Add(Service.Name + "=" + moneyForDHL.Text);
+            //else if (Service.Name == "insuranceRGS")
+            //    manDocPack.Add(Service.Name + "=" + moneyForInsuranceRGS.Text);
+            //else if (Service.Name == "insuranceKL")
+            //    manDocPack.Add(Service.Name + "=" + moneyForInsuranceKL.Text);
+            //else
+            //    manDocPack.Add(Service.Name);
 
-            Service.FontWeight = FontWeights.Bold;
-            Service.FontSize = 14;
+            if (e.LeftButton == MouseButtonState.Pressed)
+                ManualDocPack.AddService(Service.Name);
+
+            if (e.RightButton == MouseButtonState.Pressed)
+                ManualDocPack.SubService(Service.Name);
 
             Match ReqMatch = Regex.Match(Service.Content.ToString(), @"^([^\(]+)\s\((\d+)\)$");
+            int serviceNum = ManualDocPack.GetService(Service.Name);
 
-            if (ReqMatch.Success)
+            if (serviceNum > 0)
             {
-                int servCount = Int32.Parse(ReqMatch.Groups[2].Value);
+                Service.FontWeight = FontWeights.Bold;
+                Service.FontSize = 14;
 
-                servCount += 1;
-
-                Service.Content = ReqMatch.Groups[1].Value + " (" + servCount.ToString() + ")";
+                if (ReqMatch.Success)
+                    Service.Content = ReqMatch.Groups[1].Value + " (" + serviceNum.ToString() + ")";
+                else
+                    Service.Content = Service.Content + " (" + serviceNum.ToString() + ")";
             }
             else
-                Service.Content = Service.Content + " (1)";
+            {
+                Service.FontWeight = FontWeights.Normal;
+                Service.FontSize = 12;
+
+                if (ReqMatch.Success)
+                    Service.Content = ReqMatch.Groups[1].Value;
+            } 
+            
+            
+            
+
+            //if (ReqMatch.Success)
+            //{
+            //    int servCount = Int32.Parse(ReqMatch.Groups[2].Value);
+
+            //    servCount += 1;
+
+            //    Service.Content = ReqMatch.Groups[1].Value + " (" + servCount.ToString() + ")";
+            //}
+            //else
+            //    Service.Content = Service.Content + " (1)";
         }
 
         private void addRService_Click(object sender, RoutedEventArgs e)

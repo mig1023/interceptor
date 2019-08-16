@@ -75,6 +75,7 @@
     <Compile Include="Cashboxes\ShtrihM.cs" />
     <Compile Include="Cashboxes\Atol.cs" />
     <Compile Include="Cashboxes\Settings.cs" />
+    <Compile Include="ManualDocPack.cs" />
     <Compile Include="Server\CheckRequest.cs" />
     <Compile Include="Server\Client.cs" />
     <Compile Include="CRM.cs" />

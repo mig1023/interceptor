@@ -205,12 +205,12 @@ namespace interceptor
             return requestResult;
         }
 
-        public static string SendManDocPack(List<string> manDocPack, string login, int password, int moneyType,
-            string money, string center, string vType, string returnDate, bool reception = false)
+        public static string SendManDocPack(string login, int password, int moneyType, string money,
+            string center, string vType, string returnDate, bool reception = false)
         {
             string requestResult = String.Empty;
 
-            string servicesList = String.Join("|", manDocPack.ToArray());
+            string servicesList = ManualDocPack.AllServices();
 
             Log.Add("запрос на чек: " + servicesList, freeLine: true);
 

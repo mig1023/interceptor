@@ -41,12 +41,11 @@
             <Button x:Name="srv11" Content="распечатка анкеты" Height="41" Canvas.Left="19" Canvas.Top="389" Width="254" Tag="checkButtons" PreviewMouseDown="addService_Click" Background="#66CCFF"/>
             <Button x:Name="photosrv" Content="фото" Height="41" Canvas.Left="19" Canvas.Top="205" Width="254" Tag="checkButtons" PreviewMouseDown="addService_Click"/>
             <Button x:Name="xerox" Content="ксерокс" Height="41" Canvas.Left="19" Canvas.Top="159" Width="254" Tag="checkButtons" PreviewMouseDown="addService_Click"/>
-            <Button x:Name="dhl" Content="&lt;---- доставка DHL" Height="36" Canvas.Left="471" Canvas.Top="505" Width="296" Tag="checkButtons" PreviewMouseDown="addService_Click"/>
-            <TextBox x:Name="moneyForDHL" Height="36" Canvas.Left="335" Canvas.Top="505" Width="104" FontSize="22" Tag="placeholderDHL" KeyUp="withPlaceholder_KeyUp"/>
+            <TextBox x:Name="moneyForDHL" Height="36" Canvas.Left="393" Canvas.Top="503" Width="104" FontSize="22" Tag="placeholderDHL" KeyUp="withPlaceholder_KeyUp"/>
             <Button x:Name="printCheckMoney" Content="наличными" IsEnabled="False" Height="44" Canvas.Left="427" Canvas.Top="565" Width="105" Click="printCheckMoney_Click"/>
             <Button x:Name="printCheckCard" Content="картой" IsEnabled="False" Height="44" Canvas.Left="537" Canvas.Top="565" Width="105" Click="printCheckCard_Click"/>
             <Label x:Name="currency1" Content="Р" Canvas.Left="402" Canvas.Top="561" FontSize="28"/>
-            <Label x:Name="currency2" Content="Р" Canvas.Left="440" Canvas.Top="497" FontSize="28"/>
+            <Label x:Name="currency2" Content="Р " Canvas.Left="498" Canvas.Top="495" FontSize="28"/>
             <Button x:Name="returnSale" Content="возврат наличными" IsEnabled="False" Height="20" Canvas.Left="647" Canvas.Top="565" Width="120" Click="returnSale_Click" FontSize="11"/>
             <Button x:Name="returnSaleCard" Content="возврат на карту" IsEnabled="False" Height="20" Canvas.Left="647" Canvas.Top="589" Width="120" FontSize="11" Click="returnSaleCard_Click"/>
             <Label x:Name="total" Content="" Height="27" Canvas.Left="178" Canvas.Top="576" Width="103"/>
@@ -59,20 +58,21 @@
             <Button x:Name="srv8" Content="покупка квитанций D04" Height="41" Canvas.Left="529" Canvas.Top="205" Width="239" Tag="checkButtons" PreviewMouseDown="addService_Click" Background="#FF7FEE9D"/>
             <Button x:Name="srv9" Content="покупка квитанций D05" Height="41" Canvas.Left="529" Canvas.Top="251" Width="239" Tag="checkButtons" PreviewMouseDown="addService_Click" Background="#FF7FEE9D"/>
             <Button x:Name="srv1" Content="консультационные услуги" Height="41" Canvas.Left="278" Canvas.Top="251" Width="246" Tag="checkButtons" PreviewMouseDown="addService_Click"/>
-            <Button x:Name="insuranceRGS" Content="&lt;---- страхование РГС" Height="37" Canvas.Left="471" Canvas.Top="417" Width="296" Tag="checkButtons" PreviewMouseDown="addService_Click"/>
-            <TextBox x:Name="moneyForInsuranceRGS" Height="37" Canvas.Left="335" Canvas.Top="419" Width="104" FontSize="22" Tag="placeholderRGS" KeyUp="withPlaceholder_KeyUp"/>
-            <Label x:Name="currency3" Content="Р" Canvas.Left="440" Canvas.Top="411" FontSize="28"/>
-            <Button x:Name="insuranceKL" Content="&lt;---- страхование Капитал Лайф" Height="37" Canvas.Left="471" Canvas.Top="462" Width="296" Tag="checkButtons" PreviewMouseDown="addService_Click"/>
-            <TextBox x:Name="moneyForInsuranceKL" Height="37" Canvas.Left="335" Canvas.Top="462" Width="104" FontSize="22" Tag="placeholderKL" KeyUp="withPlaceholder_KeyUp"/>
-            <Label x:Name="currency4" Content="Р" Canvas.Left="440" Canvas.Top="454" FontSize="28"/>
+            <TextBox x:Name="moneyForInsuranceRGS" Height="37" Canvas.Left="393" Canvas.Top="417" Width="104" FontSize="22" Tag="placeholderRGS" KeyUp="withPlaceholder_KeyUp"/>
+            <Label x:Name="currency3" Content="Р" Canvas.Left="498" Canvas.Top="409" FontSize="28"/>
+            <TextBox x:Name="moneyForInsuranceKL" Height="37" Canvas.Left="393" Canvas.Top="460" Width="104" FontSize="22" Tag="placeholderKL" KeyUp="withPlaceholder_KeyUp"/>
+            <Label x:Name="currency4" Content="Р" Canvas.Left="498" Canvas.Top="452" FontSize="28"/>
             <TextBox x:Name="printSending" Height="40" Canvas.Left="20" Canvas.Top="489" Width="220" FontSize="22" Tag="placeholderPrintSending" KeyUp="withPlaceholder_KeyUp"/>
             <Label x:Name="printSendingText" Content="телефон или email" Canvas.Left="14" Canvas.Top="443" FontSize="18"/>
             <Label x:Name="printSendingText2" Content="для электронного чека" Canvas.Left="14" Canvas.Top="461" FontSize="14"/>
-            <Label x:Name="placeholderRGS" Content="0.00" Height="36" Canvas.Left="335" Canvas.Top="417" Width="49" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForInsuranceRGS" MouseDown="placeholder_MouseDown"/>
-            <Label x:Name="placeholderKL" Content="0.00" Height="36" Canvas.Left="335" Canvas.Top="460" Width="49" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForInsuranceKL" MouseDown="placeholder_MouseDown"/>
-            <Label x:Name="placeholderDHL" Content="0.00" Height="36" Canvas.Left="335" Canvas.Top="503" Width="49" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForDHL" MouseDown="placeholder_MouseDown"/>
+            <Label x:Name="placeholderRGS" Content="0.00" Height="36" Canvas.Left="393" Canvas.Top="415" Width="49" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForInsuranceRGS" MouseDown="placeholder_MouseDown"/>
+            <Label x:Name="placeholderKL" Content="0.00" Height="36" Canvas.Left="393" Canvas.Top="458" Width="49" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForInsuranceKL" MouseDown="placeholder_MouseDown"/>
+            <Label x:Name="placeholderDHL" Content="0.00" Height="36" Canvas.Left="393" Canvas.Top="501" Width="49" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForDHL" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderPrintSending" Content="mail@example.com" Height="36" Canvas.Left="20" Canvas.Top="487" Width="198" FontSize="22" Foreground="#FFD8D8D8" Tag="printSending" MouseDown="placeholder_MouseDown" />
             <Label x:Name="placeholderMoneyForCheck" Content="0.00" Height="36" Canvas.Left="286" Canvas.Top="565" Width="49" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForCheck" MouseDown="placeholder_MouseDown"/>
+            <Label x:Name="labelRGS" Content="&lt;---- страхование РГС" Height="34" Canvas.Left="522" Canvas.Top="419" Width="179" FontSize="16"/>
+            <Label x:Name="labelKL" Content="&lt;---- страхование Капитал Лайф" Height="34" Canvas.Left="522" Canvas.Top="462" Width="254" FontSize="16"/>
+            <Label x:Name="labelDHL" Content="&lt;---- доставка DHL" Height="34" Canvas.Left="522" Canvas.Top="505" Width="179" FontSize="16"/>
         </Canvas>
         <Canvas x:Name="receptionPlace" Margin="799,0,-799,0">
             <Button x:Name="backToMainFromReception" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click"/>

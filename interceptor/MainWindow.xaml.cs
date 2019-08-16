@@ -21,7 +21,7 @@ namespace interceptor
 
         public static ICashbox Cashbox = null;
 
-        List<string> manDocPack = new List<string>();
+        //List<string> manDocPack = new List<string>();
         List<Button> servButtonCleaningList = new List<Button>();
         List<Button> receptionButtonCleaningList = new List<Button>();
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
@@ -88,8 +88,7 @@ namespace interceptor
             foreach (Button button in new List<Button> {
                 closeCheck, service, service_urgent, vipsrv,
                 concil, concil_urg_r, concil_n, concil_n_age,
-                sms_status, anketasrv, printsrv,
-                photosrv, xerox, dhl, insuranceRGS, insuranceKL,
+                sms_status, anketasrv, printsrv, photosrv, xerox,
                 srv1, srv2, srv3, srv4, srv5, srv6, srv7, srv8, srv9, srv11
             })
                 servButtonCleaningList.Add(button);
@@ -153,7 +152,7 @@ namespace interceptor
 
         private void check_Click(object sender, RoutedEventArgs e)
         {
-            manDocPack.Clear();
+            ManualDocPack.CleanServices();
 
             UpdateCenters();
 
@@ -393,16 +392,6 @@ namespace interceptor
             if (!parse && !zero)
                 return fieldsErrors.valueError;
 
-            foreach (string serv in manDocPack)
-                if (serv.StartsWith(service))
-                    fieldClicked = true;
-
-            if (fieldClicked && currentSumm == 0)
-                return fieldsErrors.emptySummError;
-
-            if (!fieldClicked && currentSumm > 0)
-                return fieldsErrors.clickError;
-
             return fieldsErrors.noError;
         }
 
@@ -462,13 +451,27 @@ namespace interceptor
             return false;
         }
 
+        private void AddedNonPricedService(TextBox field, string service)
+        {
+            decimal summ = DocPack.manualParseDecimal(field.Text);
+
+            if (summ > 0)
+                ManualDocPack.AddService(service + "=" + summ.ToString());
+        }
+
+        private void AddNonPricedServices()
+        {
+            AddedNonPricedService(moneyForDHL, "dhl");
+            AddedNonPricedService(moneyForInsuranceRGS, "insuranceRGS");
+            AddedNonPricedService(moneyForInsuranceKL, "insuranceKL");
+        }
+
         private void сloseCheck_Click(object sender, RoutedEventArgs e)
         {
-            if (CheckEmptyServicesFail())
-                return;
+            AddNonPricedServices();
 
             string sendingSuccess = CRM.SendManDocPack(
-                manDocPack, login.Text, CRM.password, 1, moneyForCheck.Text,
+                login.Text, CRM.password, 1, moneyForCheck.Text,
                 allCenters.Text, allVisas.Text, returnDate.Text
             );
 
@@ -537,27 +540,14 @@ namespace interceptor
                 if (ReqMatch.Success)
                     Service.Content = ReqMatch.Groups[1].Value;
             } 
-            
-            
-            
-
-            //if (ReqMatch.Success)
-            //{
-            //    int servCount = Int32.Parse(ReqMatch.Groups[2].Value);
-
-            //    servCount += 1;
-
-            //    Service.Content = ReqMatch.Groups[1].Value + " (" + servCount.ToString() + ")";
-            //}
-            //else
-            //    Service.Content = Service.Content + " (1)";
         }
 
         private void addRService_Click(object sender, RoutedEventArgs e)
         {
             Button Service = sender as Button;
 
-            manDocPack.Add(Service.Name.TrimEnd('R'));
+            //manDocPack.Add(Service.Name.TrimEnd('R'));
+            ManualDocPack.AddService(Service.Name.TrimEnd('R'));
 
             Service.FontWeight = FontWeights.Bold;
             Service.FontSize = 20;
@@ -606,8 +596,6 @@ namespace interceptor
 
             BlockCheckButton(block: false);
 
-            manDocPack.Clear();
-
             foreach (TextBox text in new List<TextBox> { moneyForDHL, moneyForCheck, moneyForInsuranceRGS,
                 moneyForInsuranceKL, directPaymentSending, priceForDirectPayment
             })
@@ -633,7 +621,7 @@ namespace interceptor
 
             BlockRCheckButton(block: false);
 
-            manDocPack.Clear();
+            ManualDocPack.CleanServices();
 
             moneyForRCheck.Text = String.Empty;
             total.Content = String.Empty;
@@ -863,7 +851,7 @@ namespace interceptor
 
         private void reception_Click(object sender, RoutedEventArgs e)
         {
-            manDocPack.Clear();
+            ManualDocPack.CleanServices();
 
             UpdateCenters();
 
@@ -919,7 +907,7 @@ namespace interceptor
             string appNumberClean = Regex.Replace(appNumber.Text, @"[^0-9]", String.Empty);
 
             string sendingSuccess = CRM.SendManDocPack(
-                manDocPack, login.Text, CRM.password, 1, moneyForRCheck.Text,
+                login.Text, CRM.password, 1, moneyForRCheck.Text,
                 appNumberClean, allVisas.Text, returnDate.Text, reception: true
             );
 

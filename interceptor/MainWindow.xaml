@@ -80,10 +80,10 @@
             <TextBox x:Name="moneyForRCheck" IsEnabled="False" Height="40" Canvas.Left="287" TextWrapping="Wrap" Canvas.Top="323" Width="117" FontSize="22" Tag="placeholderMoneyForRCheck" KeyUp="withPlaceholder_KeyUp"/>
             <Button x:Name="printRCheckMoney" Content="наличными" IsEnabled="False" Height="40" Canvas.Left="427" Canvas.Top="323" Width="171" Click="printRCheckMoney_Click"/>
             <Button x:Name="printRCheckCard" Content="картой" IsEnabled="False" Height="40" Canvas.Left="605" Canvas.Top="323" Width="171" Click="printRCheckCard_Click"/>
-            <Button x:Name="anketasrvR" IsEnabled="False" Content="заполнение анкеты" Height="77" Canvas.Left="180" Canvas.Top="209" Width="262" Click="addRService_Click" Background="#FFF7FFA5" FontSize="18"/>
-            <Button x:Name="printsrvR" IsEnabled="False" Content="распечатка" Height="77" Canvas.Left="585" Canvas.Top="209" Width="191" Click="addRService_Click" Background="#FFF19292" FontSize="18"/>
-            <Button x:Name="photosrvR" IsEnabled="False" Content="фото" Height="77" Canvas.Left="447" Canvas.Top="209" Width="133" Click="addRService_Click" Background="#FF7FEE9D" FontSize="18"/>
-            <Button x:Name="xeroxR" IsEnabled="False" Content="ксерокс" Height="77" Canvas.Left="19" Canvas.Top="209" Width="156" Click="addRService_Click" Background="#FFA5BDFF" FontSize="18"/>
+            <Button x:Name="anketasrvR" IsEnabled="False" Content="заполнение анкеты" Height="77" Canvas.Left="180" Canvas.Top="209" Width="262" PreviewMouseDown="addService_Click" Background="#FFF7FFA5" FontSize="18"/>
+            <Button x:Name="printsrvR" IsEnabled="False" Content="распечатка" Height="77" Canvas.Left="585" Canvas.Top="209" Width="191" PreviewMouseDown="addService_Click" Background="#FFF19292" FontSize="18"/>
+            <Button x:Name="photosrvR" IsEnabled="False" Content="фото" Height="77" Canvas.Left="447" Canvas.Top="209" Width="133" PreviewMouseDown="addService_Click" Background="#FF7FEE9D" FontSize="18"/>
+            <Button x:Name="xeroxR" IsEnabled="False" Content="ксерокс" Height="77" Canvas.Left="19" Canvas.Top="209" Width="156" PreviewMouseDown="addService_Click" Background="#FFA5BDFF" FontSize="18"/>
             <Label x:Name="currencyR1" Content="Р" Canvas.Left="403" Canvas.Top="317" FontSize="28"/>
             <Label x:Name="totalR" Content="" Height="27" Canvas.Left="179" Canvas.Top="332" Width="103"/>
             <TextBox x:Name="appNumber" Height="38" Canvas.Left="376" Text="" Canvas.Top="110" Width="248" FontSize="24" Tag="placeholderAppNum" KeyUp="withPlaceholder_KeyUp"/>

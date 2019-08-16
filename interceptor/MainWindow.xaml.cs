@@ -21,7 +21,6 @@ namespace interceptor
 
         public static ICashbox Cashbox = null;
 
-        //List<string> manDocPack = new List<string>();
         List<Button> servButtonCleaningList = new List<Button>();
         List<Button> receptionButtonCleaningList = new List<Button>();
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
@@ -378,79 +377,6 @@ namespace interceptor
                 serv.IsEnabled = false;
         }
 
-        private fieldsErrors CheckServiceClickOrEmptyFail(string service, TextBox field)
-        {
-            double currentSumm = 0;
-            bool fieldClicked = false;
-
-            CultureInfo cultureInfo = new CultureInfo("en-US", true);
-
-            bool parse = Double.TryParse(field.Text, NumberStyles.Any, cultureInfo.NumberFormat, out currentSumm);
-
-            bool zero = String.IsNullOrEmpty(field.Text);
-
-            if (!parse && !zero)
-                return fieldsErrors.valueError;
-
-            return fieldsErrors.noError;
-        }
-
-        private void CheckEmptyServiceFail(string service, string fieldName, TextBox field,
-            string fieldEmptyOld, string fieldClickOld, string fieldParsedOld,
-            out string fieldEmptyNew, out string fieldClickNew, out string fieldParsedNew)
-        {
-            string tmpFieldEmpty = fieldEmptyOld;
-            string tmpFieldNotClick = fieldClickOld;
-            string tmpFieldNotParsed = fieldParsedOld;
-
-            switch (CheckServiceClickOrEmptyFail(service, field))
-            {
-                case fieldsErrors.emptySummError:
-                    tmpFieldEmpty += (String.IsNullOrEmpty(tmpFieldEmpty) ? String.Empty : ", ") + fieldName;
-                    break;
-                case fieldsErrors.clickError:
-                    tmpFieldNotClick += (String.IsNullOrEmpty(tmpFieldNotClick) ? String.Empty : ", ") + fieldName;
-                    break;
-                case fieldsErrors.valueError:
-                    tmpFieldNotParsed += (String.IsNullOrEmpty(tmpFieldNotParsed) ? String.Empty : ", ") + fieldName;
-                    break;
-            }
-
-            fieldEmptyNew = tmpFieldEmpty;
-            fieldClickNew = tmpFieldNotClick;
-            fieldParsedNew = tmpFieldNotParsed;
-        }
-
-        private bool CheckEmptyServicesFail()
-        {
-            string errorField = String.Empty;
-            string errorEmpty = String.Empty;
-            string errorClick = String.Empty;
-
-            CheckEmptyServiceFail("insuranceRGS", "'страховка РГС'", moneyForInsuranceRGS,
-                errorEmpty, errorClick, errorField, out errorEmpty, out errorClick, out errorField);
-
-            CheckEmptyServiceFail("insuranceKL", "'страховка Капитал Лайф'", moneyForInsuranceKL,
-                errorEmpty, errorClick, errorField, out errorEmpty, out errorClick, out errorField);
-
-            CheckEmptyServiceFail("dhl", "'доставка'", moneyForDHL, errorEmpty,
-                errorClick, errorField, out errorEmpty, out errorClick, out errorField);
-
-            if (!String.IsNullOrEmpty(errorField))
-                if (MessageBoxes.ServFieldFail(errorField) != MessageBoxResult.Yes)
-                    return true;
-
-            if (!String.IsNullOrEmpty(errorEmpty))
-                if (MessageBoxes.ServSummEmpty(errorEmpty) != MessageBoxResult.Yes)
-                    return true;
-
-            if (!String.IsNullOrEmpty(errorClick))
-                if (MessageBoxes.ServNoClick(errorClick) != MessageBoxResult.Yes)
-                    return true;
-
-            return false;
-        }
-
         private void AddedNonPricedService(TextBox field, string service)
         {
             decimal summ = DocPack.manualParseDecimal(field.Text);
@@ -504,28 +430,23 @@ namespace interceptor
         {
             Button Service = sender as Button;
 
-            //if (Service.Name == "dhl")
-            //    manDocPack.Add(Service.Name + "=" + moneyForDHL.Text);
-            //else if (Service.Name == "insuranceRGS")
-            //    manDocPack.Add(Service.Name + "=" + moneyForInsuranceRGS.Text);
-            //else if (Service.Name == "insuranceKL")
-            //    manDocPack.Add(Service.Name + "=" + moneyForInsuranceKL.Text);
-            //else
-            //    manDocPack.Add(Service.Name);
+            bool rService = (Service.Name.EndsWith("R") ? true : false);
+
+            string serviceName = Service.Name.TrimEnd('R');
 
             if (e.LeftButton == MouseButtonState.Pressed)
-                ManualDocPack.AddService(Service.Name);
+                ManualDocPack.AddService(serviceName);
 
             if (e.RightButton == MouseButtonState.Pressed)
-                ManualDocPack.SubService(Service.Name);
+                ManualDocPack.SubService(serviceName);
 
             Match ReqMatch = Regex.Match(Service.Content.ToString(), @"^([^\(]+)\s\((\d+)\)$");
-            int serviceNum = ManualDocPack.GetService(Service.Name);
+            int serviceNum = ManualDocPack.GetService(serviceName);
 
             if (serviceNum > 0)
             {
                 Service.FontWeight = FontWeights.Bold;
-                Service.FontSize = 14;
+                Service.FontSize = (rService ? 20 : 14);
 
                 if (ReqMatch.Success)
                     Service.Content = ReqMatch.Groups[1].Value + " (" + serviceNum.ToString() + ")";
@@ -535,18 +456,17 @@ namespace interceptor
             else
             {
                 Service.FontWeight = FontWeights.Normal;
-                Service.FontSize = 12;
+                Service.FontSize = (rService ? 18 : 12);
 
                 if (ReqMatch.Success)
                     Service.Content = ReqMatch.Groups[1].Value;
             } 
         }
 
-        private void addRService_Click(object sender, RoutedEventArgs e)
+        private void addRService_Click(object sender, MouseButtonEventArgs e)
         {
             Button Service = sender as Button;
 
-            //manDocPack.Add(Service.Name.TrimEnd('R'));
             ManualDocPack.AddService(Service.Name.TrimEnd('R'));
 
             Service.FontWeight = FontWeights.Bold;
@@ -1091,6 +1011,7 @@ namespace interceptor
             Server.ShowActivity(busy: false);
 
             CleanCheck();
+            appNumber_KeyUp(null, null);
         }
 
         private void paymentPrepared()

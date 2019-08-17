@@ -471,7 +471,7 @@ namespace interceptor
 
                     Button removeService = new Button();
                     removeService.Click += removeService_Click;
-                    removeService.Name = Service.Name + "_revome";
+                    removeService.Name = Service.Name + "_remove";
                     removeService.Width = 40;
                     removeService.Height = Service.Height;
                     removeService.Content = "X";
@@ -493,7 +493,7 @@ namespace interceptor
             }
             else
             {
-                Button removeService = mainGrid.FindName(Service.Name + "_revome") as Button;
+                Button removeService = mainGrid.FindName(Service.Name + "_remove") as Button;
                 Canvas buttonPlace = (rService ? receptionPlace : checkPlace);
                 buttonPlace.Children.Remove(removeService);
                 buttonPlace.UnregisterName(removeService.Name);

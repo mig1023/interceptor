@@ -340,6 +340,13 @@ namespace interceptor
                 moveToErrorFromReports(Cashbox.GetResultLine());
         }
 
+        private void SupplBlock(Button button, bool block)
+        {
+            Button removeService = mainGrid.FindName(button.Name + "_remove") as Button;
+            if (removeService != null)
+                removeService.IsEnabled = block;
+        }
+
         private void BlockCheckButton(bool block)
         {
             moneyForCheck.IsEnabled = block;
@@ -350,7 +357,10 @@ namespace interceptor
                 button.IsEnabled = block;
 
             foreach (Button serv in servButtonCleaningList)
+            {
                 serv.IsEnabled = !block;
+                SupplBlock(serv, !block);
+            }
 
             foreach (ComboBox combobox in new List<ComboBox>() { allVisas, allCenters, allVisas, allCenters })
                 combobox.IsEnabled = !block;
@@ -517,21 +527,7 @@ namespace interceptor
                 }
             }
             else
-            {
                 CleanButton(Service, currentCanvas);
-                //Button removeService = mainGrid.FindName(Service.Name + "_remove") as Button;
-                //currentCanvas.Children.Remove(removeService);
-                //currentCanvas.UnregisterName(removeService.Name);
-
-                //Label labelService = Service.FindName(Service.Name + "_num") as Label;
-                //currentCanvas.Children.Remove(labelService);
-                //currentCanvas.UnregisterName(labelService.Name);
-
-                //Service.Width += 70;
-                //Canvas.SetLeft(Service, Canvas.GetLeft(Service) - 30);
-
-                //Service.FontWeight = FontWeights.Normal;
-            } 
         }
 
         private void CleanButton(Button service, Canvas currentCanvas)

@@ -454,14 +454,10 @@ namespace interceptor
 
             bool rService = (Service.Name.EndsWith("R") ? true : false);
 
-            //if (e.LeftButton == MouseButtonState.Pressed)
-            //    ManualDocPack.AddService(serviceName);
-
-            //if (e.RightButton == MouseButtonState.Pressed)
-            //    ManualDocPack.SubService(serviceName);
-
             Match ReqMatch = Regex.Match(Service.Content.ToString(), @"^([^\(]+)\s\((\d+)\)$");
             int serviceNum = ManualDocPack.GetService(Service.Name.TrimEnd('R'));
+
+            Canvas currentCanvas = (rService ? receptionPlace : checkPlace);
 
             if (serviceNum > 0)
             {
@@ -475,33 +471,76 @@ namespace interceptor
                     removeService.Width = 40;
                     removeService.Height = Service.Height;
                     removeService.Content = "X";
+                    removeService.FontSize = 20;
                     removeService.Tag = Service.Tag;
+                    removeService.Background = Service.Background;
                     removeService.Margin = new Thickness(Canvas.GetLeft(Service) + Service.Width, Canvas.GetTop(Service), 0, 0);
 
-                    Canvas buttonPlace = (rService ? receptionPlace : checkPlace);
-                    buttonPlace.Children.Add(removeService);
-                    buttonPlace.RegisterName(removeService.Name, removeService);
+                    currentCanvas.Children.Add(removeService);
+                    currentCanvas.RegisterName(removeService.Name, removeService);
                 }
 
                 Service.FontWeight = FontWeights.Bold;
-                Service.FontSize = (rService ? 20 : 14);
+                //Service.FontSize = (rService ? 20 : 14);
 
-                if (ReqMatch.Success)
-                    Service.Content = ReqMatch.Groups[1].Value + " (" + serviceNum.ToString() + ")";
+                //if (ReqMatch.Success)
+                //    Service.Content = ReqMatch.Groups[1].Value + " (" + serviceNum.ToString() + ")";
+                //else
+                //    Service.Content = Service.Content + " (" + serviceNum.ToString() + ")";
+
+                Label labelService = Service.FindName(Service.Name + "_num") as Label;
+                if (labelService == null)
+                {
+                    Label newLabel = new Label();
+                    newLabel.Name = Service.Name + "_num";
+                    newLabel.Content = serviceNum.ToString();
+                    newLabel.FontSize = 30;
+                    //newLabel.Margin = new Thickness(Canvas.GetLeft(Service) - 2, Canvas.GetTop(Service) - 1, 0, 0);
+
+                    Service.Width -= 30;
+                    Canvas.SetLeft(Service, Canvas.GetLeft(Service) + 30);
+
+                    Canvas.SetLeft(newLabel, Canvas.GetLeft(Service) - 32);
+                    Canvas.SetTop(newLabel, Canvas.GetTop(Service) - 6);
+
+                    currentCanvas.Children.Add(newLabel);
+                    currentCanvas.RegisterName(newLabel.Name, newLabel);
+                }
                 else
-                    Service.Content = Service.Content + " (" + serviceNum.ToString() + ")";
+                {
+                    if (serviceNum >= 10)
+                    {
+                        //labelService.Margin = new Thickness(Canvas.GetLeft(Service) - 2, Canvas.GetTop(Service) + 3, 0, 0);
+                        labelService.FontSize = 18;
+                        Canvas.SetLeft(labelService, Canvas.GetLeft(Service) - 32);
+                        Canvas.SetTop(labelService, Canvas.GetTop(Service) + 3);
+                    }
+                    else
+                    {
+                        //labelService.Margin = new Thickness(Canvas.GetLeft(Service) - 2, Canvas.GetTop(Service) - 1, 0, 0);
+                        labelService.FontSize = 30;
+                        Canvas.SetLeft(labelService, Canvas.GetLeft(Service) - 32);
+                        Canvas.SetTop(labelService, Canvas.GetTop(Service) - 6);
+                    }
+
+                    labelService.Content = serviceNum.ToString();
+                }
             }
             else
             {
                 Button removeService = mainGrid.FindName(Service.Name + "_remove") as Button;
-                Canvas buttonPlace = (rService ? receptionPlace : checkPlace);
-                buttonPlace.Children.Remove(removeService);
-                buttonPlace.UnregisterName(removeService.Name);
+                currentCanvas.Children.Remove(removeService);
+                currentCanvas.UnregisterName(removeService.Name);
 
-                Service.Width += 40;
+                Label labelService = Service.FindName(Service.Name + "_num") as Label;
+                currentCanvas.Children.Remove(labelService);
+                currentCanvas.UnregisterName(labelService.Name);
+
+                Service.Width += 70;
+                Canvas.SetLeft(Service, Canvas.GetLeft(Service) - 30);
 
                 Service.FontWeight = FontWeights.Normal;
-                Service.FontSize = (rService ? 18 : 12);
+                //Service.FontSize = (rService ? 18 : 12);
 
                 if (ReqMatch.Success)
                     Service.Content = ReqMatch.Groups[1].Value;

@@ -426,25 +426,63 @@ namespace interceptor
             }
         }
 
-        private void addService_Click(object sender, MouseButtonEventArgs e)
+        private void removeService_Click(object sender, RoutedEventArgs e)
+        {
+            Button Service = sender as Button;
+
+            string serviceName = Service.Name.Replace("_remove", "");
+
+            ManualDocPack.SubService(serviceName.TrimEnd('R'));
+
+            Button serviceButton = mainGrid.FindName(serviceName) as Button;
+
+            modifyService_Click(serviceButton, e, remove: true);
+        }
+
+        private void addService_Click(object sender, RoutedEventArgs e)
+        {
+            Button Service = sender as Button;
+
+            ManualDocPack.AddService(Service.Name.TrimEnd('R'));
+
+            modifyService_Click(sender, e);
+        }
+
+        private void modifyService_Click(object sender, RoutedEventArgs e, bool remove = false)
         {
             Button Service = sender as Button;
 
             bool rService = (Service.Name.EndsWith("R") ? true : false);
 
-            string serviceName = Service.Name.TrimEnd('R');
+            //if (e.LeftButton == MouseButtonState.Pressed)
+            //    ManualDocPack.AddService(serviceName);
 
-            if (e.LeftButton == MouseButtonState.Pressed)
-                ManualDocPack.AddService(serviceName);
-
-            if (e.RightButton == MouseButtonState.Pressed)
-                ManualDocPack.SubService(serviceName);
+            //if (e.RightButton == MouseButtonState.Pressed)
+            //    ManualDocPack.SubService(serviceName);
 
             Match ReqMatch = Regex.Match(Service.Content.ToString(), @"^([^\(]+)\s\((\d+)\)$");
-            int serviceNum = ManualDocPack.GetService(serviceName);
+            int serviceNum = ManualDocPack.GetService(Service.Name.TrimEnd('R'));
 
             if (serviceNum > 0)
             {
+                if ((serviceNum == 1) && !remove)
+                {
+                    Service.Width -= 40;
+
+                    Button removeService = new Button();
+                    removeService.Click += removeService_Click;
+                    removeService.Name = Service.Name + "_revome";
+                    removeService.Width = 40;
+                    removeService.Height = Service.Height;
+                    removeService.Content = "X";
+                    removeService.Tag = Service.Tag;
+                    removeService.Margin = new Thickness(Canvas.GetLeft(Service) + Service.Width, Canvas.GetTop(Service), 0, 0);
+
+                    Canvas buttonPlace = (rService ? receptionPlace : checkPlace);
+                    buttonPlace.Children.Add(removeService);
+                    buttonPlace.RegisterName(removeService.Name, removeService);
+                }
+
                 Service.FontWeight = FontWeights.Bold;
                 Service.FontSize = (rService ? 20 : 14);
 
@@ -455,35 +493,19 @@ namespace interceptor
             }
             else
             {
+                Button removeService = mainGrid.FindName(Service.Name + "_revome") as Button;
+                Canvas buttonPlace = (rService ? receptionPlace : checkPlace);
+                buttonPlace.Children.Remove(removeService);
+                buttonPlace.UnregisterName(removeService.Name);
+
+                Service.Width += 40;
+
                 Service.FontWeight = FontWeights.Normal;
                 Service.FontSize = (rService ? 18 : 12);
 
                 if (ReqMatch.Success)
                     Service.Content = ReqMatch.Groups[1].Value;
             } 
-        }
-
-        private void addRService_Click(object sender, MouseButtonEventArgs e)
-        {
-            Button Service = sender as Button;
-
-            ManualDocPack.AddService(Service.Name.TrimEnd('R'));
-
-            Service.FontWeight = FontWeights.Bold;
-            Service.FontSize = 20;
-
-            Match ReqMatch = Regex.Match(Service.Content.ToString(), @"^([^\d]+)\s\((\d+)\)");
-
-            if (ReqMatch.Success)
-            {
-                int servCount = Int32.Parse(ReqMatch.Groups[2].Value);
-
-                servCount += 1;
-
-                Service.Content = ReqMatch.Groups[1].Value + " (" + servCount.ToString() + ")";
-            }
-            else
-                Service.Content = Service.Content + " (1)";
         }
 
         private void allCenters_SelectionChanged(object sender, SelectionChangedEventArgs e)

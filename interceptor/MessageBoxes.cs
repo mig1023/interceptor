@@ -99,5 +99,23 @@ namespace interceptor
                 "Открытый чек успешно анулирован", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning
             );
         }
+
+        static public void ShowReceiptContent(DocPack doc)
+        {
+            string receipt = String.Empty;
+
+            foreach (Service service in doc.Services)
+            {
+                decimal sum = service.Price * service.Quantity;
+                receipt += service.Name + "\n" + service.Price + " x " + service.Quantity + " = " + sum + "\n\n";
+            }
+                
+
+            receipt += "\nИТОГО: " + doc.Total.ToString() + "\n";
+
+            MessageBoxResult msg = MessageBox.Show(
+                receipt, "Чек", MessageBoxButton.OK, MessageBoxImage.Information
+            );
+        }
     }
 }

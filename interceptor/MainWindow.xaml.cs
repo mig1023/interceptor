@@ -1189,5 +1189,10 @@ namespace interceptor
             if (!Cashbox.ReportRegion(reportButton.Tag.ToString()))
                 moveToErrorFromReports(Cashbox.GetResultLine());
         }
+
+        private void totalContent_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageBoxes.ShowReceiptContent(Cashbox.manDocPackForPrinting);
+        }
     }
 }

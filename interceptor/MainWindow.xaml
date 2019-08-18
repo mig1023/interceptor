@@ -73,6 +73,7 @@
             <Label x:Name="labelRGS" Content="&lt;---- страхование РГС" Height="34" Canvas.Left="522" Canvas.Top="419" Width="179" FontSize="16"/>
             <Label x:Name="labelKL" Content="&lt;---- страхование Капитал Лайф" Height="34" Canvas.Left="522" Canvas.Top="462" Width="254" FontSize="16"/>
             <Label x:Name="labelDHL" Content="&lt;---- доставка DHL" Height="34" Canvas.Left="522" Canvas.Top="505" Width="179" FontSize="16"/>
+            <Label x:Name="totalContent" Content="подробнее" Height="29" Canvas.Left="178" Canvas.Top="603" Width="103" MouseDown="totalContent_MouseDown"/>
         </Canvas>
         <Canvas x:Name="receptionPlace" Margin="799,0,-799,0">
             <Button x:Name="backToMainFromReception" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click"/>

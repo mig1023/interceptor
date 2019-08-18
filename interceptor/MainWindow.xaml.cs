@@ -597,6 +597,8 @@ namespace interceptor
             foreach(Label label in new List<Label> { total, totalR })
                 label.Content = String.Empty;
 
+            totalContent.Visibility = Visibility.Hidden;
+
             returnDate.Text = String.Empty;
 
             // CleanRCheck
@@ -611,8 +613,6 @@ namespace interceptor
             ManualDocPack.CleanServices();
 
             moneyForRCheck.Text = String.Empty;
-            total.Content = String.Empty;
-            totalR.Content = String.Empty;
             appNumber.Text = String.Empty;
 
             // Direct

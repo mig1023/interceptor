@@ -40,52 +40,6 @@ namespace interceptor
             );
         }
 
-        static public MessageBoxResult ServSummEmpty(string services)
-        {
-            bool many = (services.IndexOf(',') >= 0 ? true : false);
-
-            return MessageBoxWithLog(
-                (
-                    many ?
-                    "Выбраны услуги " + services + ". Но суммы оставлены нулевыми" :
-                    "Выбрана услуга " + services + ". Но сумма оставлена нулевой"
-                ) + ". Продолжить?"
-            );
-        }
-
-        static public MessageBoxResult ServNoClick(string services)
-        {
-            bool many = (services.IndexOf(',') >= 0 ? true : false);
-
-            return MessageBoxWithLog(
-                (
-                    many ?
-                    "Указаны суммы для " + services + ". Но эти услуги не выбраны" :
-                    "Указана сумма для " + services + ". Но эта услуга не выбрана"
-                ) + ". Продолжить?"
-            );
-        }
-
-        static public MessageBoxResult ServFieldFail(string services)
-        {
-            bool many = (services.IndexOf(',') >= 0 ? true : false);
-
-            return MessageBoxWithLog(
-                (
-                    many ? 
-                    "В полях " + services + " указаны нечитаемые значения" :
-                    "В поле " + services + " указано нечитаемое значение"
-                ) + ". Продолжить?"
-            );
-        }
-
-        static public void WaitingForResetting()
-        {
-            MessageBoxResult msg = MessageBox.Show(
-                "Перенастройка кассы может несколько минут!\nОперация начнётся после нажатия на кнопку OK", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning
-            );
-        }
-
         static public void ChangeMessage(string change)
         {
             MessageBoxResult msg = MessageBox.Show(
@@ -109,7 +63,6 @@ namespace interceptor
                 decimal sum = service.Price * service.Quantity;
                 receipt += service.Name + "\n" + service.Price + " x " + service.Quantity + " = " + sum + "\n\n";
             }
-                
 
             receipt += "\nИТОГО: " + doc.Total.ToString() + "\n";
 

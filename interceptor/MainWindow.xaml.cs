@@ -183,9 +183,13 @@ namespace interceptor
             allCenters.Items.Clear();
 
             foreach (string center_name in CRM.GetAllCenters(login.Text))
+            {
                 allCenters.Items.Add(center_name);
-
+                allRCenters.Items.Add(center_name);
+            }
+                
             allCenters.SelectedIndex = 0;
+            allRCenters.SelectedIndex = 0;
         }
 
         private void UpdateVTypes()
@@ -377,15 +381,24 @@ namespace interceptor
         private void BlockRCheckButton(bool block)
         {
             moneyForRCheck.IsEnabled = (block ? true : false);
+            noAppReception.IsEnabled = (block ? false : true);
             appNumber.IsEnabled = (block ? false : true);
             appNumberClean.IsEnabled = (block ? false : true);
+            printRCheckMoney.IsEnabled = (block ? true : false);
+            allRCenters.IsEnabled = (block ? false : true);
 
-            foreach (Button button in new List<Button>() { printRCheckMoney, printRCheckCard })
-                button.IsEnabled = (block ? true : false);
+            if (!(noAppReception.IsChecked ?? false))
+                allRCenters.IsEnabled = false;
+            else
+                appNumber.IsEnabled = false;
 
             foreach (Button serv in receptionButtonCleaningList)
             {
-                serv.IsEnabled = false;
+                if (noAppReception.IsChecked ?? false)
+                    serv.IsEnabled = true;
+                else
+                    serv.IsEnabled = false;
+
                 SupplBlock(serv, !block);
             }
         }
@@ -896,13 +909,37 @@ namespace interceptor
                 placeholderAppNum.Visibility = Visibility.Hidden;
         }
 
+        private void checkBox_Checked(object sender, RoutedEventArgs e)
+        {
+            appNumber.Text = String.Empty;
+            appNumber.IsEnabled = false;
+            placeholderAppNum.Visibility = Visibility.Hidden;
+            allRCenters.IsEnabled = true;
+
+            foreach (Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR })
+                button.IsEnabled = true;
+        }
+
+        private void checkBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            appNumber.IsEnabled = true;
+            placeholderAppNum.Visibility = Visibility.Visible;
+            allRCenters.IsEnabled = false;
+
+            foreach (Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR })
+                button.IsEnabled = false;
+        }
+
         private void closeRCheck_Click(object sender, RoutedEventArgs e)
         {
             string appNumberClean = Regex.Replace(appNumber.Text, @"[^0-9]", String.Empty);
 
+            bool noAppointment = noAppReception.IsChecked ?? false;
+            string center = (noAppointment ? allRCenters.Text : appNumberClean);
+
             string sendingSuccess = CRM.SendManDocPack(
-                login.Text, CRM.password, 1, moneyForRCheck.Text,
-                appNumberClean, allVisas.Text, returnDate.Text, reception: true
+                login.Text, CRM.password, 1, moneyForRCheck.Text, center, allVisas.Text, returnDate.Text,
+                reception: true, withoutApp: noAppointment
             );
 
             string[] sendingData = sendingSuccess.Split('|');
@@ -945,7 +982,7 @@ namespace interceptor
 
             CheckError(result, receptionPlace);
 
-            if (result[0] == "OK")
+            if (result[0] == "OK" && !(noAppReception.IsChecked ?? false))
                 getAppInfoAndPrintRecepeit(Cashbox.manDocPackSumm.ToString());
         }
 

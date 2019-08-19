@@ -206,7 +206,7 @@ namespace interceptor
         }
 
         public static string SendManDocPack(string login, int password, int moneyType, string money,
-            string center, string vType, string returnDate, bool reception = false)
+            string center, string vType, string returnDate, bool reception = false, bool withoutApp = false)
         {
             string requestResult = String.Empty;
 
@@ -217,7 +217,8 @@ namespace interceptor
             string fields =
                 "login=" + login + "&pass=" + password.ToString() + "&moneytype=" + moneyType.ToString() +
                 "&money=" + money + "&center=" + center + "&vtype=" + vType + "&rdate=" + returnDate +
-                "&services=" + servicesList + "&callback=" + GetMyIP() + "&r=" + (reception ? "1" : "0");
+                "&services=" + servicesList + "&callback=" + GetMyIP() + "&r=" + (reception ? "1" : "0") +
+                "&n=" + (withoutApp ? "1" : "0");
 
             string request = fields + "&crc=" + CheckRequest.CreateMD5(fields, notOrd: true);
 

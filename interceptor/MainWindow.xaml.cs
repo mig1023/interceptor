@@ -92,7 +92,7 @@ namespace interceptor
             })
                 servButtonCleaningList.Add(button);
 
-            foreach (Button button in new List<Button> { anketasrvR, printsrvR, photosrvR, xeroxR })
+            foreach (Button button in new List<Button> { anketasrvR, printsrvR, photosrvR, xeroxR, srv11R })
                 receptionButtonCleaningList.Add(button);
 
             login.Focus();
@@ -378,7 +378,7 @@ namespace interceptor
                 button.IsEnabled = block;
         }
 
-        private void BlockRCheckButton(bool block)
+        private void BlockRCheckButton(bool block, bool checkClosed = false)
         {
             moneyForRCheck.IsEnabled = (block ? true : false);
             noAppReception.IsEnabled = (block ? false : true);
@@ -392,13 +392,16 @@ namespace interceptor
             else
                 appNumber.IsEnabled = false;
 
+            if (checkClosed)
+                block = true;
+            else if (noAppReception.IsChecked ?? false)
+                block = false;
+            else
+                block = true;
+
             foreach (Button serv in receptionButtonCleaningList)
             {
-                if (noAppReception.IsChecked ?? false)
-                    serv.IsEnabled = true;
-                else
-                    serv.IsEnabled = false;
-
+                serv.IsEnabled = !block;
                 SupplBlock(serv, !block);
             }
         }
@@ -510,6 +513,13 @@ namespace interceptor
                 Label labelService = Service.FindName(Service.Name + "_num") as Label;
                 double topPositionBig = (rService ? -14 : 6);
                 double topPositionLtl = (rService ? 24 : 3);
+
+                if (Service.Name == "srv11R" || Service.Name == "anketasrvR")
+                {
+                    topPositionBig = 8;
+                    topPositionLtl = 0;
+                }
+                    
 
                 if (labelService == null)
                 {
@@ -896,11 +906,10 @@ namespace interceptor
             appNumber.Text = Regex.Replace(appNumber.Text, @"[^0-9/]", String.Empty);
             string appNumberClean = Regex.Replace(appNumber.Text, @"[^0-9]", String.Empty);
 
-            if ((appNumberClean.Length == 15) || (appNumberClean.Length == 9))
-                foreach(Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR })
+            foreach (Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR, srv11R })
+                if ((appNumberClean.Length == 15) || (appNumberClean.Length == 9))
                     button.IsEnabled = true;
-            else
-                foreach (Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR })
+                else
                     button.IsEnabled = false;
 
             if (String.IsNullOrEmpty(appNumber.Text))
@@ -916,7 +925,7 @@ namespace interceptor
             placeholderAppNum.Visibility = Visibility.Hidden;
             allRCenters.IsEnabled = true;
 
-            foreach (Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR })
+            foreach (Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR, srv11R })
                 button.IsEnabled = true;
         }
 
@@ -926,7 +935,7 @@ namespace interceptor
             placeholderAppNum.Visibility = Visibility.Visible;
             allRCenters.IsEnabled = false;
 
-            foreach (Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR })
+            foreach (Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR, srv11R })
                 button.IsEnabled = false;
         }
 
@@ -948,14 +957,14 @@ namespace interceptor
             {
                 Log.Add("успешно закрыт чек ресепшена");
 
-                BlockRCheckButton(block: true);
+                BlockRCheckButton(block: true, checkClosed: true);
             }
             else if (sendingData[0] == "WARNING")
             {
                 Log.Add("некоторые услуги из чека не имеют цены: " + sendingData[1]);
 
                 if (MessageBoxes.NullInServices(sendingData[1]) == MessageBoxResult.Yes)
-                    BlockRCheckButton(block: true);
+                    BlockRCheckButton(block: true, checkClosed: true);
                 else
                     CleanCheck();
             }

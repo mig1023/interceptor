@@ -11,9 +11,7 @@
             <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="382" Canvas.Top="304" MouseDown="switchOn_MouseDown"/>
             <Canvas x:Name="activity" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="401" Canvas.Top="304"  MouseDown="switchOn_MouseDown"/>
             <Button x:Name="check" Content="чек вручную" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Click="check_Click" Canvas.Left="207" Canvas.Top="304"/>
-            <Button x:Name="status" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Click="status_Click" Canvas.Left="32" Canvas.Top="304">
-                <TextBlock TextAlignment="Center">отчёты, повторы,<LineBreak/>настройки</TextBlock>
-            </Button>
+            <Button x:Name="status" Content="отчёты, повторы" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Click="status_Click" Canvas.Left="32" Canvas.Top="304"/>
             <Button x:Name="reception" Content="ресепшен" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Canvas.Left="420" Canvas.Top="304" Click="reception_Click"/>
             <Button x:Name="money" Content="прямая оплата" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Canvas.Left="595" Canvas.Top="304" Click="money_Click"/>
             <Image x:Name="statusImage" Height="150" Canvas.Left="44" Canvas.Top="89" Width="150" Source="Images\reports.png" PreviewMouseDown="statusImage_PreviewMouseDown"/>
@@ -80,9 +78,10 @@
             <Button x:Name="closeRCheck" Content="подытог" Height="42" Canvas.Left="19" Canvas.Top="323" Width="155" Click="closeRCheck_Click"  FontSize="16"/>
             <TextBox x:Name="moneyForRCheck" IsEnabled="False" Height="40" Canvas.Left="287" TextWrapping="Wrap" Canvas.Top="323" Width="117" FontSize="22" Tag="placeholderMoneyForRCheck" KeyUp="withPlaceholder_KeyUp"/>
             <Button x:Name="printRCheckMoney" Content="наличными" IsEnabled="False" Height="40" Canvas.Left="427" Canvas.Top="323" Width="349" Click="printRCheckMoney_Click" FontSize="16"/>
-            <Button x:Name="anketasrvR" IsEnabled="False" Content="заполнение анкеты" Height="77" Canvas.Left="180" Canvas.Top="209" Width="262" Click="addService_Click" Background="#FFF7FFA5" FontSize="18"/>
-            <Button x:Name="printsrvR" IsEnabled="False" Content="распечатка" Height="77" Canvas.Left="585" Canvas.Top="209" Width="191" Click="addService_Click" Background="#FFF19292" FontSize="18"/>
-            <Button x:Name="photosrvR" IsEnabled="False" Content="фото" Height="77" Canvas.Left="447" Canvas.Top="209" Width="133" Click="addService_Click" Background="#FF7FEE9D" FontSize="18"/>
+            <Button x:Name="anketasrvR" Content="заполнение анкеты" IsEnabled="False" Height="36" Canvas.Left="180" Canvas.Top="209" Width="266" Click="addService_Click" Background="#FFF7FFA5" FontSize="18"/>
+            <Button x:Name="srv11R" Content="распечатка анкеты" IsEnabled="False" Height="36" Canvas.Left="180" Canvas.Top="250" Width="266" Click="addService_Click" Background="#FF7CCFFF" FontSize="18"/>
+            <Button x:Name="printsrvR" IsEnabled="False" Content="распечатка" Height="77" Canvas.Left="589" Canvas.Top="209" Width="187" Click="addService_Click" Background="#FFF19292" FontSize="18"/>
+            <Button x:Name="photosrvR" IsEnabled="False" Content="фото" Height="77" Canvas.Left="451" Canvas.Top="209" Width="133" Click="addService_Click" Background="#FF7FEE9D" FontSize="18"/>
             <Button x:Name="xeroxR" IsEnabled="False" Content="ксерокс" Height="77" Canvas.Left="19" Canvas.Top="209" Width="156" Click="addService_Click" Background="#FFA5BDFF" FontSize="18"/>
             <Label x:Name="currencyR1" Content="Р" Canvas.Left="403" Canvas.Top="317" FontSize="28"/>
             <Label x:Name="totalR" Content="" Height="27" Canvas.Left="179" Canvas.Top="325" Width="103"/>
@@ -92,7 +91,16 @@
             <Label x:Name="placeholderAppNum" Content="001/2019/01/01/0001" Height="36" Canvas.Left="376" Canvas.Top="90" Width="222" FontSize="22" Foreground="#FFD8D8D8" Tag="appNumber" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderMoneyForRCheck" Content="0.00" Height="36" Canvas.Left="287" Canvas.Top="323" Width="49" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForRCheck" MouseDown="placeholder_MouseDown" />
             <Label x:Name="totalRContent" Content="подробнее" Height="29" Canvas.Left="179" Canvas.Top="337" Width="103" Visibility="Hidden" MouseDown="totalContent_MouseDown" Foreground="#FFA8A8A8"/>
-            <CheckBox x:Name="noAppReception" Content="нет записи" Height="24" Canvas.Left="378" Canvas.Top="138" Width="246" Checked="checkBox_Checked" Unchecked="checkBox_Unchecked"/>
+            <CheckBox x:Name="noAppReception" Content="нет записи" Height="19" Canvas.Left="401" Canvas.Top="145" Width="106" Checked="checkBox_Checked" Unchecked="checkBox_Unchecked" RenderTransformOrigin="0.5,0.5">
+                <CheckBox.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="1.45" ScaleY="1.45"/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </CheckBox.RenderTransform>
+            </CheckBox>
             <ComboBox x:Name="allRCenters" Height="25" Canvas.Left="544" Canvas.Top="10" Width="232" IsEnabled="False"/>
         </Canvas>
 

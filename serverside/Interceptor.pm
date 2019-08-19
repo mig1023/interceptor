@@ -1211,12 +1211,12 @@ sub cash_box_mandocpack
 	my $data = { direct_docpack => 1 };
 	
 	$param->{ $_ } = ( $vars->getparam( $_ ) || '' )
-		for ( 'login', 'pass', 'moneytype', 'money', 'services', 'center', 'vtype', 'callback', 'rdate', 'crc', 'r' );
+		for ( 'login', 'pass', 'moneytype', 'money', 'services', 'center', 'vtype', 'callback', 'rdate', 'crc', 'r', 'n' );
 
 	my $request_check = "login=" . $param->{ login } . "&pass=" . $param->{ pass } .
 		"&moneytype=" . $param->{ moneytype } . "&money=" . $param->{ money } . "&center=" . $param->{ center } .
 		"&vtype=" . $param->{ vtype } . "&rdate=" . $param->{ rdate } . "&services=" . $param->{ services } .
-		"&callback=" . $param->{ callback } . "&r=" . ( $param->{ r } ? '1' : '0' );
+		"&callback=" . $param->{ callback } . "&r=" . ( $param->{ r } ? '1' : '0' ) . "&n=" . ( $param->{ n } ? '1' : '0' );
 
 	my $md5 = uc( md5_crc_with_secret_code( $request_check, 'not_ord' ) );
 
@@ -1227,7 +1227,7 @@ sub cash_box_mandocpack
 		
 	my $center_id = undef;
 
-	if ( $param->{ r } && ( length( $param->{ center } ) == 15 ) ) {
+	if ( $param->{ r } && !$param->{ n } && ( length( $param->{ center } ) == 15 ) ) {
 	
 		$param->{ center } =~ /^(\d{3})/;
 		
@@ -1239,7 +1239,7 @@ sub cash_box_mandocpack
 			SELECT ID FROM Branches WHERE ID = ?", $center_id_line
 		);
 	}
-	elsif ( $param->{ r } && ( length( $param->{ center } ) == 9 ) ) {
+	elsif ( $param->{ r } && !$param->{ n } && ( length( $param->{ center } ) == 9 ) ) {
 	
 		$center_id = $vars->db->sel1("
 			SELECT Branches.ID
@@ -1252,6 +1252,7 @@ sub cash_box_mandocpack
 		);
 	}
 	else {
+
 		$center_id = $vars->db->sel1("
 			SELECT ID FROM Branches WHERE BName = ?", $param->{ center }
 		);

@@ -492,6 +492,9 @@ namespace interceptor
                 Service.FontWeight = FontWeights.Bold;
 
                 Label labelService = Service.FindName(Service.Name + "_num") as Label;
+                double topPositionBig = (rService ? -14 : 6);
+                double topPositionLtl = (rService ? 24 : 3);
+
                 if (labelService == null)
                 {
                     Label newLabel = new Label();
@@ -503,7 +506,7 @@ namespace interceptor
                     Canvas.SetLeft(Service, Canvas.GetLeft(Service) + 30);
 
                     Canvas.SetLeft(newLabel, Canvas.GetLeft(Service) - 32);
-                    Canvas.SetTop(newLabel, Canvas.GetTop(Service) - 6);
+                    Canvas.SetTop(newLabel, Canvas.GetTop(Service) - topPositionBig);
 
                     currentCanvas.Children.Add(newLabel);
                     currentCanvas.RegisterName(newLabel.Name, newLabel);
@@ -514,13 +517,13 @@ namespace interceptor
                     {
                         labelService.FontSize = 18;
                         Canvas.SetLeft(labelService, Canvas.GetLeft(Service) - 32);
-                        Canvas.SetTop(labelService, Canvas.GetTop(Service) + 3);
+                        Canvas.SetTop(labelService, Canvas.GetTop(Service) + topPositionLtl);
                     }
                     else
                     {
                         labelService.FontSize = 30;
                         Canvas.SetLeft(labelService, Canvas.GetLeft(Service) - 32);
-                        Canvas.SetTop(labelService, Canvas.GetTop(Service) - 6);
+                        Canvas.SetTop(labelService, Canvas.GetTop(Service) - topPositionBig);
                     }
 
                     labelService.Content = serviceNum.ToString();

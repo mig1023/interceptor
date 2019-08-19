@@ -21,7 +21,7 @@
             <Image x:Name="receptionImage" Height="150" Canvas.Left="428" Canvas.Top="89" Width="150" Source="Images\reception.png" PreviewMouseDown="receptionImage_PreviewMouseDown"/>
             <Image x:Name="moneyImage" Height="150" Canvas.Left="603" Canvas.Top="89" Width="150" Source="Images\money.png" PreviewMouseDown="moneyImage_PreviewMouseDown" />
         </Canvas>
-        <Canvas x:Name="checkPlace" Margin="1626,0,-1626,-250" Background="White">
+        <Canvas x:Name="checkPlace" Margin="802,0,-802,-250" Background="White">
             <Button x:Name="backToMainFromCheck" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromCheck_Click"/>
             <Button x:Name="closeCheck" Content="подытог" Height="44" Canvas.Left="19" Canvas.Top="565" Width="155" Click="сloseCheck_Click" FontSize="16"/>
             <TextBox x:Name="moneyForCheck" IsEnabled="False" Height="40" Canvas.Left="286" Canvas.Top="567" Width="117" FontSize="22" Tag="placeholderMoneyForCheck" KeyUp="withPlaceholder_KeyUp"/>
@@ -75,7 +75,7 @@
             <Label x:Name="labelDHL" Content="&lt;---- доставка DHL" Height="34" Canvas.Left="522" Canvas.Top="505" Width="179" FontSize="16"/>
             <Label x:Name="totalContent" Content="подробнее" Height="29" Canvas.Left="179" Canvas.Top="580" Width="103" Visibility="Hidden" MouseDown="totalContent_MouseDown" Foreground="#FFA8A8A8"/>
         </Canvas>
-        <Canvas x:Name="receptionPlace" Margin="799,0,-799,0">
+        <Canvas x:Name="receptionPlace" Margin="1598,0,-1598,0">
             <Button x:Name="backToMainFromReception" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click"/>
             <Button x:Name="closeRCheck" Content="подытог" Height="42" Canvas.Left="19" Canvas.Top="323" Width="155" Click="closeRCheck_Click"  FontSize="16"/>
             <TextBox x:Name="moneyForRCheck" IsEnabled="False" Height="40" Canvas.Left="287" TextWrapping="Wrap" Canvas.Top="323" Width="117" FontSize="22" Tag="placeholderMoneyForRCheck" KeyUp="withPlaceholder_KeyUp"/>
@@ -86,12 +86,13 @@
             <Button x:Name="photosrvR" IsEnabled="False" Content="фото" Height="77" Canvas.Left="447" Canvas.Top="209" Width="133" Click="addService_Click" Background="#FF7FEE9D" FontSize="18"/>
             <Button x:Name="xeroxR" IsEnabled="False" Content="ксерокс" Height="77" Canvas.Left="19" Canvas.Top="209" Width="156" Click="addService_Click" Background="#FFA5BDFF" FontSize="18"/>
             <Label x:Name="currencyR1" Content="Р" Canvas.Left="403" Canvas.Top="317" FontSize="28"/>
-            <Label x:Name="totalR" Content="" Height="27" Canvas.Left="179" Canvas.Top="332" Width="103"/>
+            <Label x:Name="totalR" Content="" Height="27" Canvas.Left="179" Canvas.Top="325" Width="103"/>
             <TextBox x:Name="appNumber" Height="38" Canvas.Left="376" Text="" Canvas.Top="110" Width="248" FontSize="24" Tag="placeholderAppNum" KeyUp="withPlaceholder_KeyUp"/>
             <Label x:Name="appNumberLabel" Content="номер записи или паспорта" Height="34" Canvas.Left="130" Canvas.Top="114" Width="241" FontSize="18"/>
             <Button x:Name="appNumberClean" Content="Х" Height="38" Canvas.Left="633" Canvas.Top="110" Width="29" Click="appNumberClean_Click"/>
             <Label x:Name="placeholderAppNum" Content="001/2019/01/01/0001" Height="36" Canvas.Left="376" Canvas.Top="110" Width="222" FontSize="22" Foreground="#FFD8D8D8" Tag="appNumber" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderMoneyForRCheck" Content="0.00" Height="36" Canvas.Left="287" Canvas.Top="323" Width="49" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForRCheck" MouseDown="placeholder_MouseDown" />
+            <Label x:Name="totalRContent" Content="подробнее" Height="29" Canvas.Left="179" Canvas.Top="337" Width="103" Visibility="Hidden" MouseDown="totalContent_MouseDown" Foreground="#FFA8A8A8"/>
         </Canvas>
 
         <Canvas x:Name="statusPlace" Margin="-794,5,794,-5">

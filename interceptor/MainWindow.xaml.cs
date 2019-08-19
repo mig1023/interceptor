@@ -384,7 +384,10 @@ namespace interceptor
                 button.IsEnabled = (block ? true : false);
 
             foreach (Button serv in receptionButtonCleaningList)
+            {
                 serv.IsEnabled = false;
+                SupplBlock(serv, !block);
+            }
         }
 
         private void AddedNonPricedService(TextBox field, string service)
@@ -601,6 +604,7 @@ namespace interceptor
                 label.Content = String.Empty;
 
             totalContent.Visibility = Visibility.Hidden;
+            totalRContent.Visibility = Visibility.Hidden;
 
             returnDate.Text = String.Empty;
 

@@ -10,17 +10,17 @@
         <Canvas x:Name="mainPlace" Margin="2,-400,-2,400">
             <Canvas x:Name="switchOn" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="382" Canvas.Top="304" MouseDown="switchOn_MouseDown"/>
             <Canvas x:Name="activity" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="14" Background="Gray" Canvas.Left="401" Canvas.Top="304"  MouseDown="switchOn_MouseDown"/>
-            <Button x:Name="check" Content="чек вручную" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Click="check_Click" Canvas.Left="207" Canvas.Top="304"/>
-            <Button x:Name="status" Content="отчёты, повторы" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Click="status_Click" Canvas.Left="32" Canvas.Top="304"/>
-            <Button x:Name="reception" Content="ресепшен" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Canvas.Left="420" Canvas.Top="304" Click="reception_Click"/>
-            <Button x:Name="money" Content="прямая оплата" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Canvas.Left="595" Canvas.Top="304" Click="money_Click"/>
+            <Button x:Name="check" Content="чек вручную" FontSize="14" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Click="check_Click" Canvas.Left="207" Canvas.Top="304"/>
+            <Button x:Name="status" Content="отчёты, повторы" FontSize="14" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Click="status_Click" Canvas.Left="32" Canvas.Top="304"/>
+            <Button x:Name="reception" Content="ресепшен" FontSize="14" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Canvas.Left="420" Canvas.Top="304" Click="reception_Click"/>
+            <Button x:Name="money" Content="прямая оплата" FontSize="14" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="170" Canvas.Left="595" Canvas.Top="304" Click="money_Click"/>
             <Image x:Name="statusImage" Height="150" Canvas.Left="44" Canvas.Top="89" Width="150" Source="Images\reports.png" PreviewMouseDown="statusImage_PreviewMouseDown"/>
             <Image x:Name="checkImage" Height="150" Canvas.Left="219" Canvas.Top="89" Width="150" Source="Images\invoice.png" PreviewMouseDown="checkImage_PreviewMouseDown"/>
             <Image x:Name="receptionImage" Height="150" Canvas.Left="428" Canvas.Top="89" Width="150" Source="Images\reception.png" PreviewMouseDown="receptionImage_PreviewMouseDown"/>
             <Image x:Name="moneyImage" Height="150" Canvas.Left="603" Canvas.Top="89" Width="150" Source="Images\money.png" PreviewMouseDown="moneyImage_PreviewMouseDown" />
         </Canvas>
         <Canvas x:Name="checkPlace" Margin="802,0,-802,-250" Background="White">
-            <Button x:Name="backToMainFromCheck" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromCheck_Click"/>
+            <Button x:Name="backToMainFromCheck" Content="назад" FontSize="14" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromCheck_Click"/>
             <Button x:Name="closeCheck" Content="подытог" Height="44" Canvas.Left="19" Canvas.Top="565" Width="155" Click="сloseCheck_Click" FontSize="16"/>
             <TextBox x:Name="moneyForCheck" IsEnabled="False" Height="40" Canvas.Left="286" Canvas.Top="567" Width="117" FontSize="22" Tag="placeholderMoneyForCheck" KeyUp="withPlaceholder_KeyUp"/>
             <ComboBox x:Name="allCenters" Height="25" Canvas.Left="203" Canvas.Top="16" Width="232" SelectionChanged="allCenters_SelectionChanged"/>
@@ -40,8 +40,8 @@
             <Button x:Name="photosrv" Content="фото" Height="41" Canvas.Left="19" Canvas.Top="205" Width="254" Tag="checkButtons" Click="addService_Click"/>
             <Button x:Name="xerox" Content="ксерокс" Height="41" Canvas.Left="19" Canvas.Top="159" Width="254" Tag="checkButtons" Click="addService_Click"/>
             <TextBox x:Name="moneyForDHL" Height="36" Canvas.Left="393" Canvas.Top="503" Width="104" FontSize="22" Tag="placeholderDHL" KeyUp="withPlaceholder_KeyUp"/>
-            <Button x:Name="printCheckMoney" Content="наличными" IsEnabled="False" Height="44" Canvas.Left="427" Canvas.Top="565" Width="105" Click="printCheckMoney_Click"/>
-            <Button x:Name="printCheckCard" Content="картой" IsEnabled="False" Height="44" Canvas.Left="537" Canvas.Top="565" Width="105" Click="printCheckCard_Click"/>
+            <Button x:Name="printCheckMoney" Content="наличными" FontSize="14" IsEnabled="False" Height="44" Canvas.Left="427" Canvas.Top="565" Width="105" Click="printCheckMoney_Click"/>
+            <Button x:Name="printCheckCard" Content="картой" FontSize="14" IsEnabled="False" Height="44" Canvas.Left="537" Canvas.Top="565" Width="105" Click="printCheckCard_Click"/>
             <Label x:Name="currency1" Content="Р" Canvas.Left="402" Canvas.Top="561" FontSize="28"/>
             <Label x:Name="currency2" Content="Р " Canvas.Left="498" Canvas.Top="495" FontSize="28"/>
             <Button x:Name="returnSale" Content="возврат наличными" IsEnabled="False" Height="20" Canvas.Left="647" Canvas.Top="565" Width="120" Click="returnSale_Click" FontSize="11"/>
@@ -73,8 +73,8 @@
             <Label x:Name="labelDHL" Content="&lt;---- доставка DHL" Height="34" Canvas.Left="522" Canvas.Top="505" Width="179" FontSize="16"/>
             <Label x:Name="totalContent" Content="подробнее" Height="29" Canvas.Left="179" Canvas.Top="580" Width="103" Visibility="Hidden" MouseDown="totalContent_MouseDown" Foreground="#FFA8A8A8"/>
         </Canvas>
-        <Canvas x:Name="receptionPlace" Margin="1598,0,-1598,0">
-            <Button x:Name="backToMainFromReception" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click"/>
+        <Canvas x:Name="receptionPlace" Margin="804,0,-804,0">
+            <Button x:Name="backToMainFromReception" Content="назад" FontSize="14" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click"/>
             <Button x:Name="closeRCheck" Content="подытог" Height="42" Canvas.Left="19" Canvas.Top="323" Width="155" Click="closeRCheck_Click"  FontSize="16"/>
             <TextBox x:Name="moneyForRCheck" IsEnabled="False" Height="40" Canvas.Left="287" TextWrapping="Wrap" Canvas.Top="323" Width="117" FontSize="22" Tag="placeholderMoneyForRCheck" KeyUp="withPlaceholder_KeyUp"/>
             <Button x:Name="printRCheckMoney" Content="наличными" IsEnabled="False" Height="40" Canvas.Left="427" Canvas.Top="323" Width="349" Click="printRCheckMoney_Click" FontSize="16"/>
@@ -105,28 +105,28 @@
         </Canvas>
 
         <Canvas x:Name="statusPlace" Margin="-794,5,794,-5">
-            <Button x:Name="backToMainFromStatus" Content="назад" Height="42" Canvas.Left="606" Canvas.Top="321" Width="155" Click="backToMainFromStatus_Click"/>
+            <Button x:Name="backToMainFromStatus" Content="назад" FontSize="14" Height="42" Canvas.Left="606" Canvas.Top="321" Width="155" Click="backToMainFromStatus_Click"/>
             <Button x:Name="reportCleaning" Content="отчёт с гашением" Height="63" Canvas.Left="21" Canvas.Top="20" Width="186" Click="reportCleaning_Click" FontSize="18"/>
-            <Button x:Name="repeatDocument" Content="повтор чека" Height="63" Canvas.Left="21" Canvas.Top="121" Width="242" Click="repeatDocument_Click" FontSize="18"/>
+            <Button x:Name="repeatDocument" Content="повтор чека" Height="63" Canvas.Left="21" Canvas.Top="119" Width="242" Click="repeatDocument_Click" FontSize="18"/>
             <Button x:Name="reportWithoutCleaning" Content="отчёт без гашения" Height="63" Canvas.Left="212" Canvas.Top="20" Width="192" Click="reportWithoutCleaning_Click" FontSize="18"/>
             <Button x:Name="reportDepartment" Content="отчёт по отделам" Height="63" Canvas.Left="409" Canvas.Top="20" Width="180" Click="reportDepartment_Click" FontSize="18"/>
             <Button x:Name="reportTax" Content="отчёт по налогам" Height="63" Canvas.Left="594" Canvas.Top="20" Width="167" Click="reportTax_Click" FontSize="18"/>
-            <Button x:Name="continueDocument" Content="продолжить печать" Height="63" Canvas.Left="268" Canvas.Top="121" Width="242" Click="continueDocument_Click" FontSize="18"/>
-            <Button x:Name="cancelDocument" Content="аннулировать чек" Height="63" Canvas.Left="515" Canvas.Top="121" Width="246" Click="cancelDocument_Click" FontSize="18"/>
-            <Button x:Name="cashIncome" Content="&lt;---- внесение в кассу" Height="37" Canvas.Left="211" Canvas.Top="226" Width="197" Click="cashIncome_Click"/>
-            <TextBox x:Name="moneyForIncome" Height="37" Canvas.Left="25" Canvas.Top="226" Width="156" FontSize="22" Tag="placeholderMoneyForIncome" KeyUp="withPlaceholder_KeyUp"/>
-            <Label x:Name="currencyIncome" Content="Р" Canvas.Left="181" Canvas.Top="218" FontSize="28"/>
-            <Button x:Name="cashOutcome" Content="&lt;---- выплата из кассы" Height="37" Canvas.Left="211" Canvas.Top="271" Width="197" Click="cashOutcome_Click"/>
-            <TextBox x:Name="moneyForOutcome" Height="37" Canvas.Left="25" Canvas.Top="271" Width="156" FontSize="22" Tag="placeholderMoneyForOutcome" KeyUp="withPlaceholder_KeyUp"/>
-            <Label x:Name="currencyOutcome" Content="Р" Canvas.Left="181" Canvas.Top="263" FontSize="28"/>
-            <Label x:Name="placeholderMoneyForIncome" Content="0.00" Height="36" Canvas.Left="25" Canvas.Top="224" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForIncome" MouseDown="placeholder_MouseDown"/>
-            <Label x:Name="placeholderMoneyForOutcome" Content="0.00" Height="36" Canvas.Left="25" Canvas.Top="269" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForOutcome" MouseDown="placeholder_MouseDown"/>
-            <Button x:Name="regionReportMsk" Content="отчёт для кассы регионов (мск)" Height="37" Canvas.Left="422" Canvas.Top="226" Width="339" Tag="1" FontSize="18" Click="regionReport_Click"/>
-            <Button x:Name="regionReportSpb" Content="отчёт для кассы регионов (спб)" Height="37" Canvas.Left="422" Canvas.Top="271" Width="339" Tag="2" FontSize="18" Click="regionReport_Click"/>
+            <Button x:Name="continueDocument" Content="продолжить печать" Height="63" Canvas.Left="268" Canvas.Top="119" Width="242" Click="continueDocument_Click" FontSize="18"/>
+            <Button x:Name="cancelDocument" Content="аннулировать чек" Height="63" Canvas.Left="515" Canvas.Top="119" Width="246" Click="cancelDocument_Click" FontSize="18"/>
+            <Button x:Name="cashIncome" Content="&lt;---- внесение в кассу" Height="37" Canvas.Left="211" Canvas.Top="220" Width="197" Click="cashIncome_Click"/>
+            <TextBox x:Name="moneyForIncome" Height="37" Canvas.Left="25" Canvas.Top="220" Width="156" FontSize="22" Tag="placeholderMoneyForIncome" KeyUp="withPlaceholder_KeyUp"/>
+            <Label x:Name="currencyIncome" Content="Р" Canvas.Left="181" Canvas.Top="212" FontSize="28"/>
+            <Button x:Name="cashOutcome" Content="&lt;---- выплата из кассы" Height="37" Canvas.Left="211" Canvas.Top="265" Width="197" Click="cashOutcome_Click"/>
+            <TextBox x:Name="moneyForOutcome" Height="37" Canvas.Left="25" Canvas.Top="265" Width="156" FontSize="22" Tag="placeholderMoneyForOutcome" KeyUp="withPlaceholder_KeyUp"/>
+            <Label x:Name="currencyOutcome" Content="Р" Canvas.Left="181" Canvas.Top="257" FontSize="28"/>
+            <Label x:Name="placeholderMoneyForIncome" Content="0.00" Height="36" Canvas.Left="25" Canvas.Top="218" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForIncome" MouseDown="placeholder_MouseDown"/>
+            <Label x:Name="placeholderMoneyForOutcome" Content="0.00" Height="36" Canvas.Left="25" Canvas.Top="263" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForOutcome" MouseDown="placeholder_MouseDown"/>
+            <Button x:Name="regionReportMsk" Content="отчёт для кассы регионов (мск)" Height="37" Canvas.Left="422" Canvas.Top="220" Width="339" Tag="1" FontSize="18" Click="regionReport_Click"/>
+            <Button x:Name="regionReportSpb" Content="отчёт для кассы регионов (спб)" Height="37" Canvas.Left="422" Canvas.Top="265" Width="339" Tag="2" FontSize="18" Click="regionReport_Click"/>
         </Canvas>
 
         <Canvas x:Name="moneyPlace" Margin="799,0,-799,0">
-            <Button x:Name="backToMainFromMoneyPlace" Content="назад" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromMoneyPlace_Click"/>
+            <Button x:Name="backToMainFromMoneyPlace" Content="назад" FontSize="14" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromMoneyPlace_Click"/>
             <ComboBox x:Name="section" Height="38" Canvas.Left="230" Canvas.Top="87" Width="506" IsReadOnly="True" IsEditable="True" FontSize="24" Tag="placeholderSection" SelectionChanged="directSelectionChanged">
                 <ComboBoxItem Name="section1" Tag="1">услуги сервисные</ComboBoxItem>
                 <ComboBoxItem Name="section2" Tag="2">консульский сбор</ComboBoxItem>
@@ -183,18 +183,18 @@
 
         <Canvas x:Name="loginPlace" Margin="-3,0,3,0">
             <Label x:Name="versionLabel" Content="версия" Height="22" Canvas.Left="252" FontSize="9" Padding="0"  Canvas.Top="242" Width="295" HorizontalContentAlignment="Right"/>
-            <Button x:Name="sendLogin" Content="залогиниться" Height="42" Canvas.Top="197" Width="295" Click="sendLogin_Click" Canvas.Left="252"/>
+            <Button x:Name="sendLogin" Content="залогиниться" FontSize="14" Height="42" Canvas.Top="197" Width="295" Click="sendLogin_Click" Canvas.Left="252"/>
             <TextBox x:Name="login" Height="27" Canvas.Left="252" Canvas.Top="126" Width="295" HorizontalAlignment="Left" Tag="placeholderLogin" KeyUp="withPlaceholder_KeyUp" FontSize="16"/>
             <PasswordBox x:Name="password" Height="27" Canvas.Left="252" Canvas.Top="162" Width="295" KeyDown="password_KeyDown" Tag="placeholderPass" KeyUp="withPlaceholder_KeyUp" FontSize="16"/>
             <Label x:Name="placeholderLogin" Content="введите vms логин" Height="26" Canvas.Left="254" Canvas.Top="126" Width="117" Foreground="#FFD8D8D8" Tag="login" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderPass" Content="введите vms пароль" Height="24" Canvas.Left="255" Canvas.Top="162" Width="123" Foreground="#FFD8D8D8" Tag="password" MouseDown="placeholder_MouseDown"/>
         </Canvas>
         <Canvas x:Name="loginFail" Margin="0,397,0,-397" Background="#FFFF4E4E" Visibility="Hidden">
-            <Button x:Name="backToLoginFromFail" Content="попробовать ещё раз" Height="42" Canvas.Left="59" Canvas.Top="164" Width="211" Click="returnFromError_Click"/>
+            <Button x:Name="backToLoginFromFail" Content="попробовать ещё раз" FontSize="14" Height="42" Canvas.Left="59" Canvas.Top="164" Width="211" Click="returnFromError_Click"/>
             <Label x:Name="loginFailText" Content="Неизвестная ошибка" Height="33" Canvas.Left="52" Canvas.Top="126" Width="709" FontSize="16"/>
         </Canvas>
-        <Canvas x:Name="systemInfoPlace" Margin="2,-412,-2,412">
-            <Button x:Name="backToMainFromInfo" Content="назад" Height="42" Canvas.Left="608" Canvas.Top="139" Width="155" Click="backToMainFromInfo_Click"/>
+        <Canvas x:Name="systemInfoPlace" Margin="2,-414,-2,414">
+            <Button x:Name="backToMainFromInfo" Content="назад" FontSize="14" Height="42" Canvas.Left="608" Canvas.Top="139" Width="155" Click="backToMainFromInfo_Click"/>
             <Label x:Name="statusl_label" Content="версия приложения" Height="25" Canvas.Left="25" Canvas.Top="20" Width="122"/>
             <Label x:Name="status2_label" Content="адрес приложения" Height="25" Canvas.Left="25" Canvas.Top="40" Width="122"/>
             <Label x:Name="status3_label" Content="адрес vms" Height="25" Canvas.Left="25" Canvas.Top="60" Width="122"/>
@@ -214,7 +214,7 @@
             <ListBox x:Name="logBox" Height="173" Canvas.Left="25" Canvas.Top="190" Width="738"/>
         </Canvas>
         <Canvas x:Name="cashboxSettingsFail" Margin="0,399,0,-399" Background="#FFFF4E4E" Visibility="Hidden">
-            <Button x:Name="backToLoginFromSettingsFial" Content="вернуться" Height="42" Canvas.Left="59" Canvas.Top="294" Width="211" Click="backToLoginFromSettingsFial_Click"/>
+            <Button x:Name="backToLoginFromSettingsFial" Content="вернуться" FontSize="14" Height="42" Canvas.Left="59" Canvas.Top="294" Width="211" Click="backToLoginFromSettingsFial_Click"/>
             <Label x:Name="settingText1" Content="В настройках кассы обнаружены проблемы следующих полей:" Height="33" Canvas.Left="52" Canvas.Top="34" Width="480" FontSize="16"/>
             <ListBox x:Name="settingText2" Height="46" Canvas.Left="59" Canvas.Top="68" Width="674" Background="#FFFF7272"/>
             <Label x:Name="settingText3" Content="Для работы программы необходима перенастройка этих полей." Height="33" Canvas.Left="52" Canvas.Top="114" Width="480" FontSize="16"/>
@@ -226,7 +226,7 @@
         </Canvas>
         <Canvas x:Name="needUpdateRestart" Margin="-4,399,4,-399" Background="#FFFF4E4E" Visibility="Hidden">
             <Label x:Name="updateText" Content="Програме необходимо обновиться. В процессе обновления программа будет перезапущена" Height="80" Canvas.Left="52" Canvas.Top="146" Width="709" FontSize="16"/>
-            <Button x:Name="updateButton" Content="обновить и перезапустить" Height="42" Canvas.Left="59" Canvas.Top="184" Width="211" Click="updateButton_Click"/>
+            <Button x:Name="updateButton" Content="обновить и перезапустить" FontSize="14" Height="42" Canvas.Left="59" Canvas.Top="184" Width="211" Click="updateButton_Click"/>
         </Canvas>
     </Grid>
 

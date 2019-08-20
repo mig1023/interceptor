@@ -339,7 +339,7 @@ namespace interceptor
             while (atolDriver.checkDocumentClosed() < 0)
             {
                 Log.AddWithCode("проверка статуса чека");
-                return "ERR2:Не удалось проверить:" + atolDriver.errorDescription();
+                return "ERR2:Не удалось проверить - " + atolDriver.errorDescription();
             }
 
             if (!atolDriver.getParamBool(Constants.LIBFPTR_PARAM_DOCUMENT_CLOSED))
@@ -351,7 +351,16 @@ namespace interceptor
                 if (atolDriver.errorCode() != 0)
                     cancelOpenReceipt = true;
 
-                return "ERR2:Документ не закрылся:" + atolDriver.errorDescription();
+                return "ERR2:Документ не закрылся - " + atolDriver.errorDescription();
+            }
+
+            string fdForRegion = String.Empty;
+
+            if (doc.Region)
+            {
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_FN_DATA_TYPE, Constants.LIBFPTR_FNDT_LAST_RECEIPT);
+                atolDriver.fnQueryData();
+                fdForRegion = ":" + atolDriver.getParamInt(Constants.LIBFPTR_PARAM_DOCUMENT_NUMBER).ToString();
             }
 
             if (!atolDriver.getParamBool(Constants.LIBFPTR_PARAM_DOCUMENT_PRINTED))
@@ -362,17 +371,8 @@ namespace interceptor
 
                     int errCode = (doc.Region ? 5 : 2);
 
-                    return "ERR" + errCode.ToString() + ":Не удалось допечатать:" + atolDriver.errorDescription();
+                    return "ERR" + errCode.ToString() + ":Не удалось допечатать - " + atolDriver.errorDescription() + fdForRegion;
                 }
-            }
-
-            string fdForRegion = String.Empty;
-
-            if (doc.Region)
-            {
-                atolDriver.setParam(Constants.LIBFPTR_PARAM_FN_DATA_TYPE, Constants.LIBFPTR_FNDT_LAST_RECEIPT);
-                atolDriver.fnQueryData();
-                fdForRegion = ":" + atolDriver.getParamInt(Constants.LIBFPTR_PARAM_DOCUMENT_NUMBER).ToString();
             }
 
             Server.ShowActivity(busy: false);

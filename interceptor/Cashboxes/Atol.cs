@@ -359,7 +359,10 @@ namespace interceptor
                 while (atolDriver.continuePrint() < 0)
                 {
                     Log.AddWithCode("чек не удалось допечатать");
-                    return "ERR2:Не удалось допечатать:" + atolDriver.errorDescription();
+
+                    int errCode = (doc.Region ? 5 : 2);
+
+                    return "ERR" + errCode.ToString() + ":Не удалось допечатать:" + atolDriver.errorDescription();
                 }
             }
 

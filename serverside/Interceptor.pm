@@ -7,6 +7,7 @@ use HTTP::Request;
 use Digest::MD5  qw(md5_hex);
 use Data::Dumper;
 use Encode qw(decode encode);
+use JSON;
 
 sub protocol_pass { return ''; };
 
@@ -120,6 +121,18 @@ sub send_docpack
 	}
 	
 	return ( "ERR3", "Неверный кассовый пароль в настройках" ) unless $pass;
+	
+	if ( $data->{ insdata } and $data->{'center'} =~ /^31$/ ) {
+	
+		my $json = JSON->new->pretty->decode( $data->{ insdata } );
+		
+		for ( @$json ) {
+		
+			$data->{ insurance_manual_service_RGS } = $_->{ cost } if $_->{ company } eq 'rgs';
+			
+			$data->{ insurance_manual_service_KL } = $_->{ cost } if $_->{ company } eq 'kl';
+		}
+	}
 	
 	$data->{ email } = ( $email ? $email : '' );
 	
@@ -1252,7 +1265,6 @@ sub cash_box_mandocpack
 		);
 	}
 	else {
-
 		$center_id = $vars->db->sel1("
 			SELECT ID FROM Branches WHERE BName = ?", $param->{ center }
 		);

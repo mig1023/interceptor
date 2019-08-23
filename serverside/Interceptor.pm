@@ -128,9 +128,9 @@ sub send_docpack
 		
 		for ( @$json ) {
 		
-			$data->{ insurance_manual_service_RGS } = $_->{ cost } if $_->{ company } eq 'rgs';
+			$data->{ insurance_manual_service_RGS } += $_->{ cost } if $_->{ company } eq 'rgs';
 			
-			$data->{ insurance_manual_service_KL } = $_->{ cost } if $_->{ company } eq 'kl';
+			$data->{ insurance_manual_service_KL } += $_->{ cost } if $_->{ company } eq 'kl';
 		}
 	}
 	

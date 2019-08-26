@@ -352,16 +352,12 @@ namespace interceptor
                 Driver.CancelCheck();
 
                 Log.AddWithCode("отмена чека");
-
-                Server.ShowActivity(busy: false);
             }
             else if (!MainWindow.TEST_VERSION && !doc.Region)
             {
                 repeatPrintingTimer.Enabled = true;
                 repeatPrintingTimer.Start();
             }
-            else
-                Server.ShowActivity(busy: false);
 
             if (checkClosingResult == 0)
                 return "OK:" + Driver.Change;
@@ -389,8 +385,6 @@ namespace interceptor
                 repeatPrintingTimer.Stop();
 
                 CRM.CashboxPaymentControl(agreement: currentDocPack);
-
-                Server.ShowActivity(busy: false);
             }
         }
 
@@ -510,8 +504,6 @@ namespace interceptor
                 Driver.CancelCheck();
 
                 Log.AddWithCode("отмена чека");
-
-                Server.ShowActivity(busy: false);
             }
             else if (!MainWindow.TEST_VERSION)
             {

@@ -212,7 +212,6 @@ namespace interceptor
                 newHeight: 420
             );
             
-            Server.ShowActivity(busy: false);
             Cashbox.manDocPackForPrinting = null;
 
             CleanCheck();
@@ -285,7 +284,6 @@ namespace interceptor
             else
             {
                 Server.StartServer();
-                switchOn.Background = Brushes.LimeGreen;
                 CRM.currentLogin = login.Text;
                 CRM.currentPassword = passwordHash;
 
@@ -895,7 +893,6 @@ namespace interceptor
                 prevCanvas: receptionPlace
             );
 
-            Server.ShowActivity(busy: false);
             Cashbox.manDocPackForPrinting = null;
 
             CleanCheck();
@@ -1127,8 +1124,6 @@ namespace interceptor
                 moveCanvas: mainPlace,
                 prevCanvas: moneyPlace
             );
-
-            Server.ShowActivity(busy: false);
 
             CleanCheck();
             appNumber_KeyUp(null, null);

@@ -375,8 +375,6 @@ namespace interceptor
                 }
             }
 
-            Server.ShowActivity(busy: false);
-
             if (!MainWindow.TEST_VERSION && !doc.Region)
                 RepeatPrint(null, null);
 
@@ -506,8 +504,6 @@ namespace interceptor
                     return "ERR2:Не удалось допечатать:" + atolDriver.errorDescription();
                 }
             }
-
-            Server.ShowActivity(busy: false);
 
             if (!MainWindow.TEST_VERSION)
                 RepeatPrint(null, null);

@@ -30,21 +30,7 @@ namespace interceptor
 
             Log.Add("новое соединение c " + RemoteEndPoint, freeLine: true);
 
-            ShowActivity(busy: true);
-
             new Client((TcpClient)state);
-        }
-
-        public static void ShowActivity(bool busy)
-        {
-            Application.Current.Dispatcher.BeginInvoke(new ThreadStart(delegate
-            {
-                MainWindow main = (MainWindow)Application.Current.MainWindow;
-                if (busy)
-                    main.activity.Background = Brushes.Orange;
-                else
-                    main.activity.Background = Brushes.Gray;
-            }));
         }
 
         public static void StartServer()

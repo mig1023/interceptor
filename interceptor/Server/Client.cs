@@ -30,27 +30,31 @@ namespace interceptor
             Client.Close();
         }
 
-        public Client(TcpClient Client)
+        public Client(TcpClient Client, string clientIP)
         {
-            string Request = String.Empty;
-            byte[] Buffer = new byte[1024];
-            int Count;
+            string request = String.Empty;
+            string response = String.Empty;
 
-            while ((Count = Client.GetStream().Read(Buffer, 0, Buffer.Length)) > 0)
+            byte[] buffer = new byte[1024];
+            int count = 0;
+            
+            while ((count = Client.GetStream().Read(buffer, 0, buffer.Length)) > 0)
             {
-                Request += Encoding.ASCII.GetString(Buffer, 0, Count);
+                request += Encoding.ASCII.GetString(buffer, 0, count);
 
-                if (Request.IndexOf("\r\n\r\n") >= 0)
+                if (request.IndexOf("\r\n\r\n") >= 0)
                     break;
             }
 
-            Request = Uri.UnescapeDataString(Request);
+            request = Uri.UnescapeDataString(request);
 
-            Log.Add(Request, logType: "http");
+            Log.Add(request, logType: "http");
 
-            Match ReqMatch = Regex.Match(Request, @"message=([^;]+?);");
+            Match ReqMatch = Regex.Match(request, @"message=([^;]+?);");
 
-            string response = ResponsePrepare(ReqMatch.Groups[1].Value);
+            bool emplyRequest = (ReqMatch.Success ? false : true);
+
+            response = ResponsePrepare(ReqMatch.Groups[1].Value, emplyRequest, clientIP);
 
             SendResponse(Client, response);
 
@@ -66,20 +70,27 @@ namespace interceptor
                 MainWindow main = (MainWindow)Application.Current.MainWindow;
                 main.total.Content = "сумма: " + summ;
                 main.totalR.Content = main.total.Content;
+                main.totalContent.Visibility = Visibility.Visible;
+                main.totalRContent.Visibility = Visibility.Visible;
             }));
         }
 
-        public static string ResponsePrepare(string request)
+        public static string ResponsePrepare(string request, bool empty, string clientIP)
         {
             string err = String.Empty;
+
+            if (empty)
+            {
+                Log.Add("пустой запрос с " + clientIP);
+                CRM.SendError("Пустой запрос с " + clientIP);
+
+                return "403";
+            }
 
             if (!CheckRequest.CheckLoginInRequest(request, out err))
             {
                 Log.Add("конфликт логинов: " + err);
-
                 CRM.SendError("Конфликт логинов: " + err);
-
-                Server.ShowActivity(busy: false);
 
                 return "ERR3:Кассовая программа запущена пользователем " + CRM.currentLogin;
             }
@@ -90,15 +101,12 @@ namespace interceptor
 
                 string testResult = Diagnostics.MakeBeepTest();
 
-                Server.ShowActivity(busy: false);
-
                 return testResult;
             }
 
             if (!CheckRequest.CheckXml(request))
             {
                 Log.Add("CRC ошибочна, возвращаем ошибку данных");
-
                 CRM.SendError("CRC ошибка");
 
                 return "ERR1:Ошибка переданных данных";

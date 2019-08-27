@@ -30,7 +30,7 @@ namespace interceptor
 
             Log.Add("новое соединение c " + RemoteEndPoint, freeLine: true);
 
-            new Client((TcpClient)state);
+            new Client((TcpClient)state, RemoteEndPoint);
         }
 
         public static void StartServer()

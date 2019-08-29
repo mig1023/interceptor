@@ -361,7 +361,6 @@ namespace interceptor
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_FN_DATA_TYPE, Constants.LIBFPTR_FNDT_LAST_RECEIPT);
                 atolDriver.fnQueryData();
                 fdForRegion = ":" + atolDriver.getParamInt(Constants.LIBFPTR_PARAM_DOCUMENT_NUMBER).ToString();
-                fdForRegion += ":" + atolDriver.getParamDouble(Constants.LIBFPTR_PARAM_RECEIPT_SUM).ToString();
             }
 
             if (!atolDriver.getParamBool(Constants.LIBFPTR_PARAM_DOCUMENT_PRINTED))

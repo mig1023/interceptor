@@ -158,9 +158,9 @@ sub send_docpack
 		);
 	}
 	
-	my ( $code, $desc, $fd, $fd_sum ) = split( /:/, $resp );
+	my ( $code, $desc, $fd ) = split( /:/, $resp );
 	
-	return $code, $desc, $services_fail, $fd, $fd_sum;
+	return $code, $desc, $services_fail, $fd;
 }
 
 sub xml_create
@@ -936,11 +936,12 @@ sub cash_box_region
 		interceptor => ( $region_id == 1 ? 21 : 22 ),
 	};
 	
-	my ( $code, $desc, undef, $fd, $fd_sum ) = send_docpack(
-		$self, $docid, 2, undef, $data, undef, undef, undef, undef, undef, undef, $email, $region
+	my ( $code, $desc, undef, $fd ) = send_docpack(
+		$self, $docid, 2, undef, $data, undef, undef,
+		undef, undef, undef, undef, $email, $region
 	);
 	
-	return ( $code, $desc, $fd, $fd_sum );
+	return ( $code, $desc, $fd );
 }
 
 sub cash_box_auth

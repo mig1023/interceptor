@@ -105,29 +105,5 @@ namespace interceptor
 
             Log.AddDocPack(this);
         }
-
-        public void AddInfo(string Cashier, int CashierPass, int MoneyType)
-        {
-            this.Cashier = Cashier;
-            this.CashierPass = CashierPass;
-            this.MoneyType = MoneyType;
-        }
-
-        public void AddService(string ServiceName, int Quantity, decimal Price, int VAT)
-        {
-            Service newService = new Service();
-
-            newService.Name = ServiceName;
-            newService.Quantity = Quantity;
-            newService.Price = Price;
-            newService.VAT = VAT;
-
-            this.Services.Add(newService);
-        }
-
-        public void AddMoney(string Summ)
-        {
-            this.Money = manualParseDecimal(Summ);
-        }
     }
 }

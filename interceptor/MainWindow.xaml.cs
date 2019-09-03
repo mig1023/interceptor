@@ -38,8 +38,6 @@ namespace interceptor
         public static string PROTOCOL_PASS = "";
         public static int PROTOCOL_PORT = 80;
 
-        public enum fieldsErrors { noError, valueError, clickError, emptySummError };
-
         public MainWindow()
         {
             InitializeComponent();
@@ -830,9 +828,6 @@ namespace interceptor
             if (Cashbox.CurrentMode() != 4)
                 Cashbox.ReportCleaning();
 
-            // MessageBoxes.WaitingForResetting();
-            // Cashbox.TablesBackup();
-
             restoringSettingsCashbox.Elapsed += new ElapsedEventHandler(RestoreSetting);
             restoringSettingsCashbox.Enabled = true;
             restoringSettingsCashbox.Start();
@@ -1025,20 +1020,6 @@ namespace interceptor
 
                 return true;
             }
-        }
-
-        private void printRCheckCard_Click(object sender, RoutedEventArgs e)
-        {
-            Receipt.currentAppNumber = appNumber.Text;
-
-            string[] result = Cashbox.PrintDocPack(
-                Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
-            ).Split(':');
-
-            CheckError(result, receptionPlace);
-
-            if (result[0] == "OK")
-                getAppInfoAndPrintRecepeit(Cashbox.manDocPackSumm.ToString());
         }
 
         private void getAppInfoAndPrintRecepeit(string summ)

@@ -153,37 +153,6 @@ namespace interceptor
             return (Driver.ResultCode == 0 ? true : false);
         }
 
-        public bool TablesBackup()
-        {
-            PrepareDriver(admin: true);
-
-            for (int table = 1; table < 25; table += 1)
-            {
-                Driver.TableNumber = table;
-                Driver.GetTableStruct();
-
-                int rowMax = Driver.RowNumber;
-                int fieldMax = Driver.FieldNumber;
-
-                Log.Add("//////////// ТАБЛИЦА: " + Driver.TableName, "tables-backup");
-
-                for (int row = 1; row <= rowMax; row += 1)
-                    for (int field = 1; field <= fieldMax; field += 1)
-                    {
-                        Driver.TableNumber = table;
-                        Driver.RowNumber = row;
-                        Driver.FieldNumber = field;
-
-                        Driver.GetFieldStruct();
-                        Driver.ReadTable();
-
-                        Log.Add(table + " " + row + " " + field + " " + Driver.ValueOfFieldString, "tables-backup");
-                    }
-            }
-
-            return true;
-        }
-
         static string TableField(int tableNumber, int fieldNumber, int rowNumber, string fieldValue = "")
         {
             Driver.TableNumber = tableNumber;

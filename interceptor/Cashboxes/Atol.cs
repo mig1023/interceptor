@@ -198,11 +198,6 @@ namespace interceptor
             return (atolDriver.printText() < 0 ? false : true);
         }
 
-        public bool TablesBackup()
-        {
-            return true;
-        }
-
         static string TableField(int tableNumber, int fieldNumber, int rowNumber, string fieldValue = "")
         {
             return String.Empty;

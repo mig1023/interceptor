@@ -23,7 +23,6 @@ namespace interceptor
         bool CancelDocument();
         bool CashIncome(string summ);
         bool CashOutcome(string summ);
-        bool TablesBackup();
         bool resettingCashbox();
         string[] CheckCashboxTables();
         string PrintDocPack(DocPack doc, int MoneyType = -1,
@@ -32,7 +31,7 @@ namespace interceptor
         int GetResultCode();
         int CurrentMode();
         void GetStatusData(out string port, out string speed, out string version, out string model);
-       string DirectPayment(decimal? moneyPrice, decimal? moneySumm, string forPrinting,
+        string DirectPayment(decimal? moneyPrice, decimal? moneySumm, string forPrinting,
             string sending, int department, int moneyType, bool returnSale, bool VAT);
     }
 }

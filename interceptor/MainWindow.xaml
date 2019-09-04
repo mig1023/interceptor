@@ -152,6 +152,7 @@
                 <ComboBoxItem Name="string15">Консульский сбор D05</ComboBoxItem>
                 <ComboBoxItem Name="string16">Трудовая книжка</ComboBoxItem>
                 <ComboBoxItem Name="string17">Вкладыш в трудовую книжку</ComboBoxItem>
+                <ComboBoxItem Name="string18">Продажа а/м</ComboBoxItem>
             </ComboBox>
             <Label x:Name="sectionText" Content="название отдела" Canvas.Left="39" Canvas.Top="89" FontSize="18"/>
             <Label x:Name="nameMoneyText" Content="название услуги" Canvas.Left="39" Canvas.Top="143" FontSize="18"/>

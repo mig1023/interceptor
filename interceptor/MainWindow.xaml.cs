@@ -26,6 +26,9 @@ namespace interceptor
         public static System.Timers.Timer restoringSettingsCashbox = new System.Timers.Timer(5000);
         public Canvas returnFromErrorTo;
 
+        public static string PROTOCOL_PASS = Secret.PROTOCOL_PASS;
+        public static int PROTOCOL_PORT = Secret.PROTOCOL_PORT;
+
         public const bool TEST_VERSION = true;
 
         public const string CURRENT_VERSION_CLEAN = "2.5";
@@ -34,9 +37,6 @@ namespace interceptor
             CURRENT_VERSION_CLEAN + (TEST_VERSION ? "-test" : String.Empty);
 
         public string updateDir = String.Empty;
-
-        public static string PROTOCOL_PASS = "";
-        public static int PROTOCOL_PORT = 80;
 
         public MainWindow()
         {

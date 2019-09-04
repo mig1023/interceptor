@@ -86,6 +86,13 @@ namespace interceptor
 
                 return "403";
             }
+            else if (!CheckRequest.CheckValidRequest(request))
+            {
+                Log.Add("невалидный запрос " + clientIP);
+                CRM.SendError("Невалидный запрос с " + clientIP);
+
+                return "404";
+            }
 
             if (!CheckRequest.CheckLoginInRequest(request, out err))
             {

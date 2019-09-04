@@ -40,6 +40,22 @@ namespace interceptor
             return senderCashier == CRM.currentLogin;
         }
 
+        public static bool CheckValidRequest(string from)
+        {
+            XmlDocument request = new XmlDocument();
+
+            try
+            {
+                request.LoadXml(from);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public static bool CheckXml(string from)
         {
             if (from == String.Empty)
@@ -104,7 +120,7 @@ namespace interceptor
                         input += b.ToString() + " ";
                 }
             }
-
+            
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
             {
                 byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);

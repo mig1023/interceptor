@@ -353,7 +353,10 @@ namespace interceptor
                 repeatPrintingTimer.Enabled = false;
                 repeatPrintingTimer.Stop();
 
-                CRM.CashboxPaymentControl(agreement: currentDocPack);
+                CRM.CashboxPaymentControl(
+                    agreement: currentDocPack,
+                    paymentType: MainWindow.Cashbox.manDocPackForPrinting.MoneyType.ToString()
+                );
             }
         }
 

@@ -129,9 +129,10 @@ namespace interceptor
                 if (!String.IsNullOrWhiteSpace(docPack.AgrNumber))
                     Log.Add("номер договора: " + docPack.AgrNumber);
 
+                MainWindow.Cashbox.manDocPackForPrinting = docPack;
+
                 if (docPack.RequestOnly == 1)
                 {
-                    MainWindow.Cashbox.manDocPackForPrinting = docPack;
                     MainWindow.Cashbox.manDocPackSumm = docPack.Total;
 
                     ShowTotal(docPack.Total.ToString());

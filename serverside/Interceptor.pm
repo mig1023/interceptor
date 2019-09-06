@@ -1380,12 +1380,12 @@ sub cashbox_payment_control
 	
 	my $param = {};
 	
-	$param->{ $_ } = ( $vars->getparam( $_ ) || '' ) for ( 'login', 'p', 'docnum', 'ip' );
+	$param->{ $_ } = ( $vars->getparam( $_ ) || '' ) for ( 'login', 'p', 't', 'docnum', 'ip' );
 	
 	return cash_box_output( $self, "ERROR|Ошибка параметров" )
 		if !$param->{ login } or !$param->{ p } or !$param->{ docnum };
 		
-	$param->{ docnum } =~ s/[^\d]+//g;	
+	$param->{ $_ } =~ s/[^\d]+//g for ( 'docnum', 't' );
 
 	my $statuses = $vars->db->selallkeys("	
 		SELECT DocPack.ID, DocPackList.ID as DID, PStatus, Status, DocPackInfo.BankID, DocPackList.PassNum
@@ -1438,8 +1438,8 @@ sub cashbox_payment_control
 		Cashboxes_errors WRITE, DocCashbox WRITE, DocHistory WRITE" );
 	
 	$vars->db->query("
-		UPDATE DocPack SET PStatus = 2 WHERE ID = ? AND PStatus = 1", {},
-		$statuses->[0]->{ ID }
+		UPDATE DocPack SET PStatus = 2, PType = ? WHERE ID = ? AND PStatus = 1", {},
+		$param->{ t }, $statuses->[0]->{ ID }
 	);
 	
 	my $dpacklist = join( "','", @$dpacklist_array );

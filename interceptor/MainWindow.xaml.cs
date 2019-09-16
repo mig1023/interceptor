@@ -62,10 +62,6 @@ namespace interceptor
                     AutoUpdate.StartUpdater();
                 else
                 {
-                    updateText.Content = "В процессе обновления программы произошла ошибка загрузки необходимых данных!\nПожалуйста, обратитесь к системным администраторам";
-                    updateButton.Visibility = Visibility.Hidden;
-                    needUpdateRestart.Background = (Brush)new BrushConverter().ConvertFromString("#FFFF4E4E");
-
                     Log.Add("ошибка обновления: контрольные суммы файлов не совпали", "update");
 
                     returnFromErrorTo = loginPlace;
@@ -1041,11 +1037,6 @@ namespace interceptor
             CleanCheck();
             appNumber_KeyUp(null, null);
             appNumber.Focus();
-        }
-
-        private void updateButton_Click(object sender, RoutedEventArgs e)
-        {
-            AutoUpdate.StartUpdater();
         }
 
         private void placeholder_MouseDown(object sender, MouseButtonEventArgs e)

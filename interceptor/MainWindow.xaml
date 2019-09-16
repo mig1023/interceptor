@@ -225,8 +225,8 @@
             <Button x:Name="reportAndRessetting" Content="закрыть смену, распечатать отчёт и перенастроить" Height="42" Canvas.Left="59" Canvas.Top="240" Width="346" Click="reportAndRessetting_Click"/>
         </Canvas>
         <Canvas x:Name="needUpdateRestart" Margin="-4,399,4,-399" Background="#FFFF4E4E" Visibility="Hidden">
-            <Label x:Name="updateText" Content="Програме необходимо обновиться. В процессе обновления программа будет перезапущена" Height="80" Canvas.Left="52" Canvas.Top="146" Width="709" FontSize="16"/>
-            <Button x:Name="updateButton" Content="обновить и перезапустить" FontSize="14" Height="42" Canvas.Left="59" Canvas.Top="184" Width="211" Click="updateButton_Click"/>
+            <Label x:Name="updateTextStart" Content="В процессе обновления программы произошла ошибка загрузки необходимых данных!" Height="32" Canvas.Left="52" Canvas.Top="146" Width="709" FontSize="16"/>
+            <Label x:Name="updateTextEnd" Content="Пожалуйста, обратитесь к системным администраторам." Height="32" Canvas.Left="52" Canvas.Top="168" Width="709" FontSize="16"/>
         </Canvas>
     </Grid>
 

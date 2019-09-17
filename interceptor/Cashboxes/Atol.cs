@@ -164,6 +164,34 @@ namespace interceptor
         {
             atolDriver.printCliche();
 
+            //////////////////////////
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_STATUS);
+            atolDriver.queryData();
+
+            uint operatorID = atolDriver.getParamInt(Constants.LIBFPTR_PARAM_OPERATOR_ID);
+            DateTime dateTime = atolDriver.getParamDateTime(Constants.LIBFPTR_PARAM_DATE_TIME);
+            String serialNumber = atolDriver.getParamString(Constants.LIBFPTR_PARAM_SERIAL_NUMBER);
+
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_FN_DATA_TYPE, Constants.LIBFPTR_FNDT_REG_INFO);
+            atolDriver.fnQueryData();
+
+            String organizationVATIN = atolDriver.getParamString(1018);
+            String fnsUrl = atolDriver.getParamString(1060);
+            String registrationNumber = atolDriver.getParamString(1037);
+
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_FN_DATA_TYPE, Constants.LIBFPTR_FNDT_FN_INFO);
+            atolDriver.fnQueryData();
+
+            String fnSerial = atolDriver.getParamString(Constants.LIBFPTR_PARAM_SERIAL_NUMBER);
+
+            PrintLine("ЗН ККТ: " + serialNumber);
+            PrintLine("ИНН: " + organizationVATIN + " " + dateTime.ToShortDateString() + " " + dateTime.ToShortDateString());
+            PrintLine("КАССИР: " + CRM.cashier);
+            PrintLine("РН ККТ: " + registrationNumber);
+            PrintLine("ФН: " + fnSerial);
+
+            //////////////////////////
+
             PrintLine(line: true);
             PrintLine("ОТЧЁТ по НАЛОГАМ ЗА СМЕНУ");
 
@@ -191,7 +219,7 @@ namespace interceptor
 
                 double sum = atolDriver.getParamDouble(Constants.LIBFPTR_PARAM_SUM);
 
-                PrintLine("Налог 20%".PadRight(16) + sum.ToString());
+                PrintLine("Сумма НДС 20%".PadRight(16) + sum.ToString());
 
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_SHIFT_TAX_SUM);
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, pType);
@@ -200,7 +228,7 @@ namespace interceptor
 
                 sum = atolDriver.getParamDouble(Constants.LIBFPTR_PARAM_SUM);
 
-                PrintLine("БЕЗ НДС".PadRight(16) + sum.ToString());
+                PrintLine("Сумма без НДС".PadRight(16) + sum.ToString());
             }
 
             PrintLine(line: true);

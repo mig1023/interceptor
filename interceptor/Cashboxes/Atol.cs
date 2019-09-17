@@ -162,7 +162,53 @@ namespace interceptor
 
         public bool ReportTax()
         {
-            return false;
+            atolDriver.printCliche();
+
+            PrintLine(line: true);
+            PrintLine("ОТЧЁТ по НАЛОГАМ ЗА СМЕНУ");
+
+            foreach (int pType in new List<int> { Constants.LIBFPTR_RT_SELL, Constants.LIBFPTR_RT_SELL_RETURN, Constants.LIBFPTR_RT_SELL_CORRECTION })
+            {
+                PrintLine(line: true);
+
+                switch (pType)
+                {
+                    case 1:
+                        PrintLine("ЧЕК ПРИХОДА");
+                        break;
+                    case 2:
+                        PrintLine("ЧЕК ВОЗВРАТА");
+                        break;
+                    case 7:
+                        PrintLine("ЧЕК КОРРЕКЦИИ");
+                        break;
+                }
+
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_SHIFT_TAX_SUM);
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, pType);
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, Constants.LIBFPTR_TAX_VAT20);
+                atolDriver.queryData();
+
+                double sum = atolDriver.getParamDouble(Constants.LIBFPTR_PARAM_SUM);
+
+                PrintLine("Налог 20%".PadRight(16) + sum.ToString());
+
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_SHIFT_TAX_SUM);
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, pType);
+                atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, Constants.LIBFPTR_TAX_NO);
+                atolDriver.queryData();
+
+                sum = atolDriver.getParamDouble(Constants.LIBFPTR_PARAM_SUM);
+
+                PrintLine("БЕЗ НДС".PadRight(16) + sum.ToString());
+            }
+
+            PrintLine(line: true);
+            for (int i = 0; i < 10; i++)
+                PrintLine(" ");
+            atolDriver.cut();
+
+            return true;
         }
 
         public bool CancelDocument()

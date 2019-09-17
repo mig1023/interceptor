@@ -153,8 +153,10 @@ namespace interceptor
             }
 
             PrintLine(line: true);
+
             for (int i = 0; i < 10; i++)
                 PrintLine(" ");
+
             atolDriver.cut();
 
             return true;
@@ -164,7 +166,6 @@ namespace interceptor
         {
             atolDriver.printCliche();
 
-            //////////////////////////
             atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_STATUS);
             atolDriver.queryData();
 
@@ -184,56 +185,42 @@ namespace interceptor
 
             String fnSerial = atolDriver.getParamString(Constants.LIBFPTR_PARAM_SERIAL_NUMBER);
 
+            PrintLine(dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString());
             PrintLine("ЗН ККТ: " + serialNumber);
-            PrintLine("ИНН: " + organizationVATIN + " " + dateTime.ToShortDateString() + " " + dateTime.ToShortDateString());
+            PrintLine("ИНН: " + organizationVATIN);
             PrintLine("КАССИР: " + CRM.cashier);
             PrintLine("РН ККТ: " + registrationNumber);
             PrintLine("ФН: " + fnSerial);
 
-            //////////////////////////
-
             PrintLine(line: true);
             PrintLine("ОТЧЁТ по НАЛОГАМ ЗА СМЕНУ");
+
+            Dictionary<int, string> pTypes = new Dictionary<int, string> { [1] = "ЧЕК ПРИХОДА", [2] = "ЧЕК ВОЗВРАТА", [7] = "ЧЕК КОРРЕКЦИИ" };
+            Dictionary<int, string> vatTypes = new Dictionary<int, string> { [7] = "Сумма НДС 20%", [6] = "Сумма без НДС" };
 
             foreach (int pType in new List<int> { Constants.LIBFPTR_RT_SELL, Constants.LIBFPTR_RT_SELL_RETURN, Constants.LIBFPTR_RT_SELL_CORRECTION })
             {
                 PrintLine(line: true);
+                PrintLine(pTypes[pType]);
 
-                switch (pType)
+                foreach (int vatType in new List<int> { Constants.LIBFPTR_TAX_VAT20, Constants.LIBFPTR_TAX_NO })
                 {
-                    case 1:
-                        PrintLine("ЧЕК ПРИХОДА");
-                        break;
-                    case 2:
-                        PrintLine("ЧЕК ВОЗВРАТА");
-                        break;
-                    case 7:
-                        PrintLine("ЧЕК КОРРЕКЦИИ");
-                        break;
+                    atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_SHIFT_TAX_SUM);
+                    atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, pType);
+                    atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, vatType);
+                    atolDriver.queryData();
+
+                    double sum = atolDriver.getParamDouble(Constants.LIBFPTR_PARAM_SUM);
+
+                    PrintLine(vatTypes[vatType].PadRight(16) + sum.ToString());
                 }
-
-                atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_SHIFT_TAX_SUM);
-                atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, pType);
-                atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, Constants.LIBFPTR_TAX_VAT20);
-                atolDriver.queryData();
-
-                double sum = atolDriver.getParamDouble(Constants.LIBFPTR_PARAM_SUM);
-
-                PrintLine("Сумма НДС 20%".PadRight(16) + sum.ToString());
-
-                atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_SHIFT_TAX_SUM);
-                atolDriver.setParam(Constants.LIBFPTR_PARAM_RECEIPT_TYPE, pType);
-                atolDriver.setParam(Constants.LIBFPTR_PARAM_TAX_TYPE, Constants.LIBFPTR_TAX_NO);
-                atolDriver.queryData();
-
-                sum = atolDriver.getParamDouble(Constants.LIBFPTR_PARAM_SUM);
-
-                PrintLine("Сумма без НДС".PadRight(16) + sum.ToString());
             }
 
             PrintLine(line: true);
+
             for (int i = 0; i < 10; i++)
                 PrintLine(" ");
+
             atolDriver.cut();
 
             return true;

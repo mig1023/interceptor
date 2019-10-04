@@ -987,6 +987,11 @@ sub cash_box_auth
 		UPDATE Cashboxes_interceptors SET LastVersion = ?, LastUser = ?, LastUse = now() WHERE InterceptorIP = ?", {},
 		$param->{ v }, $login, $param->{ ip }
 	);
+
+	$vars->db->query("
+		UPDATE Users SET Attempts = 0, StatusDate = now() WHERE Login = ?", {},
+		$login
+	);
 	
 	return cash_box_output( $self, "OK|$pass|$surname $name $secname|$cashbox_type" );
 }

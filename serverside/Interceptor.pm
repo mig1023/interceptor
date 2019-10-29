@@ -435,6 +435,10 @@ sub get_service_code
 		'service9' 	=> '515',
 		'service10' 	=> '000',
 		'service11' 	=> '520',
+		'service12' 	=> '531',
+		'service13' 	=> '532',
+		'service14' 	=> '533',
+		'service15' 	=> '534',
 	};
 	
 	my $base = $country . $center_id->{ $center };

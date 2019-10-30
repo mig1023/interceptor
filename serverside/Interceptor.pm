@@ -122,7 +122,7 @@ sub send_docpack
 	
 	return ( "ERR3", "Неверный кассовый пароль в настройках" ) unless $pass;
 	
-	if ( $data->{ insdata } and $data->{'center'} =~ /^31$/ ) {
+	if ( $data->{ insdata } and $data->{'center'} =~ /^(31|36)$/ ) {
 	
 		my $json = JSON->new->pretty->decode( $data->{ insdata } );
 		

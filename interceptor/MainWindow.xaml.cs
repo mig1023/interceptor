@@ -176,6 +176,7 @@ namespace interceptor
         private void UpdateCenters()
         {
             allCenters.Items.Clear();
+            allRCenters.Items.Clear();
 
             foreach (string center_name in CRM.GetAllCenters(login.Text))
             {

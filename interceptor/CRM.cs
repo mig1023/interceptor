@@ -29,6 +29,13 @@ namespace interceptor
         public static string cashier = String.Empty;
         public static string loginError = String.Empty;
 
+        private static Dictionary<string, string> rCenterNames = new Dictionary<string, string>()
+        {
+            ["Выездная биометрия"] = "ext_biometry",
+            ["Дистанционное обслуживание"] = "dist_service",
+            ["Moscow (м.Киевская выдача)"] = "msk_kiev_ext"
+        };
+
         public static bool CrmAuthentication(string login, string passwordLine)
         {
             string authString = String.Empty;
@@ -205,6 +212,15 @@ namespace interceptor
             return requestResult;
         }
 
+        private static string RCenterNamesExclusion(string centerName)
+        {
+            foreach (KeyValuePair<string, string> entry in rCenterNames)
+                if (entry.Key == centerName)
+                    return entry.Value;
+
+            return centerName;
+        }
+
         public static string SendManDocPack(string login, int password, int moneyType, string money,
             string center, string vType, string returnDate, bool reception = false, bool withoutApp = false)
         {
@@ -216,9 +232,9 @@ namespace interceptor
 
             string fields =
                 "login=" + login + "&pass=" + password.ToString() + "&moneytype=" + moneyType.ToString() +
-                "&money=" + money + "&center=" + center + "&vtype=" + vType + "&rdate=" + returnDate +
-                "&services=" + servicesList + "&callback=" + GetMyIP() + "&r=" + (reception ? "1" : "0") +
-                "&n=" + (withoutApp ? "1" : "0");
+                "&money=" + money + "&center=" + RCenterNamesExclusion(center) + "&vtype=" + vType +
+                "&rdate=" + returnDate + "&services=" + servicesList + "&callback=" + GetMyIP() +
+                "&r=" + (reception ? "1" : "0") + "&n=" + (withoutApp ? "1" : "0");
 
             string request = fields + "&crc=" + CheckRequest.CreateMD5(fields, notOrd: true);
 

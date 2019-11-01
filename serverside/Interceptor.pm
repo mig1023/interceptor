@@ -1219,6 +1219,21 @@ sub cash_box_appinfo
 	return cash_box_output( $self, "OK|$person|$appnum|$summ_text|$vat_text|$ord_num|$appid" );
 }
 
+sub r_center_name_excl
+# //////////////////////////////////////////////////
+{
+	my $center = shift;
+
+	my $r_centers = {
+		"ext_biometry" => "Выездная биометрия",
+		"dist_service" => "Дистанционное обслуживание",
+		"msk_kiev_ext" => "Moscow (м.Киевская выдача)",
+	};
+
+	return $r_centers->{ $center } || $center;
+
+}
+
 sub cash_box_mandocpack
 # //////////////////////////////////////////////////
 {
@@ -1242,6 +1257,8 @@ sub cash_box_mandocpack
 
 	my $md5 = uc( md5_crc_with_secret_code( $request_check, 'not_ord' ) );
 
+	$param->{ center } = r_center_name_excl( $param->{ center } );
+
 	return cash_box_output( $self, "ERROR|Контрольная сумма запроса неверна" ) unless $md5 eq $param->{ crc };
 	
 	return cash_box_output( $self, "ERROR|Не установлена кассовая интеграция" )
@@ -1264,8 +1281,7 @@ sub cash_box_mandocpack
 	elsif ( $param->{ r } && !$param->{ n } && ( length( $param->{ center } ) == 9 ) ) {
 	
 		$center_id = $vars->db->sel1("
-			SELECT Branches.ID
-			FROM Appointments
+			SELECT Branches.ID FROM Appointments
 			JOIN AppData ON Appointments.ID = AppData.AppID
 			JOIN Branches ON Appointments.CenterID = Branches.ID
 			WHERE AppData.PassNum = ? 

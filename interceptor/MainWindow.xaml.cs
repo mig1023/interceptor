@@ -82,7 +82,8 @@ namespace interceptor
                 closeCheck, service, service_urgent, vipsrv,
                 concil, concil_urg_r, concil_n, concil_n_age,
                 sms_status, anketasrv, printsrv, photosrv, xerox,
-                srv1, srv2, srv3, srv4, srv5, srv6, srv7, srv8, srv9, srv11
+                srv1, srv2, srv3, srv4, srv5, srv6, srv7, srv8,
+                srv9, srv11, srv12, srv13, srv14, srv15
             })
                 servButtonCleaningList.Add(button);
 
@@ -481,6 +482,9 @@ namespace interceptor
 
             if (serviceNum > 0)
             {
+                bool tightButton = (Service.Height == 30 ? true : false);
+                double buttonFontBig = (tightButton ? 25 : 30);
+
                 if ((serviceNum == 1) && !remove)
                 {
                     Service.Width -= 40;
@@ -491,7 +495,7 @@ namespace interceptor
                     removeService.Width = 40;
                     removeService.Height = Service.Height;
                     removeService.Content = "X";
-                    removeService.FontSize = 20;
+                    removeService.FontSize = (tightButton ? 14 : 20); ;
                     removeService.Tag = Service.Tag;
                     removeService.Background = Service.Background;
                     removeService.Margin = new Thickness(Canvas.GetLeft(Service) + Service.Width, Canvas.GetTop(Service), 0, 0);
@@ -503,8 +507,8 @@ namespace interceptor
                 Service.FontWeight = FontWeights.Bold;
 
                 Label labelService = Service.FindName(Service.Name + "_num") as Label;
-                double topPositionBig = (rService ? -14 : 6);
-                double topPositionLtl = (rService ? 24 : 3);
+                double topPositionBig = (rService ? -14 : 6) + (tightButton ? 2 : 0);
+                double topPositionLtl = (rService ? 24 : 3) - (tightButton ? 5 : 0); // 7
 
                 if (Service.Name == "srv11R" || Service.Name == "anketasrvR")
                 {
@@ -512,13 +516,12 @@ namespace interceptor
                     topPositionLtl = 0;
                 }
                     
-
                 if (labelService == null)
                 {
                     Label newLabel = new Label();
                     newLabel.Name = Service.Name + "_num";
                     newLabel.Content = serviceNum.ToString();
-                    newLabel.FontSize = 30;
+                    newLabel.FontSize = buttonFontBig;
 
                     Service.Width -= 30;
                     Canvas.SetLeft(Service, Canvas.GetLeft(Service) + 30);
@@ -539,7 +542,7 @@ namespace interceptor
                     }
                     else
                     {
-                        labelService.FontSize = 30;
+                        labelService.FontSize = buttonFontBig;
                         Canvas.SetLeft(labelService, Canvas.GetLeft(Service) - 32);
                         Canvas.SetTop(labelService, Canvas.GetTop(Service) - topPositionBig);
                     }
@@ -576,11 +579,6 @@ namespace interceptor
         {
             foreach (Button serv in buttons)
             {
-                int bracketIndex = serv.Content.ToString().IndexOf('(');
-
-                if (bracketIndex > 0)
-                    serv.Content = serv.Content.ToString().Remove(bracketIndex - 1);
-
                 serv.FontWeight = FontWeights.Regular;
                 serv.FontSize = fontSize;
 

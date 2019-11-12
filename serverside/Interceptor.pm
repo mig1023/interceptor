@@ -440,6 +440,7 @@ sub get_service_code
 		'service13' 	=> '532',
 		'service14' 	=> '533',
 		'service15' 	=> '534',
+		'piligrims' 	=> '701',
 	};
 	
 	my $base = $country . $center_id->{ $center };
@@ -449,6 +450,8 @@ sub get_service_code
 		my ( $pay_type, $agent ) = ( 1, 1 );
 		
 		my $urgance_code = ( $urgance ? '1' : '0' );
+
+		return $base . $serv_group->{ piligrims } . ') ' if $data->{ piligrims };
 		
 		return $base . $serv_group->{ service1 } . ') ' if $center == 32;
 		
@@ -565,6 +568,8 @@ sub doc_services
 	my $special_department = ( $reception ? 3 : 1 );
 	
 	my $general_service = ( $data->{ center } == 32 ? 'Консультационные услуги' : 'Услуги по оформлению документов' );
+
+	$general_service = 'Услуги по тарифу "Партнер"' if $data->{ piligrims };
 	
 	my $servsums = {
 		shipping => {

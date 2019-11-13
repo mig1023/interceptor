@@ -368,7 +368,7 @@ sub get_all_add_services
 sub get_service_code
 # //////////////////////////////////////////////////
 {
-	my ( $self, $serv, $center, $urgance, $ord ) = @_;
+	my ( $self, $serv, $center, $urgance, $ord, $piligrims ) = @_;
 	
 	my $country = '(' . 'ITA';
 		
@@ -451,7 +451,7 @@ sub get_service_code
 		
 		my $urgance_code = ( $urgance ? '1' : '0' );
 
-		return $base . $serv_group->{ piligrims } . ') ' if $data->{ piligrims };
+		return $base . $serv_group->{ piligrims } . ') ' if $piligrims;
 		
 		return $base . $serv_group->{ service1 } . ') ' if $center == 32;
 		
@@ -704,9 +704,12 @@ sub doc_services
 	
 	for my $serv ( keys %$servsums ) {
 
-		$servsums->{ $serv }->{ Name } =
-			get_service_code( $self, $serv, $data->{ center }, $data->{ urgent }, $ord ) . $servsums->{ $serv }->{ Name }
-				unless $servsums->{ $serv }->{ WithoutServCode };
+		if ( !$servsums->{ $serv }->{ WithoutServCode } ) {
+
+			my $code = get_service_code( $self, $serv, $data->{ center }, $data->{ urgent }, $ord, $data->{ piligrims } );
+
+			$servsums->{ $serv }->{ Name } = $code . $servsums->{ $serv }->{ Name };
+		}
 
 		$mandocpack_failserv .= ( $mandocpack_failserv ? ', ' : '' ) . $servsums->{ $serv }->{ Name }
 			if $servsums->{ $serv }->{ Quantity }

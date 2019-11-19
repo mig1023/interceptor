@@ -36,12 +36,13 @@ namespace interceptor
             ["Moscow (м.Киевская выдача)"] = "msk_kiev_ext"
         };
 
-        public static bool CrmAuthentication(string login, string passwordLine)
+        public static bool CrmAuthentication(string login, string passwordLine, string serialNo)
         {
             string authString = String.Empty;
 
             string url = CRM_URL + "/vcs/cashbox_auth.htm?login=" + login +
-                "&p=" + passwordLine + "&ip=" + GetMyIP() + "&v=" + MainWindow.CURRENT_VERSION;
+                "&p=" + passwordLine + "&ip=" + GetMyIP() + "&s=" + serialNo +
+                "&v=" + MainWindow.CURRENT_VERSION;
 
             try
             {
@@ -94,6 +95,19 @@ namespace interceptor
             }
 
             return true;
+        }
+
+        public static ICashbox FindCashbox()
+        {
+            foreach(ICashbox cashbox in new List<ICashbox> { new ShtrihM(), new Atol() })
+            {
+                cashbox.CheckConnection();
+
+                if (cashbox.GetResultCode() == 0)
+                    return cashbox;
+            }
+
+            return null;
         }
 
         public static string[] GetAllCenters(string login)

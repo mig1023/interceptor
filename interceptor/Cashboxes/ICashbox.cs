@@ -13,6 +13,7 @@ namespace interceptor
 
         void MakeBeep();
         void CheckConnection();
+        string GetSerialNumber();
         bool RepeatDocument();
         bool ContinueDocument();
         bool ReportCleaning();

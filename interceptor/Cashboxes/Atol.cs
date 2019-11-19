@@ -36,6 +36,14 @@ namespace interceptor
             atolDriver.isOpened();
         }
 
+        public string GetSerialNumber()
+        {
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_DATA_TYPE, Constants.LIBFPTR_DT_SERIAL_NUMBER);
+            atolDriver.queryData();
+
+            return atolDriver.getParamString(Constants.LIBFPTR_PARAM_SERIAL_NUMBER);
+        }
+
         public static void PrepareDriver()
         {
             atolDriver.setParam(1021, "Кассир " + currentDrvPassword);

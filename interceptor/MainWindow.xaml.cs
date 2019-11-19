@@ -235,7 +235,10 @@ namespace interceptor
 
             string passwordHash = CRM.GenerateMySQLHash(password.Password);
 
-            if (!CRM.CrmAuthentication(login.Text, passwordHash))
+            ICashbox cashboxTmp = CRM.FindCashbox();
+            string serialNumber = cashboxTmp.GetSerialNumber();
+
+            if (!CRM.CrmAuthentication(login.Text, passwordHash, serialNumber))
             {
                 loginFailText.Content = CRM.loginError;
                 returnFromErrorTo = loginPlace;

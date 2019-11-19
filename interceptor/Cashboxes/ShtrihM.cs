@@ -35,6 +35,12 @@ namespace interceptor
             Driver.CheckConnection();
         }
 
+        public string GetSerialNumber()
+        {
+            Driver.ReadSerialNumber();
+            return Driver.SerialNumber;
+        }
+
         public static void PrepareDriver(bool admin = false)
         {
             Driver.Password = (admin ? CRM.adminPassword : CRM.password);

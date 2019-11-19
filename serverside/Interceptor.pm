@@ -966,7 +966,7 @@ sub cash_box_auth
 
 	my $param = {};
 	
-	$param->{ $_ } = ( $vars->getparam( $_ ) || '' ) for ( 'login', 'p', 'ip', 'v' );
+	$param->{ $_ } = ( $vars->getparam( $_ ) || '' ) for ( 'login', 'p', 'ip', 'v', 's' );
 
 	return cash_box_output( $self, "ERROR|Укажите данные для авторизации" ) if !$param->{ login } or !$param->{ p };
 	
@@ -997,8 +997,8 @@ sub cash_box_auth
 	return cash_box_output( $self, "ERROR|Недостаточно прав для доступа" ) unless $access_cashbox =~ /(full|write|read)/;
 	
 	$vars->db->query("
-		UPDATE Cashboxes_interceptors SET LastVersion = ?, LastUser = ?, LastUse = now() WHERE InterceptorIP = ?", {},
-		$param->{ v }, $login, $param->{ ip }
+		UPDATE Cashboxes_interceptors SET LastVersion = ?, LastUser = ?, LastUse = now(), SerialNo = ? WHERE InterceptorIP = ?", {},
+		$param->{ v }, $login, $param->{ s }, $param->{ ip }
 	);
 
 	$vars->db->query("

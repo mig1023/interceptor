@@ -108,9 +108,32 @@ namespace interceptor
             Log.Add("ищем кассу");
 
             Cashbox = CRM.FindCashbox();
-            Cashbox.serialNumber = Cashbox.GetSerialNumber();
 
-            MainWindow.Instance.ShowEntrance();
+            if (Cashbox == null)
+                ShowStartError("Ошибка подключения к кассе. Проверьте подключение и перезапустите приложение");
+            else
+            {
+                Cashbox.serialNumber = Cashbox.GetSerialNumber();
+                Log.Add(String.Format("нашли {0} {1}", Cashbox.Name(), Cashbox.serialNumber));
+
+                Instance.ShowEntrance();
+            }
+        }
+
+        private static void ShowStartError(string error)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new ThreadStart(delegate
+            {
+                Instance.loginFailText.Content = error;
+                Instance.backToLoginFromFail.Visibility = Visibility.Hidden;
+                Instance.closeApppication.Visibility = Visibility.Visible;
+
+                Instance.MoveCanvas(
+                    moveCanvas: Instance.loginFail,
+                    prevCanvas: Instance.loginPlace,
+                    direction: moveDirection.vertical
+                );
+            }));
         }
 
         private void ShowEntrance()
@@ -1264,6 +1287,11 @@ namespace interceptor
         {
             if (asynchCashboxSearch.IsBusy)
                 MessageBoxes.ShowCashboxSearchCancel();
+        }
+
+        private void closeApppication_Click(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }

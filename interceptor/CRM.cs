@@ -70,29 +70,11 @@ namespace interceptor
 
             password = Int32.Parse(authData[1]);
 
-            ShtrihM.currentDirectPassword = password;
-            Atol.currentDirectPassword = password;
+            MainWindow.Cashbox.currentDirectPassword = password;
 
             cashier = authData[2];
 
             Log.Add("успешный вход: " + login + "/" + authData[1] + "(" + authData[2] + ")");
-
-            if (authData[3] == "ShtrihM")
-            {
-                MainWindow.Cashbox = new ShtrihM();
-                Log.Add("тип кассы: Штрих-М");
-            }
-            else if (authData[3] == "Atol")
-            {
-                MainWindow.Cashbox = new Atol();
-                Log.Add("тип кассы: Атол");
-            }
-            else
-            {
-                Log.Add("тип кассы НЕ не распознан");
-
-                return false;
-            }
 
             return true;
         }

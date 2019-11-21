@@ -201,6 +201,7 @@
         </Canvas>
         <Canvas x:Name="loginFail" Margin="0,397,0,-397" Background="#FFFF4E4E" Visibility="Hidden">
             <Button x:Name="backToLoginFromFail" Content="попробовать ещё раз" FontSize="14" Height="42" Canvas.Left="59" Canvas.Top="164" Width="211" Click="returnFromError_Click"/>
+            <Button x:Name="closeApppication" Content="закрыть приложение" Visibility="Hidden" FontSize="14" Height="42" Canvas.Left="59" Canvas.Top="164" Width="211" Click="closeApppication_Click"/>
             <Label x:Name="loginFailText" Content="Неизвестная ошибка" Height="33" Canvas.Left="52" Canvas.Top="126" Width="709" FontSize="16"/>
         </Canvas>
         <Canvas x:Name="systemInfoPlace" Margin="2,-420,-2,420">

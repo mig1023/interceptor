@@ -11,12 +11,12 @@ namespace interceptor
     class Atol : ICashbox
     {
         public static IFptr atolDriver = new Fptr();
-
-        public static int currentDirectPassword = 0;
+        
         static int currentDrvPassword = 0;
         static string currentDocPack = String.Empty;
         private bool cancelOpenReceipt = false;
 
+        public int currentDirectPassword { get; set; }
         public DocPack manDocPackForPrinting { get; set; }
         public decimal manDocPackSumm { get; set; }
         public string serialNumber { get; set; }

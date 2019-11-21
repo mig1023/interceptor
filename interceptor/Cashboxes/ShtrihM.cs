@@ -11,10 +11,10 @@ namespace interceptor
 
         public static System.Timers.Timer repeatPrintingTimer = new System.Timers.Timer(5000);
         static int currentDrvPassword = 0;
-        public static int currentDirectPassword = 0;
         static string currentDocPack = String.Empty;
         public static int timeout = 159; // 1500ms
 
+        public int currentDirectPassword { get; set; }
         public DocPack manDocPackForPrinting { get; set; }
         public decimal manDocPackSumm { get; set; }
         public string serialNumber { get; set; }

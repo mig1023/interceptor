@@ -11,6 +11,7 @@ namespace interceptor
         DocPack manDocPackForPrinting { get; set; }
         decimal manDocPackSumm { get; set; }
         string serialNumber { get; set; }
+        int currentDirectPassword { get; set; }
 
         string Name();
         void MakeBeep();

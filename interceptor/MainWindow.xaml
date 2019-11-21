@@ -196,8 +196,8 @@
             <PasswordBox x:Name="password" Visibility="Hidden" Height="27" Canvas.Left="252" Canvas.Top="162" Width="295" KeyDown="password_KeyDown" Tag="placeholderPass" KeyUp="withPlaceholder_KeyUp" FontSize="16"/>
             <Label x:Name="placeholderLogin" Visibility="Hidden" Content="введите vms логин" Height="26" Canvas.Left="254" Canvas.Top="126" Width="117" Foreground="#FFD8D8D8" Tag="login" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderPass" Visibility="Hidden" Content="введите vms пароль" Height="24" Canvas.Left="255" Canvas.Top="162" Width="123" Foreground="#FFD8D8D8" Tag="password" MouseDown="placeholder_MouseDown"/>
-            <MediaElement x:Name="waitingSpinner" Height="275" Canvas.Left="261" Canvas.Top="10" Width="269" UnloadedBehavior="Manual" Source="Images/spinner.gif" LoadedBehavior="Play" Stretch="None" MediaEnded="waitingSpinner_MediaEnded"/>
-            <TextBlock x:Name="waitingText" Height="29" Canvas.Left="163" TextWrapping="Wrap" Text="Пожалуйста, подождите пока программа соединится с кассой..." Canvas.Top="239" Width="496" FontSize="16"/>
+            <MediaElement x:Name="waitingSpinner" Height="275" Canvas.Left="261" Canvas.Top="20" Width="269" UnloadedBehavior="Manual" Source="Images/spinner.gif" LoadedBehavior="Play" Stretch="None" MediaEnded="waitingSpinner_MediaEnded"/>
+            <TextBlock x:Name="waitingText" Height="29" Canvas.Left="163" TextWrapping="Wrap" Text="Пожалуйста, подождите пока программа соединится с кассой..." Canvas.Top="267" Width="496" FontSize="16"/>
         </Canvas>
         <Canvas x:Name="loginFail" Margin="0,397,0,-397" Background="#FFFF4E4E" Visibility="Hidden">
             <Button x:Name="backToLoginFromFail" Content="попробовать ещё раз" FontSize="14" Height="42" Canvas.Left="59" Canvas.Top="164" Width="211" Click="returnFromError_Click"/>

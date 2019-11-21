@@ -117,7 +117,7 @@ namespace interceptor
         {
             Application.Current.Dispatcher.BeginInvoke(new ThreadStart(delegate
             {
-                Instance.cashboxLabel.Content = String.Format("касса {0}", Cashbox.serialNumber);
+                Instance.cashboxLabel.Content = String.Format("касса {0} {1}", Cashbox.Name(), Cashbox.serialNumber);
                 Instance.login.Focus();
 
                 Instance.placeholderLogin.Visibility = Visibility.Visible;

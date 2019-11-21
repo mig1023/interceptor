@@ -17,12 +17,18 @@ namespace interceptor
 
         public DocPack manDocPackForPrinting { get; set; }
         public decimal manDocPackSumm { get; set; }
+        public string serialNumber { get; set; }
 
         static ShtrihM()
         {
             Driver = new DrvFR();
             Driver.FindDevice();
             repeatPrintingTimer.Elapsed += new ElapsedEventHandler(RepeatPrint);
+        }
+
+        public string Name()
+        {
+            return "Штрих";
         }
 
         public void MakeBeep()

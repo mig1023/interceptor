@@ -10,7 +10,9 @@ namespace interceptor
     {
         DocPack manDocPackForPrinting { get; set; }
         decimal manDocPackSumm { get; set; }
+        string serialNumber { get; set; }
 
+        string Name();
         void MakeBeep();
         void CheckConnection();
         string GetSerialNumber();

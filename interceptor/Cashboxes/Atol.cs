@@ -19,11 +19,17 @@ namespace interceptor
 
         public DocPack manDocPackForPrinting { get; set; }
         public decimal manDocPackSumm { get; set; }
+        public string serialNumber { get; set; }
 
         static Atol()
         {
             String version = atolDriver.version();
             atolDriver.open();
+        }
+
+        public string Name()
+        {
+            return "Атол";
         }
 
         public void MakeBeep()

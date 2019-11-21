@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:interceptor"
         mc:Ignorable="d"
-        Title="interceptor" Height="420" Width="800" ResizeMode="CanMinimize" Icon="Images\icon.png">
+        Title="interceptor" Height="420" Width="800" ResizeMode="CanMinimize" Icon="Images\icon.png" Closed="Window_Closed">
     <Grid x:Name="mainGrid">
         <Canvas x:Name="mainPlace" Margin="2,-400,-2,400">
             <Canvas x:Name="activity" HorizontalAlignment="Left" Height="38" VerticalAlignment="Top" Width="2" Background="Gray" Canvas.Left="399" Canvas.Top="308"  MouseDown="switchOn_MouseDown"/>
@@ -187,13 +187,17 @@
             <Label x:Name="placeholderDirectMoney" Content="0.00" Height="36" Canvas.Left="115" Canvas.Top="304" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForDirectPayment" MouseDown="placeholder_MouseDown"/>
         </Canvas>
 
-        <Canvas x:Name="loginPlace" Margin="-3,0,3,0">
-            <Label x:Name="versionLabel" Content="версия" Height="22" Canvas.Left="252" FontSize="9" Padding="0"  Canvas.Top="242" Width="295" HorizontalContentAlignment="Right"/>
-            <Button x:Name="sendLogin" Content="залогиниться" FontSize="14" Height="42" Canvas.Top="197" Width="295" Click="sendLogin_Click" Canvas.Left="252"/>
-            <TextBox x:Name="login" Height="27" Canvas.Left="252" Canvas.Top="126" Width="295" HorizontalAlignment="Left" Tag="placeholderLogin" KeyUp="withPlaceholder_KeyUp" FontSize="16"/>
-            <PasswordBox x:Name="password" Height="27" Canvas.Left="252" Canvas.Top="162" Width="295" KeyDown="password_KeyDown" Tag="placeholderPass" KeyUp="withPlaceholder_KeyUp" FontSize="16"/>
-            <Label x:Name="placeholderLogin" Content="введите vms логин" Height="26" Canvas.Left="254" Canvas.Top="126" Width="117" Foreground="#FFD8D8D8" Tag="login" MouseDown="placeholder_MouseDown"/>
-            <Label x:Name="placeholderPass" Content="введите vms пароль" Height="24" Canvas.Left="255" Canvas.Top="162" Width="123" Foreground="#FFD8D8D8" Tag="password" MouseDown="placeholder_MouseDown"/>
+
+        <Canvas x:Name="loginPlace" Margin="0,-3,0,3">
+            <Label x:Name="versionLabel" Visibility="Hidden" Content="версия" Height="22" Canvas.Left="252" FontSize="9" Padding="0"  Canvas.Top="242" Width="295" HorizontalContentAlignment="Right"/>
+            <Label x:Name="cashboxLabel" Visibility="Hidden" Content="касса" Height="22" Canvas.Left="252" FontSize="9" Padding="0"  Canvas.Top="254" Width="295" HorizontalContentAlignment="Right"/>
+            <Button x:Name="sendLogin" Visibility="Hidden" Content="залогиниться" FontSize="14" Height="42" Canvas.Top="197" Width="295" Click="sendLogin_Click" Canvas.Left="252"/>
+            <TextBox x:Name="login" Visibility="Hidden" Height="27" Canvas.Left="252" Canvas.Top="126" Width="295" HorizontalAlignment="Left" Tag="placeholderLogin" KeyUp="withPlaceholder_KeyUp" FontSize="16"/>
+            <PasswordBox x:Name="password" Visibility="Hidden" Height="27" Canvas.Left="252" Canvas.Top="162" Width="295" KeyDown="password_KeyDown" Tag="placeholderPass" KeyUp="withPlaceholder_KeyUp" FontSize="16"/>
+            <Label x:Name="placeholderLogin" Visibility="Hidden" Content="введите vms логин" Height="26" Canvas.Left="254" Canvas.Top="126" Width="117" Foreground="#FFD8D8D8" Tag="login" MouseDown="placeholder_MouseDown"/>
+            <Label x:Name="placeholderPass" Visibility="Hidden" Content="введите vms пароль" Height="24" Canvas.Left="255" Canvas.Top="162" Width="123" Foreground="#FFD8D8D8" Tag="password" MouseDown="placeholder_MouseDown"/>
+            <MediaElement x:Name="waitingSpinner" Height="275" Canvas.Left="261" Canvas.Top="10" Width="269" UnloadedBehavior="Manual" Source="Images/spinner.gif" LoadedBehavior="Play" Stretch="None" MediaEnded="waitingSpinner_MediaEnded"/>
+            <TextBlock x:Name="waitingText" Height="29" Canvas.Left="163" TextWrapping="Wrap" Text="Пожалуйста, подождите пока программа соединится с кассой..." Canvas.Top="239" Width="496" FontSize="16"/>
         </Canvas>
         <Canvas x:Name="loginFail" Margin="0,397,0,-397" Background="#FFFF4E4E" Visibility="Hidden">
             <Button x:Name="backToLoginFromFail" Content="попробовать ещё раз" FontSize="14" Height="42" Canvas.Left="59" Canvas.Top="164" Width="211" Click="returnFromError_Click"/>

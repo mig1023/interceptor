@@ -10,6 +10,7 @@ using System.Windows.Media.Animation;
 using System.Text.RegularExpressions;
 using System.Timers;
 using System.Globalization;
+using System.ComponentModel;
 
 namespace interceptor
 {
@@ -20,6 +21,7 @@ namespace interceptor
         public static MainWindow Instance { get; private set; }
 
         public static ICashbox Cashbox = null;
+        private static readonly BackgroundWorker asynchCashboxSearch = new BackgroundWorker();
 
         List<Button> servButtonCleaningList = new List<Button>();
         List<Button> receptionButtonCleaningList = new List<Button>();
@@ -31,7 +33,7 @@ namespace interceptor
 
         public const bool TEST_VERSION = true;
 
-        public const string CURRENT_VERSION_CLEAN = "2.5";
+        public const string CURRENT_VERSION_CLEAN = "3.0";
 
         public static string CURRENT_VERSION =
             CURRENT_VERSION_CLEAN + (TEST_VERSION ? "-test" : String.Empty);
@@ -90,7 +92,45 @@ namespace interceptor
             foreach (Button button in new List<Button> { anketasrvR, printsrvR, photosrvR, xeroxR, srv11R })
                 receptionButtonCleaningList.Add(button);
 
-            login.Focus();
+            FindCashboxAndShowEntrance();
+        }
+
+        private void FindCashboxAndShowEntrance()
+        {
+            asynchCashboxSearch.DoWork += worker_SearchCashbox;
+            asynchCashboxSearch.RunWorkerAsync();
+        }
+
+        private static void worker_SearchCashbox(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            Log.Add("ищем кассу");
+
+            Cashbox = CRM.FindCashbox();
+            Cashbox.serialNumber = Cashbox.GetSerialNumber();
+
+            MainWindow.Instance.ShowEntrance();
+        }
+
+        private void ShowEntrance()
+        {
+            Application.Current.Dispatcher.BeginInvoke(new ThreadStart(delegate
+            {
+                Instance.cashboxLabel.Content = String.Format("касса {0}", Cashbox.serialNumber);
+                Instance.login.Focus();
+
+                Instance.placeholderLogin.Visibility = Visibility.Visible;
+                Instance.placeholderPass.Visibility = Visibility.Visible;
+                Instance.login.Visibility = Visibility.Visible;
+                Instance.password.Visibility = Visibility.Visible;
+                Instance.sendLogin.Visibility = Visibility.Visible;
+                Instance.versionLabel.Visibility = Visibility.Visible;
+                Instance.cashboxLabel.Visibility = Visibility.Visible;
+
+                Instance.waitingSpinner.Visibility = Visibility.Hidden;
+                Instance.waitingText.Visibility = Visibility.Hidden;
+            }));
         }
 
         private void WindowResize(object Sender, EventArgs e, int newHeight)
@@ -235,12 +275,7 @@ namespace interceptor
 
             string passwordHash = CRM.GenerateMySQLHash(password.Password);
 
-                    //// temporary
-                    ICashbox cashboxTemporary = CRM.FindCashbox();
-                    string serialNumber = cashboxTemporary.GetSerialNumber();
-                    ////
-
-            if (!CRM.CrmAuthentication(login.Text, passwordHash, serialNumber))
+            if (!CRM.CrmAuthentication(login.Text, passwordHash, Cashbox.serialNumber))
             {
                 loginFailText.Content = CRM.loginError;
                 returnFromErrorTo = loginPlace;
@@ -1217,6 +1252,18 @@ namespace interceptor
         private void totalContent_MouseDown(object sender, MouseButtonEventArgs e)
         {
             MessageBoxes.ShowReceiptContent(Cashbox.manDocPackForPrinting);
+        }
+
+        private void waitingSpinner_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            waitingSpinner.Position = new TimeSpan(0, 0, 1);
+            waitingSpinner.Play();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if (asynchCashboxSearch.IsBusy)
+                MessageBoxes.ShowCashboxSearchCancel();
         }
     }
 }

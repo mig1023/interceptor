@@ -70,5 +70,13 @@ namespace interceptor
                 receipt, "Чек", MessageBoxButton.OK, MessageBoxImage.Information
             );
         }
+
+        static public void ShowCashboxSearchCancel()
+        {
+            MessageBox.Show("Программа в процессе поиска кассы.\nК сожалению, она не может закрыться мгновенно.\n" +
+                "Она будет оставаться ещё некоторое время в памяти.\n\nЭто может иметь эффект при перезапуске программы.\n" +
+                "Если возникнут затруднения - попробуйте перезапустить программу чуть позже, через несколько минут",
+                "interceptor", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
     }
 }

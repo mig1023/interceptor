@@ -373,8 +373,9 @@ namespace interceptor
 
         private void reportCleaning_Click(object sender, RoutedEventArgs e)
         {
-            if (!Cashbox.ReportCleaning())
-                moveToErrorFromReports(Cashbox.GetResultLine());
+            if (MessageBoxes.isReportCleaningNeed() == MessageBoxResult.Yes)
+                if (!Cashbox.ReportCleaning())
+                    moveToErrorFromReports(Cashbox.GetResultLine());
         }
 
         private void reportWithoutCleaning_Click(object sender, RoutedEventArgs e)

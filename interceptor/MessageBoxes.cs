@@ -9,12 +9,13 @@ namespace interceptor
 {
     class MessageBoxes
     {
-        static private MessageBoxResult MessageBoxWithLog(string message)
+        static private MessageBoxResult MessageBoxWithLog(string message, bool warning = false)
         {
             Log.Add("предупреждение: " + message);
 
             MessageBoxResult result = MessageBox.Show(
-               message, "Внимание!", MessageBoxButton.YesNo, MessageBoxImage.Question
+               message, "Внимание!", MessageBoxButton.YesNo,
+               (warning ? MessageBoxImage.Warning : MessageBoxImage.Question)
             );
 
             Log.Add("ответ: " + (result == MessageBoxResult.Yes ? "ДА" : "нет"));
@@ -38,6 +39,11 @@ namespace interceptor
                 "Услуги не имеют цены по прайслисту выбранного центра: " + services.TrimEnd() +
                 ". Такие услуги не будут отображены в чеке. Продолжить?"
             );
+        }
+
+        static public MessageBoxResult isReportCleaningNeed()
+        {
+            return MessageBoxWithLog("Распечатка отчёта с гашением приведёт к закрытию смены. Продолжить?", warning: true);
         }
 
         static public void ChangeMessage(string change)

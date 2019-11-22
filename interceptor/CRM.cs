@@ -6,20 +6,20 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
+using System.Net.Sockets;
 
 namespace interceptor
 {
     class CRM
     {
-        const string CRM_URL_TEST = "127.0.0.1";
+        private static Socket SocketSend = null;
+        private static Socket SocketReceive = null;
 
-        const string CRM_URL_FIGHT = "127.0.0.1";
-        public const string CRM_URL_BASE = (MainWindow.TEST_VERSION ? CRM_URL_TEST : CRM_URL_FIGHT);
-        public const string CRM_URL = "http://" + CRM_URL_BASE;
-
-        const string CRM_URL_FIGHT_RUSERV = "127.0.0.1";
-        public const string CRM_URL_BASE_RUSERV = (MainWindow.TEST_VERSION ? CRM_URL_TEST : CRM_URL_FIGHT_RUSERV);
-        public const string CRM_URL_RUSERV = "http://" + CRM_URL_BASE_RUSERV;
+				// tmp
+                                const string CRM_URL_TEST = "127.0.0.1";
+                                const string CRM_URL_FIGHT = "127.0.0.1";
+                                public const string CRM_URL_BASE = (MainWindow.TEST_VERSION ? CRM_URL_TEST : CRM_URL_FIGHT);
+                                public const string CRM_URL = "http://" + CRM_URL_BASE;
 
         public static int password = 0;
         public const int adminPassword = 0;
@@ -36,6 +36,33 @@ namespace interceptor
             ["Moscow (м.Киевская выдача)"] = "msk_kiev_ext"
         };
 
+        public static bool SocketConnect()
+        {
+            IPEndPoint ipSendPoint = new IPEndPoint(IPAddress.Parse(Secret.PRTOCOL_IP_SERVER), Secret.PROTOCOL_PORT_SEND);
+            SocketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            SocketSend.Connect(ipSendPoint);
+
+            return true;
+        }
+
+        public static string SockectSend(string sending)
+        {
+            SocketSend.Send(Encoding.Unicode.GetBytes(sending));
+
+            byte[] data = new byte[256];
+            StringBuilder builder = new StringBuilder();
+            int bytes = 0;
+
+            do
+            {
+                bytes = SocketSend.Receive(data, data.Length, 0);
+                builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
+            }
+            while (SocketSend.Available > 0);
+
+            return builder.ToString();
+        }
+
         public static bool CrmAuthentication(string login, string passwordLine, string serialNo)
         {
             string authString = String.Empty;
@@ -44,11 +71,13 @@ namespace interceptor
                 "&p=" + passwordLine + "&ip=" + GetMyIP() + "&s=" + serialNo +
                 "&v=" + MainWindow.CURRENT_VERSION;
 
+            SocketConnect();
+
             try
             {
-                authString = GetHtml(url);
+                authString = SockectSend(url);
             }
-            catch (WebException e)
+            catch (SocketException e)
             {
                 loginError = "Ошибка доступа к серверу";
                 Log.AddWeb(e.Message);
@@ -332,7 +361,7 @@ namespace interceptor
         {
             string controlString = String.Empty;
 
-            string url = CRM_URL_RUSERV + "/individuals/cashbox_payment_control.htm?" +
+            string url = CRM_URL + "/individuals/cashbox_payment_control.htm?" +
                 "docnum=" + agreement + "&login="+ currentLogin +
                 "&p=" + currentPassword + "&t=" + paymentType + "&ip=" + GetMyIP();
 

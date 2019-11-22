@@ -29,7 +29,7 @@ namespace interceptor
         public Canvas returnFromErrorTo;
 
         public static string PROTOCOL_PASS = Secret.PROTOCOL_PASS;
-        public static int PROTOCOL_PORT = Secret.PROTOCOL_PORT;
+        public static int PROTOCOL_PORT = Secret.PROTOCOL_PORT_SEND; // tmp
 
         public const bool TEST_VERSION = true;
 

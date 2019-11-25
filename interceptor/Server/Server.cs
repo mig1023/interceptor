@@ -1,6 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
@@ -9,49 +11,51 @@ namespace interceptor
 {
     class Server
     {
-        TcpListener Listener;
-
         private static readonly BackgroundWorker asynchServ = new BackgroundWorker();
 
-        public Server(int port)
-        {
-            Listener = new TcpListener(IPAddress.Any, port);
-            Listener.Start();
-
-            while (true)
-            {
-                ThreadPool.QueueUserWorkItem(new WaitCallback(ClientThread), Listener.AcceptTcpClient()); 
-            }
-        }
-
-        private void ClientThread(object state)
-        {
-            string RemoteEndPoint = (state as TcpClient).Client.RemoteEndPoint.ToString();
-
-            Log.Add("новое соединение c " + RemoteEndPoint, freeLine: true);
-
-            new Client((TcpClient)state, RemoteEndPoint);
-        }
+        public static Socket SocketReceive = null;
 
         public static void StartServer()
         {
-            asynchServ.DoWork += worker_DoWork;
+            asynchServ.DoWork += worker_Server;
             asynchServ.RunWorkerAsync();
         }
 
-        private static void worker_DoWork(object sender, DoWorkEventArgs e)
+        private static void worker_Server(object sender, DoWorkEventArgs e)
         {
             Log.Add("сервер запущен");
 
-            new Server(80); // tmp
-        }
-
-        ~Server()
-        {
-            if (Listener != null)
+            while (true)
             {
-                Listener.Stop();
-                Log.Add("сервер остановлен");
+                try
+                {
+                    Socket received = SocketReceive.Accept();
+
+                    StringBuilder receviedLine = new StringBuilder();
+                    int bytes = 0;
+                    byte[] data = new byte[256];
+
+                    do
+                    {
+                        bytes = received.Receive(data);
+                        receviedLine.Append(Encoding.Unicode.GetString(data, 0, bytes));
+                    }
+                    while (received.Available > 0);
+
+                    Log.Add("новый запрос " + receviedLine.ToString(), freeLine: true);
+
+                    string responce = Client.ClientWork(receviedLine.ToString(), "1.1.1.1");
+
+                    data = Encoding.Unicode.GetBytes(responce);
+                    received.Send(data);
+
+                    received.Shutdown(SocketShutdown.Both);
+                    received.Close();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
     }

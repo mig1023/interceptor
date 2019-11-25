@@ -30,22 +30,8 @@ namespace interceptor
             Client.Close();
         }
 
-        public Client(TcpClient Client, string clientIP)
+        public static string ClientWork(string request, string clientIP)
         {
-            string request = String.Empty;
-            string response = String.Empty;
-
-            byte[] buffer = new byte[1024];
-            int count = 0;
-            
-            while ((count = Client.GetStream().Read(buffer, 0, buffer.Length)) > 0)
-            {
-                request += Encoding.ASCII.GetString(buffer, 0, count);
-
-                if (request.IndexOf("\r\n\r\n") >= 0)
-                    break;
-            }
-
             request = Uri.UnescapeDataString(request);
 
             Log.Add(request, logType: "http");
@@ -54,13 +40,7 @@ namespace interceptor
 
             bool emplyRequest = (ReqMatch.Success ? false : true);
 
-            response = ResponsePrepare(ReqMatch.Groups[1].Value, emplyRequest, clientIP);
-
-            SendResponse(Client, response);
-
-            Log.Add("соединение закрыто");
-
-            Client.Close();
+            return ResponsePrepare(ReqMatch.Groups[1].Value, emplyRequest, clientIP);
         }
 
         public static void ShowTotal(string summ)

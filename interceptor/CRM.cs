@@ -12,8 +12,8 @@ namespace interceptor
 {
     class CRM
     {
-        private static Socket SocketSend = null;
-        private static Socket SocketReceive = null;
+        public static Socket SocketSend = null;
+        
 
         public static int password = 0;
         public const int adminPassword = 0;
@@ -33,28 +33,37 @@ namespace interceptor
 
         public static bool SocketsConnect()
         {
-            if (!SocketConnect(Secret.PROTOCOL_PORT_SEND, "сокет отправки", out SocketSend))
+            if (!SocketConnect(Secret.PROTOCOL_IP_CLIENT, Secret.PROTOCOL_PORT_SEND, "сокет отправки", out SocketSend))
                 return false;
 
-            if (!SocketConnect(Secret.PROTOCOL_PORT_RECEIVE, "сокета сервера", out SocketReceive))
+            if (!SocketConnect(Secret.PROTOCOL_IP_SERVER, Secret.PROTOCOL_PORT_RECEIVE, 
+                    "сокета сервера", out Server.SocketReceive, server: true))
                 return false;
 
             return true;
         }
 
-        private static bool SocketConnect(int port, string typeLine, out Socket socket)
+        private static bool SocketConnect(string ip, int port, string typeLine, out Socket socket, bool server = false)
         {
             socket = null;
 
             try
             {
-                IPEndPoint ipSendPoint = new IPEndPoint(IPAddress.Parse(Secret.PRTOCOL_IP_SERVER), port);
+                IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(ip), port);
                 socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                socket.Connect(ipSendPoint);
+
+                if (server)
+                {
+                    socket.Bind(ipPoint);
+                    socket.Listen(25);
+                }
+                else
+                    socket.Connect(ipPoint);
             }
             catch(SocketException e)
             {
                 Log.Add(String.Format("{0}: {1}", typeLine, e.Message));
+                socket = null;
                 return false;
             }
 

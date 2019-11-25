@@ -16,6 +16,12 @@ namespace socketserver
 
         static void Main(string[] args)
         {
+            IPAddress ip = Dns.GetHostByName(Dns.GetHostName()).AddressList[0];
+            Console.WriteLine(ip.ToString());
+            Console.WriteLine(portReceive.ToString());
+            Console.WriteLine(portSend.ToString());
+
+
             IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(ipServer), portReceive);
             Socket SocketReceive = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 

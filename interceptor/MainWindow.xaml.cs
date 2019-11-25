@@ -249,7 +249,7 @@ namespace interceptor
             status1.Content = CURRENT_VERSION;
             status2.Content = CRM.GetMyIP();
             status3.Content = String.Format("отправки {0} / сервер {1}", Secret.PROTOCOL_PORT_SEND, Secret.PROTOCOL_PORT_RECEIVE);
-            status4.Content = Secret.PRTOCOL_IP_SERVER;
+            status4.Content = Secret.PROTOCOL_IP_SERVER;
 
             Cashbox.GetStatusData(out port, out speed, out version, out model);
 

@@ -3,6 +3,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System.Threading;
 
 namespace socketserver
 {
@@ -40,29 +41,32 @@ namespace socketserver
                 {
                     Socket received = SocketReceive.Accept();
 
-                    StringBuilder receviedLine = new StringBuilder();
-                    int bytes = 0;
-                    byte[] data = new byte[256];
-
-                    do
+                    new Thread(() =>
                     {
-                        bytes = received.Receive(data);
-                        receviedLine.Append(Encoding.Unicode.GetString(data, 0, bytes));
-                    }
-                    while (received.Available > 0);
+                        while (true)
+                        {
+                            StringBuilder receviedLine = new StringBuilder();
+                            int bytes = 0;
+                            byte[] data = new byte[256];
 
-                    Console.WriteLine(" ");
-                    Console.WriteLine("----------> " + receviedLine.ToString());
+                            do
+                            {
+                                bytes = received.Receive(data);
+                                receviedLine.Append(Encoding.Unicode.GetString(data, 0, bytes));
+                            }
+                            while (received.Available > 0);
 
-                    string message = SendToCRM(receviedLine.ToString());
+                            Console.WriteLine(" ");
+                            Console.WriteLine("---> " + receviedLine.ToString());
 
-                    Console.WriteLine("<---------- " + message);
+                            string message = SendToCRM(receviedLine.ToString());
 
-                    data = Encoding.Unicode.GetBytes(message);
-                    received.Send(data);
+                            Console.WriteLine("<--- " + message);
 
-                    received.Shutdown(SocketShutdown.Both);
-                    received.Close();
+                            data = Encoding.Unicode.GetBytes(message);
+                            received.Send(data);
+                        }
+                    }).Start();
                 }
                 catch (Exception e)
                 {

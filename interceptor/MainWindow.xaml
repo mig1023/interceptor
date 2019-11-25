@@ -197,7 +197,7 @@
             <Label x:Name="placeholderLogin" Visibility="Hidden" Content="введите vms логин" Height="26" Canvas.Left="254" Canvas.Top="126" Width="117" Foreground="#FFD8D8D8" Tag="login" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderPass" Visibility="Hidden" Content="введите vms пароль" Height="24" Canvas.Left="255" Canvas.Top="162" Width="123" Foreground="#FFD8D8D8" Tag="password" MouseDown="placeholder_MouseDown"/>
             <MediaElement x:Name="waitingSpinner" Height="275" Canvas.Left="261" Canvas.Top="20" Width="269" UnloadedBehavior="Manual" Source="Images/spinner.gif" LoadedBehavior="Play" Stretch="None" MediaEnded="waitingSpinner_MediaEnded"/>
-            <TextBlock x:Name="waitingText" Height="29" Canvas.Left="163" TextWrapping="Wrap" Text="Пожалуйста, подождите пока программа соединится с кассой..." Canvas.Top="267" Width="496" FontSize="16"/>
+            <TextBlock x:Name="waitingText" Height="29" Canvas.Left="163" TextWrapping="Wrap" Text="" Canvas.Top="267" Width="496" FontSize="16"/>
         </Canvas>
         <Canvas x:Name="loginFail" Margin="0,397,0,-397" Background="#FFFF4E4E" Visibility="Hidden">
             <Button x:Name="backToLoginFromFail" Content="попробовать ещё раз" FontSize="14" Height="42" Canvas.Left="59" Canvas.Top="164" Width="211" Click="returnFromError_Click"/>
@@ -208,19 +208,19 @@
             <Button x:Name="backToMainFromInfo" Content="назад" FontSize="14" Height="42" Canvas.Left="608" Canvas.Top="139" Width="155" Click="backToMainFromInfo_Click"/>
             <Label x:Name="statusl_label" Content="версия приложения" Height="25" Canvas.Left="25" Canvas.Top="20" Width="122"/>
             <Label x:Name="status2_label" Content="адрес приложения" Height="25" Canvas.Left="25" Canvas.Top="40" Width="122"/>
-            <Label x:Name="status3_label" Content="адрес vms" Height="25" Canvas.Left="25" Canvas.Top="60" Width="122"/>
-            <Label x:Name="status4_label" Content="порт кассы" Height="25" Canvas.Left="25" Canvas.Top="80" Width="122"/>
-            <Label x:Name="status5_label" Content="скорость кассы" Height="25" Canvas.Left="25" Canvas.Top="100" Width="122"/>
-            <Label x:Name="status6_label" Content="тип кассы" Height="25" Canvas.Left="25" Canvas.Top="120" Width="122"/>
-            <Label x:Name="status7_label" Content="версия прошивки кассы" Height="25" Canvas.Left="25" Canvas.Top="140" Width="149"/>
+            <Label x:Name="status3_label" Content="порты" Height="25" Canvas.Left="25" Canvas.Top="60" Width="122"/>
+            <Label x:Name="status4_label" Content="адрес сокет-сервера" Height="25" Canvas.Left="25" Canvas.Top="80" Width="122"/>
+            <Label x:Name="status5_label" Content="порт кассы" Height="25" Canvas.Left="25" Canvas.Top="100" Width="122"/>
+            <Label x:Name="status6_label" Content="скорость кассы" Height="25" Canvas.Left="25" Canvas.Top="120" Width="122"/>
+            <Label x:Name="status7_label" Content="тип кассы" Height="25" Canvas.Left="25" Canvas.Top="140" Width="149"/>
             <Label x:Name="status10_label" Content="текущий пользователь" Height="25" Canvas.Left="25" Canvas.Top="160" Width="141"/>
-            <Label x:Name="status1" Content="" Height="25" Canvas.Left="184" Canvas.Top="20" Width="293"/>
-            <Label x:Name="status2" Content="" Height="25" Canvas.Left="184" Canvas.Top="40" Width="293"/>
-            <Label x:Name="status3" Content="" Height="25" Canvas.Left="184" Canvas.Top="60" Width="293"/>
-            <Label x:Name="status4" Content="" Height="25" Canvas.Left="184" Canvas.Top="80" Width="293"/>
-            <Label x:Name="status5" Content="" Height="25" Canvas.Left="184" Canvas.Top="100" Width="293"/>
-            <Label x:Name="status6" Content="" Height="25" Canvas.Left="184" Canvas.Top="120" Width="293"/>
-            <Label x:Name="status7" Content="" Height="25" Canvas.Left="184" Canvas.Top="140" Width="293"/>
+            <Label x:Name="status1" Content="" Height="25" Canvas.Left="184" Canvas.Top="20" Width="395"/>
+            <Label x:Name="status2" Content="" Height="25" Canvas.Left="184" Canvas.Top="40" Width="395"/>
+            <Label x:Name="status3" Content="" Height="25" Canvas.Left="184" Canvas.Top="60" Width="395"/>
+            <Label x:Name="status4" Content="" Height="25" Canvas.Left="184" Canvas.Top="80" Width="395"/>
+            <Label x:Name="status5" Content="" Height="25" Canvas.Left="184" Canvas.Top="100" Width="395"/>
+            <Label x:Name="status6" Content="" Height="25" Canvas.Left="184" Canvas.Top="120" Width="395"/>
+            <Label x:Name="status7" Content="" Height="25" Canvas.Left="184" Canvas.Top="140" Width="395"/>
             <Label x:Name="status10" Content="" Height="25" Canvas.Left="184" Canvas.Top="160" Width="419"/>
             <ListBox x:Name="logBox" Height="173" Canvas.Left="25" Canvas.Top="190" Width="738"/>
         </Canvas>

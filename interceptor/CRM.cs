@@ -15,12 +15,6 @@ namespace interceptor
         private static Socket SocketSend = null;
         private static Socket SocketReceive = null;
 
-				// tmp
-                                const string CRM_URL_TEST = "127.0.0.1";
-                                const string CRM_URL_FIGHT = "127.0.0.1";
-                                public const string CRM_URL_BASE = (MainWindow.TEST_VERSION ? CRM_URL_TEST : CRM_URL_FIGHT);
-                                public const string CRM_URL = "http://" + CRM_URL_BASE;
-
         public static int password = 0;
         public const int adminPassword = 0;
 
@@ -36,12 +30,35 @@ namespace interceptor
             ["Moscow (м.Киевская выдача)"] = "msk_kiev_ext"
         };
 
-        public static bool SocketConnect()
-        {
-            IPEndPoint ipSendPoint = new IPEndPoint(IPAddress.Parse(Secret.PRTOCOL_IP_SERVER), Secret.PROTOCOL_PORT_SEND);
-            SocketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            SocketSend.Connect(ipSendPoint);
 
+        public static bool SocketsConnect()
+        {
+            if (!SocketConnect(Secret.PROTOCOL_PORT_SEND, "сокет отправки", out SocketSend))
+                return false;
+
+            if (!SocketConnect(Secret.PROTOCOL_PORT_RECEIVE, "сокета сервера", out SocketReceive))
+                return false;
+
+            return true;
+        }
+
+        private static bool SocketConnect(int port, string typeLine, out Socket socket)
+        {
+            socket = null;
+
+            try
+            {
+                IPEndPoint ipSendPoint = new IPEndPoint(IPAddress.Parse(Secret.PRTOCOL_IP_SERVER), port);
+                socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                socket.Connect(ipSendPoint);
+            }
+            catch(SocketException e)
+            {
+                Log.Add(String.Format("{0}: {1}", typeLine, e.Message));
+                return false;
+            }
+
+            Log.Add(String.Format("{0}: подключено", typeLine));
             return true;
         }
 
@@ -51,12 +68,10 @@ namespace interceptor
 
             byte[] data = new byte[256];
             StringBuilder builder = new StringBuilder();
-            int bytes = 0;
 
             do
             {
-                bytes = SocketSend.Receive(data, data.Length, 0);
-                builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
+                builder.Append(Encoding.Unicode.GetString(data, 0, SocketSend.Receive(data, data.Length, 0)));
             }
             while (SocketSend.Available > 0);
 
@@ -67,11 +82,9 @@ namespace interceptor
         {
             string authString = String.Empty;
 
-            string url = CRM_URL + "/vcs/cashbox_auth.htm?login=" + login +
+            string url = "/vcs/cashbox_auth.htm?login=" + login +
                 "&p=" + passwordLine + "&ip=" + GetMyIP() + "&s=" + serialNo +
                 "&v=" + MainWindow.CURRENT_VERSION;
-
-            SocketConnect();
 
             try
             {
@@ -125,13 +138,13 @@ namespace interceptor
         {
             string centerString = String.Empty;
 
-            string url = CRM_URL + "/vcs/cashbox_centers.htm?login=" + login;
+            string url = "/vcs/cashbox_centers.htm?login=" + login;
 
             try
             {
-                centerString = GetHtml(url);
+                centerString = SockectSend(url);
             }
-            catch (WebException e)
+            catch (SocketException e)
             {
                 Log.AddWeb("(центры) " + e.Message);
 
@@ -145,13 +158,13 @@ namespace interceptor
         {
             string vtypeString = String.Empty;
 
-            string url = CRM_URL + "/vcs/cashbox_vtype.htm?center=" + vcenterName;
+            string url = "/vcs/cashbox_vtype.htm?center=" + vcenterName;
 
             try
             {
-                vtypeString = GetHtml(url);
+                vtypeString = SockectSend(url);
             }
-            catch (WebException e)
+            catch (SocketException e)
             {
                 Log.AddWeb("(типы виз) " + e.Message);
 
@@ -165,13 +178,13 @@ namespace interceptor
         {
             string FDData = String.Empty;
 
-            string url = CRM_URL + "/vcs/cashbox_fd.htm?first=" + startFD.ToString() + "&type=" + type;
+            string url = "/vcs/cashbox_fd.htm?first=" + startFD.ToString() + "&type=" + type;
 
             try
             {
-                FDData = GetHtml(url);
+                FDData = SockectSend(url);
             }
-            catch (WebException e)
+            catch (SocketException e)
             {
                 Log.AddWeb("(запрос данных) " + e.Message);
 
@@ -188,15 +201,15 @@ namespace interceptor
             string fields =
                 "login=" + currentLogin + "&error=" + error + "&ip=" + GetMyIP() + "&agr=" + agrNumber;
 
-            string url = CRM_URL + "/vcs/cashbox_error.htm?" + fields;
+            string url = "/vcs/cashbox_error.htm?" + fields;
 
             Log.Add(url, logType: "http");
 
             try
             {
-                requestResult = GetHtml(url);
+                requestResult = SockectSend(url);
             }
-            catch (WebException e)
+            catch (SocketException e)
             {
                 Log.AddWeb("(отправка информации об ошибке) " + e.Message);
             }
@@ -219,15 +232,15 @@ namespace interceptor
 
             string request = fields + "&crc=" + CheckRequest.CreateMD5(fields, notOrd: true);
 
-            string url = CRM_URL + "/vcs/cashbox_appinfo.htm?" + request;
+            string url = "/vcs/cashbox_appinfo.htm?" + request;
 
             Log.Add(url, logType: "http");
 
             try
             {
-                requestResult = GetHtml(url);
+                requestResult = SockectSend(url);
             }
-            catch (WebException e)
+            catch (SocketException e)
             {
                 Log.AddWeb("(отправка запроса на информацию о записи) " + e.Message);
 
@@ -263,15 +276,15 @@ namespace interceptor
 
             string request = fields + "&crc=" + CheckRequest.CreateMD5(fields, notOrd: true);
 
-            string url = CRM_URL + "/vcs/cashbox_mandocpack.htm?" + request;
+            string url = "/vcs/cashbox_mandocpack.htm?" + request;
 
             Log.Add(url, logType: "http");
 
             try
             {
-                requestResult = GetHtml(url);
+                requestResult = SockectSend(url);
             }
-            catch (WebException e)
+            catch (SocketException e)
             {
                 Log.AddWeb("(отправка запроса на чек) " + e.Message);
 
@@ -297,22 +310,10 @@ namespace interceptor
             return "*" + sha1hash.ToString();
         }
 
-        public static string GetHtml(string url)
-        {
-            WebClient client = new WebClient();
-            using (Stream data = client.OpenRead(url))
-            {
-                using (StreamReader reader = new StreamReader(data))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-        }
-
         public static void SendFile(string pathToFile, string appID, string actNum,
             string xerox, string form, string print, string photo)
         {
-            string url = CRM_URL + "/vcs/cashbox_upload.htm";
+            string url = "/vcs/cashbox_upload.htm";
 
             Log.Add("отправлена информация в БД об акте для AppID " + appID);
             Log.Add("копирование: " + xerox + " Анкета: " + form + " Распечатка: " + print + " Фото: " + photo);
@@ -361,15 +362,15 @@ namespace interceptor
         {
             string controlString = String.Empty;
 
-            string url = CRM_URL + "/individuals/cashbox_payment_control.htm?" +
+            string url = "/individuals/cashbox_payment_control.htm?" +
                 "docnum=" + agreement + "&login="+ currentLogin +
                 "&p=" + currentPassword + "&t=" + paymentType + "&ip=" + GetMyIP();
 
             try
             {
-                controlString = GetHtml(url);
+                controlString = SockectSend(url);
             }
-            catch (WebException e)
+            catch (SocketException e)
             {
                 Log.AddWeb("(ошибка контроля оплаты) " + e.Message);
             }

@@ -43,7 +43,7 @@ namespace interceptor
         {
             Log.Add("сервер запущен");
 
-            new Server(MainWindow.PROTOCOL_PORT);
+            new Server(80); // tmp
         }
 
         ~Server()

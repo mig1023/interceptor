@@ -2,6 +2,7 @@
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using System.IO;
 
 namespace socketserver
 {
@@ -11,6 +12,8 @@ namespace socketserver
         static int portReceive = 80;
         static int portSend = 80;
 
+        static string serverCRM = "http://" + "127.0.0.1";
+
         static void Main(string[] args)
         {
             IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(ipServer), portReceive);
@@ -18,6 +21,12 @@ namespace socketserver
 
             SocketReceive.Bind(ipPoint);
             SocketReceive.Listen(10);
+
+                            ipPoint = new IPEndPoint(IPAddress.Parse(ipServer), portSend);
+                            Socket SocketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                            SocketSend.Bind(ipPoint);
+                            SocketSend.Listen(10);
 
             while (true)
             {
@@ -36,9 +45,13 @@ namespace socketserver
                     }
                     while (received.Available > 0);
 
-                    Console.WriteLine(receviedLine.ToString());
+                    Console.WriteLine(" ");
+                    Console.WriteLine("----------> " + receviedLine.ToString());
 
-                    string message = "OK|received";
+                    string message = SendToCRM(receviedLine.ToString());
+
+                    Console.WriteLine("<---------- " + message);
+
                     data = Encoding.Unicode.GetBytes(message);
                     received.Send(data);
 
@@ -48,6 +61,37 @@ namespace socketserver
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
+                }
+            }
+        }
+
+
+        public static string SendToCRM(string url)
+        {
+            string response = String.Empty;
+
+            try
+            {
+                response = GetHtml(serverCRM + url);
+            }
+            catch (WebException e)
+            {
+                //Log.AddWeb("(запрос данных) " + e.Message);
+
+                return String.Empty;
+            }
+
+            return response;
+        }
+
+        public static string GetHtml(string url)
+        {
+            WebClient client = new WebClient();
+            using (Stream data = client.OpenRead(url))
+            {
+                using (StreamReader reader = new StreamReader(data))
+                {
+                    return reader.ReadToEnd();
                 }
             }
         }

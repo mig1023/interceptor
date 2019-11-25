@@ -29,7 +29,6 @@ namespace interceptor
         public Canvas returnFromErrorTo;
 
         public static string PROTOCOL_PASS = Secret.PROTOCOL_PASS;
-        public static int PROTOCOL_PORT = Secret.PROTOCOL_PORT_SEND; // tmp
 
         public const bool TEST_VERSION = true;
 
@@ -92,47 +91,70 @@ namespace interceptor
             foreach (Button button in new List<Button> { anketasrvR, printsrvR, photosrvR, xeroxR, srv11R })
                 receptionButtonCleaningList.Add(button);
 
-            FindCashboxAndShowEntrance();
+            FindCashboxAndSetSocketsConnecion();
         }
 
-        private void FindCashboxAndShowEntrance()
+        private void FindCashboxAndSetSocketsConnecion()
         {
-            asynchCashboxSearch.DoWork += worker_SearchCashbox;
+            asynchCashboxSearch.DoWork += worker_CashboxAndSockets;
             asynchCashboxSearch.RunWorkerAsync();
         }
 
-        private static void worker_SearchCashbox(object sender, DoWorkEventArgs e)
+        private static void worker_CashboxAndSockets(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
+
+            ShowStartStatus("Пожалуйста, подождите пока программа соединится с кассой...");
 
             Log.Add("ищем кассу");
 
             Cashbox = CRM.FindCashbox();
 
             if (Cashbox == null)
-                ShowStartError("Ошибка подключения к кассе. Проверьте подключение и перезапустите приложение");
-            else
             {
-                Cashbox.serialNumber = Cashbox.GetSerialNumber();
-                Log.Add(String.Format("нашли {0} {1}", Cashbox.Name(), Cashbox.serialNumber));
-
-                Instance.ShowEntrance();
+                ShowStartError("Ошибка подключения к кассе. Проверьте подключение и перезапустите приложение", onlyExit: true);
+                return;
             }
+                
+            Cashbox.serialNumber = Cashbox.GetSerialNumber();
+            Log.Add(String.Format("нашли {0} {1}", Cashbox.Name(), Cashbox.serialNumber));
+
+            ShowStartStatus("Пожалуйста, подождите пока программа соединится с сервером...");
+
+            if (!CRM.SocketsConnect())
+            {
+                ShowStartError("Ошибка подключения к серверу системы VMS", onlyExit: true);
+                return;
+            }
+
+            Instance.ShowEntrance();
         }
 
-        private static void ShowStartError(string error)
+        private static void ShowStartError(string error, bool onlyExit = false)
         {
             Application.Current.Dispatcher.BeginInvoke(new ThreadStart(delegate
             {
                 Instance.loginFailText.Content = error;
-                Instance.backToLoginFromFail.Visibility = Visibility.Hidden;
-                Instance.closeApppication.Visibility = Visibility.Visible;
+
+                if (onlyExit)
+                {
+                    Instance.backToLoginFromFail.Visibility = Visibility.Hidden;
+                    Instance.closeApppication.Visibility = Visibility.Visible;
+                }
 
                 Instance.MoveCanvas(
                     moveCanvas: Instance.loginFail,
                     prevCanvas: Instance.loginPlace,
                     direction: moveDirection.vertical
                 );
+            }));
+        }
+
+        private static void ShowStartStatus(string waitingText)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new ThreadStart(delegate
+            {
+                Instance.waitingText.Text = waitingText;
             }));
         }
 
@@ -225,15 +247,15 @@ namespace interceptor
             string port, speed, version, model;
 
             status1.Content = CURRENT_VERSION;
-            status2.Content = CRM.GetMyIP() + " ( порт " + PROTOCOL_PORT + " )";
-            status3.Content = CRM.CRM_URL_BASE;
+            status2.Content = CRM.GetMyIP();
+            status3.Content = String.Format("отправки {0} / сервер {1}", Secret.PROTOCOL_PORT_SEND, Secret.PROTOCOL_PORT_RECEIVE);
+            status4.Content = Secret.PRTOCOL_IP_SERVER;
 
             Cashbox.GetStatusData(out port, out speed, out version, out model);
 
-            status4.Content = port;
-            status5.Content = speed;
-            status6.Content = model;
-            status7.Content = version;
+            status5.Content = port;
+            status6.Content = speed;
+            status7.Content = model;
         }
 
         private void UpdateCenters()

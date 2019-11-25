@@ -64,7 +64,7 @@ namespace interceptor
 
             try
             {
-                versionData = CRM.GetHtml(URL_MANIFEST);
+                versionData = GetHtml(URL_MANIFEST);
             }
             catch (WebException e)
             {
@@ -92,6 +92,18 @@ namespace interceptor
             XmlNode lastVersionXml = xmlData.SelectSingleNode("Update/LastVersion");
 
             return lastVersionXml.InnerText;
+        }
+
+        public static string GetHtml(string url)
+        {
+            WebClient client = new WebClient();
+            using (Stream data = client.OpenRead(url))
+            {
+                using (StreamReader reader = new StreamReader(data))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
         }
     }
 }

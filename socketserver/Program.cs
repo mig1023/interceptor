@@ -9,9 +9,12 @@ namespace socketserver
 {
     class Program
     {
-        static string ipServer = "127.0.0.1";
-        static int portReceive = 80;
-        static int portSend = 80;
+        public static Socket SocketSend = null;
+
+        public static string ipServer = "127.0.0.1";
+        public static int portReceive = 80;
+        public static int portSend = 80;
+        public static int portServerReceive = 80;
 
         static string serverCRM = "http://" + "127.0.0.1";
 
@@ -30,10 +33,12 @@ namespace socketserver
             SocketReceive.Listen(10);
 
                             ipPoint = new IPEndPoint(IPAddress.Parse(ipServer), portSend);
-                            Socket SocketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                            SocketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                             SocketSend.Bind(ipPoint);
                             SocketSend.Listen(10);
+
+            Server.StartServer();
 
             while (true)
             {

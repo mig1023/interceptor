@@ -39,6 +39,8 @@ namespace interceptor
             if (!SocketConnect(Secret.PROTOCOL_IP_SERVER, Secret.PROTOCOL_PORT_RECEIVE, "сокета сервера", out Server.SocketReceive))
                 return false;
 
+            Server.SocketReceive.Send(Encoding.Unicode.GetBytes("12345"));
+
             return true;
         }
 

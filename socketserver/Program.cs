@@ -10,11 +10,12 @@ namespace socketserver
     class Program
     {
         public static Socket SocketSend = null;
+        public static Socket Socket2Send = null;
 
         public static string ipServer = "127.0.0.1";
         public static int portReceive = 80;
         public static int portSend = 80;
-        public static int portServerReceive = 80;
+        public static int portServerCRM = 80;
 
         static string serverCRM = "http://" + "127.0.0.1";
 
@@ -32,11 +33,16 @@ namespace socketserver
             SocketReceive.Bind(ipPoint);
             SocketReceive.Listen(10);
 
-                            ipPoint = new IPEndPoint(IPAddress.Parse(ipServer), portSend);
-                            SocketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            new Thread(() =>
+            {
+                ipPoint = new IPEndPoint(IPAddress.Parse(ipServer), portSend);
+                SocketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-                            SocketSend.Bind(ipPoint);
-                            SocketSend.Listen(10);
+                SocketSend.Bind(ipPoint);
+                SocketSend.Listen(10);
+                Socket2Send = SocketSend.Accept();
+                Console.WriteLine("Socket2Send connected");
+            }).Start();
 
             Server.StartServer();
 
@@ -50,6 +56,8 @@ namespace socketserver
                     {
                         while (true)
                         {
+                            Console.WriteLine("SocketReceive connected");
+
                             StringBuilder receviedLine = new StringBuilder();
                             int bytes = 0;
                             byte[] data = new byte[256];
@@ -79,7 +87,6 @@ namespace socketserver
                 }
             }
         }
-
 
         public static string SendToCRM(string url)
         {

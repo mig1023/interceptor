@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -29,6 +30,8 @@ namespace socketserver
         {
             string RemoteEndPoint = (state as TcpClient).Client.RemoteEndPoint.ToString();
 
+            Console.WriteLine("новое соединение c " + RemoteEndPoint);
+
             new Client((TcpClient)state, RemoteEndPoint);
         }
 
@@ -40,13 +43,17 @@ namespace socketserver
 
         private static void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            new Server(Program.portServerReceive);
+            Console.WriteLine("сервер запущен");
+
+            new Server(Program.portServerCRM);
         }
 
         ~Server()
         {
             if (Listener != null)
             {
+                Console.WriteLine("сервер остановлен");
+
                 Listener.Stop();
             }
         }

@@ -23,6 +23,8 @@ namespace socketserver
         {
             byte[] Buffer = EncodeToUTF8(line);
 
+            Console.WriteLine("отправлен ответ: " + line);
+
             Client.GetStream().Write(Buffer, 0, Buffer.Length);
 
             Client.Close();
@@ -31,8 +33,6 @@ namespace socketserver
         public Client(TcpClient Client, string clientIP)
         {
             string request = String.Empty;
-
-            Console.WriteLine("");
 
             byte[] buffer = new byte[1024];
             int count = 0;
@@ -49,24 +49,33 @@ namespace socketserver
 
             Match ReqMatch = Regex.Match(request, @"message=([^;]+?);");
 
-            bool emplyRequest = (ReqMatch.Success ? false : true);
+            //bool emplyRequest = (ReqMatch.Success ? false : true);
 
             string clean_request = ReqMatch.Groups[1].Value;
 
             Console.WriteLine(" ");
             Console.WriteLine("---> " + clean_request);
 
-            Program.SocketSend.Send(Encoding.Unicode.GetBytes(clean_request));
+            if (Program.Socket2Send.Connected)
+                Console.WriteLine("порт открыт");
+            else
+            {
+                Console.WriteLine("порт закрыт");
+                return;
+            }
+
+            Program.Socket2Send.Send(Encoding.Unicode.GetBytes(clean_request));
 
             byte[] data = new byte[256];
             StringBuilder builder = new StringBuilder();
 
             do
             {
-                builder.Append(Encoding.Unicode.GetString(data, 0, Program.SocketSend.Receive(data, data.Length, 0)));
+                builder.Append(Encoding.Unicode.GetString(data, 0, Program.Socket2Send.Receive(data, data.Length, 0)));
             }
-            while (Program.SocketSend.Available > 0);
-
+            while (Program.Socket2Send.Available > 0);
+            
+            Console.WriteLine("response: "+ builder.ToString());
             SendResponse(Client, builder.ToString());
 
             Console.WriteLine("<--- " + builder.ToString());

@@ -33,17 +33,16 @@ namespace interceptor
 
         public static bool SocketsConnect()
         {
-            if (!SocketConnect(Secret.PROTOCOL_IP_CLIENT, Secret.PROTOCOL_PORT_SEND, "сокет отправки", out SocketSend))
+            if (!SocketConnect(Secret.PROTOCOL_IP_SERVER, Secret.PROTOCOL_PORT_SEND, "сокет отправки", out SocketSend))
                 return false;
 
-            if (!SocketConnect(Secret.PROTOCOL_IP_SERVER, Secret.PROTOCOL_PORT_RECEIVE, 
-                    "сокета сервера", out Server.SocketReceive, server: true))
+            if (!SocketConnect(Secret.PROTOCOL_IP_SERVER, Secret.PROTOCOL_PORT_RECEIVE, "сокета сервера", out Server.SocketReceive))
                 return false;
 
             return true;
         }
 
-        private static bool SocketConnect(string ip, int port, string typeLine, out Socket socket, bool server = false)
+        private static bool SocketConnect(string ip, int port, string typeLine, out Socket socket)
         {
             socket = null;
 
@@ -52,13 +51,7 @@ namespace interceptor
                 IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(ip), port);
                 socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-                if (server)
-                {
-                    socket.Bind(ipPoint);
-                    socket.Listen(25);
-                }
-                else
-                    socket.Connect(ipPoint);
+                socket.Connect(ipPoint);
             }
             catch(SocketException e)
             {

@@ -36,11 +36,9 @@ namespace interceptor
 
             Log.Add(request, logType: "http");
 
-            Match ReqMatch = Regex.Match(request, @"message=([^;]+?);");
+            bool emplyRequest = (String.IsNullOrEmpty(request) ? true : false);
 
-            bool emplyRequest = (ReqMatch.Success ? false : true);
-
-            return ResponsePrepare(ReqMatch.Groups[1].Value, emplyRequest, clientIP);
+            return ResponsePrepare(request, emplyRequest, clientIP);
         }
 
         public static void ShowTotal(string summ)

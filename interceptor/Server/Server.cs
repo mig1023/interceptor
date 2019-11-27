@@ -29,28 +29,23 @@ namespace interceptor
             {
                 try
                 {
-                    Socket received = SocketReceive.Accept();
-
                     StringBuilder receviedLine = new StringBuilder();
                     int bytes = 0;
                     byte[] data = new byte[256];
 
                     do
                     {
-                        bytes = received.Receive(data);
+                        bytes = SocketReceive.Receive(data);
                         receviedLine.Append(Encoding.Unicode.GetString(data, 0, bytes));
                     }
-                    while (received.Available > 0);
+                    while (SocketReceive.Available > 0);
 
                     Log.Add("новый запрос " + receviedLine.ToString(), freeLine: true);
 
                     string responce = Client.ClientWork(receviedLine.ToString(), "1.1.1.1");
 
                     data = Encoding.Unicode.GetBytes(responce);
-                    received.Send(data);
-
-                    received.Shutdown(SocketShutdown.Both);
-                    received.Close();
+                    SocketReceive.Send(data);
                 }
                 catch (Exception ex)
                 {

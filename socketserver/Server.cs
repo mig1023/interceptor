@@ -30,8 +30,6 @@ namespace socketserver
         {
             string RemoteEndPoint = (state as TcpClient).Client.RemoteEndPoint.ToString();
 
-            Console.WriteLine("новое соединение c " + RemoteEndPoint);
-
             new Client((TcpClient)state, RemoteEndPoint);
         }
 
@@ -43,8 +41,6 @@ namespace socketserver
 
         private static void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            Console.WriteLine("сервер запущен");
-
             new Server(Program.portServerCRM);
         }
 
@@ -52,8 +48,6 @@ namespace socketserver
         {
             if (Listener != null)
             {
-                Console.WriteLine("сервер остановлен");
-
                 Listener.Stop();
             }
         }

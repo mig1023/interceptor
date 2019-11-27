@@ -49,20 +49,13 @@ namespace socketserver
 
             Match ReqMatch = Regex.Match(request, @"message=([^;]+?);");
 
-            //bool emplyRequest = (ReqMatch.Success ? false : true);
-
             string clean_request = ReqMatch.Groups[1].Value;
 
             Console.WriteLine(" ");
             Console.WriteLine("---> " + clean_request);
 
-            if (Program.Socket2Send.Connected)
-                Console.WriteLine("порт открыт");
-            else
-            {
-                Console.WriteLine("порт закрыт");
+            if (!Program.Socket2Send.Connected)
                 return;
-            }
 
             Program.Socket2Send.Send(Encoding.Unicode.GetBytes(clean_request));
 
@@ -74,8 +67,7 @@ namespace socketserver
                 builder.Append(Encoding.Unicode.GetString(data, 0, Program.Socket2Send.Receive(data, data.Length, 0)));
             }
             while (Program.Socket2Send.Available > 0);
-            
-            Console.WriteLine("response: "+ builder.ToString());
+
             SendResponse(Client, builder.ToString());
 
             Console.WriteLine("<--- " + builder.ToString());

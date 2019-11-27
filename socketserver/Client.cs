@@ -47,26 +47,27 @@ namespace socketserver
 
             request = Uri.UnescapeDataString(request);
 
-            Match ReqMatch = Regex.Match(request, @"message=([^;]+?);");
+            Match ReqMatch = Regex.Match(request, @"to=([\d]+)&message=([^;]+?);");
 
-            string clean_request = ReqMatch.Groups[1].Value;
+            string cleanRequest = ReqMatch.Groups[2].Value;
+            string toCashbox = ReqMatch.Groups[1].Value;
 
             Console.WriteLine(" ");
-            Console.WriteLine("---> " + clean_request);
+            Console.WriteLine("---> " + cleanRequest);
 
-            if (!Program.Socket2Send.Connected)
+            if (!Program.Sockets2Send[toCashbox].Connected)
                 return;
 
-            Program.Socket2Send.Send(Encoding.Unicode.GetBytes(clean_request));
+            Program.Sockets2Send[toCashbox].Send(Encoding.Unicode.GetBytes(cleanRequest));
 
             byte[] data = new byte[256];
             StringBuilder builder = new StringBuilder();
 
             do
             {
-                builder.Append(Encoding.Unicode.GetString(data, 0, Program.Socket2Send.Receive(data, data.Length, 0)));
+                builder.Append(Encoding.Unicode.GetString(data, 0, Program.Sockets2Send[toCashbox].Receive(data, data.Length, 0)));
             }
-            while (Program.Socket2Send.Available > 0);
+            while (Program.Sockets2Send[toCashbox].Available > 0);
 
             SendResponse(Client, builder.ToString());
 

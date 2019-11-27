@@ -4,13 +4,15 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace socketserver
 {
     class Program
     {
-        public static Socket SocketSend = null;
-        public static Socket Socket2Send = null;
+        // public static Socket Socket2Send = null;
+
+        public static Dictionary<string, Socket> Sockets2Send = new Dictionary<string, Socket>();
 
         public static string ipServer = "127.0.0.1";
         public static int portReceive = 80;
@@ -32,12 +34,37 @@ namespace socketserver
 
             new Thread(() =>
             {
-                ipPoint = new IPEndPoint(IPAddress.Parse(ipServer), portSend);
-                SocketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-                SocketSend.Bind(ipPoint);
-                SocketSend.Listen(10);
-                Socket2Send = SocketSend.Accept();
+                try
+                {
+                    ipPoint = new IPEndPoint(IPAddress.Parse(ipServer), portSend);
+                    Socket SocketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                    SocketSend.Bind(ipPoint);
+                    SocketSend.Listen(10);
+                    Socket Socket2Send = SocketSend.Accept();
+
+                    while (true)
+                    {
+
+                        StringBuilder receviedLine = new StringBuilder();
+                        int bytes = 0;
+                        byte[] data = new byte[256];
+
+                        do
+                        {
+                            bytes = Socket2Send.Receive(data);
+                            receviedLine.Append(Encoding.Unicode.GetString(data, 0, bytes));
+                        }
+                        while (Socket2Send.Available > 0);
+
+                        Sockets2Send[receviedLine.ToString()] = Socket2Send;
+                    };
+                }
+                catch (SocketException e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }).Start();
 
             Server.StartServer();

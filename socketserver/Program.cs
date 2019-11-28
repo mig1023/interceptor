@@ -12,138 +12,145 @@ namespace socketserver
     {
         // public static Socket Socket2Send = null;
 
-        public static Dictionary<string, Socket> Sockets2Send = new Dictionary<string, Socket>();
+        //public static Dictionary<string, Socket> Sockets2Send = new Dictionary<string, Socket>();
+
+        public static Sockets receiver;
+        public static Sockets sender;
 
         public static string ipServer = "127.0.0.1";
         public static int portReceive = 80;
         public static int portSend = 80;
         public static int portServerCRM = 80;
 
-        static string serverCRM = "http://" + "127.0.0.1";
+        public static string serverCRM = "http://" + "127.0.0.1";
 
         static void Main(string[] args)
         {
-            IPAddress ip = Dns.GetHostByName(Dns.GetHostName()).AddressList[0];
-            Console.WriteLine(ip.ToString());
+            receiver = new Sockets(ipServer, portReceive);
+            sender = new Sockets(ipServer, portSend, sender: true);
 
-            IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(ipServer), portReceive);
-            Socket SocketReceive = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            SocketReceive.Bind(ipPoint);
-            SocketReceive.Listen(10);
-
-            new Thread(() =>
-            {
-
-                try
-                {
-                    ipPoint = new IPEndPoint(IPAddress.Parse(ipServer), portSend);
-                    Socket SocketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-                    SocketSend.Bind(ipPoint);
-                    SocketSend.Listen(10);
-                    Socket Socket2Send = SocketSend.Accept();
-
-                    while (true)
-                    {
-
-                        StringBuilder receviedLine = new StringBuilder();
-                        int bytes = 0;
-                        byte[] data = new byte[256];
-
-                        do
-                        {
-                            bytes = Socket2Send.Receive(data);
-                            receviedLine.Append(Encoding.Unicode.GetString(data, 0, bytes));
-                        }
-                        while (Socket2Send.Available > 0);
-
-                        Sockets2Send[receviedLine.ToString()] = Socket2Send;
-                    };
-                }
-                catch (SocketException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            }).Start();
+            //IPAddress ip = Dns.GetHostByName(Dns.GetHostName()).AddressList[0];
+            //Console.WriteLine(ip.ToString());
 
             Server.StartServer();
 
-            while (true)
-            {
-                try
-                {
-                    Socket received = SocketReceive.Accept();
+            while (true) { };
 
-                    new Thread(() => receivedServer(received)).Start();
-                }
-                catch (SocketException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            }
+            //IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(ipServer), portReceive);
+            //Socket SocketReceive = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            //SocketReceive.Bind(ipPoint);
+            //SocketReceive.Listen(10);
+
+            //new Thread(() =>
+            //{
+            //    try
+            //    {
+            //        ipPoint = new IPEndPoint(IPAddress.Parse(ipServer), portSend);
+            //        Socket SocketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            //        SocketSend.Bind(ipPoint);
+            //        SocketSend.Listen(10);
+            //        Socket Socket2Send = SocketSend.Accept();
+
+            //        while (true)
+            //        {
+
+            //            StringBuilder receviedLine = new StringBuilder();
+            //            int bytes = 0;
+            //            byte[] data = new byte[256];
+
+            //            do
+            //            {
+            //                bytes = Socket2Send.Receive(data);
+            //                receviedLine.Append(Encoding.Unicode.GetString(data, 0, bytes));
+            //            }
+            //            while (Socket2Send.Available > 0);
+
+            //            Sockets2Send[receviedLine.ToString()] = Socket2Send;
+            //        };
+            //    }
+            //    catch (SocketException e)
+            //    {
+            //        Console.WriteLine(e.Message);
+            //    }
+            //}).Start();
+
+            //while (true)
+            //{
+            //    try
+            //    {
+            //        Socket received = SocketReceive.Accept();
+
+            //        new Thread(() => receivedServer(received)).Start();
+            //    }
+            //    catch (SocketException e)
+            //    {
+            //        Console.WriteLine(e.Message);
+            //    }
+            //}
         }
 
-        private static void receivedServer(Socket received)
-        {
-            while (received.Connected)
-            {
-                StringBuilder receviedLine = new StringBuilder();
-                int bytes = 0;
-                byte[] data = new byte[256];
+        //private static void receivedServer(Socket received)
+        //{
+        //    while (received.Connected)
+        //    {
+        //        StringBuilder receviedLine = new StringBuilder();
+        //        int bytes = 0;
+        //        byte[] data = new byte[256];
 
-                try
-                {
-                    do
-                    {
-                        bytes = received.Receive(data);
-                        receviedLine.Append(Encoding.Unicode.GetString(data, 0, bytes));
-                    }
-                    while (received.Available > 0);
+        //        try
+        //        {
+        //            do
+        //            {
+        //                bytes = received.Receive(data);
+        //                receviedLine.Append(Encoding.Unicode.GetString(data, 0, bytes));
+        //            }
+        //            while (received.Available > 0);
 
-                    Console.WriteLine(" ");
-                    Console.WriteLine("---> " + receviedLine.ToString());
+        //            Console.WriteLine(" ");
+        //            Console.WriteLine("---> " + receviedLine.ToString());
 
-                    string message = SendToCRM(receviedLine.ToString());
+        //            string message = SendToCRM(receviedLine.ToString());
 
-                    Console.WriteLine("<--- " + message);
+        //            Console.WriteLine("<--- " + message);
 
-                    data = Encoding.Unicode.GetBytes(message);
-                    received.Send(data);
-                }
-                catch (SocketException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            }
-        }
+        //            data = Encoding.Unicode.GetBytes(message);
+        //            received.Send(data);
+        //        }
+        //        catch (SocketException e)
+        //        {
+        //            Console.WriteLine(e.Message);
+        //        }
+        //    }
+        //}
 
-        public static string SendToCRM(string url)
-        {
-            string response = String.Empty;
+        //public static string SendToCRM(string url)
+        //{
+        //    string response = String.Empty;
 
-            try
-            {
-                response = GetHtml(serverCRM + url);
-            }
-            catch (WebException e)
-            {
-                return String.Empty;
-            }
+        //    try
+        //    {
+        //        response = GetHtml(serverCRM + url);
+        //    }
+        //    catch (WebException e)
+        //    {
+        //        return String.Empty;
+        //    }
 
-            return response;
-        }
+        //    return response;
+        //}
 
-        public static string GetHtml(string url)
-        {
-            WebClient client = new WebClient();
-            using (Stream data = client.OpenRead(url))
-            {
-                using (StreamReader reader = new StreamReader(data))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-        }
+        //public static string GetHtml(string url)
+        //{
+        //    WebClient client = new WebClient();
+        //    using (Stream data = client.OpenRead(url))
+        //    {
+        //        using (StreamReader reader = new StreamReader(data))
+        //        {
+        //            return reader.ReadToEnd();
+        //        }
+        //    }
+        //}
     }
 }

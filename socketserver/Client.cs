@@ -53,21 +53,21 @@ namespace socketserver
             string toCashbox = ReqMatch.Groups[1].Value;
 
             Console.WriteLine(" ");
-            Console.WriteLine("---> " + cleanRequest);
+            Console.WriteLine("cashbox " + toCashbox + " ---> " + cleanRequest);
 
-            if (!Program.Sockets2Send[toCashbox].Connected)
+            if (!Program.sender.SocketsPool[toCashbox].Connected)
                 return;
 
-            Program.Sockets2Send[toCashbox].Send(Encoding.Unicode.GetBytes(cleanRequest));
+            Program.sender.SocketsPool[toCashbox].Send(Encoding.Unicode.GetBytes(cleanRequest));
 
             byte[] data = new byte[256];
             StringBuilder builder = new StringBuilder();
 
             do
             {
-                builder.Append(Encoding.Unicode.GetString(data, 0, Program.Sockets2Send[toCashbox].Receive(data, data.Length, 0)));
+                builder.Append(Encoding.Unicode.GetString(data, 0, Program.sender.SocketsPool[toCashbox].Receive(data, data.Length, 0)));
             }
-            while (Program.Sockets2Send[toCashbox].Available > 0);
+            while (Program.sender.SocketsPool[toCashbox].Available > 0);
 
             SendResponse(Client, builder.ToString());
 

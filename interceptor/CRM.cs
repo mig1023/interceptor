@@ -36,10 +36,12 @@ namespace interceptor
             if (!SocketConnect(Secret.PROTOCOL_IP_SERVER, Secret.PROTOCOL_PORT_SEND, "сокет отправки", out SocketSend))
                 return false;
 
+            SocketSend.Send(Encoding.Unicode.GetBytes(MainWindow.Cashbox.serialNumber));
+
             if (!SocketConnect(Secret.PROTOCOL_IP_SERVER, Secret.PROTOCOL_PORT_RECEIVE, "сокета сервера", out Server.SocketReceive))
                 return false;
 
-            Server.SocketReceive.Send(Encoding.Unicode.GetBytes("12345"));
+            Server.SocketReceive.Send(Encoding.Unicode.GetBytes(MainWindow.Cashbox.serialNumber));
 
             return true;
         }
@@ -275,7 +277,7 @@ namespace interceptor
             string fields =
                 "login=" + login + "&pass=" + password.ToString() + "&moneytype=" + moneyType.ToString() +
                 "&money=" + money + "&center=" + RCenterNamesExclusion(center) + "&vtype=" + vType +
-                "&rdate=" + returnDate + "&services=" + servicesList + "&callback=" + GetMyIP() +
+                "&rdate=" + returnDate + "&services=" + servicesList + "&callback=" + MainWindow.Cashbox.serialNumber +
                 "&r=" + (reception ? "1" : "0") + "&n=" + (withoutApp ? "1" : "0");
 
             string request = fields + "&crc=" + CheckRequest.CreateMD5(fields, notOrd: true);

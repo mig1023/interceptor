@@ -55,14 +55,14 @@ namespace socketserver
             }
             while (received.Available > 0);
 
-            Console.WriteLine("HELLO: " + receviedHello.ToString());
+            Console.WriteLine(receviedHello.ToString());
 
             SocketsPool[receviedHello.ToString()] = received;
 
             if (!sender)
-                while (received.Connected)
+                while (SocketConnected(received))
                 {
-                    StringBuilder receviedLine = new StringBuilder();
+                    StringBuilder receviedBuilder = new StringBuilder();
                     bytes = 0;
                     data = new byte[256];
 
@@ -71,28 +71,44 @@ namespace socketserver
                         do
                         {
                             bytes = received.Receive(data);
-                            receviedLine.Append(Encoding.Unicode.GetString(data, 0, bytes));
+                            receviedBuilder.Append(Encoding.Unicode.GetString(data, 0, bytes));
                         }
                         while (received.Available > 0);
 
-                        Console.WriteLine(" ");
-                        Console.WriteLine("---> " + receviedLine.ToString());
+                        string receviedLine = receviedBuilder.ToString();
 
-                        string message = SendToCRM(receviedLine.ToString());
+                        if (!String.IsNullOrEmpty(receviedLine))
+                        {
+                            Console.WriteLine(" ");
+                            Console.WriteLine("---> " + receviedLine.ToString());
 
-                        Console.WriteLine("<--- " + message);
+                            string message = SendToCRM(receviedLine.ToString());
 
-                        data = Encoding.Unicode.GetBytes(message);
-                        received.Send(data);
+                            Console.WriteLine("<--- " + message);
+
+                            data = Encoding.Unicode.GetBytes(message);
+                            received.Send(data);
+                        }
                     }
                     catch (SocketException e)
                     {
                         Console.WriteLine(e.Message);
+
+                        received.Shutdown(SocketShutdown.Both);
+                        received.Close();
                     }
                 }
         }
 
-        public static string SendToCRM(string url)
+        private static bool SocketConnected(Socket socket)
+        {
+            if (socket.Poll(1000, SelectMode.SelectRead) && (socket.Available == 0))
+                return false;
+
+            return true;
+        }
+
+        private static string SendToCRM(string url)
         {
             string response = String.Empty;
 
@@ -108,7 +124,7 @@ namespace socketserver
             return response;
         }
 
-        public static string GetHtml(string url)
+        private static string GetHtml(string url)
         {
             WebClient client = new WebClient();
             using (Stream data = client.OpenRead(url))

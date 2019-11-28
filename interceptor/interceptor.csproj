@@ -78,7 +78,6 @@
     <Compile Include="ManualDocPack.cs" />
     <Compile Include="Secret.cs" />
     <Compile Include="Server\CheckRequest.cs" />
-    <Compile Include="Server\Client.cs" />
     <Compile Include="CRM.cs" />
     <Compile Include="Diagnostic.cs" />
     <Compile Include="DocPack.cs" />

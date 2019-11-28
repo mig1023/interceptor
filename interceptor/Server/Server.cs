@@ -163,7 +163,6 @@ namespace interceptor
                 else
                     return MainWindow.Cashbox.PrintDocPack(docPack);
             }
-
         }
     }
 }

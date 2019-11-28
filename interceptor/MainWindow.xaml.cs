@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Timers;
 using System.Globalization;
 using System.ComponentModel;
+using System.Net.Sockets;
 
 namespace interceptor
 {
@@ -1308,6 +1309,12 @@ namespace interceptor
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            foreach (Socket socket in new List<Socket> { CRM.SocketSend, Server.SocketReceive })
+            {
+                socket.Shutdown(SocketShutdown.Both);
+                socket.Close();
+            }
+
             if (asynchCashboxSearch.IsBusy)
                 MessageBoxes.ShowCashboxSearchCancel();
         }

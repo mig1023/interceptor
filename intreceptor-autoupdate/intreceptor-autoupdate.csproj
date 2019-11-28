@@ -7,8 +7,8 @@
     <ProjectGuid>{5E962561-10A9-4FE5-A822-3ED6BAB0A022}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>autoupdate</RootNamespace>
-    <AssemblyName>autoupdate</AssemblyName>
+    <RootNamespace>intreceptor_autoupdate</RootNamespace>
+    <AssemblyName>intreceptor-autoupdate</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

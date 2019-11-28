@@ -98,7 +98,7 @@ namespace socketserver
 
             try
             {
-                response = GetHtml(Program.serverCRM + url);
+                response = GetHtml(Secret.CRM_SERVER + url);
             }
             catch (WebException e)
             {

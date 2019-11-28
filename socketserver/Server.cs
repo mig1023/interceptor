@@ -9,8 +9,6 @@ namespace socketserver
 {
     class Server
     {
-
-
         TcpListener Listener;
 
         private static readonly BackgroundWorker asynchServ = new BackgroundWorker();
@@ -41,7 +39,7 @@ namespace socketserver
 
         private static void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            new Server(Program.portServerCRM);
+            new Server(Secret.PORT_CRM_SERVER);
         }
 
         ~Server()

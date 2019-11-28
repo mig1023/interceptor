@@ -15,6 +15,9 @@ namespace socketserver
 
         static void Main(string[] args)
         {
+            Log.Add("СОКЕТ-СЕРВЕР ЗАПУЩЕН");
+            Console.WriteLine("\n\n\n\tСОКЕТ-СЕРВЕР ЗАПУЩЕН");
+
             receiver = new Sockets(Secret.IP_SERVER, Secret.PORT_RECEIVE);
             sender = new Sockets(Secret.IP_SERVER, Secret.PORT_SEND, sender: true);
 

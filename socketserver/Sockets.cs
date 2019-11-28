@@ -18,7 +18,7 @@ namespace socketserver
         {
             new Thread(() =>
             {
-                Console.WriteLine("start socket " + ipServer + ":" + port.ToString());
+                Log.Add(String.Format("socket {0}:{1}", ipServer, port));
 
                 IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(ipServer), port);
                 Socket SocketReceive = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -36,7 +36,7 @@ namespace socketserver
                     }
                     catch (SocketException e)
                     {
-                        Console.WriteLine(e.Message);
+                        Log.Add(e.Message);
                     }
                 }
             }).Start();
@@ -55,7 +55,7 @@ namespace socketserver
             }
             while (received.Available > 0);
 
-            Console.WriteLine(receviedHello.ToString());
+            Log.Add(receviedHello.ToString());
 
             SocketsPool[receviedHello.ToString()] = received;
 
@@ -79,12 +79,11 @@ namespace socketserver
 
                         if (!String.IsNullOrEmpty(receviedLine))
                         {
-                            Console.WriteLine(" ");
-                            Console.WriteLine("---> " + receviedLine.ToString());
+                            Log.Add(String.Format("---> {0}", receviedLine));
 
                             string message = SendToCRM(receviedLine.ToString());
 
-                            Console.WriteLine("<--- " + message);
+                            Log.Add(String.Format("<--- {0}", message));
 
                             data = Encoding.Unicode.GetBytes(message);
                             received.Send(data);
@@ -92,7 +91,7 @@ namespace socketserver
                     }
                     catch (SocketException e)
                     {
-                        Console.WriteLine(e.Message);
+                        Log.Add(e.Message);
 
                         received.Shutdown(SocketShutdown.Both);
                         received.Close();
@@ -118,6 +117,8 @@ namespace socketserver
             }
             catch (WebException e)
             {
+                Log.Add(e.Message);
+
                 return String.Empty;
             }
 

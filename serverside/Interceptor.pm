@@ -11,6 +11,8 @@ use JSON;
 
 sub protocol_pass { return ''; };
 
+sub protocol_serv { return '127.0.0.1'; };
+
 sub protocol_port { return 80; };
 
 sub new
@@ -226,37 +228,32 @@ sub send_request
 {
 	my ( $vars, $line, $interceptor, $callback ) = @_;
 	
-	my $serv;
+	my $serv = protocol_serv();
 
 	my $port = protocol_port();
 	
+	my $serialNo;
+
 	if ( !$callback ) {
 	
 		$interceptor = $vars->get_session->{ interceptor } unless $interceptor;
 
-		$serv = $vars->db->sel1("
-			SELECT InterceptorIP FROM Cashboxes_interceptors WHERE ID = ?",
+		$serialNo = $vars->db->sel1("
+			SELECT SerialNo FROM Cashboxes_interceptors WHERE ID = ?",
 			$interceptor
-		);
+		) || undef;
 	}
 	else {
-		$serv = $callback;
+		$serialNo = $callback;
 	}
 	
-	return "ERR4:Не установлена кассовая интеграция" unless $serv =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
-
-	my $proxy = $vars->db->sel1("
-		SELECT ProxyIP FROM Cashboxes_interceptors WHERE InterceptorIP = ?",
-		$serv
-	) || undef;
-
-	( $serv, $port ) = split( /:/, $proxy ) if $proxy;
-
+	return "ERR1:Ошибка серийного номера кассы" unless $serialNo;
+	
 	my $ua = LWP::UserAgent->new;
 	
 	$ua->agent( 'Mozilla/4.0 (compatible; MSIE 6.0; X11; Linux i686; en) Opera 7.60' );
 
-	my $request = HTTP::Request->new( GET => 'http://'."$serv:$port".'/?message='.$line.';' );
+	my $request = HTTP::Request->new( GET => 'http://'."$serv:$port".'/?to='.$serialNo.'&message='.$line.';' );
 
 	my $response = $ua->request( $request );
 
@@ -980,12 +977,14 @@ sub cash_box_auth
 	return cash_box_output( $self, "ERROR|Неудачная авторизация в VMS" ) unless $login;
 	
 	return cash_box_output( $self, "ERROR|Неверные данные IP-адреса" ) unless $param->{ ip } =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
+	
+	return cash_box_output( $self, "ERROR|Неверный серийный номер кассы" ) unless $param->{ s } =~ /^[0-9]+$/;
 		
-	my ( $pass, $cashbox_type ) = $vars->db->sel1("
-		SELECT CashPassword, CashboxType FROM Cashboxes_interceptors WHERE InterceptorIP = ?", $param->{ ip }
+	my $pass = $vars->db->sel1("
+		SELECT CashPassword FROM Cashboxes_interceptors WHERE SerialNo = ?", $param->{ s }
 	);
 	
-	return cash_box_output( $self, "ERROR|IP-адрес не найден в БД или не установлен кассовый пароль" ) unless $pass;
+	return cash_box_output( $self, "ERROR|Cерийный номер кассы не найден в БД или неверно настроен" ) unless $pass;
 	
 	my $access_cashbox = $vars->db->sel1("
 		SELECT Rights FROM AccessActionRoles 
@@ -997,8 +996,8 @@ sub cash_box_auth
 	return cash_box_output( $self, "ERROR|Недостаточно прав для доступа" ) unless $access_cashbox =~ /(full|write|read)/;
 	
 	$vars->db->query("
-		UPDATE Cashboxes_interceptors SET LastVersion = ?, LastUser = ?, LastUse = now(), SerialNo = ? WHERE InterceptorIP = ?", {},
-		$param->{ v }, $login, $param->{ s }, $param->{ ip }
+		UPDATE Cashboxes_interceptors SET LastVersion = ?, LastUser = ?, LastUse = now(), InterceptorIP = ? WHERE SerialNo = ?", {},
+		$param->{ v }, $login, $param->{ ip }, $param->{ s }
 	);
 
 	$vars->db->query("
@@ -1006,7 +1005,7 @@ sub cash_box_auth
 		$login
 	);
 	
-	return cash_box_output( $self, "OK|$pass|$surname $name $secname|$cashbox_type" );
+	return cash_box_output( $self, "OK|$pass|$surname $name $secname" );
 }
 
 sub cash_box_centers
@@ -1270,8 +1269,13 @@ sub cash_box_mandocpack
 
 	return cash_box_output( $self, "ERROR|Контрольная сумма запроса неверна" ) unless $md5 eq $param->{ crc };
 	
-	return cash_box_output( $self, "ERROR|Не установлена кассовая интеграция" )
-		unless $param->{ callback } =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
+	my $serialFromDB = $vars->db->sel1("
+		SELECT ID FROM Cashboxes_interceptors WHERE serialNo = ?",
+		$param->{ callback }
+	) || undef;
+	
+	return cash_box_output( $self, "ERROR|Серийный номер кассы не зарегистрирован" )
+		unless $serialFromDB;
 		
 	my $center_id = undef;
 

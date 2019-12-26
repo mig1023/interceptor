@@ -23,7 +23,7 @@ namespace socketserver
         {
             byte[] Buffer = EncodeToUTF8(line);
 
-            Log.Add(String.Format("===>  " + line));
+            Log.Add(String.Format("касса ===> " + line));
 
             Client.GetStream().Write(Buffer, 0, Buffer.Length);
 
@@ -52,7 +52,7 @@ namespace socketserver
             string cleanRequest = ReqMatch.Groups[2].Value;
             string toCashbox = ReqMatch.Groups[1].Value;
 
-            Log.Add(String.Format("cashbox {0} ---> {1}", toCashbox, cleanRequest));
+            Log.Add(String.Format("система ---> кассе {0} ---> {1}", toCashbox, cleanRequest));
 
             if (!Program.sender.SocketsPool[toCashbox].Connected)
                 return;
@@ -70,7 +70,7 @@ namespace socketserver
 
             SendResponse(Client, builder.ToString());
 
-            Log.Add(String.Format("<--- {0}", builder.ToString()));
+            Log.Add(String.Format("системе <--- {0}", builder.ToString()));
 
             Client.Close();
         }

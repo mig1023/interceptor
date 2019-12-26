@@ -18,7 +18,7 @@ namespace socketserver
         {
             new Thread(() =>
             {
-                Log.Add(String.Format("socket {0}:{1}", ipServer, port));
+                Log.Add(String.Format("сокет {0}:{1} ({2})", ipServer, port, (sender ? "send" : "receive")));
 
                 IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(ipServer), port);
                 Socket SocketReceive = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -79,11 +79,11 @@ namespace socketserver
 
                         if (!String.IsNullOrEmpty(receviedLine))
                         {
-                            Log.Add(String.Format("---> {0}", receviedLine));
+                            Log.Add(String.Format("касса ---> {0}", receviedLine));
 
                             string message = SendToCRM(receviedLine.ToString());
 
-                            Log.Add(String.Format("<--- {0}", message));
+                            Log.Add(String.Format("касса <--- {0}", message));
 
                             data = Encoding.Unicode.GetBytes(message);
                             received.Send(data);

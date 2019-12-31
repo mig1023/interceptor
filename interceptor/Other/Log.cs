@@ -52,8 +52,6 @@ namespace interceptor
             {
                 // nothing to do here
             }
-
-            if (logType == "main") ShowCurrentStatus(line);
         } 
 
         public static void AddDocPack(DocPack docForLog)
@@ -111,21 +109,6 @@ namespace interceptor
         {
             if (!Directory.Exists(UPDATE_LOGS_DIR))
                 Directory.CreateDirectory(UPDATE_LOGS_DIR);
-        }
-
-        public static void ShowCurrentStatus(string line)
-        {
-            if (Application.Current == null)
-                return;
-             
-            Application.Current.Dispatcher.BeginInvoke(new ThreadStart(delegate
-            {
-                MainWindow main = (MainWindow)Application.Current.MainWindow;
-                main.status9.Content = line;
-
-                if (MainWindow.Cashbox != null)
-                    main.status11.Content = MainWindow.Cashbox.CurrentModeDescription().ToLower();
-            }));
         }
     }
 }

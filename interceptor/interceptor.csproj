@@ -71,21 +71,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AutoUpdate.cs" />
+    <Compile Include="Other\AutoUpdate.cs" />
     <Compile Include="Cashboxes\ShtrihM.cs" />
     <Compile Include="Cashboxes\Atol.cs" />
     <Compile Include="Cashboxes\Settings.cs" />
-    <Compile Include="ManualDocPack.cs" />
-    <Compile Include="Secret.cs" />
+    <Compile Include="CRM\ManualDocPack.cs" />
+    <Compile Include="Other\Secret.cs" />
     <Compile Include="Server\CheckRequest.cs" />
-    <Compile Include="CRM.cs" />
-    <Compile Include="Diagnostic.cs" />
-    <Compile Include="DocPack.cs" />
+    <Compile Include="CRM\CRM.cs" />
+    <Compile Include="Cashboxes\Diagnostic.cs" />
+    <Compile Include="CRM\DocPack.cs" />
     <Compile Include="Cashboxes\ICashbox.cs" />
-    <Compile Include="MessageBoxes.cs" />
-    <Compile Include="Receipt.cs" />
+    <Compile Include="Other\MessageBoxes.cs" />
+    <Compile Include="Other\Receipt.cs" />
     <Compile Include="Server\Server.cs" />
-    <Compile Include="Service.cs" />
+    <Compile Include="CRM\Service.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -94,7 +94,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Log.cs" />
+    <Compile Include="Other\Log.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

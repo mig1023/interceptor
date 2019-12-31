@@ -15,7 +15,7 @@ namespace interceptor
         public static Socket SocketSend = null;
         
         public static int password = 0;
-        public const int adminPassword = 0;
+        public const int adminPassword = 30;
 
         public static string currentLogin = String.Empty;
         public static string currentPassword = String.Empty;

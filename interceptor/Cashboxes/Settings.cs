@@ -91,6 +91,13 @@ namespace interceptor
                     fieldValue = "(Капитал Лайф)",
                     description = "неверное наименование поля услуг (страхование-КЛ)",
                 },
+                new Settings() {
+                    tableNumber = 7,
+                    fieldNumber = 1,
+                    rowNumber = 6,
+                    fieldValue = "(прочие)",
+                    description = "неверное наименование поля услуг (прочие)",
+                },
         };
     }
 }

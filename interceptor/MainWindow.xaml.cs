@@ -151,8 +151,6 @@ namespace interceptor
 
             ShowStartStatus("Пожалуйста, подождите пока программа соединится с кассой...");
 
-            Log.Add("ищем кассу");
-
             Cashbox = CRM.FindCashbox();
 
             if (Cashbox == null)

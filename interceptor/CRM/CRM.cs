@@ -87,7 +87,7 @@ namespace interceptor
         {
             string authString = String.Empty;
 
-            string url = "/vcs/cashbox_auth.htm?login=" + login +
+            string url = "/vcs/cashbox_auth_socket.htm?login=" + login +
                 "&p=" + passwordLine + "&ip=" + GetMyIP() + "&s=" + serialNo +
                 "&v=" + MainWindow.CURRENT_VERSION;
 
@@ -130,6 +130,8 @@ namespace interceptor
         {
             foreach(ICashbox cashbox in new List<ICashbox> { new ShtrihM(), new Atol() })
             {
+                Log.Add(String.Format("ищем кассу {0}", cashbox.Name()));
+
                 cashbox.CheckConnection();
 
                 if (cashbox.GetResultCode() == 0)

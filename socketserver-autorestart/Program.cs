@@ -15,7 +15,8 @@ namespace socketserver_autorestart
         {
             string serverName = args[0];
 
-            Log(String.Format("ЗАПУСК, отслеживаем {0}", serverName));
+            Log(String.Format("самовосстановление: отслеживаем {0}", serverName));
+            Console.WriteLine("\n\n\n\tсамовосстановление сокет-сервера");
 
             while (true)
             {

@@ -982,6 +982,22 @@ sub cash_box_region
 	return ( $code, $desc, $fd );
 }
 
+sub cash_box_check_cashbox
+# //////////////////////////////////////////////////
+{
+	my ( $self, $task, $id, $template, $slist, $authip, $clientip ) = @_;
+	
+	my $vars = $self->{'VCS::Vars'};
+
+	my $paramSernialNo = $vars->getparam( 's' ) || '';
+	
+	my $exist = $vars->db->sel1("
+		SELECT ID FROM Cashboxes_interceptors WHERE SerialNo = ?", $paramSernialNo
+	) || undef;
+	
+	return cash_box_output( $self, ( $exist ? "OK" : "ERR" ) );
+}
+
 sub cash_box_auth_socket
 # //////////////////////////////////////////////////
 {

@@ -170,6 +170,16 @@ namespace interceptor
                 return;
             }
 
+            Thread.Sleep(1000);
+
+            ShowStartStatus("Пожалуйста, подождите пока программа проверит номер кассы...");
+
+            if (!CRM.CashboxSerialNumberIsOk(Cashbox.serialNumber))
+            {
+                ShowStartError(String.Format("Серийный номер кассы {0} не найден в системе", Cashbox.serialNumber), onlyExit: true);
+                return;
+            }
+
             Instance.ShowEntrance();
         }
 

@@ -83,6 +83,27 @@ namespace interceptor
             return builder.ToString();
         }
 
+        public static bool CashboxSerialNumberIsOk(string serialNo)
+        {
+            string checkResponse = String.Empty;
+
+            string url = "/vcs/cashbox_check_cashbox.htm?s=" + serialNo;
+
+            try
+            {
+                checkResponse = SockectSend(url);
+            }
+            catch (SocketException e)
+            {
+                loginError = "Ошибка доступа к серверу";
+                Log.AddWeb(e.Message);
+
+                return false;
+            }
+
+            return (checkResponse == "OK" ? true : false);
+        }
+
         public static bool CrmAuthentication(string login, string passwordLine, string serialNo)
         {
             string authString = String.Empty;

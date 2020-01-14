@@ -23,7 +23,7 @@ namespace socketserver
         {
             byte[] Buffer = EncodeToUTF8(line);
 
-            Log.Add(String.Format("касса ===> " + line));
+            Log.Add(String.Format("касса ---> " + line));
 
             Client.GetStream().Write(Buffer, 0, Buffer.Length);
 

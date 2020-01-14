@@ -95,6 +95,7 @@ namespace socketserver
 
                         received.Shutdown(SocketShutdown.Both);
                         received.Close();
+                        return;
                     }
                 }
         }

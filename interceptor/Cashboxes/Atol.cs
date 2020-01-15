@@ -156,14 +156,12 @@ namespace interceptor
 
                 double sum = atolDriver.getParamDouble(1020);
                 uint type = atolDriver.getParamInt(1054);
+                string doc = (agreements.ContainsKey(documentNumber) ? agreements[documentNumber] : "не найден");
 
                 PrintLine(line: true);
-                PrintLine("документ ФД: " + documentNumber.ToString());
-                PrintLine("договор: " + (agreements.ContainsKey(documentNumber) ? agreements[documentNumber] : "не найден"));
-                PrintLine("тип: " + (type == 1 ? "приход" : (type == 2 ? "возврат" : "ИНОЕ")));
-                PrintLine("дата: " + dateTime.ToString());
-                PrintLine("ФП: " + fiscalSign.ToString());
-                PrintLine("сумма чека: " + (type == 2 ? "-" : "") + sum.ToString());
+                PrintLine(String.Format("документ ФД: {0, 6} договор: {1, 14}", documentNumber, doc));
+                PrintLine(String.Format("дата: {0} тип: {1}", dateTime, (type == 1 ? "приход" : (type == 2 ? "возврат" : "ИНОЕ"))));
+                PrintLine(String.Format("ФП: {0} сумма {1}", fiscalSign, (type == 2 ? "-" : "") + sum.ToString()));
             }
 
             PrintLine(line: true);

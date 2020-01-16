@@ -110,8 +110,10 @@ namespace interceptor
             return (resultCode < 0 ? false : true);
         }
 
-        public bool ReportRegion(string reportType)
+        public bool ReportRegion(string reportTypeString)
         {
+            int reportType = Int32.Parse(reportTypeString);
+
             Dictionary<uint, string> agreements = new Dictionary<uint, string>();
 
             atolDriver.setParam(Constants.LIBFPTR_PARAM_FN_DATA_TYPE, Constants.LIBFPTR_FNDT_LAST_DOCUMENT);
@@ -124,14 +126,7 @@ namespace interceptor
 
             uint firstDoc = lastDoc - docsInLine + 1;
 
-            string getDataVar = reportType;
-
-            if (reportType == "3")
-                getDataVar = "1";
-            else if (reportType == "4")
-                getDataVar = "2";
-
-            string[] FDData = CRM.GetFDData(firstDoc, getDataVar);
+            string[] FDData = CRM.GetFDData(firstDoc, (reportType <= 2 ? reportType : (reportType - 2)));
 
             if (FDData.Length <= 0 || FDData[0] == "ERR")
                 return false;
@@ -150,6 +145,8 @@ namespace interceptor
             PrintLine(line: true);
             PrintLine("ОТЧЁТ до ЗАКРЫТИЯ СМЕНЫ");
             PrintLine(line: true);
+            PrintLine("дата | время | чек | договор | сумма");
+            PrintLine(line: true);
 
             for (uint i = firstDoc; i <= lastDoc; i++)
             {
@@ -160,17 +157,17 @@ namespace interceptor
                 uint documentType = atolDriver.getParamInt(Constants.LIBFPTR_PARAM_FN_DOCUMENT_TYPE);
                 uint documentNumber = atolDriver.getParamInt(Constants.LIBFPTR_PARAM_DOCUMENT_NUMBER);
                 DateTime dateTime = atolDriver.getParamDateTime(Constants.LIBFPTR_PARAM_DATE_TIME);
-                String fiscalSign = atolDriver.getParamString(Constants.LIBFPTR_PARAM_FISCAL_SIGN);
+                string fiscalSign = atolDriver.getParamString(Constants.LIBFPTR_PARAM_FISCAL_SIGN);
 
                 double sum = atolDriver.getParamDouble(1020);
                 uint type = atolDriver.getParamInt(1054);
                 string doc = (agreements.ContainsKey(documentNumber) ? agreements[documentNumber] : "не найден");
 
-                if (reportType == "3" || reportType == "4")
+                if (reportType > 2)
                 {
                     PrintLine(
                     String.Format(
-                        "{0}.{1} {2}:{3} {4} {5} {6}",
+                        "{0}.{1} {2}:{3} {4} {5} --> {6}",
                         dateTime.Day, dateTime.Month, dateTime.Hour, dateTime.Minute,
                         documentNumber, doc, (type == 2 ? "-" : "") + sum.ToString()
                         )

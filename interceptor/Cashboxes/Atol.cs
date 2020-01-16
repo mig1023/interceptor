@@ -124,7 +124,14 @@ namespace interceptor
 
             uint firstDoc = lastDoc - docsInLine + 1;
 
-            string[] FDData = CRM.GetFDData(firstDoc, reportType);
+            string getDataVar = reportType;
+
+            if (reportType == "3")
+                getDataVar = "1";
+            else if (reportType == "4")
+                getDataVar = "2";
+
+            string[] FDData = CRM.GetFDData(firstDoc, getDataVar);
 
             if (FDData.Length <= 0 || FDData[0] == "ERR")
                 return false;
@@ -142,6 +149,7 @@ namespace interceptor
 
             PrintLine(line: true);
             PrintLine("ОТЧЁТ до ЗАКРЫТИЯ СМЕНЫ");
+            PrintLine(line: true);
 
             for (uint i = firstDoc; i <= lastDoc; i++)
             {
@@ -158,10 +166,26 @@ namespace interceptor
                 uint type = atolDriver.getParamInt(1054);
                 string doc = (agreements.ContainsKey(documentNumber) ? agreements[documentNumber] : "не найден");
 
-                PrintLine(line: true);
-                PrintLine(String.Format("документ ФД: {0, 6} договор: {1, 14}", documentNumber, doc));
-                PrintLine(String.Format("дата: {0} тип: {1}", dateTime, (type == 1 ? "приход" : (type == 2 ? "возврат" : "ИНОЕ"))));
-                PrintLine(String.Format("ФП: {0} сумма {1}", fiscalSign, (type == 2 ? "-" : "") + sum.ToString()));
+                if (reportType == "3" || reportType == "4")
+                {
+                    PrintLine(
+                    String.Format(
+                        "{0}.{1} {2}:{3} {4} {5} {6}",
+                        dateTime.Day, dateTime.Month, dateTime.Hour, dateTime.Minute,
+                        documentNumber, doc, (type == 2 ? "-" : "") + sum.ToString()
+                        )
+                    );
+                }
+                else
+                {
+                    PrintLine(line: true);
+                    PrintLine("документ ФД: " + documentNumber.ToString());
+                    PrintLine("договор: " + (agreements.ContainsKey(documentNumber) ? agreements[documentNumber] : "не найден"));
+                    PrintLine("тип: " + (type == 1 ? "приход" : (type == 2 ? "возврат" : "ИНОЕ")));
+                    PrintLine("дата: " + dateTime.ToString());
+                    PrintLine("ФП: " + fiscalSign.ToString());
+                    PrintLine("сумма чека: " + (type == 2 ? "-" : "") + sum.ToString());
+                }
             }
 
             PrintLine(line: true);

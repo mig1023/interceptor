@@ -138,6 +138,10 @@ namespace interceptor
                         continue;
 
                     string[] fd = FDData[i].Split(':');
+
+                    if (fd.Length < 2)
+                        return false;
+
                     agreements.Add(uint.Parse(fd[0]), fd[1]);
                 }
             }

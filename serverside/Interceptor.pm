@@ -225,6 +225,16 @@ sub xml_create
 	return $xml;
 }
 
+sub connection_type
+# //////////////////////////////////////////////////
+{
+	my $callback = shift;
+	
+	return 'HTTP' if $callback =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/;
+	
+	return 'Socket';
+}
+
 sub send_request
 # //////////////////////////////////////////////////
 {
@@ -234,17 +244,11 @@ sub send_request
 	
 	if ( $callback ) {
 	
-		if ( $callback =~ /^([0-9]{1,3}[\.]){3}[0-9]{1,3}$/ ) {
-	
-			$serv = $callback;
-			
-			$connection_type = 'HTTP';
-		}
-		else {
-			$serial_no = $callback;
-			
-			$connection_type = 'Socket';
-		}
+		$connection_type = connection_type( $callback );
+		
+		$serv = $callback if $connection_type eq 'HTTP';
+		
+		$serial_no = $callback if $connection_type eq 'Socket';
 	}
 	else {
 		$interceptor = $vars->get_session->{ interceptor } unless $interceptor;
@@ -995,6 +999,8 @@ sub cash_box_check_cashbox
 		SELECT ID FROM Cashboxes_interceptors WHERE SerialNo = ?", $paramSernialNo
 	) || undef;
 	
+	my $resp = ( $exist ? "OK" : "ERR" );
+	
 	return cash_box_output( $self, ( $exist ? "OK" : "ERR" ) );
 }
 
@@ -1367,13 +1373,17 @@ sub cash_box_mandocpack
 
 	return cash_box_output( $self, "ERROR|Контрольная сумма запроса неверна" ) unless $md5 eq $param->{ crc };
 	
-	my $serialFromDB = $vars->db->sel1("
-		SELECT ID FROM Cashboxes_interceptors WHERE serialNo = ?",
+	my $connection_type = connection_type( $param->{ callback } );
+	
+	my $cashbox_by_type = ( $connection_type eq 'HTTP' ? "InterceptorIP" : "serialNo" );
+	
+	my $cashboxIDFromDB = $vars->db->sel1("
+		SELECT ID FROM Cashboxes_interceptors WHERE $cashbox_by_type = ?",
 		$param->{ callback }
 	) || undef;
 	
-	return cash_box_output( $self, "ERROR|Серийный номер кассы не зарегистрирован" )
-		unless $serialFromDB;
+	return cash_box_output( $self, "ERROR|Касса не зарегистрирована в системе ($cashbox_by_type)" )
+		unless $cashboxIDFromDB;
 		
 	my $center_id = undef;
 

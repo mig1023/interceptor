@@ -110,20 +110,6 @@ namespace interceptor
             return (resultCode < 0 ? false : true);
         }
 
-        private string SmallDocNumber(string doc)
-        {
-            if (doc == "не найден")
-                return doc;
-
-            string center = doc.Substring(0, 2);
-            string number = doc.Substring(2, 6);
-            string date = doc.Substring(8, 6);
-
-            number = number.Replace("0", String.Empty);
-
-            return String.Format("{0}.{1}.{2}", center, number, date);
-        }
-
         public bool ReportRegion(string reportTypeString)
         {
             int reportType = Int32.Parse(reportTypeString);
@@ -162,8 +148,8 @@ namespace interceptor
             if (reportType > 2)
             {
                 PrintLine(line: true);
-                PrintLine("дата | время | договор | сумма | чек | ФП");
-                PrintLine(line: true);
+                PrintLine("дата | время | чек | ФП");
+                PrintLine("договор | сумма");
             }
                 
             for (uint i = firstDoc; i <= lastDoc; i++)
@@ -183,13 +169,15 @@ namespace interceptor
 
                 if (reportType > 2)
                 {
-                    PrintLine(
-                    String.Format(
-                        "{0}.{1} {2}:{3} {4} {5}р {6} {7}",
-                        dateTime.Day, dateTime.Month, dateTime.Hour, dateTime.Minute,
-                        SmallDocNumber(doc), (type == 2 ? "-" : "") + sum.ToString(), documentNumber, fiscalSign  
-                        )
-                    );
+                    PrintLine(line: true);
+
+                    PrintLine(String.Format(
+                        "{0}.{1} {2}:{3} {4} {5}", dateTime.Day, dateTime.Month, dateTime.Hour, dateTime.Minute, documentNumber, fiscalSign
+                    ));
+
+                    PrintLine(String.Format(
+                        "{0} {1}", doc, (type == 2 ? "-" : "") + sum.ToString()
+                    ));
                 }
                 else
                 {

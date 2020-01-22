@@ -110,6 +110,20 @@ namespace interceptor
             return (resultCode < 0 ? false : true);
         }
 
+        private string SmallDocNumber(string doc)
+        {
+            if (doc == "не найден")
+                return doc;
+
+            string center = doc.Substring(0, 2);
+            string number = doc.Substring(2, 6);
+            string date = doc.Substring(8, 6);
+
+            number = number.Replace("0", String.Empty);
+
+            return String.Format("{0}.{1}.{2}", center, number, date);
+        }
+
         public bool ReportRegion(string reportTypeString)
         {
             int reportType = Int32.Parse(reportTypeString);
@@ -138,20 +152,20 @@ namespace interceptor
                         continue;
 
                     string[] fd = FDData[i].Split(':');
-
-                    if (fd.Length < 2)
-                        return false;
-
                     agreements.Add(uint.Parse(fd[0]), fd[1]);
                 }
             }
 
             PrintLine(line: true);
             PrintLine("ОТЧЁТ до ЗАКРЫТИЯ СМЕНЫ");
-            PrintLine(line: true);
-            PrintLine("дата | время | чек | договор | сумма");
-            PrintLine(line: true);
 
+            if (reportType > 2)
+            {
+                PrintLine(line: true);
+                PrintLine("дата | время | договор | сумма | чек | ФП");
+                PrintLine(line: true);
+            }
+                
             for (uint i = firstDoc; i <= lastDoc; i++)
             {
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_FN_DATA_TYPE, Constants.LIBFPTR_FNDT_DOCUMENT_BY_NUMBER);
@@ -171,9 +185,9 @@ namespace interceptor
                 {
                     PrintLine(
                     String.Format(
-                        "{0}.{1} {2}:{3} {4} {5} --> {6}",
+                        "{0}.{1} {2}:{3} {4} {5}р {6} {7}",
                         dateTime.Day, dateTime.Month, dateTime.Hour, dateTime.Minute,
-                        documentNumber, doc, (type == 2 ? "-" : "") + sum.ToString()
+                        SmallDocNumber(doc), (type == 2 ? "-" : "") + sum.ToString(), documentNumber, fiscalSign  
                         )
                     );
                 }

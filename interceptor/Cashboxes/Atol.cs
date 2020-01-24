@@ -126,6 +126,16 @@ namespace interceptor
 
             uint firstDoc = lastDoc - docsInLine + 1;
 
+            bool verySmall = false;
+
+            if (reportType == 5)
+            {
+                reportType = 3;
+                verySmall = true;
+
+
+            }
+
             string[] FDData = CRM.GetFDData(firstDoc, (reportType <= 2 ? reportType : (reportType - 2)));
 
             if (FDData.Length <= 0 || FDData[0] == "ERR")
@@ -138,6 +148,10 @@ namespace interceptor
                         continue;
 
                     string[] fd = FDData[i].Split(':');
+
+                    if (fd.Length < 2)
+                        return false;
+
                     agreements.Add(uint.Parse(fd[0]), fd[1]);
                 }
             }
@@ -145,13 +159,21 @@ namespace interceptor
             PrintLine(line: true);
             PrintLine("ОТЧЁТ до ЗАКРЫТИЯ СМЕНЫ");
 
-            if (reportType > 2)
+            if (verySmall)
+            {
+                PrintLine(line: true);
+                PrintLine("дата | время | чек | договор | сумма");
+                PrintLine(line: true);
+            }
+            else if (reportType > 2)
             {
                 PrintLine(line: true);
                 PrintLine("дата | время | чек | ФП");
-                PrintLine("договор | сумма");
+                PrintLine("договор | приход/возврат | сумма");
             }
-                
+
+            string fpInEnd = String.Empty;
+
             for (uint i = firstDoc; i <= lastDoc; i++)
             {
                 atolDriver.setParam(Constants.LIBFPTR_PARAM_FN_DATA_TYPE, Constants.LIBFPTR_FNDT_DOCUMENT_BY_NUMBER);
@@ -165,30 +187,54 @@ namespace interceptor
 
                 double sum = atolDriver.getParamDouble(1020);
                 uint type = atolDriver.getParamInt(1054);
-                string doc = (agreements.ContainsKey(documentNumber) ? agreements[documentNumber] : "не найден");
+                string doc = (agreements.ContainsKey(documentNumber) ? agreements[documentNumber] : "[не найден]");
+                string typeLine = (type == 1 ? "приход" : (type == 2 ? "возврат" : "ИНОЕ"));
 
-                if (reportType > 2)
+                if (verySmall)
+                {
+                    PrintLine(String.Format(
+                        "{0}.{1} {2}:{3} {4} {5} {6}",
+                        dateTime.Day, dateTime.Month, dateTime.Hour, dateTime.Minute, documentNumber,
+                        doc, (type == 2 ? "-" : "") + sum.ToString()
+                    ));
+
+                    fpInEnd += String.Format("{0}->{1}; ", documentNumber, fiscalSign);
+                }
+                else if (reportType > 2)
                 {
                     PrintLine(line: true);
 
                     PrintLine(String.Format(
-                        "{0}.{1} {2}:{3} {4} {5}", dateTime.Day, dateTime.Month, dateTime.Hour, dateTime.Minute, documentNumber, fiscalSign
+                        "{0}.{1} {2}:{3} {4} {5}",
+                        dateTime.Day, dateTime.Month, dateTime.Hour, dateTime.Minute, documentNumber, fiscalSign
                     ));
 
                     PrintLine(String.Format(
-                        "{0} {1}", doc, (type == 2 ? "-" : "") + sum.ToString()
+                        "{0} {1} {2} р", doc, typeLine, (type == 2 ? "-" : "") + sum.ToString()
                     ));
                 }
                 else
                 {
                     PrintLine(line: true);
                     PrintLine("документ ФД: " + documentNumber.ToString());
-                    PrintLine("договор: " + (agreements.ContainsKey(documentNumber) ? agreements[documentNumber] : "не найден"));
-                    PrintLine("тип: " + (type == 1 ? "приход" : (type == 2 ? "возврат" : "ИНОЕ")));
+                    PrintLine("договор: " + doc);
+                    PrintLine("тип: " + typeLine);
                     PrintLine("дата: " + dateTime.ToString());
                     PrintLine("ФП: " + fiscalSign.ToString());
                     PrintLine("сумма чека: " + (type == 2 ? "-" : "") + sum.ToString());
                 }
+            }
+
+            if (verySmall)
+            {
+                PrintLine(line: true);
+                PrintLine("Сведения о ФП чеков (чек->ФП)");
+                PrintLine(line: true);
+
+                List<string> lines = (from Match m in Regex.Matches(fpInEnd, @".{1,64}") select m.Value).ToList();
+
+                foreach (string line in lines)
+                    PrintLine(line);
             }
 
             PrintLine(line: true);

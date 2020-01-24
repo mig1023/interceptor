@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Atol.Drivers10.Fptr;
 using System.Timers;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace interceptor
 {
@@ -15,6 +18,8 @@ namespace interceptor
         static int currentDrvPassword = 0;
         static string currentDocPack = String.Empty;
         private bool cancelOpenReceipt = false;
+
+        private static string temporaryGraphicFile = @"temporaryGraphicFile.bmp";
 
         public int currentDirectPassword { get; set; }
         public DocPack manDocPackForPrinting { get; set; }
@@ -132,8 +137,6 @@ namespace interceptor
             {
                 reportType = 3;
                 verySmall = true;
-
-
             }
 
             string[] FDData = CRM.GetFDData(firstDoc, (reportType <= 2 ? reportType : (reportType - 2)));
@@ -162,7 +165,7 @@ namespace interceptor
             if (verySmall)
             {
                 PrintLine(line: true);
-                PrintLine("дата | время | чек | договор | сумма");
+                PrintLine("дата | время | чек | ФП | договор | сумма");
                 PrintLine(line: true);
             }
             else if (reportType > 2)
@@ -171,8 +174,6 @@ namespace interceptor
                 PrintLine("дата | время | чек | ФП");
                 PrintLine("договор | приход/возврат | сумма");
             }
-
-            string fpInEnd = String.Empty;
 
             for (uint i = firstDoc; i <= lastDoc; i++)
             {
@@ -192,13 +193,11 @@ namespace interceptor
 
                 if (verySmall)
                 {
-                    PrintLine(String.Format(
-                        "{0}.{1} {2}:{3} {4} {5} {6}",
-                        dateTime.Day, dateTime.Month, dateTime.Hour, dateTime.Minute, documentNumber,
-                        doc, (type == 2 ? "-" : "") + sum.ToString()
+                    PrintGraphicLine(String.Format(
+                        "{0}.{1}   {2}:{3}   400{4}   {5}   {6}   {7}   {8} р",
+                        dateTime.Day, dateTime.Month, dateTime.Hour, dateTime.Minute, documentNumber, fiscalSign,
+                        doc, typeLine, (type == 2 ? "-" : String.Empty) + sum.ToString()
                     ));
-
-                    fpInEnd += String.Format("{0}->{1}; ", documentNumber, fiscalSign);
                 }
                 else if (reportType > 2)
                 {
@@ -225,24 +224,15 @@ namespace interceptor
                 }
             }
 
-            if (verySmall)
-            {
-                PrintLine(line: true);
-                PrintLine("Сведения о ФП чеков (чек->ФП)");
-                PrintLine(line: true);
-
-                List<string> lines = (from Match m in Regex.Matches(fpInEnd, @".{1,64}") select m.Value).ToList();
-
-                foreach (string line in lines)
-                    PrintLine(line);
-            }
-
             PrintLine(line: true);
 
             for (int i = 0; i < 10; i++)
                 PrintLine(" ");
 
             atolDriver.cut();
+
+            if (verySmall)
+                CleanOldGraphicLine();
 
             return true;
         }
@@ -362,6 +352,36 @@ namespace interceptor
         public string[] CheckCashboxTables()
         {
             return new string[0];
+        }
+
+        private static void CleanOldGraphicLine()
+        {
+            if (File.Exists(temporaryGraphicFile))
+                File.Delete(temporaryGraphicFile);
+        }
+
+        private static void PrintGraphicLine(string text = "")
+        {
+            PrepareDriver();
+
+            if (String.IsNullOrEmpty(text))
+                return;
+
+            Rectangle rect = new Rectangle(0, 0, 570, 22);
+
+            Bitmap bmp1 = new Bitmap(570, 22, PixelFormat.Format24bppRgb);
+
+            using (Graphics g = Graphics.FromImage(bmp1))
+            using (Font font = new Font("Arial", 12))
+            {
+                g.FillRectangle(Brushes.White, rect);
+                g.DrawString(text, font, Brushes.Black, rect, StringFormat.GenericTypographic);
+            }
+
+            bmp1.Save(temporaryGraphicFile);
+
+            atolDriver.setParam(Constants.LIBFPTR_PARAM_FILENAME, temporaryGraphicFile);
+            atolDriver.printPicture();
         }
 
         public static void PrintLine(string text = "", bool line = false)

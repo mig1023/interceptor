@@ -194,9 +194,10 @@ namespace interceptor
                 if (verySmall)
                 {
                     PrintGraphicLine(String.Format(
-                        "{0}.{1}   {2}:{3}   400{4}   {5}   {6}   {7}   {8} р",
-                        dateTime.Day, dateTime.Month, dateTime.Hour, dateTime.Minute, documentNumber, fiscalSign,
-                        doc, typeLine, (type == 2 ? "-" : String.Empty) + sum.ToString()
+                        "{0}.{1}   {2}:{3}   {4}   {5}   {6}   {7} р",
+                        dateTime.Day.ToString("D2"), dateTime.Month.ToString("D2"),
+                        dateTime.Hour.ToString("D2"), dateTime.Minute.ToString("D2"),
+                        documentNumber, doc, typeLine, (type == 2 ? "-" : String.Empty) + sum.ToString()
                     ));
                 }
                 else if (reportType > 2)

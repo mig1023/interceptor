@@ -700,9 +700,11 @@ sub doc_services
 	
 	my $concil_price_to_name = {
 		35  => 'C01',
+		40  => 'C04',
 		50  => 'D05',
 		60  => 'C03',
 		70  => 'C02',
+		80  => 'C05',
 		116 => 'D04',
 	};
 	

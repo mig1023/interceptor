@@ -115,6 +115,14 @@ namespace interceptor
             return (resultCode < 0 ? false : true);
         }
 
+        public string DocNumber(string doc)
+        {
+            if (doc == "не найден")
+                return doc;
+
+            return String.Format("{0}.{1}.{2}", doc.Substring(0, 2), doc.Substring(2, 6), doc.Substring(8, 6));
+        }
+
         public bool ReportRegion(string reportTypeString)
         {
             int reportType = Int32.Parse(reportTypeString);
@@ -165,7 +173,7 @@ namespace interceptor
             if (verySmall)
             {
                 PrintLine(line: true);
-                PrintLine("дата | время | чек | ФП | договор | сумма");
+                PrintLine("дата | время | чек | договор | сумма");
                 PrintLine(line: true);
             }
             else if (reportType > 2)
@@ -197,7 +205,7 @@ namespace interceptor
                         "{0}.{1}   {2}:{3}   {4}   {5}   {6}   {7} р",
                         dateTime.Day.ToString("D2"), dateTime.Month.ToString("D2"),
                         dateTime.Hour.ToString("D2"), dateTime.Minute.ToString("D2"),
-                        documentNumber, doc, typeLine, (type == 2 ? "-" : String.Empty) + sum.ToString()
+                        documentNumber, DocNumber(doc), typeLine, (type == 2 ? "-" : String.Empty) + sum.ToString()
                     ));
                 }
                 else if (reportType > 2)

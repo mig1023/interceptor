@@ -526,7 +526,11 @@ sub doc_services
 				$cntncon += 1;
 			}
 			else {
-				if ( $ak->{ AgeCatA } ) {
+				if ( $ak->{ AgeCatA } and $ak->{ iNRes } ) {
+				
+					$cntageires += 1;
+				}
+				elsif ( $ak->{ AgeCatA } ) {
 				
 					$cntage += 1;
 				}
@@ -696,6 +700,7 @@ sub doc_services
 	concil_add_price( $concil_price, $prices, "concilr$u", $cntres ) if $data->{ vcat } eq 'C';
 	concil_add_price( $concil_price, $prices, "conciln$u", $cntnres );
 	concil_add_price( $concil_price, $prices, "concilr$u" . '_' . $ages, $cntage );
+	concil_add_price( $concil_price, $prices, "conciln$u" . '_' . $ages, $cntageires );
 	concil_add_price( $concil_price, $prices, "concilr$u", $cntres ) if $data->{ vcat } eq 'D';
 
 	my $consil_index = 0;

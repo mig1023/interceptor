@@ -202,11 +202,11 @@ namespace interceptor
             return vtypeString.Split('|');
         }
 
-        public static string[] GetFDData(uint startFD, string type)
+        public static string[] GetFDData(uint startFD, int type)
         {
             string FDData = String.Empty;
 
-            string url = "/vcs/cashbox_fd.htm?first=" + startFD.ToString() + "&type=" + type;
+            string url = "/vcs/cashbox_fd.htm?first=" + startFD.ToString() + "&type=" + type.ToString();
 
             try
             {

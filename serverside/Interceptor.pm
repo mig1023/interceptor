@@ -469,6 +469,8 @@ sub get_service_code
 		'service13' 	=> '532',
 		'service14' 	=> '533',
 		'service15' 	=> '534',
+		'service16' 	=> '516',
+		'service17' 	=> '517',
 		'piligrims' 	=> '701',
 	};
 	
@@ -704,7 +706,7 @@ sub doc_services
 		50  => 'D05',
 		60  => 'C03',
 		70  => 'C02',
-		80  => 'C05',
+		80  => 'C03',
 		116 => 'D04',
 	};
 	

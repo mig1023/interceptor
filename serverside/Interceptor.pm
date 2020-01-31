@@ -1487,7 +1487,7 @@ sub cash_box_mandocpack
 				
 				$data->{ applicants }->[ $concil_index + $n ]->{ AgeCatA } = 1 if /^concil_n_age$/;
 				
-				$data->{ applicants }->[ $concil_index + $n ]->{ iNRes } = 1 if /^concil_n$/;
+				$data->{ applicants }->[ $concil_index + $n ]->{ iNRes } = 1 if /^concil_n(_age)$/;
 				
 				$data->{ applicants }->[ $concil_index + $n ]->{ direct_concil } = 1;
 			}

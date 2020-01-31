@@ -1499,7 +1499,7 @@ sub cash_box_mandocpack
 
 		$data->{ $_ } = $serv_hash->{ $_ } if /^(vipsrv|sms_status|anketasrv|transum|printsrv|photosrv|xerox)$/;
 		
-		$data->{ $_ } = $serv_hash->{ $_ } if /^srv(1|2|3|4|5|6|7|8|9|11|12|13|14|15)$/;
+		$data->{ $_ } = $serv_hash->{ $_ } if /^srv\d+$/;
 	}
 
 	$data->{ urgent } = ( $urgent_docpack ? 1 : 0 );

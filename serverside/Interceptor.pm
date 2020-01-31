@@ -501,8 +501,8 @@ sub doc_services
 
 	my $vars = $self->{'VCS::Vars'};
 
-	my ( $cntres, $cntnres, $cntncon, $cntage, $smscnt, $shcnt, $shrows, $shind, $indexes, $dhlsum, $inssum, $inscnt ) = 
-		( 0, 0, 0, 0, 0, 0, {}, '', {}, 0, 0, 0 );
+	my ( $cntres, $cntnres, $cntncon, $cntage, $cntageires, $smscnt, $shcnt, $dhlsum ) = 
+		( 0, 0, 0, 0, 0, 0, 0, 0 );
 
 	if ( $data->{ shipping } == 1 ) {
 

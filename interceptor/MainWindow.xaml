@@ -186,7 +186,7 @@
             <Label x:Name="directPaymentSendingText" Content="телефон или email" Canvas.Left="39" Canvas.Top="243" FontSize="18"/>
             <Label x:Name="directPaymentSendingText2" Content="для электронного чека" Canvas.Left="39" Canvas.Top="261" FontSize="14"/>
             <Label x:Name="placeholderSection" Content="-- выберите отдел --" Height="36" Canvas.Left="230" Canvas.Top="87" Width="222" FontSize="22" Foreground="#FFD8D8D8" Tag="section" MouseDown="placeholder_MouseDown"/>
-            <Label x:Name="placeholderStringForPrinting" Content="Консульский сбор C01" Height="36" Canvas.Left="230" Canvas.Top="139" Width="281" FontSize="22" Foreground="#FFD8D8D8" Tag="stringForPrinting" MouseDown="placeholder_MouseDown"/>
+            <Label x:Name="placeholderStringForPrinting" Content="-- выберите из списка или наберите самостоятельно --" Height="36" Canvas.Left="230" Canvas.Top="142" Width="506" FontSize="19" Foreground="#FFD8D8D8" Tag="stringForPrinting" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderForDirectPayment" Content="0.00" Height="36" Canvas.Left="230" Canvas.Top="190" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="priceForDirectPayment" MouseDown="placeholder_MouseDown"/>
             <Label x:Name="placeholderPaymentSending" Content="mail@example.com" Height="36" Canvas.Left="230" Canvas.Top="248" Width="198" FontSize="22" Foreground="#FFD8D8D8" Tag="directPaymentSending" MouseDown="placeholder_MouseDown" />
             <Label x:Name="placeholderDirectMoney" Content="0.00" Height="36" Canvas.Left="115" Canvas.Top="304" Width="53" FontSize="22" Foreground="#FFD8D8D8" Tag="moneyForDirectPayment" MouseDown="placeholder_MouseDown"/>

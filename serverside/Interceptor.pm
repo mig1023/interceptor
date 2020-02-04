@@ -484,8 +484,6 @@ sub get_service_code
 
 		return $base . $serv_group->{ piligrims } . ') ' if $piligrims;
 		
-		return $base . $serv_group->{ service1 } . ') ' if $center == 32;
-		
 		return $base . $pay_type . $urgance_code . $agent . ') ';
 	}
 	else {
@@ -602,9 +600,7 @@ sub doc_services
 	
 	my $special_department = ( $reception ? 3 : 1 );
 	
-	my $general_service = ( $data->{ center } == 32 ? 'Консультационные услуги' : 'Услуги по оформлению документов' );
-
-	$general_service = 'Услуги по тарифу "Партнер"' if $data->{ piligrims };
+	my $general_service = ( $data->{ piligrims } ? 'Услуги по тарифу "Партнер"' : 'Услуги по оформлению документов' );
 	
 	my $servsums = {
 		shipping => {
@@ -1487,7 +1483,7 @@ sub cash_box_mandocpack
 				
 				$data->{ applicants }->[ $concil_index + $n ]->{ AgeCatA } = 1 if /^concil_n_age$/;
 				
-				$data->{ applicants }->[ $concil_index + $n ]->{ iNRes } = 1 if /^concil_n(_age)$/;
+				$data->{ applicants }->[ $concil_index + $n ]->{ iNRes } = 1 if /^concil_n(_age)?$/;
 				
 				$data->{ applicants }->[ $concil_index + $n ]->{ direct_concil } = 1;
 			}

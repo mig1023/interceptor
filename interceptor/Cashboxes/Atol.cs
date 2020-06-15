@@ -117,7 +117,7 @@ namespace interceptor
 
         public string DocNumber(string doc)
         {
-            if (doc == "не найден")
+            if (doc.Contains("не найден"))
                 return doc;
 
             return String.Format("{0}.{1}.{2}", doc.Substring(0, 2), doc.Substring(2, 6), doc.Substring(8, 6));

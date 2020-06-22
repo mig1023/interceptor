@@ -149,14 +149,28 @@ namespace interceptor
 
         public static ICashbox FindCashbox()
         {
-            foreach(ICashbox cashbox in new List<ICashbox> { new ShtrihM(), new Atol() })
+            List<ICashbox> cashboxOrder = null;
+
+            string currentCashbox = SaveLtlData.GetCurrentCashbox();
+
+            if (String.IsNullOrEmpty(currentCashbox) || (currentCashbox == "Штрих"))
+                cashboxOrder = new List<ICashbox>() { new ShtrihM(), new Atol() };
+            else
+                cashboxOrder = new List<ICashbox>() { new Atol(), new ShtrihM() };
+
+            foreach (ICashbox cashbox in cashboxOrder)
             {
                 Log.Add(String.Format("ищем кассу {0}", cashbox.Name()));
 
                 cashbox.CheckConnection();
 
                 if (cashbox.GetResultCode() == 0)
+                {
+                    SaveLtlData.SaveCurrentCashbox(cashbox.Name());
                     return cashbox;
+                }
+                else
+                    SaveLtlData.RemoveCurrentCashbox(cashbox.Name());
             }
 
             return null;

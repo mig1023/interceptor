@@ -147,30 +147,50 @@ namespace interceptor
             return true;
         }
 
-        public static ICashbox FindCashbox()
+        private static ICashbox CreateCashboxDriver(string name)
         {
-            List<ICashbox> cashboxOrder = null;
-
-            string currentCashbox = SaveLtlData.GetCurrentCashbox();
-
-            if (String.IsNullOrEmpty(currentCashbox) || (currentCashbox == "Штрих"))
-                cashboxOrder = new List<ICashbox>() { new ShtrihM(), new Atol() };
+            if (name == "Штрих")
+                return new ShtrihM();
+            else if (name == "Атол")
+                return new Atol();
             else
-                cashboxOrder = new List<ICashbox>() { new Atol(), new ShtrihM() };
+                return null;
+        }
 
-            foreach (ICashbox cashbox in cashboxOrder)
+        private static ICashbox TryCashbox(string name)
+        {
+            ICashbox cashbox = CreateCashboxDriver(name);
+
+            if (cashbox == null)
+                return null;
+
+            Log.Add(String.Format("ищем кассу {0}", cashbox.Name()));
+
+            cashbox.CheckConnection();
+
+            if (cashbox.GetResultCode() == 0)
             {
-                Log.Add(String.Format("ищем кассу {0}", cashbox.Name()));
+                Cached.CashboxSave(cashbox.Name());
 
-                cashbox.CheckConnection();
+                return cashbox;
+            }
+            else
+                return null;
+        }
 
-                if (cashbox.GetResultCode() == 0)
-                {
-                    SaveLtlData.SaveCurrentCashbox(cashbox.Name());
+        public static ICashbox FindCashbox()
+        {           
+            string currentCashbox = Cached.GetCashbox();
+
+            List<string> checkCashboxOrder =
+                (currentCashbox == "Атол" ? new List<string> { "Атол", "Штрих" } : new List<string> { "Штрих", "Атол" });
+
+            foreach (string cashboxName in checkCashboxOrder)
+            {
+                ICashbox cashbox = TryCashbox(cashboxName);
+
+                if (cashbox != null)
                     return cashbox;
-                }
-                else
-                    SaveLtlData.RemoveCurrentCashbox(cashbox.Name());
             }
 
             return null;

@@ -77,7 +77,7 @@
     <Compile Include="Cashboxes\Atol.cs" />
     <Compile Include="Cashboxes\Settings.cs" />
     <Compile Include="CRM\ManualDocPack.cs" />
-    <Compile Include="Other\SaveLtlData.cs" />
+    <Compile Include="Other\Cached.cs" />
     <Compile Include="Other\Secret.cs" />
     <Compile Include="Server\CheckRequest.cs" />
     <Compile Include="CRM\CRM.cs" />

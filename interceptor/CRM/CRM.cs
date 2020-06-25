@@ -87,7 +87,7 @@ namespace interceptor
         {
             string checkResponse = String.Empty;
 
-            string url = "/vcs/cashbox_check_cashbox.htm?s=" + serialNo;
+            string url = String.Format("/vcs/cashbox_check_cashbox.htm?s={0}", serialNo);
 
             try
             {
@@ -108,10 +108,11 @@ namespace interceptor
         {
             string authString = String.Empty;
 
-            string url = "/vcs/cashbox_auth_socket.htm?login=" + login +
-                "&p=" + passwordLine + "&ip=" + GetMyIP() + "&s=" + serialNo +
-                "&v=" + MainWindow.CURRENT_VERSION;
-
+            string url = String.Format(
+                "/vcs/cashbox_auth_socket.htm?login={0}&p={1}&ip={2}&s={3}&v={4}",
+                login, passwordLine, GetMyIP(), serialNo, MainWindow.CURRENT_VERSION
+            );                
+                
             try
             {
                 authString = SockectSend(url);
@@ -142,7 +143,7 @@ namespace interceptor
 
             cashier = authData[2];
 
-            Log.Add("успешный вход: " + login + "/" + authData[1] + "(" + authData[2] + ")");
+            Log.Add(String.Format("успешный вход: {0}/{1}({2})", login, authData[1], authData[2]));
 
             return true;
         }
@@ -200,7 +201,7 @@ namespace interceptor
         {
             string centerString = String.Empty;
 
-            string url = "/vcs/cashbox_centers.htm?login=" + login;
+            string url = String.Format("/vcs/cashbox_centers.htm?login={0}", login);
 
             try
             {
@@ -220,7 +221,7 @@ namespace interceptor
         {
             string vtypeString = String.Empty;
 
-            string url = "/vcs/cashbox_vtype.htm?center=" + vcenterName;
+            string url = String.Format("/vcs/cashbox_vtype.htm?center={0}", vcenterName);
 
             try
             {
@@ -240,7 +241,7 @@ namespace interceptor
         {
             string FDData = String.Empty;
 
-            string url = "/vcs/cashbox_fd.htm?first=" + startFD.ToString() + "&type=" + type.ToString();
+            string url = String.Format("/vcs/cashbox_fd.htm?first={0}&type={1}", startFD, type);
 
             try
             {
@@ -260,10 +261,10 @@ namespace interceptor
         {
             string requestResult = String.Empty;
 
-            string fields =
-                "login=" + currentLogin + "&error=" + error + "&ip=" + GetMyIP() + "&agr=" + agrNumber;
-
-            string url = "/vcs/cashbox_error.htm?" + fields;
+            string url = String.Format(
+                "/vcs/cashbox_error.htm?login={0}&error={1}&ip={2}&agr={3}",
+                currentLogin, error, GetMyIP(), agrNumber
+            );
 
             Log.Add(url, logType: "http");
 
@@ -290,11 +291,8 @@ namespace interceptor
 
             string appNumberClean = Regex.Replace(appNumber, @"[^0-9]", String.Empty);
 
-            string fields = "app=" + appNumberClean + "&summ=" + summ;
-
-            string request = fields + "&crc=" + CheckRequest.CreateMD5(fields, notOrd: true);
-
-            string url = "/vcs/cashbox_appinfo.htm?" + request;
+            string fields = String.Format("app={0}&summ={1}", appNumberClean, summ);
+            string url = String.Format("/vcs/cashbox_appinfo.htm?{0}&crc={1}", fields, CheckRequest.CreateMD5(fields, notOrd: true)) ;
 
             Log.Add(url, logType: "http");
 
@@ -330,15 +328,13 @@ namespace interceptor
 
             Log.Add("запрос на чек: " + servicesList, freeLine: true);
 
-            string fields =
-                "login=" + login + "&pass=" + password.ToString() + "&moneytype=" + moneyType.ToString() +
-                "&money=" + money + "&center=" + RCenterNamesExclusion(center) + "&vtype=" + vType +
-                "&rdate=" + returnDate + "&services=" + servicesList + "&callback=" + MainWindow.Cashbox.serialNumber +
-                "&r=" + (reception ? "1" : "0") + "&n=" + (withoutApp ? "1" : "0");
+            string fields = String.Format(
+                "login={0}&pass={1}&moneytype={2}&money={3}&center={4}&vtype={5}&rdate={6}&services={7}&callback={8}&r={9}&n={10}",
+                login, password, moneyType, money, RCenterNamesExclusion(center), vType, returnDate, servicesList,
+                MainWindow.Cashbox.serialNumber, (reception ? "1" : "0"), (withoutApp ? "1" : "0")
+            );
 
-            string request = fields + "&crc=" + CheckRequest.CreateMD5(fields, notOrd: true);
-
-            string url = "/vcs/cashbox_mandocpack.htm?" + request;
+            string url = String.Format("/vcs/cashbox_mandocpack.htm?{0}&crc={1}", fields, CheckRequest.CreateMD5(fields, notOrd: true));
 
             Log.Add(url, logType: "http");
 
@@ -378,7 +374,7 @@ namespace interceptor
             string url = "/vcs/cashbox_upload.htm";
 
             Log.Add("отправлена информация в БД об акте для AppID " + appID);
-            Log.Add("копирование: " + xerox + " Анкета: " + form + " Распечатка: " + print + " Фото: " + photo);
+            Log.Add(String.Format("копирование: {0} Анкета: {1} Распечатка: {2}  Фото: {3}", xerox, form, print, photo));
 
             var md5 = System.Security.Cryptography.MD5.Create();
             string md5sum = BitConverter.ToString(
@@ -424,9 +420,10 @@ namespace interceptor
         {
             string controlString = String.Empty;
 
-            string url = "/individuals/cashbox_payment_control.htm?" +
-                "docnum=" + agreement + "&login="+ currentLogin +
-                "&p=" + currentPassword + "&t=" + paymentType + "&ip=" + GetMyIP();
+            string url = String.Format(
+                "/individuals/cashbox_payment_control.htm?docnum={0}&login={1}&p={2}&t={3}&ip={4}",
+                agreement, currentLogin, currentPassword, paymentType, GetMyIP()
+            );
 
             try
             {

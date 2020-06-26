@@ -470,23 +470,10 @@ namespace interceptor
         private void BlockRCheckButton(bool block, bool checkClosed = false)
         {
             moneyForRCheck.IsEnabled = (block ? true : false);
-            noAppReception.IsEnabled = (block ? false : true);
-            appNumber.IsEnabled = (block ? false : true);
-            appNumberClean.IsEnabled = (block ? false : true);
             printRCheckMoney.IsEnabled = (block ? true : false);
             allRCenters.IsEnabled = (block ? false : true);
 
-            if (!(noAppReception.IsChecked ?? false))
-                allRCenters.IsEnabled = false;
-            else
-                appNumber.IsEnabled = false;
-
-            if (checkClosed)
-                block = true;
-            else if (noAppReception.IsChecked ?? false)
-                block = false;
-            else
-                block = true;
+            block = true; // ??
 
             foreach (Button serv in receptionButtonCleaningList)
             {
@@ -579,7 +566,6 @@ namespace interceptor
             if (serviceNum > 0)
             {
                 bool tightButton = (Service.Height == 30 ? true : false);
-                double buttonFontBig = (tightButton ? 25 : 30);
 
                 if ((serviceNum == 1) && !remove)
                 {
@@ -603,21 +589,15 @@ namespace interceptor
                 Service.FontWeight = FontWeights.Bold;
 
                 Label labelService = Service.FindName(Service.Name + "_num") as Label;
-                double topPositionBig = (rService ? -14 : 6) + (tightButton ? 2 : 0);
-                double topPositionLtl = (rService ? 24 : 3) - (tightButton ? 5 : 0); // 7
-
-                if (Service.Name == "srv11R" || Service.Name == "anketasrvR")
-                {
-                    topPositionBig = 8;
-                    topPositionLtl = 0;
-                }
+                double topPositionBig = (rService ? -22 : 6) + (tightButton ? 6 : 0);
+                double topPositionLtl = (rService ? 32 : 3) - (tightButton ? 5 : 0);
                     
                 if (labelService == null)
                 {
                     Label newLabel = new Label();
                     newLabel.Name = Service.Name + "_num";
                     newLabel.Content = serviceNum.ToString();
-                    newLabel.FontSize = buttonFontBig;
+                    newLabel.FontSize = 30;
 
                     Service.Width -= 30;
                     Canvas.SetLeft(Service, Canvas.GetLeft(Service) + 30);
@@ -630,19 +610,9 @@ namespace interceptor
                 }
                 else
                 {
-                    if (serviceNum >= 10)
-                    {
-                        labelService.FontSize = 18;
-                        Canvas.SetLeft(labelService, Canvas.GetLeft(Service) - 32);
-                        Canvas.SetTop(labelService, Canvas.GetTop(Service) + topPositionLtl);
-                    }
-                    else
-                    {
-                        labelService.FontSize = buttonFontBig;
-                        Canvas.SetLeft(labelService, Canvas.GetLeft(Service) - 32);
-                        Canvas.SetTop(labelService, Canvas.GetTop(Service) - topPositionBig);
-                    }
-
+                    labelService.FontSize = (serviceNum >= 10 ? 18 : 30);
+                    Canvas.SetTop(labelService, Canvas.GetTop(Service) + (serviceNum >= 10 ? topPositionLtl : (topPositionBig * -1)));
+                    Canvas.SetLeft(labelService, Canvas.GetLeft(Service) - 32);
                     labelService.Content = serviceNum.ToString();
                 }
             }
@@ -729,7 +699,9 @@ namespace interceptor
             ManualDocPack.CleanServices();
 
             moneyForRCheck.Text = String.Empty;
-            appNumber.Text = String.Empty;
+
+            foreach (Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR, srv11R })
+                button.IsEnabled = true;
 
             // Direct
 
@@ -962,8 +934,6 @@ namespace interceptor
                 moveCanvas: receptionPlace,
                 prevCanvas: mainPlace
             );
-
-            appNumber.Focus();
         }
 
         private void money_Click(object sender, RoutedEventArgs e)
@@ -986,54 +956,11 @@ namespace interceptor
             CleanCheck();
         }
 
-        private void appNumber_KeyUp(object sender, KeyEventArgs e)
-        {
-            appNumber.Text = Regex.Replace(appNumber.Text, @"[^0-9/]", String.Empty);
-            string appNumberClean = Regex.Replace(appNumber.Text, @"[^0-9]", String.Empty);
-
-            foreach (Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR, srv11R })
-                if ((appNumberClean.Length == 15) || (appNumberClean.Length == 9))
-                    button.IsEnabled = true;
-                else
-                    button.IsEnabled = false;
-
-            if (String.IsNullOrEmpty(appNumber.Text))
-                placeholderAppNum.Visibility = Visibility.Visible;
-            else
-                placeholderAppNum.Visibility = Visibility.Hidden;
-        }
-
-        private void checkBox_Checked(object sender, RoutedEventArgs e)
-        {
-            appNumber.Text = String.Empty;
-            appNumber.IsEnabled = false;
-            placeholderAppNum.Visibility = Visibility.Hidden;
-            allRCenters.IsEnabled = true;
-
-            foreach (Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR, srv11R })
-                button.IsEnabled = true;
-        }
-
-        private void checkBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            appNumber.IsEnabled = true;
-            placeholderAppNum.Visibility = Visibility.Visible;
-            allRCenters.IsEnabled = false;
-
-            foreach (Button button in new List<Button>() { anketasrvR, printsrvR, photosrvR, xeroxR, srv11R })
-                button.IsEnabled = false;
-        }
-
         private void closeRCheck_Click(object sender, RoutedEventArgs e)
         {
-            string appNumberClean = Regex.Replace(appNumber.Text, @"[^0-9]", String.Empty);
-
-            bool noAppointment = noAppReception.IsChecked ?? false;
-            string center = (noAppointment ? allRCenters.Text : appNumberClean);
-
             string sendingSuccess = CRM.SendManDocPack(
-                login.Text, CRM.password, 1, moneyForRCheck.Text, center, allVisas.Text, returnDate.Text,
-                reception: true, withoutApp: noAppointment
+                login.Text, CRM.password, 1, moneyForRCheck.Text, allRCenters.Text,
+                allVisas.Text, returnDate.Text, reception: true
             );
 
             string[] sendingData = sendingSuccess.Split('|');
@@ -1063,8 +990,6 @@ namespace interceptor
 
         private void printRCheckMoney_Click(object sender, RoutedEventArgs e)
         {
-            Receipt.currentAppNumber = appNumber.Text;
-
             decimal money = DocPack.manualParseDecimal(moneyForRCheck.Text);
 
             if (CheckMoneyFail(money))
@@ -1076,8 +1001,8 @@ namespace interceptor
 
             CheckError(result, receptionPlace);
 
-            if (result[0] == "OK" && !(noAppReception.IsChecked ?? false))
-                getAppInfoAndPrintRecepeit(Cashbox.manDocPackSumm.ToString());
+            if (result[0] == "OK")
+                CleanCheck();
         }
 
         private bool CheckMoneyFail(decimal money)
@@ -1113,27 +1038,6 @@ namespace interceptor
 
                 return true;
             }
-        }
-
-        private void getAppInfoAndPrintRecepeit(string summ)
-        {
-            string error = Receipt.PrintReceipt(CRM.AppNumberData(Receipt.currentAppNumber, summ), Cashbox.manDocPackForPrinting);
-
-            CleanCheck();
-            appNumber_KeyUp(null, null);
-            appNumber.Focus();
-
-            if (!String.IsNullOrEmpty(error))
-                ShowError(receptionPlace, error);
-        }
-
-        private void appNumberClean_Click(object sender, RoutedEventArgs e)
-        {
-            appNumber.Text = String.Empty;
-
-            CleanCheck();
-            appNumber_KeyUp(null, null);
-            appNumber.Focus();
         }
 
         private void placeholder_MouseDown(object sender, MouseButtonEventArgs e)
@@ -1178,13 +1082,7 @@ namespace interceptor
                 senderText = text.Text;
             }
 
-            if (String.IsNullOrEmpty(senderText))
-                ralatedPlaceholder.Visibility = Visibility.Visible;
-            else
-                ralatedPlaceholder.Visibility = Visibility.Hidden;
-
-            if (senderbox.Name == "appNumber")
-                appNumber_KeyUp(null, null);
+            ralatedPlaceholder.Visibility = (String.IsNullOrEmpty(senderText) ? Visibility.Visible : Visibility.Hidden);
         }
 
         private void backToMainFromMoneyPlace_Click(object sender, RoutedEventArgs e)
@@ -1195,7 +1093,6 @@ namespace interceptor
             );
 
             CleanCheck();
-            appNumber_KeyUp(null, null);
         }
 
         private void paymentPrepared()

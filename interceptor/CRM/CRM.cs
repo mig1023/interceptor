@@ -285,31 +285,6 @@ namespace interceptor
             return ip.ToString();
         }
 
-        public static string AppNumberData(string appNumber, string summ)
-        {
-            string requestResult = String.Empty;
-
-            string appNumberClean = Regex.Replace(appNumber, @"[^0-9]", String.Empty);
-
-            string fields = String.Format("app={0}&summ={1}", appNumberClean, summ);
-            string url = String.Format("/vcs/cashbox_appinfo.htm?{0}&crc={1}", fields, CheckRequest.CreateMD5(fields, notOrd: true)) ;
-
-            Log.Add(url, logType: "http");
-
-            try
-            {
-                requestResult = SockectSend(url);
-            }
-            catch (SocketException e)
-            {
-                Log.AddWeb("(отправка запроса на информацию о записи) " + e.Message);
-
-                return "ERROR|Ошибка отправки запроса на информацию о записи";
-            }
-
-            return requestResult;
-        }
-
         private static string RCenterNamesExclusion(string centerName)
         {
             foreach (KeyValuePair<string, string> entry in rCenterNames)
@@ -320,7 +295,7 @@ namespace interceptor
         }
 
         public static string SendManDocPack(string login, int password, int moneyType, string money,
-            string center, string vType, string returnDate, bool reception = false, bool withoutApp = false)
+            string center, string vType, string returnDate, bool reception = false)
         {
             string requestResult = String.Empty;
 
@@ -331,7 +306,7 @@ namespace interceptor
             string fields = String.Format(
                 "login={0}&pass={1}&moneytype={2}&money={3}&center={4}&vtype={5}&rdate={6}&services={7}&callback={8}&r={9}&n={10}",
                 login, password, moneyType, money, RCenterNamesExclusion(center), vType, returnDate, servicesList,
-                MainWindow.Cashbox.serialNumber, (reception ? "1" : "0"), (withoutApp ? "1" : "0")
+                MainWindow.Cashbox.serialNumber, (reception ? "1" : "0"), "1"
             );
 
             string url = String.Format("/vcs/cashbox_mandocpack.htm?{0}&crc={1}", fields, CheckRequest.CreateMD5(fields, notOrd: true));
@@ -366,54 +341,6 @@ namespace interceptor
                 sha1hash.Append(i.ToString("X2"));
 
             return "*" + sha1hash.ToString();
-        }
-
-        public static void SendFile(string pathToFile, string appID, string actNum,
-            string xerox, string form, string print, string photo)
-        {
-            string url = "/vcs/cashbox_upload.htm";
-
-            Log.Add("отправлена информация в БД об акте для AppID " + appID);
-            Log.Add(String.Format("копирование: {0} Анкета: {1} Распечатка: {2}  Фото: {3}", xerox, form, print, photo));
-
-            var md5 = System.Security.Cryptography.MD5.Create();
-            string md5sum = BitConverter.ToString(
-                md5.ComputeHash(
-                    File.ReadAllBytes(pathToFile)
-                )
-            ).Replace("-", String.Empty).ToLower();
-
-            WebClient client = new WebClient();
-            client.Proxy = WebRequest.DefaultWebProxy;
-            client.Proxy.Credentials = CredentialCache.DefaultCredentials;
-            client.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-
-            NameValueCollection parameters = new NameValueCollection();
-            parameters.Add("md5", md5sum);
-            parameters.Add("login", currentLogin);
-            parameters.Add("appID", appID);
-
-            parameters.Add("xerox", xerox);
-            parameters.Add("form", form);
-            parameters.Add("photo", photo);
-            parameters.Add("print", print);
-            parameters.Add("actnum", actNum);
-
-            client.QueryString = parameters;
-
-            Uri fServer = new Uri(url);
-            client.UploadFileAsync(fServer, pathToFile);
-            client.UploadFileCompleted += SendFileComplete;
-        }
-
-        private static void SendFileComplete(object sender, UploadFileCompletedEventArgs e)
-        {
-            string[] serverResult = System.Text.Encoding.UTF8.GetString(e.Result).Split('|');
-
-            if (e.Error == null && serverResult[0] == "OK")
-                Log.Add("акт успешно загружен на сервер");
-            else
-                Log.Add($"ошибка загрузки акта на сервер: {e.Error}");
         }
 
         public static void CashboxPaymentControl(string agreement, string paymentType)

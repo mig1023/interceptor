@@ -47,10 +47,6 @@
     <Reference Include="Atol.Drivers10.Fptr">
       <HintPath>obj\Debug\Atol.Drivers10.Fptr.dll</HintPath>
     </Reference>
-    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -85,7 +81,6 @@
     <Compile Include="CRM\DocPack.cs" />
     <Compile Include="Cashboxes\ICashbox.cs" />
     <Compile Include="Other\MessageBoxes.cs" />
-    <Compile Include="Other\Receipt.cs" />
     <Compile Include="Server\Server.cs" />
     <Compile Include="CRM\Service.cs" />
     <Page Include="MainWindow.xaml">
@@ -120,7 +115,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

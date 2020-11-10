@@ -304,9 +304,9 @@ namespace interceptor
             Log.Add("запрос на чек: " + servicesList, freeLine: true);
 
             string fields = String.Format(
-                "login={0}&pass={1}&moneytype={2}&money={3}&center={4}&vtype={5}&rdate={6}&services={7}&callback={8}&r={9}&n={10}",
+                "login={0}&pass={1}&moneytype={2}&money={3}&center={4}&vtype={5}&rdate={6}&services={7}&callback={8}&r={9}&n=1",
                 login, password, moneyType, money, RCenterNamesExclusion(center), vType, returnDate, servicesList,
-                MainWindow.Cashbox.serialNumber, (reception ? "1" : "0"), "1"
+                MainWindow.Cashbox.serialNumber, (reception ? "1" : "0")
             );
 
             string url = String.Format("/vcs/cashbox_mandocpack.htm?{0}&crc={1}", fields, CheckRequest.CreateMD5(fields, notOrd: true));

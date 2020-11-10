@@ -84,7 +84,8 @@
             <Button x:Name="backToMainFromReception" Content="назад" FontSize="14" Height="42" Canvas.Left="19" Canvas.Top="16" Width="155" Click="backToMainFromReception_Click"/>
             <Button x:Name="closeRCheck" Content="подытог" Height="42" Canvas.Left="19" Canvas.Top="323" Width="155" Click="closeRCheck_Click"  FontSize="16"/>
             <TextBox x:Name="moneyForRCheck" IsEnabled="False" Height="40" Canvas.Left="287" TextWrapping="Wrap" Canvas.Top="323" Width="117" FontSize="22" Tag="placeholderMoneyForRCheck" KeyUp="withPlaceholder_KeyUp"/>
-            <Button x:Name="printRCheckMoney" Content="наличными" IsEnabled="False" Height="40" Canvas.Left="427" Canvas.Top="323" Width="349" Click="printRCheckMoney_Click" FontSize="16"/>
+            <Button x:Name="printRCheckMoney" Content="наличными" IsEnabled="False" Height="40" Canvas.Left="427" Canvas.Top="323" Width="171" Click="printRCheckMoney_Click"/>
+            <Button x:Name="printRCheckCard" Content="картой" IsEnabled="False" Height="40" Canvas.Left="605" Canvas.Top="323" Width="171" Click="printRCheckCard_Click"/>
             <Button x:Name="anketasrvR" Content="заполнение анкеты" Height="95" Canvas.Left="400" Canvas.Top="189" Width="376" Click="addService_Click" Background="#FFF7FFA5" FontSize="22"/>
             <Button x:Name="srv11R" Content="распечатка анкеты" Height="95" Canvas.Left="19" Canvas.Top="189" Width="376" Click="addService_Click" Background="#FF7CCFFF" FontSize="22"/>
             <Button x:Name="printsrvR" Content="распечатка" Height="95" Canvas.Left="527" Canvas.Top="89" Width="249" Click="addService_Click" Background="#FFF19292" FontSize="22" RenderTransformOrigin="0.504,0.448"/>

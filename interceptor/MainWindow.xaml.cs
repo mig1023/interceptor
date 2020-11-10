@@ -470,15 +470,15 @@ namespace interceptor
         private void BlockRCheckButton(bool block, bool checkClosed = false)
         {
             moneyForRCheck.IsEnabled = (block ? true : false);
-            printRCheckMoney.IsEnabled = (block ? true : false);
             allRCenters.IsEnabled = (block ? false : true);
 
-            block = true; // ??
+            foreach (Button button in new List<Button>() { printRCheckMoney, printRCheckCard })
+                button.IsEnabled = (block ? true : false);
 
             foreach (Button serv in receptionButtonCleaningList)
             {
-                serv.IsEnabled = !block;
-                SupplBlock(serv, !block);
+                serv.IsEnabled = false;
+                SupplBlock(serv, false);
             }
         }
 
@@ -997,6 +997,18 @@ namespace interceptor
 
             string[] result = Cashbox.PrintDocPack(
                 Cashbox.manDocPackForPrinting, MoneyType: 1, MoneySumm: money
+            ).Split(':');
+
+            CheckError(result, receptionPlace);
+
+            if (result[0] == "OK")
+                CleanCheck();
+        }
+
+        private void printRCheckCard_Click(object sender, RoutedEventArgs e)
+        {
+            string[] result = Cashbox.PrintDocPack(
+                Cashbox.manDocPackForPrinting, MoneyType: 2, MoneySumm: Cashbox.manDocPackSumm
             ).Split(':');
 
             CheckError(result, receptionPlace);

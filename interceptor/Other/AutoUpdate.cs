@@ -62,6 +62,10 @@ namespace interceptor
         {
             string versionData;
 
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            
             try
             {
                 versionData = GetHtml(URL_MANIFEST);
